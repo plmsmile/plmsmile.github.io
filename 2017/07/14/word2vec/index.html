@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>利用tensorflow实现简版word2vec | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="自然语言处理,深度学习,word2vec">
+    <meta name="description" content="相关知识传统方法One-Hot Encoder 是一个词对应一个向量，向量中只有一个是1，其余是0，离散表达。$ $ Bag of Words 标识当前单词那一位不是1，而是变成了当前单词的出现次数。 存在的问题 需要大量的维数去表示，编码随机的，没有任何关联的信息。 向量空间模型Vector Space Models可以把字词转化为连续值，并将意思相近的词被映射到向量空间相近的位置。 VSM在N">
+<meta name="keywords" content="自然语言处理,深度学习,word2vec">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用tensorflow实现简版word2vec">
+<meta property="og:url" content="http://plmsmile.github.io/2017/07/14/word2vec/index.html">
+<meta property="og:site_name" content="PLM&#39;s Notes">
+<meta property="og:description" content="相关知识传统方法One-Hot Encoder 是一个词对应一个向量，向量中只有一个是1，其余是0，离散表达。$ $ Bag of Words 标识当前单词那一位不是1，而是变成了当前单词的出现次数。 存在的问题 需要大量的维数去表示，编码随机的，没有任何关联的信息。 向量空间模型Vector Space Models可以把字词转化为连续值，并将意思相近的词被映射到向量空间相近的位置。 VSM在N">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.tensorflow.org/images/linear-relationships.png">
+<meta property="og:image" content="https://www.tensorflow.org/images/softmax-nplm.png">
+<meta property="og:image" content="https://www.tensorflow.org/images/nce-nplm.png">
+<meta property="og:updated_time" content="2018-11-25T08:30:11.202Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="利用tensorflow实现简版word2vec">
+<meta name="twitter:description" content="相关知识传统方法One-Hot Encoder 是一个词对应一个向量，向量中只有一个是1，其余是0，离散表达。$ $ Bag of Words 标识当前单词那一位不是1，而是变成了当前单词的出现次数。 存在的问题 需要大量的维数去表示，编码随机的，没有任何关联的信息。 向量空间模型Vector Space Models可以把字词转化为连续值，并将意思相近的词被映射到向量空间相近的位置。 VSM在N">
+<meta name="twitter:image" content="https://www.tensorflow.org/images/linear-relationships.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">PLM</h5>
+          <a href="mailto:plmsmile@126.com" title="plmsmile@126.com" class="mail">plmsmile@126.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                类别
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/plmsmile" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">利用tensorflow实现简版word2vec</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">利用tensorflow实现简版word2vec</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-07-14T12:17:50.000Z" itemprop="datePublished" class="page-time">
+  2017-07-14
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/深度学习/">深度学习</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#相关知识"><span class="post-toc-number">1.</span> <span class="post-toc-text">相关知识</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#传统方法"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">传统方法</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#向量空间模型"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">向量空间模型</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Word2Vec"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">Word2Vec</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#噪声对比训练"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">噪声对比训练</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#实现Skip-Gram模型"><span class="post-toc-number">2.</span> <span class="post-toc-text">实现Skip-Gram模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#数据说明"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">数据说明</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#构建数据集"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">构建数据集</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#产生batch训练样本"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">产生batch训练样本</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一些配置信息"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">一些配置信息</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#计算图"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">计算图</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#训练过程"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">训练过程</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-word2vec" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">利用tensorflow实现简版word2vec</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-07-14 20:17:50" datetime="2017-07-14T12:17:50.000Z" itemprop="datePublished">2017-07-14</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/深度学习/">深度学习</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="相关知识"><a href="#相关知识" class="headerlink" title="相关知识"></a>相关知识</h2><h3 id="传统方法"><a href="#传统方法" class="headerlink" title="传统方法"></a>传统方法</h3><p><code>One-Hot Encoder</code> 是一个词对应一个向量，向量中只有一个是1，其余是0，离散表达。$ $</p>
+<p><code>Bag of Words</code> 标识当前单词那一位不是1，而是变成了当前单词的出现次数。</p>
+<p><strong>存在的问题</strong> 需要大量的维数去表示，编码随机的，没有任何关联的信息。</p>
+<h3 id="向量空间模型"><a href="#向量空间模型" class="headerlink" title="向量空间模型"></a>向量空间模型</h3><p><code>Vector Space Models</code>可以把字词转化为连续值，并将意思相近的词被映射到向量空间相近的位置。</p>
+<p>VSM在NLP中的一个重要假设是：在相同语境中出现的词，语义也相近。</p>
+<p>有如下两种模型</p>
+<ul>
+<li><code>计数模型</code> 统计语料库中相邻出现的词的频率，再把这些计数结果转为小而稠密的矩阵。</li>
+<li><code>预测模型</code> 根据一个词周围相邻的词汇推测出这个词。</li>
+</ul>
+<h3 id="Word2Vec"><a href="#Word2Vec" class="headerlink" title="Word2Vec"></a>Word2Vec</h3><p><code>Word2Vec</code>是一种计算非常高效的、可以从原始语料中学习字词空间向量的预测模型。</p>
+<p>有如下两种模型</p>
+<ul>
+<li><code>CBOW</code> Continuous Bag of Words 从语境推测目标词汇，适合小型数据。如“中国的首都是__”推测出“北京”。把一整段上下文信息当做一个观察对象</li>
+<li><code>Skip-Gram</code> 从目标词汇推测语境，适合大型语料。 把每一对<code>上下文-目标词汇</code>当做一个观察对象</li>
+</ul>
+<p>Word2Vec的一些优点</p>
+<ul>
+<li>连续的词向量能够捕捉到更多的语义和关联信息</li>
+</ul>
+<ul>
+<li>意思相近的词语在向量空间中的位置也会比较近。如北京-成都、狗-猫等词汇会分别聚集在一起。</li>
+<li>能学会一些高阶语言的抽象概念。如”man-woman”和”king-queen”的向量很相似。</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://www.tensorflow.org/images/linear-relationships.png" alt="Word2Vec学习的抽象概念" title="">
+                </div>
+                <div class="image-caption">Word2Vec学习的抽象概念</div>
+            </figure>
+<h3 id="噪声对比训练"><a href="#噪声对比训练" class="headerlink" title="噪声对比训练"></a>噪声对比训练</h3><p>神经概率化语言模型通常使用极大似然法进行训练，再使用<code>Softmax</code>函数得到在给出上下文单词$h$的情况下，目标词$w_t$出现的最大概率，设为$P(w_t|h)$。</p>
+<p>设$score(w_t, h)$为当前词$w_t$和上下文单词$h$的相容性，通常使用向量积获得。</p>
+<p>$$<br>P(w_t|h) = Softmax(score(w_i, h))=\frac{e^{score(w_i, h)}} {\sum_{i=1}^v {e^{score(w_i, h)}}}<br>$$</p>
+<p>通过对数似然函数max likelihood来进行训练<br>$$<br>J_{ml}=\ln{P(w_t|h)}=score(w_t,h)-\ln{\sum_{i=1}^v e^{score(w_i, h)}}<br>$$<br>这个方法看起来可行，但是消耗太大了，因为要对当前$h$与所有单词$w$的相容性$score(w, h)$。</p>
+<p><img src="https://www.tensorflow.org/images/softmax-nplm.png" style="display:block; margin:auto" width="60%"></p>
+<p>在使用word2vec模型中，我们并不需要对所有的特征进行学习。所以在CBOW模型和Skip-Gram模型中，会构造$k$个噪声单词，而我们只需要从这k个中找出真正目标单词$w_t$即可，使用了一个二分类器（lr）。下面是CBOW模型，对于Skip-Gram模型只需要相反就行了。</p>
+<p><img src="https://www.tensorflow.org/images/nce-nplm.png" style="display:block; margin:auto" width="60%"></p>
+<p>设$Q_\theta(D=1|w, h)$是二元逻辑回归的概率，即在当前条件下出现词语$w$的概率。</p>
+<ul>
+<li>$\theta$ 输入的embedding vector</li>
+<li>$h$ 当前上下文</li>
+<li>$d$ 输入数据集</li>
+<li>$w$ 目标词汇（就是他出现的概率）</li>
+</ul>
+<p>此时，最大化目标函数如下：<br>$$<br>J_{NEG}=\ln{Q_\theta(D=1|w_t, h)} + \frac {\sum_{i=1}^{k}{\ln Q_\theta(D=0|w_I, h)}} {k}<br>$$<br>前半部分为词$w$出现的概率，后面为$k$个噪声概率的期望值（如果写法有错误，希望提出，再改啦），有点像<a href="https://en.wikipedia.org/wiki/Monte_Carlo_integration" target="_blank" rel="noopener">蒙特卡洛</a>。</p>
+<p><code>负采样Negative Sampling</code> </p>
+<ul>
+<li>当模型预测的真实目标词汇$w_t$的概率越高，其他噪声词汇概率越低，模型就得到优化了</li>
+<li>用编造的噪声词汇进行训练</li>
+<li>计算loss效率非常高，只需要随机选择$k$个，而不是全部词汇</li>
+</ul>
+<h2 id="实现Skip-Gram模型"><a href="#实现Skip-Gram模型" class="headerlink" title="实现Skip-Gram模型"></a>实现Skip-Gram模型</h2><h3 id="数据说明"><a href="#数据说明" class="headerlink" title="数据说明"></a>数据说明</h3><p>Skip-Gram模型是通过目标词汇预测语境词汇。如数据集如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">I hope you always find a reason to smile</span><br></pre></td></tr></table></figure>
+<p>从中我们可以得到很多目标单词和所对应的上下文信息（多个单词）。如假设设左右词的窗口距离为1，那么相应的信息如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">'hope'</span>:[<span class="string">'i'</span>, <span class="string">'you'</span>], <span class="string">'you'</span>:[<span class="string">'hope'</span>, <span class="string">'alawys'</span>]...&#125;</span><br></pre></td></tr></table></figure>
+<p>训练时，希望给出目标词汇就能够预测出语境词汇，所以需要这样的训练数据</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 前面是目标单词，后面是语境词汇，实际上相当于数据的label</span></span><br><span class="line">(<span class="string">'hope'</span>, <span class="string">'i'</span>)</span><br><span class="line">(<span class="string">'hope'</span>, <span class="string">'you'</span>)</span><br><span class="line">(<span class="string">'you'</span>, <span class="string">'hope'</span>)</span><br><span class="line">(<span class="string">'you'</span>, <span class="string">'always'</span>)</span><br></pre></td></tr></table></figure>
+<p>同时在训练时，制造一些随机单词作为负样本（噪声）。我们希望预测的概率分布在正样本上尽可能大，在负样本上尽可能小。</p>
+<p>使用<code>随机梯度下降算法(SGD)</code>来进行最优化求解，并且使用<code>mini-batch</code>的方法，这样来<strong>更新embedding中的参数$\theta$，让损失函数(NCE loss)尽可能小</strong>。这样，每个单词的词向量就会在训练的过程中不断调整，最后会处在一个最合适的语料空间位置。</p>
+<p>例如，假设训练第$t$步，输入目标单词<code>hope</code>，希望预测出<code>you</code>，选择一个噪声词汇<code>reason</code>。则目标函数如下<br>$$<br>J_{NEG}^{(t)}=\ln {Q_\theta(D=1|hope, you)} + \ln{Q_\theta(D=0|hope, reason)}<br>$$<br>目标是更新embedding的参数$\theta$以增大目标值，更新方式是计算损失函数对参数$\theta$的导数，使得参数$\theta$朝梯度方向进行调整。多次以后，模型就能够很好区别出真实语境单词和噪声词。</p>
+<h3 id="构建数据集"><a href="#构建数据集" class="headerlink" title="构建数据集"></a>构建数据集</h3><p>先来分析数据，对所有的词汇进行编码。对高频词汇给一个<code>id</code>，对于出现次数很少词汇，id就设置为0。高频是选择出现频率最高的50000个词汇。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_dataset</span><span class="params">(self, words)</span>:</span></span><br><span class="line">    <span class="string">''' 构建数据集</span></span><br><span class="line"><span class="string">        Args:</span></span><br><span class="line"><span class="string">            words: 单词列表</span></span><br><span class="line"><span class="string">        Returns:</span></span><br><span class="line"><span class="string">            word_code: 所有word的编码，top的单词：数量；其余的：0</span></span><br><span class="line"><span class="string">            topword_id: topword-id</span></span><br><span class="line"><span class="string">            id_topword: id-word</span></span><br><span class="line"><span class="string">            topcount: 包含所有word的一个Counter对象</span></span><br><span class="line"><span class="string">        '''</span></span><br><span class="line">    <span class="comment"># 获取top50000频数的单词</span></span><br><span class="line">    unk = <span class="string">'UNK'</span></span><br><span class="line">    topcount = [[unk, <span class="number">-1</span>]]</span><br><span class="line">    topcount.extend(</span><br><span class="line">        collections.Counter(words).most_common(</span><br><span class="line">            self.__vocab_size - <span class="number">1</span>))</span><br><span class="line">    topword_id = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> word, _ <span class="keyword">in</span> topcount:</span><br><span class="line">        topword_id[word] = len(topword_id)</span><br><span class="line">        <span class="comment"># 构建单词的编码。top单词：出现次数；其余单词：0</span></span><br><span class="line">        word_code = []</span><br><span class="line">        unk_count = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> w <span class="keyword">in</span> words:</span><br><span class="line">            <span class="keyword">if</span> w <span class="keyword">in</span> topword_id:</span><br><span class="line">                c = topword_id[w]</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                c = <span class="number">0</span></span><br><span class="line">                unk_count += <span class="number">1</span></span><br><span class="line">            word_code.append(c)</span><br><span class="line">    topcount[<span class="number">0</span>][<span class="number">1</span>] = unk_count</span><br><span class="line">    id_topword = dict(zip(topword_id.values(), topword_id.keys()))</span><br><span class="line">    <span class="keyword">return</span> word_code, topword_id, id_topword, topcount</span><br></pre></td></tr></table></figure>
+<h3 id="产生batch训练样本"><a href="#产生batch训练样本" class="headerlink" title="产生batch训练样本"></a>产生batch训练样本</h3><p>由于是使用<code>mini-batch</code>的训练方法，所以每次要产生一些样本。对于每个单词，要确定要产生多少个语境单词，和最多可以左右选择多远。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generate_batch</span><span class="params">(self, batch_size, single_num, skip_window, word_code)</span>:</span></span><br><span class="line">    <span class="string">'''产生训练样本。Skip-Gram模型，从当前推测上下文</span></span><br><span class="line"><span class="string">    如 i love you. (love, i), (love, you)</span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        batch_size: 每一个batch的大小，即多少个()</span></span><br><span class="line"><span class="string">        single_num: 对单个单词生成多少个样本</span></span><br><span class="line"><span class="string">        skip_window: 单词最远可以联系的距离</span></span><br><span class="line"><span class="string">        word_code: 所有单词，单词以code形式表示</span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        batch: 目标单词</span></span><br><span class="line"><span class="string">        labels: 语境单词</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    <span class="comment"># 条件判断</span></span><br><span class="line">    <span class="comment"># 确保每个batch包含了一个词汇对应的所有样本</span></span><br><span class="line">    <span class="keyword">assert</span> batch_size % single_num == <span class="number">0</span></span><br><span class="line">    <span class="comment"># 样本数量限制</span></span><br><span class="line">    <span class="keyword">assert</span> single_num &lt;= <span class="number">2</span> * skip_window</span><br><span class="line"></span><br><span class="line">    <span class="comment"># batch label</span></span><br><span class="line">    batch = np.ndarray(shape=(batch_size), dtype=np.int32)</span><br><span class="line">    labels = np.ndarray(shape=(batch_size, <span class="number">1</span>), dtype=np.int32)</span><br><span class="line">    <span class="comment"># 目标单词和相关单词</span></span><br><span class="line">    span = <span class="number">2</span> * skip_window + <span class="number">1</span></span><br><span class="line">    word_buffer = collections.deque(maxlen=span)</span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> range(span):</span><br><span class="line">        word_buffer.append(word_code[self.__data_index])</span><br><span class="line">        self.__data_index = (self.__data_index + <span class="number">1</span>) % len(word_code)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 遍历batchsize/samplenums次，每次一个目标词汇，一次samplenums个语境词汇</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(batch_size // single_num):</span><br><span class="line">        target = skip_window                <span class="comment"># 当前的单词</span></span><br><span class="line">        targets_to_void = [skip_window]     <span class="comment"># 已经选过的单词+自己本身</span></span><br><span class="line">        <span class="comment"># 为当前单词选取样本</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(single_num):</span><br><span class="line">            <span class="keyword">while</span> target <span class="keyword">in</span> targets_to_void:</span><br><span class="line">                target = random.randint(<span class="number">0</span>, span - <span class="number">1</span>)</span><br><span class="line">            targets_to_void.append(target)</span><br><span class="line">            batch[i * single_num + j] = word_buffer[skip_window]</span><br><span class="line">            labels[i * single_num + j, <span class="number">0</span>] = word_buffer[target]</span><br><span class="line">        <span class="comment"># 当前单词已经选择完毕，输入下一个单词，skip_window单词也成为下一个</span></span><br><span class="line">        self.__data_index = (self.__data_index + <span class="number">1</span>) % len(word_code)</span><br><span class="line">        word_buffer.append(word_code[self.__data_index])</span><br><span class="line">    <span class="keyword">return</span> batch, labels</span><br></pre></td></tr></table></figure>
+<h3 id="一些配置信息"><a href="#一些配置信息" class="headerlink" title="一些配置信息"></a>一些配置信息</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 频率top50000个单词</span></span><br><span class="line">vocab_size = <span class="number">50000</span></span><br><span class="line"><span class="comment"># 一批样本的数量</span></span><br><span class="line">batch_size = <span class="number">128</span></span><br><span class="line"><span class="comment"># 将单词转化为稠密向量的维度</span></span><br><span class="line">embedding_size = <span class="number">128</span></span><br><span class="line"><span class="comment"># 为单词找相邻单词，向左向右最多能取得范围</span></span><br><span class="line">skip_window = <span class="number">1</span></span><br><span class="line"><span class="comment"># 每个单词的语境单词数量</span></span><br><span class="line">single_num = <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 验证单词的数量</span></span><br><span class="line">valid_size = <span class="number">16</span></span><br><span class="line"><span class="comment"># 验证单词从频数最高的100个单词中抽取</span></span><br><span class="line">valid_window = <span class="number">100</span></span><br><span class="line"><span class="comment"># 从100个中随机选择16个</span></span><br><span class="line">valid_examples = np.random.choice(valid_window, valid_size, replace=<span class="keyword">False</span>)</span><br><span class="line"><span class="comment"># 负样本的噪声数量</span></span><br><span class="line">noise_num = <span class="number">64</span></span><br></pre></td></tr></table></figure>
+<h3 id="计算图"><a href="#计算图" class="headerlink" title="计算图"></a>计算图</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">graph = tf.Graph()</span><br><span class="line"><span class="keyword">with</span> graph.as_default():</span><br><span class="line">    <span class="comment"># 输入数据</span></span><br><span class="line">    train_inputs = tf.placeholder(tf.int32, shape=[batch_size])</span><br><span class="line">    train_labels = tf.placeholder(tf.int32, shape=[batch_size, <span class="number">1</span>])</span><br><span class="line">    valid_dataset = tf.constant(valid_examples, dtype=tf.int32)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> tf.device(<span class="string">'/cpu:0'</span>):</span><br><span class="line">        <span class="comment"># 随机生成单词的词向量，50000*128</span></span><br><span class="line">        embeddings = tf.Variable(</span><br><span class="line">            tf.random_uniform([vocab_size, embedding_size], <span class="number">-1.0</span>, <span class="number">1.0</span>))</span><br><span class="line">        <span class="comment"># 查找输入inputs对应的向量</span></span><br><span class="line">        embed = tf.nn.embedding_lookup(embeddings, train_inputs)</span><br><span class="line">        nce_weights = tf.Variable(</span><br><span class="line">            tf.truncated_normal([vocab_size, embedding_size],</span><br><span class="line">                                stddev=<span class="number">1.0</span> / math.sqrt(embedding_size)))</span><br><span class="line">        nce_biases = tf.Variable(tf.zeros([vocab_size]))</span><br><span class="line">    <span class="comment"># 为每个batch计算nceloss</span></span><br><span class="line">    loss = tf.reduce_mean(tf.nn.nce_loss(weights=nce_weights,</span><br><span class="line">                                         biases=nce_biases,</span><br><span class="line">                                         labels = train_labels,</span><br><span class="line">                                         inputs=embed,</span><br><span class="line">                                         num_sampled=noise_num,</span><br><span class="line">                                         num_classes=vocab_size))</span><br><span class="line">    <span class="comment"># sgd</span></span><br><span class="line">    optimizer = tf.train.GradientDescentOptimizer(<span class="number">1.0</span>).minimize(loss)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 计算embeddings的L2范式，各元素的平方和然后求平方根，防止过拟合</span></span><br><span class="line">    norm = tf.sqrt(</span><br><span class="line">        tf.reduce_sum(</span><br><span class="line">            tf.square(embeddings),</span><br><span class="line">            axis=<span class="number">1</span>,</span><br><span class="line">            keep_dims=<span class="keyword">True</span>))</span><br><span class="line">    <span class="comment"># 标准化词向量</span></span><br><span class="line">    normalized_embeddings = embeddings / norm</span><br><span class="line">    valid_embeddings = tf.nn.embedding_lookup(</span><br><span class="line">                                normalized_embeddings, valid_dataset)</span><br><span class="line">    <span class="comment"># valid单词和所有单词的相似度计算，向量相乘</span></span><br><span class="line">    similarity = tf.matmul(</span><br><span class="line">        valid_embeddings,</span><br><span class="line">        normalized_embeddings,</span><br><span class="line">        transpose_b=<span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line">    init = tf.global_variables_initializer()</span><br></pre></td></tr></table></figure>
+<h3 id="训练过程"><a href="#训练过程" class="headerlink" title="训练过程"></a>训练过程</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">num_steps = <span class="number">100001</span></span><br><span class="line"><span class="keyword">with</span> tf.Session(graph=graph) <span class="keyword">as</span> sess:</span><br><span class="line">    init.run()</span><br><span class="line">    print(<span class="string">'Initialized'</span>)</span><br><span class="line">    avg_loss = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> step <span class="keyword">in</span> range(num_steps):</span><br><span class="line">        batch_inputs, batch_labels = wu.generate_batch(</span><br><span class="line">                batch_size, single_num, skip_window,  word_code)</span><br><span class="line">        feed_dict = &#123;train_inputs: batch_inputs, train_labels: batch_labels&#125;</span><br><span class="line">        _, loss_val = sess.run([optimizer, loss], feed_dict=feed_dict)</span><br><span class="line">        avg_loss += loss_val</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> step % <span class="number">2000</span> == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">if</span> step &gt; <span class="number">0</span>:</span><br><span class="line">                avg_loss /= <span class="number">2000</span></span><br><span class="line">            <span class="keyword">print</span> (<span class="string">"avg loss at step %s : %s"</span> % (step, avg_loss)) </span><br><span class="line">            avg_loss = <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> step % <span class="number">10000</span> == <span class="number">0</span>:</span><br><span class="line">            <span class="comment"># 相似度，16*50000</span></span><br><span class="line">            sim = similarity.eval()</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> range(valid_size):</span><br><span class="line">                valid_word = id_topword[valid_examples[i]]</span><br><span class="line">                <span class="comment"># 选相似的前8个</span></span><br><span class="line">                top_k = <span class="number">8</span></span><br><span class="line">                <span class="comment"># 排序，获得id</span></span><br><span class="line">                nearest = (-sim[i, :]).argsort()[<span class="number">1</span>:top_k+<span class="number">1</span>]</span><br><span class="line">                log_str = <span class="string">"Nearest to %s: "</span> % valid_word</span><br><span class="line">                <span class="keyword">for</span> k <span class="keyword">in</span> range(top_k):</span><br><span class="line">                    close_word = id_topword[nearest[k]]</span><br><span class="line">                    log_str = <span class="string">"%s %s,"</span> % (log_str, close_word)</span><br><span class="line">                <span class="keyword">print</span> log_str</span><br><span class="line">    final_embeddings = normalized_embeddings.eval()</span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-11-25T08:30:11.202Z" itemprop="dateUpdated">2018-11-25 16:30:11</time>
+</span><br>
+
+
+        
+        <br>原始链接：<a href="/2017/07/14/word2vec/" target="_blank" rel="external">http://plmsmile.github.io/2017/07/14/word2vec/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://plmsmile.github.io">
+            <img src="/img/avatar.jpg" alt="PLM">
+            PLM
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/word2vec/">word2vec</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/深度学习/">深度学习</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/自然语言处理/">自然语言处理</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/07/14/word2vec/&title=《利用tensorflow实现简版word2vec》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/07/14/word2vec/&title=《利用tensorflow实现简版word2vec》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2017/07/14/word2vec/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《利用tensorflow实现简版word2vec》 — PLM's Notes&url=http://plmsmile.github.io/2017/07/14/word2vec/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2017/07/14/word2vec/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/07/18/cnn-mnist/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">简单的卷积神经网络</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/05/06/ml-ch03-bayes/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">机器学习-朴素贝叶斯</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "kR8nND4dcsWgqDWIjpiH4YFj-gzGzoHsz",
+            appKey: "il7PLkcJCfDBXMR6XirLdO2K",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="bottom">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <span>
+            PLM's Notes &nbsp; &copy; &nbsp
+            </span>
+            2016 - 2018
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/07/14/word2vec/&title=《利用tensorflow实现简版word2vec》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/07/14/word2vec/&title=《利用tensorflow实现简版word2vec》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2017/07/14/word2vec/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《利用tensorflow实现简版word2vec》 — PLM's Notes&url=http://plmsmile.github.io/2017/07/14/word2vec/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2017/07/14/word2vec/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACLUlEQVR42u3a0W6DMAwF0P7/T3evkyrg2qbTSE6eqhYIJ5O82M7rFY/3r5F88/n90V3n9948MDAwHst4n47PVzl6uaNfq4DzpTmkYmBgbMA4imDJNefhdTJXcj0GBgbGZHtXCJet5cPAwMBIEtR5optcj4GBgZEnsXk5bBLEv56LY2BgPJCRV93//vNX+hsYGBiPYkzSzqRVUA2gvYGBgbE2o9fCrDY75w2AKJXFwMBYmtFrUvbak/Om6QUPAwNjUUbvUFd1I1i9stxGxcDAWJTRC3x5ySxPQW8r92NgYCzHyMNrbznuXbioE4uBgbEcY1KITzaL1WS4mdxiYGAszaiG12ryWUWeJ7oXz8HAwFiUUT1CkVTvqsg8lb34O2BgYGzDmDcU80BZPXZW6GxgYGAsxMgD6EXFrpiU9mZ/3fUgDAyMhzOqRx/y0FlNdDEwMDCqKet52jl/frUhenEsDAMDYzlGr0A2ufeulgMGBsYOjMn0eRE/D6a9gh0GBsY+jF45vtfyrM4bbT0xMDC2YSQTvL8wesW+V2/9MDAwHsi4q5WYtD/ztLZ3pAMDA2M9xiQs5m2D3naz0ITAwMBYmpGPSdBMNpq9pLcMw8DAeCyj2p7sHfyaNykvlgADA2MDRl65yknNZmQQ+gs/YGBgbMnIw2Wyucw3oxfvjIGBgdEqpVXbA6PiGgYGxgaMeRJbDZ3VLeMfldswMDD+JaMalCfgySve/L8FAwPjGYwfNVE84kcsW2sAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Word2vec详细介绍 | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="word2vec,cbow,skip-gram,负采样">
+    <meta name="description" content="Word2vec简介把词汇变成词向量。     类别1 类别2     算法 CBOW，上下文预测中心词汇 Skip-gram，中心词汇预测上下文   训练方法 负采样 哈夫曼树    语言模型两种句子：  正常的句子：The cat jumped over the puddle。 概率高，有意义。 没意义的句子：stock boil fish is toy 。概率低，没意义。  二元模型 一个">
+<meta name="keywords" content="word2vec,cbow,skip-gram,负采样">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Word2vec详细介绍">
+<meta property="og:url" content="http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/index.html">
+<meta property="og:site_name" content="PLM&#39;s Notes">
+<meta property="og:description" content="Word2vec简介把词汇变成词向量。     类别1 类别2     算法 CBOW，上下文预测中心词汇 Skip-gram，中心词汇预测上下文   训练方法 负采样 哈夫曼树    语言模型两种句子：  正常的句子：The cat jumped over the puddle。 概率高，有意义。 没意义的句子：stock boil fish is toy 。概率低，没意义。  二元模型 一个">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/14-cbow.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/15-skipgram.png">
+<meta property="og:updated_time" content="2018-11-25T08:30:09.898Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Word2vec详细介绍">
+<meta name="twitter:description" content="Word2vec简介把词汇变成词向量。     类别1 类别2     算法 CBOW，上下文预测中心词汇 Skip-gram，中心词汇预测上下文   训练方法 负采样 哈夫曼树    语言模型两种句子：  正常的句子：The cat jumped over the puddle。 概率高，有意义。 没意义的句子：stock boil fish is toy 。概率低，没意义。  二元模型 一个">
+<meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/14-cbow.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">PLM</h5>
+          <a href="mailto:plmsmile@126.com" title="plmsmile@126.com" class="mail">plmsmile@126.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                类别
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/plmsmile" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Word2vec详细介绍</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Word2vec详细介绍</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-11-12T12:54:37.000Z" itemprop="datePublished" class="page-time">
+  2017-11-12
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/自然语言处理/">自然语言处理</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Word2vec"><span class="post-toc-number">1.</span> <span class="post-toc-text">Word2vec</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#简介"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">简介</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#语言模型"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">语言模型</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#CBOW"><span class="post-toc-number">2.</span> <span class="post-toc-text">CBOW</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#符号说明"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">符号说明</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#步骤"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">步骤</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#目标函数"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">目标函数</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Skip-gram"><span class="post-toc-number">3.</span> <span class="post-toc-text">Skip-gram</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#步骤-1"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">步骤</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#目标函数-1"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">目标函数</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#负采样训练"><span class="post-toc-number">4.</span> <span class="post-toc-text">负采样训练</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#标签函数"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">标签函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#目标函数-2"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">目标函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#负采样集合选择"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">负采样集合选择</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#CBOW-1"><span class="post-toc-number">4.4.</span> <span class="post-toc-text">CBOW</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Skip-gram-1"><span class="post-toc-number">4.5.</span> <span class="post-toc-text">Skip-gram</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-cs224n-notes1-word2vec" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Word2vec详细介绍</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-11-12 20:54:37" datetime="2017-11-12T12:54:37.000Z" itemprop="datePublished">2017-11-12</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/自然语言处理/">自然语言处理</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p><img src="" style="display:block; margin:auto" width="60%"></p>
+<h1 id="Word2vec"><a href="#Word2vec" class="headerlink" title="Word2vec"></a>Word2vec</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>把词汇变成词向量。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>类别1</th>
+<th>类别2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>算法</td>
+<td>CBOW，上下文预测中心词汇</td>
+<td>Skip-gram，中心词汇预测上下文</td>
+</tr>
+<tr>
+<td>训练方法</td>
+<td>负采样</td>
+<td>哈夫曼树</td>
+</tr>
+</tbody>
+</table>
+<h2 id="语言模型"><a href="#语言模型" class="headerlink" title="语言模型"></a>语言模型</h2><p>两种句子：</p>
+<ul>
+<li>正常的句子：<code>The cat jumped over the puddle</code>。 概率高，有意义。</li>
+<li>没意义的句子：<code>stock boil fish is toy</code> 。概率低，没意义。</li>
+</ul>
+<p><strong>二元模型</strong></p>
+<p>一个句子，有$n$个单词。每个词出现的概率由上一个词语来决定。则整体句子的概率如下表示：<br>$$<br>P(w_1, w_2, \cdots, w_n) = \prod_{i=2}^n P(w_i \mid w_{i-1})<br>$$<br> <strong>缺点</strong></p>
+<ul>
+<li>只考虑单词相邻传递概率，而<strong>忽略句子整体的可能性</strong>。</li>
+<li>context size=1，只学了相邻单词对的概率</li>
+<li>会计算整个大数据集的全局信息</li>
+</ul>
+<h1 id="CBOW"><a href="#CBOW" class="headerlink" title="CBOW"></a>CBOW</h1><p>给上下文<code>The cat _ over the puddle</code>，预测<code>jump</code> 。对于每个单词，学习两个向量：</p>
+<ul>
+<li>$v$ ：<code>输入向量</code> ，（上下文单词）</li>
+<li>$u$： <code>输出向量</code> ， （中心单词）</li>
+</ul>
+<h2 id="符号说明"><a href="#符号说明" class="headerlink" title="符号说明"></a>符号说明</h2><ul>
+<li>$V$ ：词汇表，后面用$V$代替词汇表单词个数 </li>
+<li>$w_i$ ：词汇表中第$i$个单词 </li>
+<li>$d$ ：向量的维数</li>
+<li>$\mathcal V_{d \times |V|}$：输入矩阵，也可以用$W$来表达 </li>
+<li>$v_i$ ：$\mathcal{V}$的第$i$列，$w_i$的输入向量表达 </li>
+<li>$\mathcal {U}_{|V| \times d}$ ：输出矩阵，可以用$W ^ \prime$来表达 </li>
+<li>$u_i$ ：$\mathcal U$的第i行， $w_i$的输出向量表达</li>
+</ul>
+<p>输入与输出</p>
+<ul>
+<li>$x^{(c)}$， 输入$2m$个上下文单词，上下文词汇的one-hot向量</li>
+<li>$y_c$： 真实标签</li>
+<li>$\hat y^{(c)}$， 输出一个中心单词，中心词汇的one-hot向量</li>
+</ul>
+<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><p><strong>1 上下文单词onehot向量</strong></p>
+<p>one-hot向量的表达：$(x^{(c-m)}, \cdots, x^{(c-1)}, x^{(c+1)}, x^{(c+m)}  \in \mathbb R^V)$</p>
+<p><strong>2 上下文单词向量</strong></p>
+<p>$(v_{c-m}, v_{c-m+1}, \cdots. v_{c+m} \in \mathbb{R}^d)$， 其中，$v_{c-m}=\mathcal V x^{(c-m)}$， 即输入矩阵乘以one-hot向量就找到所在的列</p>
+<p><strong>3 平均上下文词向量</strong></p>
+<p>$\hat v = \frac {v_{c-m} + \cdots + v_{c+m}}{2m} \in \mathbb R^d$</p>
+<p><strong>4 输出单词与上下文计算得分向量</strong></p>
+<p>$z = \mathcal U \hat v \in \mathbb R ^V$ 。点积，单词越相似，得分越高</p>
+<p><strong>5 得分向量转为概率</strong></p>
+<p>$\hat y = \mathrm{softmax}(z) \in  \mathbb R^V $</p>
+<p><strong>6 真实预测概率对比</strong></p>
+<p>预测的概率向量$\hat y$与唯一真实中心单词one-hot向量$y$，进行<code>交叉熵</code>比较算出loss。   </p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/14-cbow.png" style="display:block; margin:auto" width="50%"></p>
+<h2 id="目标函数"><a href="#目标函数" class="headerlink" title="目标函数"></a>目标函数</h2><p>使用<code>交叉熵</code>计算loss，损失函数如下：<br>$$<br>H(\hat y, y) = - \sum_{j=1}^{|V|} y_j \log (\hat y_j)<br>$$<br>由于中心单词$y$是one-hot编码，<strong>只有正确位置才为1，其余均为0</strong>，所以<strong>只需计算中心单词对应的位置概率的loss</strong>即可：<br>$$<br>H(\hat y, y) = - y_c \log (\hat y_c) = -  \log (\hat y_c)<br>$$<br><strong>交叉熵很好</strong>是因为</p>
+<ul>
+<li>$-1 \cdot \log (1) = 0$，预测得好 </li>
+<li>$-1 \cdot \log (0.01) = 4.605$， 预测得不好</li>
+</ul>
+<p>最终<code>损失函数</code>：<br>$$<br>\begin{align}<br>\rm{minimize} \;  J<br>&amp; = - \log P(w_c \mid w_{c-m}, \ldots, w_{c-1}, w_{c+1}, \ldots, w_{c+m}) \<br>&amp; = - \log P(u_c \mid \hat v) \<br>&amp; = - \log \frac {\exp(u_c^T \hat v)}{\sum_{j=1}^{|V|} \exp(u_j^T \hat v)}   \<br>&amp; = -u_c^T \hat v + \log \sum_{j=1}^{|V|} \exp(u_j^T \hat v)<br>\end{align}<br>$$<br>再使用<code>SGD</code>方法<strong>去更新相关的两种向量$u_c, v_j$</strong> 。</p>
+<h1 id="Skip-gram"><a href="#Skip-gram" class="headerlink" title="Skip-gram"></a>Skip-gram</h1><p>给中心单词<code>jump</code>，预测上下文<code>The cat _ over the puddle</code> 。</p>
+<p>输入中心单词$x$， 输出上下文单词$y$ 。与CBOW正好输入输出相反，但同样有两个矩阵$\mathcal {U, V}$ 。符号说明同CBOW。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/15-skipgram.png" style="display:block; margin:auto" width="50%"></p>
+<h2 id="步骤-1"><a href="#步骤-1" class="headerlink" title="步骤"></a>步骤</h2><p><strong>1 中心单词onehot向量</strong></p>
+<p>$x \in \mathbb {R}^{|V|}$</p>
+<p><strong>2 中心单词词向量</strong></p>
+<p>$v_c =  \mathcal V x \in \mathbb R^d$</p>
+<p><strong>3 中心词与其他词的得分向量</strong></p>
+<p>$z = \mathcal U v_c \in \mathbb R ^{|V|}$</p>
+<p><strong>4 得分向量转为概率</strong></p>
+<p>概率 $\hat y = \rm {softmax} (z)$， <strong>$\hat y_{c-m}, \ldots, \hat y_{c+m}$ 是目标上下文单词是中心单词的上下文的预测概率</strong>。</p>
+<p><strong>5 预测真实概率对比</strong></p>
+<p>预测概率$\hat y$ 与$2m$ 个真实上下文onehot向量$y_{c-m}, \ldots, y_{c+m}$进行交叉熵对比，算出loss </p>
+<h2 id="目标函数-1"><a href="#目标函数-1" class="headerlink" title="目标函数"></a>目标函数</h2><p>与CBOW不同的是，Skip-gram做了一个朴素贝叶斯条件假设，<strong>所有的输出上下文单词都是独立的</strong>。<br>$$<br>\begin {align}<br>\rm{minimize} \;  J<br>&amp; = - \log P(w_{c-m}, \ldots, w_{c-1}, w_{c+1}, \ldots, w_{c+m} \mid w_c) \<br>&amp; = - \log \prod_{j=0, j \neq m}^{2m} P(w_{c-m+j} \mid  w_c) \<br>&amp; = -\log \prod_{j=0, j \neq m}^{2m} \frac {\exp (u_{c-m+j}^T \cdot v_c)} {\sum_{k=1}^{|V|} \exp (u_k^T \cdot v_c)} \<br>&amp; = - \sum_{j=0, j \neq m}^{2m} \left ( \log \exp (u_{c-m+j}^T \cdot v_c) -  \log \sum_{k=1}^{|V|} \exp (u_k^T \cdot v_c) \right) \<br>&amp; = - \sum_{j=0, j \neq m}^{2m} u_{c-m+j}^T v_c + 2m  \cdot \log \sum_{k=1}^{|V|} \exp (u_k^T \cdot v_c)<br>\end {align}<br>$$<br>一样，使用SGD去优化U和V。</p>
+<p><strong>损失函数实际上是$2m$个交叉熵求和</strong>，求出的向量$\hat y$与$2m$个onehot向量$y_{c-m+j}$  计算<code>交叉熵</code>：<br>$$<br>\begin {align}<br>J<br>&amp; = - \sum_{j=0, j \neq m}^{2m} \log P(u_{c-m+j} \mid v_c) \<br>&amp; =  \sum_{j=0, j \neq m}^{2m} H(\hat y, y_{c-m+j}) \<br>\end{align}<br>$$</p>
+<h1 id="负采样训练"><a href="#负采样训练" class="headerlink" title="负采样训练"></a>负采样训练</h1><p>每次计算都会算整个$|V|$词表，太耗时了。  可以从噪声分布$P_n(w)$中进行<strong>负采样</strong>，来代替整个词表。当然单词采样概率与其<code>词频</code>相关。只需关心：<code>目标函数</code>、<code>梯度</code>、<code>更新规则</code>。</p>
+<h2 id="标签函数"><a href="#标签函数" class="headerlink" title="标签函数"></a>标签函数</h2><p>对于一对中心词和上下文单词$(w, c)$ ，设<code>标签</code>如下：</p>
+<ul>
+<li>$P(l = 1 \mid w, c)$， $(w, c)$ 来自于<strong>真实语料</strong></li>
+<li>$P(l = 0 \mid w, c)$ ，$(w, c)$来自于<strong>负样本</strong>，即不在语料中  </li>
+</ul>
+<p>用<code>sigmoid</code>表示标签函数：<br>$$<br>\begin {align}<br>&amp; P(l = 1 \mid w, c; \theta) = \sigma (u^T_w v_c) = \frac {1}{ 1 + e^{-u^T_w v_c}} \<br>&amp;  P(l = 0 \mid w, c; \theta) = 1 -  \sigma (u^T_w v_c) = \frac {1}{ 1 + e^{u^T_w v_c} } \<br>\end {align}<br>$$</p>
+<h2 id="目标函数-2"><a href="#目标函数-2" class="headerlink" title="目标函数"></a>目标函数</h2><p>选取合适的$\theta= \mathcal {U, V}$ ，<strong>去增大正样本的概率，减小负样本的概率</strong>。设$D$为正样本集合，$\bar D$为负样本集合。<br>$$<br>\begin {align}<br>\theta<br>&amp; = \mathop{\rm{argmax}}<em>\limits{\theta} \prod</em>{(w, c) \in D} P(l=1 \mid w, c, \theta) \prod_{(w, c) \in \bar D} P(l=0 \mid w, c, \theta) \<br>&amp; = \mathop{\rm{argmax}}<em>\limits{\theta}  \prod</em>{(w, c) \in D} P(l=1 \mid w, c, \theta) \prod_{(w, c) \in \bar D} (1 - P(l=1 \mid w, c, \theta) )\<br>&amp; = \mathop{\rm{argmax}}<em>\limits{\theta}  \sum</em>{(w, c) \in D} \log P(l=1 \mid w, c, \theta) +<br>\sum_{(w, c) \in \bar D} \log (1 - P(l=1 \mid w, c, \theta) )\<br>&amp; = \mathop{\rm{argmax}}<em>\limits{\theta}  \sum</em>{(w, c) \in D} \log  \frac {1}{ 1 + \exp (-u^T_w v_c)}+<br>\sum_{(w, c) \in \bar D} \log \frac {1}{ 1 + \exp (u^T_w v_c) } \<br>&amp; =  \mathop{\rm{argmax}}<em>\limits{\theta}  \sum</em>{(w, c) \in D} \log \sigma(u^T_w v_c) +<br>\sum_{(w, c) \in \bar D} \log \sigma (-u^T_w v_c)<br>\end {align}<br>$$<br> 最大化概率也就是最小化负对数似然<br>$$<br>J = - \sum_{(w, c) \in D} \log \sigma(u^T_w v_c) - \sum_{(w, c) \in \bar D} \log \sigma (-u^T_w v_c)<br>$$</p>
+<h2 id="负采样集合选择"><a href="#负采样集合选择" class="headerlink" title="负采样集合选择"></a>负采样集合选择</h2><p>为中心单词$w_c$ 从$P_n(w)$ 采样$K$个假的上下文单词。表示为${ \bar u_k \mid k=1\ldots K}$</p>
+<h2 id="CBOW-1"><a href="#CBOW-1" class="headerlink" title="CBOW"></a>CBOW</h2><p>给上下文向量$\hat{v}=\frac {v_{c-m} + \cdots + v_{c+m}}{2m}$  和真实中心词$u_c$ </p>
+<p><strong>原始loss</strong><br>$$<br>J  = -u_c^T \hat v + \log \sum_{j=1}^{|V|} \exp(u_j^T \hat v)<br>$$<br><strong>负采样loss</strong><br>$$<br>J = - \log \sigma (u_c^T \cdot \hat v) - \sum_{k=1}^K \log \sigma (- \bar u_k^T \cdot \hat v)<br>$$</p>
+<h2 id="Skip-gram-1"><a href="#Skip-gram-1" class="headerlink" title="Skip-gram"></a>Skip-gram</h2><p>给中心单词$v_c$， 和$2m$个真实上下文单词$u_{c-m+j}$</p>
+<p><strong>原始loss</strong><br>$$<br>J  = - \sum_{j=0, j \neq m}^{2m} u_{c-m+j}^T v_c + 2m  \cdot \log \sum_{k=1}^{|V|} \exp (u_k^T \cdot v_c)<br>$$<br><strong>负采样loss</strong><br>$$<br>J = - \sum_{j=0, j \neq m}^{2m} \log \sigma (u_{c-m+j}^T \cdot v_c) - \sum_{k=1}^K  \log \sigma (-\bar u_{k}^T \cdot v_c)<br>$$</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-11-25T08:30:09.898Z" itemprop="dateUpdated">2018-11-25 16:30:09</time>
+</span><br>
+
+
+        
+        <br>原始链接：<a href="/2017/11/12/cs224n-notes1-word2vec/" target="_blank" rel="external">http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://plmsmile.github.io">
+            <img src="/img/avatar.jpg" alt="PLM">
+            PLM
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cbow/">cbow</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/skip-gram/">skip-gram</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/word2vec/">word2vec</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/负采样/">负采样</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/&title=《Word2vec详细介绍》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/&title=《Word2vec详细介绍》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Word2vec详细介绍》 — PLM's Notes&url=http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/11/23/cs224n-notes3-neural-networks/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">神经网络基础-反向传播-激活函数</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/11/02/word2vec-math/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">word2vec中的数学模型</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "kR8nND4dcsWgqDWIjpiH4YFj-gzGzoHsz",
+            appKey: "il7PLkcJCfDBXMR6XirLdO2K",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="bottom">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <span>
+            PLM's Notes &nbsp; &copy; &nbsp
+            </span>
+            2016 - 2018
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/&title=《Word2vec详细介绍》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/&title=《Word2vec详细介绍》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Word2vec详细介绍》 — PLM's Notes&url=http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJElEQVR42u3ay27DIBAF0P7/T7vbSpXde4FUMhxWVmQHThYTz+PrK17Xj/X78/z+53uSp6YWBgbGaxnX41q15d033J0hPxsGBsY5jLuNn6+Tp563T3jPu2BgYGDc3fO8/RgJAwMDYy2jTUrzHwIDAwNjJoldVbZLamUfzMUxMDBeyGi3/8/rj/Q3MDAwXsW4yjVWJssbmWMLAwNjb8ZYgtqW4RaU0pJhDgwMjAMYM6F2LOGc+VHqXBwDA2MLRt62TNqTybHastofQ2kYGBhbM/INxsJisn0RWNt/DwwMjJcz8oDYlsba8D1zBgwMjL0ZySvX2OjD1EhEmehiYGCcwMgxbUidaRgkL4tR0Q0DA2MLRl78aqNcGy7bRBoDA+MERr7NVCwvQ2p+kvr9EQMD44WM5LgtYFWwbgfFMDAwTmPMVLHGBsWWDVtgYGBsx5gJoPlLZNvIbJNeDAyMExhtKjvW/mwbDEU6jYGBsTVjrKw/doj2e9o7MTAwTmDkgxRjjcn8Oi+03XY5MDAwNmXMtBvHmg1tqhzNjGBgYGzNyF/RZkJn+1QRgjEwMDZlXOVaO/i1IHHFwMA4gLFqXCya44iPMpZIY2Bg7M2YTyCXTaXNBFwMDIwDGHngy5PSfCBsWS6OgYGBESSo+bBFe9zFARcDA2NrRr7ZWAhOCnBRJxYDA2M7RltKG0tx8zZnPgKCgYFxAqNNHcd4eSltbFwDAwNjU8Y3+zBBz8c/7zwAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

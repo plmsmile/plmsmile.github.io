@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>subword-units | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="NMT,subword">
+    <meta name="description" content="Neural Machine Translation of Rare Words with Subword Units   背景摘要NMT处理的词汇表是定长的，但是实际翻译却是OOV(out of vocabulary)的。以前是把 新词汇加到词典里去。本文是提出一种subword单元的策略，会把稀有和未知词汇以subword units序列来进行编码，更简单更有效。 会介绍不同分词技术的适用性">
+<meta name="keywords" content="NMT,subword">
+<meta property="og:type" content="article">
+<meta property="og:title" content="subword-units">
+<meta property="og:url" content="http://plmsmile.github.io/2017/10/19/subword-units/index.html">
+<meta property="og:site_name" content="PLM&#39;s Notes">
+<meta property="og:description" content="Neural Machine Translation of Rare Words with Subword Units   背景摘要NMT处理的词汇表是定长的，但是实际翻译却是OOV(out of vocabulary)的。以前是把 新词汇加到词典里去。本文是提出一种subword单元的策略，会把稀有和未知词汇以subword units序列来进行编码，更简单更有效。 会介绍不同分词技术的适用性">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-11-25T08:30:11.078Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="subword-units">
+<meta name="twitter:description" content="Neural Machine Translation of Rare Words with Subword Units   背景摘要NMT处理的词汇表是定长的，但是实际翻译却是OOV(out of vocabulary)的。以前是把 新词汇加到词典里去。本文是提出一种subword单元的策略，会把稀有和未知词汇以subword units序列来进行编码，更简单更有效。 会介绍不同分词技术的适用性">
+    
+        <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">PLM</h5>
+          <a href="mailto:plmsmile@126.com" title="plmsmile@126.com" class="mail">plmsmile@126.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                类别
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/plmsmile" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">subword-units</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">subword-units</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-10-19T14:16:07.000Z" itemprop="datePublished" class="page-time">
+  2017-10-19
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/论文笔记/">论文笔记</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#背景"><span class="post-toc-number">1.</span> <span class="post-toc-text">背景</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#摘要"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">摘要</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#简介"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">简介</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#神经机器翻译"><span class="post-toc-number">2.</span> <span class="post-toc-text">神经机器翻译</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Subword-翻译"><span class="post-toc-number">3.</span> <span class="post-toc-text">Subword 翻译</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#相关工作"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">相关工作</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Byte-Pair-Encoding"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">Byte Pair Encoding</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#评估"><span class="post-toc-number">4.</span> <span class="post-toc-text">评估</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Subword统计"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">Subword统计</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#翻译评估"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">翻译评估</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-subword-units" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">subword-units</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-10-19 22:16:07" datetime="2017-10-19T14:16:07.000Z" itemprop="datePublished">2017-10-19</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/论文笔记/">论文笔记</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p><a href="https://arxiv.org/pdf/1508.07909.pdf" target="_blank" rel="noopener">Neural Machine Translation of Rare Words with Subword Units</a> </p>
+</blockquote>
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>NMT处理的词汇表是定长的，但是实际翻译却是OOV(out of vocabulary)的。以前是把 新词汇加到词典里去。本文是提出一种subword单元的策略，会把稀有和未知词汇以subword units序列来进行编码，更简单更有效。</p>
+<p>会介绍不同分词技术的适用性，包括简单的字符n元模型和基于字节对编码压缩算法的分词技术。也会以经验说明subword模型比传统back-off词典的方法好。</p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>NMT模型的词汇一般是30000-5000，但是翻译却是open-vocabulary的问题。很多语言富有信息创造力，比如凝聚组合等等，翻译系统就需要一种低于word-level的机制。</p>
+<p><strong>Word-level NMT的缺点</strong></p>
+<p>对于word-level的NMT模型，翻译out-of-vocabulary的单词会回退到dictionary里面去查找。有下面几个缺点</p>
+<ul>
+<li>种技术在实际上使这种假设并不成立。比如源单词和目标单词并不是一对一的，你怎么找呢</li>
+<li>不能够翻译或者产生未见单词</li>
+<li>把unknown单词直接copy到目标句子中，对于人名有时候可以。但是有时候却需要改变形态或者直译。</li>
+</ul>
+<p><strong>Subword-level NMT</strong></p>
+<p>我们的目标是建立open-vocabulary的翻译模型，不用针对稀有词汇去查字典。事实证明，subword模型效果比传统大词汇表方法更好、更精确。Subword神经网络模型可以从subword表达中学习到组合和直译等能力，也可以有效的产生不在训练数据集中的词汇。本文主要有下面两个贡献</p>
+<ul>
+<li>open-vocabulary的问题可以通过对稀有词汇使用subword units单元来编码解决</li>
+<li>采用<strong>Byte pair encoding (BPE)</strong> 算法来进行分割。BPE通过一个固定大小的词汇表来表示开放词汇，这个词汇表里面的是变长的字符串序列。这是一种对于神经网络模型非常合适的词分割策略。</li>
+</ul>
+<h1 id="神经机器翻译"><a href="#神经机器翻译" class="headerlink" title="神经机器翻译"></a>神经机器翻译</h1><p>NMT是使用的Bahdanau的Attention模型。Encoder是双向RNN，输入$X=(x_1, x_2, \cdots, x_m)$，会把两个方向的隐状态串联起来得到annotation向量$\mathbf x$。实际上是一个矩阵，对于单个$x_j$来说，对应的注释向量是$\mathbf{x}_j$。</p>
+<p>Decoder是一个单向的RNN，预测$Y=(y_1, y_2, \cdots, y_n)$。   预测$y_i$ 时，需要：</p>
+<ul>
+<li>当前的隐状态$s_i$</li>
+<li>上一时刻的输出$y_{i-1}$作为当前的输入  </li>
+<li>语义向量$\mathbf c_i$ 。语义向量是由所有的注释向量$x_j$ 加权求和得到的。权就是对齐概率$\alpha_{ij}$。 即$\mathbf c_i = \sum_{j=1} ^ m \alpha_{ij} \mathbf x_j$</li>
+</ul>
+<p>详情请看<a href="https://plmsmile.github.io/2017/10/17/%E8%B0%B7%E6%AD%8C%E7%BF%BB%E8%AF%91%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/#系统总览">谷歌论文里面的介绍</a>或者Bahdanau的论文。</p>
+<h1 id="Subword-翻译"><a href="#Subword-翻译" class="headerlink" title="Subword 翻译"></a>Subword 翻译</h1><p>下面词汇的翻译是透明的(transparent，明显的)</p>
+<ul>
+<li>命名实体。如果两个语言的字母表相同，可以直接copy到目标句子中去，也可以抄写音译直译等。</li>
+<li>同源词和外来词。有着共同的起源，但是不同的语言表达形式不同，所以character-level翻译规则就可以了。</li>
+<li>形态复杂的词语。包含多个语素的单词，可以通过单独翻译语素来翻译。</li>
+</ul>
+<p>总之，通过subword单元表示稀有词汇对于NMT来说可以学到transparent翻译，并且可以翻译和产生未见词汇。</p>
+<h2 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h2><p>对于SMT(Statistical Machine Translation)来说，翻译未见单词一直是研究的主题。</p>
+<p>很多未见单词都是人名，如果两种语言的字母表一样，那么可以直接复制过去。如果不一样，那么就得音译过去。基于字符（character-based）的翻译是比较成功的。</p>
+<p>形态上很复杂的单词往往需要分割，这里有很多的分割算法。基于短语的SMT的分割算法是比较保守的。而我们需要<strong>积极的细分</strong>，让网络可以处理open-vocabulary，而不是去求助于背字典。 怎么选择subword units要看具体的任务。</p>
+<p>提出了很多这样的技术：生成基于字符或者基于语素的定长的连续的词向量。于此同时，word-based的方法并没有重大发现。现在的注意力机制还是基于word-level的。我们希望，<strong>注意力机制</strong>能从我们<strong>变长表达</strong>中收益：<strong>网络可以把注意力放在不同的subword units中。</strong> 这可以突破定长表达的信息传达瓶颈。</p>
+<p>NMT减少词汇表可以大大节省时间和增加空间效率。我们也想要对一个句子<strong>更紧凑的表达</strong>。因为文本长度增加了，会减少效率，也会增加模型传递信息的距离。(hidden size？)</p>
+<p> 权衡词汇表大小和文本长度，可以用未分割单词列表，subword 单元表达的稀有词汇。作为一个代替，Byte pair encoding就是这样的一种分割算法，可以学到一个词汇表，同时对文本有很好的压缩率。</p>
+<h2 id="Byte-Pair-Encoding"><a href="#Byte-Pair-Encoding" class="headerlink" title="Byte Pair Encoding"></a>Byte Pair Encoding</h2><p>Byte pair encoding是一种简单的数据压缩技术，它把句子中经常出现的字节pairs用一个没有出现的字节去替代。我们使用这种算法去分割单词，但我们合并字符或者字符序列。</p>
+<p><strong>算法步骤</strong></p>
+<p>算法步骤如下：</p>
+<ul>
+<li>初始化符号词表。用所有的字符加入到符号词表中。对所有单词的末尾加入特殊标记，如<code>-</code>。翻译后恢复原始的标记。 </li>
+<li>迭代对所有符号进行计数，找出次数最多的(A, B)，用AB代替。</li>
+<li>每次合并，会产生一个新的符号，代表着n-gram字符</li>
+<li>常见的n-grams字符(或者whole words)，最终会被合并到一个符号</li>
+<li>最终符号词表大小=初始大小+合并操作次数。操作次数是算法唯一的超参数。</li>
+</ul>
+<p>不用考虑不在训练集里面的pair，为每个word根据出现频率设置权重。</p>
+<p>和传统的压缩算法(哈夫曼编码)相比，我们的以subword 单元堆积的符号序列依然是<strong>可以解释的</strong>，<strong>网络也可以翻译和产生新的词汇</strong>（训练集没有见过的）。</p>
+<p>下面是代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">process_raw_words</span><span class="params">(words, endtag=<span class="string">'-'</span>)</span>:</span></span><br><span class="line">    <span class="string">'''把单词分割成最小的符号，并且加上结尾符号'''</span></span><br><span class="line">    vocabs = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> word, count <span class="keyword">in</span> words.items():</span><br><span class="line">        <span class="comment"># 加上空格</span></span><br><span class="line">        word = re.sub(<span class="string">r'([a-zA-Z])'</span>, <span class="string">r' \1'</span>, word)</span><br><span class="line">        word += <span class="string">' '</span> + endtag</span><br><span class="line">        vocabs[word] = count</span><br><span class="line">    <span class="keyword">return</span> vocabs</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_symbol_pairs</span><span class="params">(vocabs)</span>:</span></span><br><span class="line">    <span class="string">''' 获得词汇中所有的字符pair，连续长度为2，并统计出现次数</span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        vocabs: 单词dict，(word, count)单词的出现次数。单词已经分割为最小的字符</span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        pairs: ((符号1, 符号2), count)</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    <span class="comment">#pairs = collections.defaultdict(int)</span></span><br><span class="line">    pairs = dict()</span><br><span class="line">    <span class="keyword">for</span> word, freq <span class="keyword">in</span> vocabs.items():</span><br><span class="line">        <span class="comment"># 单词里的符号</span></span><br><span class="line">        symbols = word.split()</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(symbols) - <span class="number">1</span>):</span><br><span class="line">            p = (symbols[i], symbols[i + <span class="number">1</span>])</span><br><span class="line">            pairs[p] = pairs.get(p, <span class="number">0</span>) + freq</span><br><span class="line">    <span class="keyword">return</span> pairs</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">merge_symbols</span><span class="params">(symbol_pair, vocabs)</span>:</span></span><br><span class="line">    <span class="string">'''把vocabs中的所有单词中的'a b'字符串用'ab'替换</span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        symbol_pair: (a, b) 两个符号</span></span><br><span class="line"><span class="string">        vocabs: 用subword(symbol)表示的单词，(word, count)。其中word使用subword空格分割</span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        vocabs_new: 替换'a b'为'ab'的新词汇表</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    vocabs_new = &#123;&#125;</span><br><span class="line">    raw = <span class="string">' '</span>.join(symbol_pair)</span><br><span class="line">    merged = <span class="string">''</span>.join(symbol_pair)</span><br><span class="line">    <span class="comment"># 非字母和数字字符做转义</span></span><br><span class="line">    bigram =  re.escape(raw)</span><br><span class="line">    p = re.compile(<span class="string">r'(?&lt;!\S)'</span> + bigram + <span class="string">r'(?!\S)'</span>)</span><br><span class="line">    <span class="keyword">for</span> word, count <span class="keyword">in</span> vocabs.items():</span><br><span class="line">        word_new = p.sub(merged, word)</span><br><span class="line">        vocabs_new[word_new] = count</span><br><span class="line">    <span class="keyword">return</span> vocabs_new</span><br><span class="line"></span><br><span class="line">raw_words = &#123;<span class="string">"low"</span>:<span class="number">5</span>, <span class="string">"lower"</span>:<span class="number">2</span>, <span class="string">"newest"</span>:<span class="number">6</span>, <span class="string">"widest"</span>:<span class="number">3</span>&#125;</span><br><span class="line">vocabs = process_raw_words(raw_words)</span><br><span class="line"></span><br><span class="line">num_merges = <span class="number">10</span></span><br><span class="line"><span class="keyword">print</span> (vocabs)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(num_merges):</span><br><span class="line">    pairs = get_symbol_pairs(vocabs)</span><br><span class="line">    <span class="comment"># 选择出现频率最高的pair</span></span><br><span class="line">    symbol_pair = max(pairs, key=pairs.get)</span><br><span class="line">    vocabs = merge_symbols(symbol_pair, vocabs)</span><br><span class="line"><span class="keyword">print</span> (vocabs)</span><br></pre></td></tr></table></figure>
+<p><strong>单独BPE</strong></p>
+<p>为目标语言和原语言分别使用BPE去计算词典。从文本和词汇表大小来说更加紧凑，能保证每个subword单元在各自的训练数据上都有。同样的名字在不同的语言中可能切割的不一样，神经网络很难去学习subword units之间的映射。</p>
+<p><strong>Joint BPE</strong></p>
+<p>为目标语言和原语言一起使用BPE，即联合两种语言的词典去做BPE。提高了源语言和目标语言的分割一致性。训练中一般concat两种语言。</p>
+<h1 id="评估"><a href="#评估" class="headerlink" title="评估"></a>评估</h1><p>有两个重要问题</p>
+<ul>
+<li>subword units表达稀有词汇，是否真的对翻译有效果？</li>
+<li>根据词汇表大小，文本长度，翻译质量，怎样分割才是最好的？</li>
+</ul>
+<p>我们的使用WMT2015的数据，使用BLEU来评判结果。英语-德语：</p>
+<ul>
+<li>420万句子对</li>
+<li>1亿个token</li>
+</ul>
+<p>英语-俄罗斯语：</p>
+<ul>
+<li>260万句子对</li>
+<li>5000万个token</li>
+</ul>
+<p>minibatch-size是80，每个epoch都会reshuffle训练数据。训练了7天，每12个小时存一次模型，取最后4个模型再单独训练。分别选择clip 梯度是5.0和1.0，1.0效果好一些。最终是融合了8个模型。</p>
+<p>Beam search的大小是12，使用双语词典进行快速对齐，类似于对稀有词汇查找词典，也会用词典去加速训练。</p>
+<h2 id="Subword统计"><a href="#Subword统计" class="headerlink" title="Subword统计"></a>Subword统计</h2><p>我们的目标是通过一个紧凑的固定大小的subword词典去代表一个open-vocabulary，并且能够有效的训练和解码。</p>
+<p>一个简单的基准就是把单词分割成字符n-grams 。n的选择很重要，可以在序列长度(tokens)和词汇表大小(size)之间做一个权衡。序列的长度会增加许多，一个比较好得减少长度的方法就是使用k个最常见的未被分割的词列表。只有unigram(n=1，一元模型)表达才能真正实现open-vocabulary，但是实际上效果却并不好。Bigram效果好，但是不能产生测试集中的tokens。</p>
+<p>BPE符合open-vocabulary的目标，并且合并操作可以应用于测试集，去发现未知符号的分割。与字符集模型的主要区别在于，BPE更紧凑的表示较短序列，注意力模型可以应对变长的单元。</p>
+<table>
+<thead>
+<tr>
+<th>分割方法</th>
+<th>tokens</th>
+<th>types</th>
+<th>unk</th>
+<th>merge次数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BPE</td>
+<td>112 m</td>
+<td>63000</td>
+<td>0</td>
+<td>59500</td>
+</tr>
+<tr>
+<td>BPE(joint)</td>
+<td>111 m</td>
+<td>82000</td>
+<td>32</td>
+<td>89500</td>
+</tr>
+</tbody>
+</table>
+<p>实际上，NMT词汇表中，并不会包含不常见的subword单元，因为里面有很多噪声。</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>seg</th>
+<th>shotlist</th>
+<th>s-v</th>
+<th>t-v</th>
+<th>S-BLEU</th>
+<th>BLEU</th>
+<th>CHAR-F3</th>
+<th>CHAR-F3</th>
+<th>F1</th>
+<th>F1</th>
+<th>F1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BPE-60k</td>
+<td>BPE</td>
+<td>无</td>
+<td>60000</td>
+<td>60000</td>
+<td>21.5</td>
+<td>24.5</td>
+<td>52.0</td>
+<td>53.9</td>
+<td>58.4</td>
+<td>40.9</td>
+<td>29.3</td>
+</tr>
+<tr>
+<td>BPE-J60k</td>
+<td>BPE(joint)</td>
+<td>无</td>
+<td>90000</td>
+<td>90000</td>
+<td>22.8</td>
+<td>24.7</td>
+<td>51.7</td>
+<td>54.1</td>
+<td>58.5</td>
+<td>41.8</td>
+<td>33.6</td>
+</tr>
+</tbody>
+</table>
+<h2 id="翻译评估"><a href="#翻译评估" class="headerlink" title="翻译评估"></a>翻译评估</h2><p>所有的subword系统都不会去查字典。使用UNK表示模型词典以外的单词，OOV表示训练集里面没有的单词。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-11-25T08:30:11.078Z" itemprop="dateUpdated">2018-11-25 16:30:11</time>
+</span><br>
+
+
+        
+        <br>原始链接：<a href="/2017/10/19/subword-units/" target="_blank" rel="external">http://plmsmile.github.io/2017/10/19/subword-units/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://plmsmile.github.io">
+            <img src="/img/avatar.jpg" alt="PLM">
+            PLM
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NMT/">NMT</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/subword/">subword</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/10/19/subword-units/&title=《subword-units》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/10/19/subword-units/&title=《subword-units》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2017/10/19/subword-units/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《subword-units》 — PLM's Notes&url=http://plmsmile.github.io/2017/10/19/subword-units/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2017/10/19/subword-units/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/11/02/cs224n-lecture2-word2vec/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Word2vec推导图文笔记</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/10/19/26_wordpieacemodel/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Wordpiece模型</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "kR8nND4dcsWgqDWIjpiH4YFj-gzGzoHsz",
+            appKey: "il7PLkcJCfDBXMR6XirLdO2K",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="bottom">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <span>
+            PLM's Notes &nbsp; &copy; &nbsp
+            </span>
+            2016 - 2018
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/10/19/subword-units/&title=《subword-units》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/10/19/subword-units/&title=《subword-units》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2017/10/19/subword-units/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《subword-units》 — PLM's Notes&url=http://plmsmile.github.io/2017/10/19/subword-units/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2017/10/19/subword-units/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJklEQVR42u3aQW7DMAwEwPz/0+m1QGpnV1IKRBqfgsC1OTmwFMnHI76et9fve67uv3/m1TeLLwwMjK9l5CHm1+vzXz/fx5DHhoGBcQ7j6tFX9+Tf5Mm3ZWNgYGAkj87TdFsyYmBgYMwz8sNncujFwMDASBhjrbSkKEyCaBM6BgbGaYy86/7/nz8y38DAwPgqxli7vx0A3If1nL4wMDD2ZuQJ7j70sYWJmYSLgYFxGqNdd2jrtDFMntwxMDBOYLRrW2Pt+2R1LG/qvfm/gYGBsREjb8HnK2IzCXRsLIqBgbE3ox1J1gsQEwfdBIyBgXEOoy3mkjSdJ9x24SwacGJgYGzHaF+W/G3Ryh867v7xLgwMjK0ZCSZPuHnoeVFYFJcYGBhbM9q0uDalrkrcGBgYuzLGhov5ssV8G644f2NgYGzHaIu2Nuh8yawdnV5OYjEwMLZjtMPC+YCSZNomdwwMjDMZM4OBvPgba6jVOyMYGBhbMGaOoHmKbNc42jsxMDD2ZtS7Y+VPkIDHGm2XOyMYGBjHMPKAxlYlVr0RAwPjTEY7zmyLvJnk/uYsjoGBsR3jWV5jyxbtGln9XgwMjK0Zq5YqkmPn/AgzOfRiYGDsyhhLsmsxH5xpYGBgbMTI23Br1ybasu9NnYuBgYExUeSNnTeLZI2BgYERJNy24MsDje7EwMA4gJEcYscWv/ImXfLDYWBgnMmYL9TGEmUbxIKhJgYGxvcxfgD4jCLgAXMjYQAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>最大熵模型 | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="机器学习,自然语言处理,各种熵,最大熵模型,IIS,期望">
+    <meta name="description" content="最大熵原理预备知识离散型变量$X$的概率分布是$\color{blue}{P(X)}$。它的熵$\color{blue}{H(X) \; or \; H(P)}$越大，代表越均匀、越混乱、越不确定。各种熵点这里$$\color{blue}{H(P)} =  \color{red} {- \sum_{x \in X}P(x) \log P(x)}$$熵满足下面不等式$$0 \le H(P) \le">
+<meta name="keywords" content="机器学习,自然语言处理,各种熵,最大熵模型,IIS,期望">
+<meta property="og:type" content="article">
+<meta property="og:title" content="最大熵模型">
+<meta property="og:url" content="http://plmsmile.github.io/2017/09/20/maxentmodel/index.html">
+<meta property="og:site_name" content="PLM&#39;s Notes">
+<meta property="og:description" content="最大熵原理预备知识离散型变量$X$的概率分布是$\color{blue}{P(X)}$。它的熵$\color{blue}{H(X) \; or \; H(P)}$越大，代表越均匀、越混乱、越不确定。各种熵点这里$$\color{blue}{H(P)} =  \color{red} {- \sum_{x \in X}P(x) \log P(x)}$$熵满足下面不等式$$0 \le H(P) \le">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-11-25T08:30:10.311Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="最大熵模型">
+<meta name="twitter:description" content="最大熵原理预备知识离散型变量$X$的概率分布是$\color{blue}{P(X)}$。它的熵$\color{blue}{H(X) \; or \; H(P)}$越大，代表越均匀、越混乱、越不确定。各种熵点这里$$\color{blue}{H(P)} =  \color{red} {- \sum_{x \in X}P(x) \log P(x)}$$熵满足下面不等式$$0 \le H(P) \le">
+    
+        <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">PLM</h5>
+          <a href="mailto:plmsmile@126.com" title="plmsmile@126.com" class="mail">plmsmile@126.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                类别
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/plmsmile" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">最大熵模型</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">最大熵模型</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-09-20T09:39:12.000Z" itemprop="datePublished" class="page-time">
+  2017-09-20
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/自然语言处理/">自然语言处理</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#最大熵原理"><span class="post-toc-number">1.</span> <span class="post-toc-text">最大熵原理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#预备知识"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">预备知识</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#最大熵的思想"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">最大熵的思想</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#最大熵模型"><span class="post-toc-number">2.</span> <span class="post-toc-text">最大熵模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#基本概念"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">基本概念</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#概率期望的计算"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">概率期望的计算</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#约束条件等式"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">约束条件等式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#最大熵模型思想"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">最大熵模型思想</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#最大熵模型的学习"><span class="post-toc-number">3.</span> <span class="post-toc-text">最大熵模型的学习</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#学习问题"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">学习问题</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#推导最大熵模型"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">推导最大熵模型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#最大熵模型-1"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">最大熵模型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#极大似然估计"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">极大似然估计</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#模型学习的最优化算法"><span class="post-toc-number">4.</span> <span class="post-toc-text">模型学习的最优化算法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#改进的迭代尺度法"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">改进的迭代尺度法</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-maxentmodel" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">最大熵模型</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-09-20 17:39:12" datetime="2017-09-20T09:39:12.000Z" itemprop="datePublished">2017-09-20</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/自然语言处理/">自然语言处理</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="最大熵原理"><a href="#最大熵原理" class="headerlink" title="最大熵原理"></a>最大熵原理</h1><h2 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h2><p>离散型变量$X$的概率分布是$\color{blue}{P(X)}$。它的<strong>熵</strong>$\color{blue}{H(X) \; or \; H(P)}$越大，代表<strong>越均匀、越混乱、越不确定</strong>。<a href="https://plmsmile.github.io/2017/07/31/nlp-notes/#信息量和信息熵">各种熵点这里</a><br>$$<br>\color{blue}{H(P)} =  \color{red} {- \sum_{x \in X}P(x) \log P(x)}<br>$$<br>熵满足下面不等式<br>$$<br>0 \le H(P) \le \log |X|, \quad 其中|X|是X的取值个数<br>$$<br>当前仅当$X$的分布是均匀分布的时候等号成立。当$X$服从均匀分布时，熵最大。</p>
+<h2 id="最大熵的思想"><a href="#最大熵的思想" class="headerlink" title="最大熵的思想"></a>最大熵的思想</h2><p>最大熵原理认为，学习概率模型时，在所有可能的概率模型中，<strong>熵最大的模型是最好的模型</strong>。</p>
+<p>事情分为两个部分：确定的部分（约束条件）和不确定的部分。选择模型时要</p>
+<ul>
+<li>要满足所有的<strong>约束条件</strong>，即满足已有的确定的事实</li>
+<li>要<strong>均分</strong>不确定的部分</li>
+</ul>
+<p>$X$有5个取值${A, B,C,D,E}$，取值概率分别为$P(A), P(B), P(C), P(D), P(E)$。满足以下约束条件<br>$$<br>P(A)+ P(B)+ P(C)+ P(D)+ P(E) = 1<br>$$<br>满足这个条件的模型有很多。再加一个约束条件<br>$$<br>P(A) + P(B) = \frac{3}{10}<br>$$<br>则，<strong>满足约束条件</strong>，<strong>不确定的平分（熵最大）</strong>：这样的模型是最好的模型<br>$$<br>P(A) = P(B) = \frac{3}{20}, \quad P(C)=P(D)=P(E) = \frac{7}{30}<br>$$<br>即：<strong>约束条件，熵最大</strong></p>
+<h1 id="最大熵模型"><a href="#最大熵模型" class="headerlink" title="最大熵模型"></a>最大熵模型</h1><p>假设分类模型是一个条件概率分布$\color{blue}{P(Y \mid X)}$。(有的不是选择条件模型，如论文里面)。训练数据集$N$个样本 $T = {(x_1, y_1), (x_2, y_2), \cdots, (x_N, y_N)}$</p>
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><ul>
+<li>联合分布：$\color{blue}{P(X, Y)}$</li>
+<li>边缘分布：$\color{blue}{P(X)}$</li>
+<li>联合经验分布：$\color{blue}{\widetilde{P}(X, Y)} = \color{red}{\frac {v(X=x, Y=y)}{N}}$，其中$v(x, y)$为频数</li>
+<li>联合边缘分布：$\color{blue}{\widetilde P(X) = \color{red} {\frac{v(X=x)}{N}}}$</li>
+</ul>
+<p><strong>特征函数</strong>$\color{blue}{f(x, y)}$用来描述$x$和$y$满足的一个事实<strong>约束条件</strong>：<br>$$<br>f(x, y) =<br>\begin{cases}<br>1, \quad &amp; x与y满足一个事实，即约束条件 \<br>0, \quad &amp; 否则<br>\end{cases}<br>$$<br>如果有$n$个特征函数$\color{blue}{f_i(x, y), i = 1, 2, \cdots, n}$, 就有$n$个约束条件。</p>
+<h2 id="概率期望的计算"><a href="#概率期望的计算" class="headerlink" title="概率期望的计算"></a>概率期望的计算</h2><p><strong>$X$的期望</strong></p>
+<p>$X$ 是随机变量，概率分布是$P(X)$ ，或概率密度函数是$f(x)$<br>$$<br>E(X) =<br>\begin{cases}<br>&amp;\sum_{i} x_i P(x_i), \quad &amp; \text{离散} \<br>&amp; \int_{-\infty}^{+\infty} {x \cdot f(x)} \, {\rm d}x  , \quad &amp; \text{连续} \<br>\end{cases}<br>$$<br>下面只考虑离散型的期望，连续型同理，求积分即可。</p>
+<p><strong>一元函数的期望</strong></p>
+<p>$Y = g(X)$，期望是<br>$$<br>E[Y] = E[g(X)] = \sum_{i}^{\infty} g(x_i) \cdot P(x_i)<br>$$<br><strong>二元函数的期望</strong></p>
+<p>$Z = g(X, Y)$ ，期望是<br>$$<br>E(Z) = \sum_{x, y} g(x, y) \cdot p(x, y) = \sum_{i=1} \sum_{j=1} g(x_i, y_j) p(x_i, y_j)<br>$$<br>期望其实就是$E 狗 = \sum 狗 \cdot 老概率$ 。可离散，可连续。</p>
+<h2 id="约束条件等式"><a href="#约束条件等式" class="headerlink" title="约束条件等式"></a>约束条件等式</h2><p><strong>实际分布期望</strong></p>
+<p>特征函数$f(x, y)$关于经验分布$\color{blue}{\widetilde P(x, y)}$的期望$\color{blue}{E_{\widetilde P}(f)}$，即<strong>实际应该有的特征</strong> ，也就是一个给模型加的<strong>约束条件</strong> ：<br>$$<br>\color{blue}{E_{\widetilde P}(f)} = \sum_{x, y} \color{red} {\widetilde P(x,y)} f(x, y)<br>$$<br><strong>理论模型期望</strong></p>
+<p>特征函数$f(x, y)$ 关于模型$\color{blue}{P(Y\mid X)}$和经验分布$\color{blue}{\widetilde P(X)}$的期望$\color{blue}{E_{P}(f)}$ ，即理论上模型学得后的期望：<br>$$<br>\color{blue}{E_{ P}(f)}  =\sum_{x, y}  \color{red} { \widetilde{P}(x) P(y \mid x)}  f(x, y)<br>$$<br>要从训练数据中获取信息，特征函数关于实际经验分布和理论模型的两个期望就得相等，即<strong>理论模型要满足实际约束条件</strong><br>$$<br>E_{\widetilde P}(f) = E_{ P}(f)<br>$$</p>
+<h2 id="最大熵模型思想"><a href="#最大熵模型思想" class="headerlink" title="最大熵模型思想"></a>最大熵模型思想</h2><p>条件概率分布$P(Y \mid X)$的<strong>条件熵</strong>为$\color{blue}{H(P)}$如下，<a href="https://plmsmile.github.io/2017/07/31/nlp-notes/#联合熵和条件熵">条件熵</a>：<br>$$<br>\color{blue}{H(P)} =<br>\color{red} {- \sum_{x, y} \widetilde P(x) P(y \mid x) \log P(y \mid x)}<br>$$<br>则满足约束条件$\color{blue}{E_{\widetilde P}(f) = E_{ P}(f)}$的模型中，<strong>条件熵</strong>$\color{blue}{H(P)}$<strong>最大的模型</strong>就是<code>最大熵模型</code>。</p>
+<h1 id="最大熵模型的学习"><a href="#最大熵模型的学习" class="headerlink" title="最大熵模型的学习"></a>最大熵模型的学习</h1><h2 id="学习问题"><a href="#学习问题" class="headerlink" title="学习问题"></a>学习问题</h2><p>最大熵模型的学习等价于<strong>约束最优化问题</strong>，这类问题可以用<code>拉格朗日对偶性</code>去求解。</p>
+<p>给定数据集$T = {(x_1, y_1), (x_2, y_2), \cdots, (x_N, y_N)}$和<strong>特征函数</strong>$\color{blue}{f_i(x, y), i = 1, 2, \cdots, n}$。</p>
+<p>要满足2个<strong>约束条件</strong><br>$$<br>\color{red} {E_{\widetilde P}(f) = E_{ P}(f), \quad \sum_{x, y}P(y \mid x) = 1 }<br>$$<br>要得到<strong>最大化熵</strong><br>$$<br>\max \limits_{P \in C} \; \color{blue}{H(P)} = \color{red} {- \sum_{x, y} \widetilde P(x) P(y \mid x) \log P(y \mid x)}<br>$$<br>按照最优化问题的习惯，<strong>将求最大值问题改写为等价的求最小值问题</strong> ，如下<br>$$<br>\min \limits_{P \in C} \; \color{blue}{ - H(P)} = \color{red} { \sum_{x, y} \widetilde P(x) P(y \mid x) \log P(y \mid x)}<br>$$</p>
+<h2 id="推导最大熵模型"><a href="#推导最大熵模型" class="headerlink" title="推导最大熵模型"></a>推导最大熵模型</h2><p>一般使用<code>拉格朗日对偶性</code>去求解，可以见李航书附录。<br>引入拉格朗日乘子$\color{blue}{w = (w_0, w_1, \cdots, w_n)}$，即参数向量，构造拉格朗日函数$\color{blue}{L(P, w)}$ ：<br>$$<br>\color{blue}{L(P, w)} = \color{red}{<br>-H(P) +<br>w_0 \cdot \left( 1 - \sum_{x, y} P(y \mid x)\right) </p>
+<ul>
+<li>\sum_{i=1}^n w_i \cdot \left(E_{\widetilde P}(f) - E_{ P}(f) \right)<br>}<br>$$<br>由于是凸函数，根据相关性质，所以原始问题和对偶问题同解，<code>原始问题</code>如下：<br>$$<br>\min \limits_{P \in C} \max \limits_{w} L(P, w)<br>$$<br>对应的<code>对偶问题</code>如下：<br>$$<br>\max \limits_{w} \min \limits_{P \in C} L(P, w)<br>$$<br>主要思路是：先固定$\color{blue}{w}$，去计算$\color{blue} {\min \limits_{P \in C} L(P, w)}$，即去找到一个合适的$\color{blue}{P(Y \mid X)}$。再去找到一个合适的$\color{blue}{w}$。</li>
+</ul>
+<p>第一步：求解$\color{blue}{P}$ 。设<code>对偶函数</code>$\color{blue} { \Psi (w)}$如下：<br>$$<br>\color{blue} { \Psi (w)} = \color{red} {\min \limits_{P \in C} L(P, w) = L(P_w, w)}<br>$$<br>对偶函数的解，即我们找到的$P(Y \mid X)$，记作$\color{blue}{P_w}$，如下：<br>$$<br>\color{blue}{P_w} = \arg \min \limits_{P \in C} L(P, w) =\color{red} {P_w(y \mid x)}<br>$$<br>用${L(P, w)}$对$P$进行求偏导，令偏导为0，可以解得${P_w}$，即<code>最大熵模型</code> 如下：<br>$$<br>\color{blue}{P_w(y \mid x)} = \color{red} {\frac{1}{Z_w(x)} \cdot \exp \left({\sum_{i=1}^nw_if_i(x, y)}\right) },<br>\;<br>\color{blue}{Z_w(x)} = \color{red} {\sum_{y} \exp \left( \sum_{i=1}^{n} w_i f_i(x, y)\right) }<br>$$<br>其中$\color{blue}{Z_w(x)}$是<code>归一化因子</code>，$\color{blue} {f_i(x, y)}$是<code>特征函数</code>，$\color{blue}{w_i}$是<code>特征的权值</code>，$\color{blue}{P_w(y \mid x)}$ 就是<code>最大熵模型</code>， $\color{blue}{w}$是最大熵模型中的<code>参数向量</code>。</p>
+<p>第二步：求解$\color{blue}{w}$。即求$w$去最大化对偶函数，设解为$\color{blue} {w^<em>}$ 。可以使用最优化算法去求极大化。<br>$$<br>\color{blue}{w^</em>} = \color{red} {\arg \max \limits_{w} \Psi(w)}<br>$$<br>最终，求到的$\color{blue} {P^<em> = P_{w^</em>} = P_{w^*}(y \mid x)}$就是学习得到的<strong>最大熵模型</strong>。</p>
+<h2 id="最大熵模型-1"><a href="#最大熵模型-1" class="headerlink" title="最大熵模型"></a>最大熵模型</h2><p>最大熵模型如下，其中$\color{blue}{Z_w(x)}$是<code>归一化因子</code>，$\color{blue} {f_i(x, y)}$是<code>特征函数</code>，$\color{blue}{w_i}$是<code>特征的权值</code> 。<br>$$<br>\color{blue}{P_w(y \mid x)} = \color{red} {\frac{1}{Z_w(x)} \cdot \exp \left({\sum_{i=1}^nw_if_i(x, y)}\right) },<br>\;<br>\color{blue}{Z_w(x)} = \color{red} {\sum_{y} \exp \left( \sum_{i=1}^{n} w_i f_i(x, y)\right) }<br>$$</p>
+<h2 id="极大似然估计"><a href="#极大似然估计" class="headerlink" title="极大似然估计"></a>极大似然估计</h2><p>其实对偶函数$\color{blue}{\Psi(w)}$的极大化等价于最大熵模型的极大似然估计。</p>
+<p>已知训练数据的经验分布$\widetilde{P}(X, Y)$，条件概率分布的$P(Y \mid X)$的<code>对数似然函数</code>是：<br>$$<br>\begin{align<em>}<br>\color{blue} {L_{\widetilde P}(P_w)}<br>&amp; = \log \prod_{x, y} P(y \mid x) ^ {\widetilde{P}(X, Y)} = \sum_{x, y} \widetilde P(x, y) \log P(y \mid x)  \<br>&amp; = \color{red}{\sum_{x, y}\widetilde{P}(X, Y)  \sum_{i=1}^{n} w_i f_i(x, y) - \sum_{x} \widetilde{P}(X)\log Z_w(x) }<br>\end{align</em>}<br>$$<br>可以证明得到，$L_{\widetilde P}(P_w) = \Psi (w) $，极大似然函数等于对偶函数。</p>
+<h1 id="模型学习的最优化算法"><a href="#模型学习的最优化算法" class="headerlink" title="模型学习的最优化算法"></a>模型学习的最优化算法</h1><p><code>逻辑回归</code>、<code>最大熵模型</code>的学习都是<strong>以似然函数为目标函数的最优化问题</strong>，可以通过迭代算法求解。这个目标函数是个<strong>光滑的凸函数</strong>。通过很多方法都可以保证找到全局最优解，常用的有<code>改进的迭代尺度法</code>、<code>梯度下降法</code>、<code>牛顿法</code>或<code>拟牛顿法</code>，其中牛顿法和拟牛顿法一般收敛速度更快。</p>
+<h2 id="改进的迭代尺度法"><a href="#改进的迭代尺度法" class="headerlink" title="改进的迭代尺度法"></a>改进的迭代尺度法</h2><p>改进的迭代尺度法(improved iterative scaling, IIS)是一种最大熵模型学习的最优化算法。</p>
+<p>已知最大熵模型如下：<br>$$<br>\color{blue}{P_w(y \mid x)} = \color{red} {\frac{1}{Z_w(x)} \cdot \exp \left({\sum_{i=1}^nw_if_i(x, y)}\right) },<br>\;<br>\color{blue}{Z_w(x)} = \color{red} {\sum_{y} \exp \left( \sum_{i=1}^{n} w_i f_i(x, y)\right) }<br>$$<br>对数似然函数如下：<br>$$<br>\color{blue} {L_{\widetilde P}(P_w)} =  \color{red}{\sum_{x, y}\widetilde{P}(X, Y)  \sum_{i=1}^{n} w_i f_i(x, y) - \sum_{x} \widetilde{P}(X)\log Z_w(x) }<br>$$<br>目标是：通过极大似然估计学习模型参数，即求对数似然函数的<strong>极大值</strong>$\color{blue} {\hat w}$。</p>
+<p><strong>基本思想</strong></p>
+<p>当前参数向量$w = (w_1, w_2, \cdots, w_n)^T$，找到一个新的参数向量$w+\delta = (w_1 + \delta_1, w_2 + \delta_2, \cdots, w_n + \delta_n)$，使得每次更新都使似然函数值增大。</p>
+<p>由于$\delta$是一个向量，含有多个变量，不易同时优化。所以<code>IIS</code> <strong>每次只优化其中一个变量</strong>$\delta_i$，而固定其他变量$\delta_j$。</p>
+<p>设所有特征在$(x, y)$中的出现次数$f^#(x, y) = M$ ：<br>$$<br>\color{blue}{f^# (x, y)} = \sum_i f_i(x, y)<br>$$<br>计算每次的改变量：<br>$$<br>L(w+\delta) - L(w) \ge \color{blue}{B(\delta \mid w)}, \; 改变量的下界限<br>$$<br>如果找到适当的$\delta$使得改变量的下界$B(\delta \mid w)$提高，则对数似然函数也能提高。</p>
+<p>计算$B(\delta \mid w)$对$\delta_i$求偏导，<strong>令偏导等于0，得如下方程</strong>：<br>$$<br>\color{red} {<br>\sum_{x, y} \widetilde P(x) P_w(y \mid x) f_i(x, y) \exp \left(\delta_i f^#(x, y)\right)<br>= E_{\widetilde p}(f_i)<br>},<br>\quad 其中\, E_{\widetilde p}(f_i) = \sum_{x, y} \widetilde P(x, y)f_i(x, y)<br>$$<br>然后，<strong>依次对$\delta_i​$求解该方程</strong>，就可以求得$\delta​$，也就能够更新$w​$，即$w \to w+\delta​$</p>
+<p><strong>算法步骤</strong></p>
+<p>输入：特征函数$f_1, \cdots, f_n$；经验分布$\widetilde P(x, y)$，模型$P_w(y \mid x)$</p>
+<p>输出：最优参数值$w_i^<em>$；最优模型$P_{w^</em>}$</p>
+<p>(1) 初始化参数，取初值 $w_i = 0$</p>
+<p>(2) 求解方程 $\delta_i$<br>$$<br>\sum_{x, y} \widetilde P(x) P_w(y \mid x) f_i(x, y) \exp \left(\delta_i f^#(x, y)\right)<br>= E_{\widetilde p}(f_i),<br>$$<br>(3) 更新参数 $w_i + \delta_i \to w_i$</p>
+<p>其中解方程的时候，如果特征出现次数$f^#(x, y)$ 是常数$M$，则可以<strong>直接计算</strong>$\delta_i$ ：<br>$$<br>\color{blue}{\delta_i } = \color{red} {\frac{1}{M} \log \frac{E_{\widetilde p}(f_i)}{E_{p}(f_i)} }<br>$$<br>如果$f^#(x, y)$不是常数，则必须通过数值计算$\delta_i$。最简单就是通过<code>牛顿迭代法</code>去<strong>迭代求解</strong>$\delta_i^*$。以$g(\delta_i) = 0$ 表示该方程，进行如下迭代：<br>$$<br>\color{blue} {\delta_i^{(k+1)}} = \color{red} {\delta_i^{(k)} - \frac{g(\delta_i^{(k)})}{g^\prime (\delta_i^{(k)})} }<br>$$</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-11-25T08:30:10.311Z" itemprop="dateUpdated">2018-11-25 16:30:10</time>
+</span><br>
+
+
+        
+        <br>原始链接：<a href="/2017/09/20/maxentmodel/" target="_blank" rel="external">http://plmsmile.github.io/2017/09/20/maxentmodel/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://plmsmile.github.io">
+            <img src="/img/avatar.jpg" alt="PLM">
+            PLM
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IIS/">IIS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/各种熵/">各种熵</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/最大熵模型/">最大熵模型</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/期望/">期望</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/机器学习/">机器学习</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/自然语言处理/">自然语言处理</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/09/20/maxentmodel/&title=《最大熵模型》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/09/20/maxentmodel/&title=《最大熵模型》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2017/09/20/maxentmodel/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《最大熵模型》 — PLM's Notes&url=http://plmsmile.github.io/2017/09/20/maxentmodel/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2017/09/20/maxentmodel/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/09/28/crf/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">条件随机场</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/08/20/ml-ng-notes/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">机器学习笔记</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "kR8nND4dcsWgqDWIjpiH4YFj-gzGzoHsz",
+            appKey: "il7PLkcJCfDBXMR6XirLdO2K",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="bottom">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <span>
+            PLM's Notes &nbsp; &copy; &nbsp
+            </span>
+            2016 - 2018
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/09/20/maxentmodel/&title=《最大熵模型》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/09/20/maxentmodel/&title=《最大熵模型》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2017/09/20/maxentmodel/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《最大熵模型》 — PLM's Notes&url=http://plmsmile.github.io/2017/09/20/maxentmodel/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2017/09/20/maxentmodel/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACMUlEQVR42u3azW6EMAxF4Xn/l6bbSh3CuTZUwjmsRi1D8rHw+CefD76Ok+vvf8/uXz/z7C83XzJkyHgt41he6wXW3/p9D/lMXscpVYYMGRswziLYesn1c9DymHqxZxkyZMjAgfKulFGGDBkyOoz1Fkl1yYtYGTJkyEiL2PWj18g0iXywFpchQ8YLGbzr/v+fH5lvyJAh41WMI7z6RW9/D192JUOGjNGMfqrXOTARFKhkPzJkyBjN4EcfSFMsLTXTpt4FVYYMGUMZPNWrNd3SV8Nbfuh3Q4YMGSMYaQuejw3SVDJNMWXIkLEPo1aC8kQwzlLx0Y3g90GGDBnjGP1jE2nArd0vQ4aMHRg3ZJT9Vj4ody/YMmTI2IARJ2F4eMlL01a7TYYMGaMZdx2PqJW7pKkXF7EyZMgYzegszNv96aA0eH0yZMgYyqi18vmRi05qSIajX2pxGTJkbMAgGyVhkaeAN4xFZciQMZqRjjNJEOQBlySXNaQMGTKmMsiSJIHrpIkpO15GhgwZr2Xwplg6euwXw0FQliFDxgaMtPgkSeFzB8JkyJCxJ6OzUTJVLM5XeRErQ4aMoYwjvPqHvWrpZlB/y5AhYxyjFuaefkJ82EKGDBkbMNLWfy2M1g5zBAFXhgwZGzDSwFdropG2Gg/HMmTIkJEGWd50S4eXjwRcGTJkjGbUauI0KSTfPZ3EypAhYyiDFLEpoDMkiA9wyJAhYzQjLR37yRyH1dJKGTJkDGL8AD5DLLoD+4kRAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

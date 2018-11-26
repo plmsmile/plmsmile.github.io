@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>cpp-pointer-object-reference | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="cpp,指针，对象，引用">
+    <meta name="description" content="类对象和指针的区别   类对象和指针代码类 1234567class Test&amp;#123;  public:      int a;      Test()&amp;#123;          a = 1;      &amp;#125;&amp;#125;; 类指针 12345678910111213141516171819202122void test1() &amp;#123;  	// 1. 两个类的指针，使用了ne">
+<meta name="keywords" content="cpp,指针，对象，引用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cpp-pointer-object-reference">
+<meta property="og:url" content="http://plmsmile.github.io/2017/12/25/cpp-pointer-object-reference/index.html">
+<meta property="og:site_name" content="PLM&#39;s Notes">
+<meta property="og:description" content="类对象和指针的区别   类对象和指针代码类 1234567class Test&amp;#123;  public:      int a;      Test()&amp;#123;          a = 1;      &amp;#125;&amp;#125;; 类指针 12345678910111213141516171819202122void test1() &amp;#123;  	// 1. 两个类的指针，使用了ne">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-11-25T08:30:09.715Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="cpp-pointer-object-reference">
+<meta name="twitter:description" content="类对象和指针的区别   类对象和指针代码类 1234567class Test&amp;#123;  public:      int a;      Test()&amp;#123;          a = 1;      &amp;#125;&amp;#125;; 类指针 12345678910111213141516171819202122void test1() &amp;#123;  	// 1. 两个类的指针，使用了ne">
+    
+        <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">PLM</h5>
+          <a href="mailto:plmsmile@126.com" title="plmsmile@126.com" class="mail">plmsmile@126.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                类别
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/plmsmile" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">cpp-pointer-object-reference</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">cpp-pointer-object-reference</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-12-25T13:17:36.000Z" itemprop="datePublished" class="page-time">
+  2017-12-25
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/cpp/">cpp</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#类对象和指针"><span class="post-toc-number">1.</span> <span class="post-toc-text">类对象和指针</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#代码"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">代码</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#不同点"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">不同点</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-cpp-pointer-object-reference" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">cpp-pointer-object-reference</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-12-25 21:17:36" datetime="2017-12-25T13:17:36.000Z" itemprop="datePublished">2017-12-25</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/cpp/">cpp</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p><a href="http://www.cnblogs.com/flylong0204/p/4731318.html" target="_blank" rel="noopener">类对象和指针的区别</a> </p>
+</blockquote>
+<h1 id="类对象和指针"><a href="#类对象和指针" class="headerlink" title="类对象和指针"></a>类对象和指针</h1><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>类</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span>&#123;</span></span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">      <span class="keyword">int</span> a;</span><br><span class="line">      Test()&#123;</span><br><span class="line">          a = <span class="number">1</span>;</span><br><span class="line">      &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>类指针</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  	<span class="comment">// 1. 两个类的指针，使用了new</span></span><br><span class="line">    Test* t1 = <span class="keyword">new</span> Test();</span><br><span class="line">    t1-&gt;a = <span class="number">10</span>;</span><br><span class="line">    Test* t2 = <span class="keyword">new</span> Test();</span><br><span class="line">    t2-&gt;a = <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 两个指针的所指向的地址不一样</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"&amp;t1:"</span> &lt;&lt; t1 &lt;&lt; <span class="string">" a = "</span> &lt;&lt; t1-&gt;a &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"&amp;t2:"</span> &lt;&lt; t2 &lt;&lt;  <span class="string">" a = "</span> &lt;&lt; t2-&gt;a &lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 指针t1的值赋值给了t2，两个指针指向的地址相同，都是t1的地址</span></span><br><span class="line">    t2 = t1;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"&amp;t1:"</span> &lt;&lt; t1 &lt;&lt; <span class="string">" a = "</span> &lt;&lt; t1-&gt;a &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"&amp;t2:"</span> &lt;&lt; t2 &lt;&lt;  <span class="string">" a = "</span> &lt;&lt; t2-&gt;a &lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    t1-&gt;a = <span class="number">111</span>;</span><br><span class="line">    t2-&gt;a = <span class="number">222</span>;</span><br><span class="line">    <span class="comment">// 4. 修改了同样的地方，输出为222</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"&amp;t1:"</span> &lt;&lt; t1 &lt;&lt; <span class="string">" a = "</span> &lt;&lt; t1-&gt;a &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"&amp;t2:"</span> &lt;&lt; t2 &lt;&lt;  <span class="string">" a = "</span> &lt;&lt; t2-&gt;a &lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>类对象</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 1. 两个类对象</span></span><br><span class="line">    Test t1;</span><br><span class="line">    t1.a = <span class="number">10</span>;</span><br><span class="line">    Test t2;</span><br><span class="line">    t2.a = <span class="number">5</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 2. 对象的内容不一样</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"&amp;t1:"</span> &lt;&lt; &amp;t1 &lt;&lt; <span class="string">" a = "</span> &lt;&lt; t1.a &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"&amp;t2:"</span> &lt;&lt; &amp;t2 &lt;&lt;  <span class="string">" a = "</span> &lt;&lt; t2.a &lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 3. 把t1对象的内容赋值给t2。t2的内容和t1相同</span></span><br><span class="line">    t2 = t1;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"&amp;t1:"</span> &lt;&lt; &amp;t1 &lt;&lt; <span class="string">" a = "</span> &lt;&lt; t1.a &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"&amp;t2:"</span> &lt;&lt; &amp;t2 &lt;&lt;  <span class="string">" a = "</span> &lt;&lt; t2.a &lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 4. 再分别修改两个不同的对象，输出分别为111， 222</span></span><br><span class="line">    t1.a = <span class="number">111</span>;</span><br><span class="line">    t2.a = <span class="number">222</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"&amp;t1:"</span> &lt;&lt; &amp;t1 &lt;&lt; <span class="string">" a = "</span> &lt;&lt; t1.a &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"&amp;t2:"</span> &lt;&lt; &amp;t2 &lt;&lt;  <span class="string">" a = "</span> &lt;&lt; t2.a &lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="不同点"><a href="#不同点" class="headerlink" title="不同点"></a>不同点</h2><table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">类指针</th>
+<th style="text-align:center">类对象</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">内存分配</td>
+<td style="text-align:center">定义类指针，不分配内存</td>
+<td style="text-align:center">定义类对象，分配内存</td>
+</tr>
+<tr>
+<td style="text-align:center">关系</td>
+<td style="text-align:center">内存地址，指向类对象。利用构造函数分配一块内存</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">访问</td>
+<td style="text-align:center">间接访问</td>
+<td style="text-align:center">直接访问</td>
+</tr>
+<tr>
+<td style="text-align:center">多态</td>
+<td style="text-align:center">实现多态，父类指针调用子类对象</td>
+<td style="text-align:center">不能实现多态，声明即调用构造函数，已分配内存</td>
+</tr>
+<tr>
+<td style="text-align:center">堆栈</td>
+<td style="text-align:center">内存堆，永久变量，手动释放，new-delete搭配</td>
+<td style="text-align:center">内存栈，局部临时变量</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">new的对象在堆中</td>
+<td style="text-align:center">在栈中</td>
+</tr>
+<tr>
+<td style="text-align:center">使用</td>
+<td style="text-align:center">new： <code>S* s = new S()</code> , <code>s-&gt;name</code></td>
+<td style="text-align:center">声明即可：  <code>S s;</code>，<code>s.name</code></td>
+</tr>
+<tr>
+<td style="text-align:center">生命期</td>
+<td style="text-align:center">需要delete</td>
+<td style="text-align:center">类的析构函数来释放空间</td>
+</tr>
+<tr>
+<td style="text-align:center">传参</td>
+<td style="text-align:center">指针4个字节</td>
+<td style="text-align:center">对象，参数传递资源占用太大</td>
+</tr>
+<tr>
+<td style="text-align:center">虚函数f</td>
+<td style="text-align:center">调用分配给它空间时那种类的func</td>
+<td style="text-align:center">调用自己的func</td>
+</tr>
+<tr>
+<td style="text-align:center">其它</td>
+<td style="text-align:center">父类指针指向子类对象</td>
+</tr>
+</tbody>
+</table>
+<p>推荐使用<code>const &amp;引用</code>，安全系数高。 </p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-11-25T08:30:09.715Z" itemprop="dateUpdated">2018-11-25 16:30:09</time>
+</span><br>
+
+
+        
+        <br>原始链接：<a href="/2017/12/25/cpp-pointer-object-reference/" target="_blank" rel="external">http://plmsmile.github.io/2017/12/25/cpp-pointer-object-reference/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://plmsmile.github.io">
+            <img src="/img/avatar.jpg" alt="PLM">
+            PLM
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cpp/">cpp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/指针，对象，引用/">指针，对象，引用</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/12/25/cpp-pointer-object-reference/&title=《cpp-pointer-object-reference》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/12/25/cpp-pointer-object-reference/&title=《cpp-pointer-object-reference》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2017/12/25/cpp-pointer-object-reference/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《cpp-pointer-object-reference》 — PLM's Notes&url=http://plmsmile.github.io/2017/12/25/cpp-pointer-object-reference/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2017/12/25/cpp-pointer-object-reference/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/12/26/sort-algorithms/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">排序算法总结</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/12/17/cs224n-assignment-1/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">cs224n作业一</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "kR8nND4dcsWgqDWIjpiH4YFj-gzGzoHsz",
+            appKey: "il7PLkcJCfDBXMR6XirLdO2K",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="bottom">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <span>
+            PLM's Notes &nbsp; &copy; &nbsp
+            </span>
+            2016 - 2018
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/12/25/cpp-pointer-object-reference/&title=《cpp-pointer-object-reference》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/12/25/cpp-pointer-object-reference/&title=《cpp-pointer-object-reference》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2017/12/25/cpp-pointer-object-reference/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《cpp-pointer-object-reference》 — PLM's Notes&url=http://plmsmile.github.io/2017/12/25/cpp-pointer-object-reference/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2017/12/25/cpp-pointer-object-reference/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACwklEQVR42u3a0WrjMBAF0Pz/T2dhnxbauPfOWEkXjp6KQ2wdFTzKHT0e8Xj+Ha+ufP00ucO/17+O/A43DDw8PLzR1K8f8+rK9X1my3E9h3zOeHh4eKd51y/i/MWdL8H+SlQ88PDw8D7Kyye9Lzz5fPDw8PD+F16ywZ2VhFnJwcPDw3s/L3lxJ/FBEvsmz/1A1oKHh4cX89oG2G/4+2B/Dw8PD2/RVc+LxCbeTcLi52jg4eHhneDlrfo2VE0i2uR6vlEufjHg4eHhLXjtSzmJTfNIN4mS80Nd39wNDw8P7wAv/3J+6CovOW3wmm/r8fDw8M7xhj/vRxvxfVRRFx48PDy8A7x827oKUkeHDGalqG6J4eHh4ZW8TVtrv2TtdOtChYeHh3eA1x6uarew13FwGxm3zTM8PDy8E7xk45sfEdgHu/lTonYdHh4e3gFe29xqt+Cz6tSWhx++i4eHh3eAl08xeaHvkbO4IWnC4eHh4e15STSQtKY28US7xEVIgYeHh3eMl5eBTQnJJ7opCd8UBjw8PLxbeXc9oH3MrDE2jHHx8PDwDvDyuCEPYRPw7ABWXZDw8PDwjvHyRyZjT8qPfEX9PTw8PLybeG37P9nIbg4K3Bxk4OHh4R3jzW7dHi+YXc9DjR9Sajw8PLybeJut7T7wbWPf/B+Ah4eHd46XB7h5OLthzAKLl1fw8PDw3sKbFYNiO1sGxG3L7ZGfL8DDw8Mb8WaN/zxQyIvErN11WwyBh4eHF/Oe5WgD3P1Bq3Ypo18MeHh4eAvebfVkFEy0y7GPj/Hw8PDu4rXHqh43jSRcmG218fDw8N7Da4OJvDW1P8K1yWbx8PDwPsubHSSdBbjtNv3lcuDh4eH9Al4b5rZb4fZwahRG4OHh4R3gtVPMX9ZtMcjbb0eyFjw8PLxtP+uRNJzaYwFtDDFbaDw8PLwDvD+Hx7tgpLSc1QAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

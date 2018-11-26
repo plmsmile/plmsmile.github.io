@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>QANet | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Self-Attention,可分离卷积">
+    <meta name="description" content="常年SQuAD榜单排名第一的模型。QANet: Combining Local Convolution with Global Self-Attention for Reading Comprehension">
+<meta name="keywords" content="Self-Attention,可分离卷积">
+<meta property="og:type" content="article">
+<meta property="og:title" content="QANet">
+<meta property="og:url" content="http://plmsmile.github.io/2018/08/30/49-qanet/index.html">
+<meta property="og:site_name" content="PLM&#39;s Notes">
+<meta property="og:description" content="常年SQuAD榜单排名第一的模型。QANet: Combining Local Convolution with Global Self-Attention for Reading Comprehension">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/qanet/01-qanet.png">
+<meta property="og:updated_time" content="2018-11-25T08:30:09.283Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="QANet">
+<meta name="twitter:description" content="常年SQuAD榜单排名第一的模型。QANet: Combining Local Convolution with Global Self-Attention for Reading Comprehension">
+<meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/qanet/01-qanet.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">PLM</h5>
+          <a href="mailto:plmsmile@126.com" title="plmsmile@126.com" class="mail">plmsmile@126.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                类别
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/plmsmile" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">QANet</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">QANet</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-08-30T05:47:34.000Z" itemprop="datePublished" class="page-time">
+  2018-08-30
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/机器阅读理解/">机器阅读理解</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#论文模型"><span class="post-toc-number">1.</span> <span class="post-toc-text">论文模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#概览"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">概览</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Input-Embedding"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">Input Embedding</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Embedding-Encoder"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">Embedding Encoder</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Attention-Layer"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">Attention Layer</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Model-Encoder"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">Model Encoder</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Output-Layer"><span class="post-toc-number">1.6.</span> <span class="post-toc-text">Output Layer</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-49-qanet" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">QANet</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-08-30 13:47:34" datetime="2018-08-30T05:47:34.000Z" itemprop="datePublished">2018-08-30</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/机器阅读理解/">机器阅读理解</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>常年<a href="https://rajpurkar.github.io/SQuAD-explorer/" target="_blank" rel="noopener">SQuAD榜单</a>排名第一的模型。<a href="https://arxiv.org/abs/1804.09541" target="_blank" rel="noopener">QANet: Combining Local Convolution with Global Self-Attention for Reading Comprehension</a><a id="more"></a> </p>
+<p><img src="" style="display:block; margin:auto" width="60%"></p>
+<h1 id="论文模型"><a href="#论文模型" class="headerlink" title="论文模型"></a>论文模型</h1><h2 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h2><p>机器阅读任务就不说了。这个模型的主要创新点在于</p>
+<ul>
+<li>卷积（可分离卷积）捕捉局部信息 （并行计算，加速）</li>
+<li>Self-Attention捕捉全局信息</li>
+<li>数据扩增</li>
+</ul>
+<p>一个<code>Encoder Block</code>主要是，其中<a href="https://plmsmile.github.io/2018/08/29/48-attention-is-all-you-need/#encoder">Transformer的EncoderBlock</a>只有Attention和FFN，没有卷积。</p>
+<ul>
+<li>Positional Encoder</li>
+<li><a href="https://plmsmile.github.io/2018/04/11/38-convolution/#xception">可分离卷积</a> （多个，提高内存效率和泛化性）</li>
+<li><a href="https://plmsmile.github.io/2018/08/29/48-attention-is-all-you-need/#self-attention">Self-Attention</a></li>
+<li>前向神经网络</li>
+</ul>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/qanet/01-qanet.png" style="display:block; margin:auto" width="60%"></p>
+<h2 id="Input-Embedding"><a href="#Input-Embedding" class="headerlink" title="Input Embedding"></a>Input Embedding</h2><p><strong>词向量</strong></p>
+<p>Glove 300维，Fix；UNK词向量可以训练</p>
+<p><strong>字向量</strong></p>
+<ul>
+<li>CNN字符向量，200维，可以训练</li>
+<li>每个单词的字符最多16个</li>
+<li>对单词的16个字符的向量过<strong>卷积</strong>（可分离卷积）</li>
+<li>选择所有字符中<strong>最大的向量</strong>作为单词的最终字符向量</li>
+</ul>
+<p><strong>拼接</strong></p>
+<p>对词向量和字符向量拼接起来，$[x_w;x_c] \in \mathcal{R}^{d_w+d_c}$。再过两层的<code>HighwayNetwork</code>，得到最终的单词向量表示。</p>
+<h2 id="Embedding-Encoder"><a href="#Embedding-Encoder" class="headerlink" title="Embedding Encoder"></a>Embedding Encoder</h2><p>每一个Encoder块是由卷积、Self-Attention、全连接层组成，一共有4个Encoder块。输入向量维数是$d=500(200+300)$，输出是$d=128$</p>
+<ul>
+<li>可分离卷积：<code>kernal size=7</code>，<code>d = 128</code>。变成128维向量</li>
+<li>Self-Attention：8头注意力，<a href="https://plmsmile.github.io/2018/03/25/33-attention-summary/#%E9%94%AE%E5%80%BC%E5%AF%B9%E6%B3%A8%E6%84%8F%E5%8A%9B">键值对注意力</a></li>
+<li>全连接：输出也是128</li>
+<li>QANet:层归一化+残差连接：$f(\rm{LayerNorm}(x)) + x$</li>
+<li>Transformer 是<code>Add&amp;Norm</code>，$\rm{LayerNorm(f(x) +x)}$</li>
+</ul>
+<h2 id="Attention-Layer"><a href="#Attention-Layer" class="headerlink" title="Attention Layer"></a>Attention Layer</h2><p>Context: $n$个单词，Question：m个单词。$C \in \mathcal{R}^{n\times d}$，$Q \in \mathcal{R}^{m \times d}$</p>
+<p><strong>关联性矩阵</strong> </p>
+<p>采用的是BiDAF的计算策略：<br>$$<br>S = f(q, c) = W_0 [q, c, q \odot c] \in \mathcal{R} ^{n \times m}<br>$$<br>DCN： $S = C \cdot Q^T \in \mathcal{R}^{n \times m}$</p>
+<p><strong>Context2Query Attention</strong></p>
+<p>C2Q的attention weights，对行做softmax<br>$$<br>A^Q = \rm{softmax}(S) \in \mathcal{R}^{n \times m}<br>$$<br>C2Q <strong>Attention</strong>（Context）<br>$$<br>S^C = A^Q \cdot Q \in \mathcal{R} ^{n \times d}<br>$$<br><strong>Query2Context Attention</strong></p>
+<p>Q2C Attention weights，对列做Softmax<br>$$<br>A^C = \rm{softmax}(S^T) \in \mathcal{R}^{m \times n}<br>$$<br>Q2C Attention（Query）<br>$$<br>S^Q = A^C \cdot C  \in \mathcal{R}^{m \times d}<br>$$<br>Context的<strong>Coattention</strong>，参考自<a href="https://plmsmile.github.io/2018/03/15/32-dynamic-coattention-network/#coattention%E6%B7%B1%E5%B1%82%E7%90%86%E8%A7%A3">DCN的Coattention</a><br>$$<br>C^C = A^Q \cdot S^Q \in \mathcal{R}^{n \times d}<br>$$<br>最终得到两个对Context的编码</p>
+<ul>
+<li>普通Attention：$A = S^C \in \mathcal{R}^{n \times d}$</li>
+<li>Coattention：$B = C^C \in \mathcal{R}^{n \times d}$</li>
+</ul>
+<h2 id="Model-Encoder"><a href="#Model-Encoder" class="headerlink" title="Model Encoder"></a>Model Encoder</h2><p>输入是3个关于Context的矩阵信息：</p>
+<ul>
+<li><strong>原始Context</strong>：$C \in \mathcal{R}^{n\times d}$</li>
+<li>Context的<strong>Attention</strong>： $A \in \mathcal{R}^{n\times d}$</li>
+<li>Context的<strong>Coattention</strong>：$B \in \mathcal{R}^{n \times d}$</li>
+</ul>
+<p>每个单词的编码信息为上面三个矩阵的一个拼接：<br>$$<br>f(w) = [c, a, c \odot a, c \odot b]<br>$$<br>一个有7个Encoder-Block，每个Encoder-Block：2个卷积层、Self-Attention、FFN。其它参数和Embedding Encoder一样。</p>
+<p>一共有3个Model-Encoder，共享所有参数。输出依次为$M_0, M_1, M_2$</p>
+<h2 id="Output-Layer"><a href="#Output-Layer" class="headerlink" title="Output Layer"></a>Output Layer</h2><p>这一层是和特定任务相关的。输出各个位置作为开始和结束位置的概率：<br>$$<br>p^1 = \rm{softmax}(W_1[M_0; M_1]), \quad p^2 = \rm{softmax}(W_1[M_0; M_2])<br>$$<br>目标函数<br>$$<br>L(\theta) = -\frac{1}{N} \sum_{i}^N [\log(p^1_{y_i^1}) + \log(p^2_{y_i^2})]<br>$$</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-11-25T08:30:09.283Z" itemprop="dateUpdated">2018-11-25 16:30:09</time>
+</span><br>
+
+
+        
+        <br>原始链接：<a href="/2018/08/30/49-qanet/" target="_blank" rel="external">http://plmsmile.github.io/2018/08/30/49-qanet/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://plmsmile.github.io">
+            <img src="/img/avatar.jpg" alt="PLM">
+            PLM
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Self-Attention/">Self-Attention</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/可分离卷积/">可分离卷积</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2018/08/30/49-qanet/&title=《QANet》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/08/30/49-qanet/&title=《QANet》 — PLM's Notes&source=常年SQuAD榜单排名第一的模型。QANet: Combining Local Convolution with Global Self-Attentio..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2018/08/30/49-qanet/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《QANet》 — PLM's Notes&url=http://plmsmile.github.io/2018/08/30/49-qanet/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2018/08/30/49-qanet/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/11/26/hello-world/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Hello World</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/08/29/48-attention-is-all-you-need/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Transformer</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "kR8nND4dcsWgqDWIjpiH4YFj-gzGzoHsz",
+            appKey: "il7PLkcJCfDBXMR6XirLdO2K",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="bottom">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <span>
+            PLM's Notes &nbsp; &copy; &nbsp
+            </span>
+            2016 - 2018
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2018/08/30/49-qanet/&title=《QANet》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/08/30/49-qanet/&title=《QANet》 — PLM's Notes&source=常年SQuAD榜单排名第一的模型。QANet: Combining Local Convolution with Global Self-Attentio..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2018/08/30/49-qanet/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《QANet》 — PLM's Notes&url=http://plmsmile.github.io/2018/08/30/49-qanet/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2018/08/30/49-qanet/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACLklEQVR42u3aSY7DMAwF0b7/pd3bAA3J9Ul3AFOllRF4el4w4vDzg9f1sT5/+Xu8On9/5/Sq4pIhQ8ZrGdd27R+Qvu7qTPLc1TkyZMg4h0FCIX/w/qpOKF/+LkOGDBnbIEjuQ4J4ek8ZMmTISIMgSUrTDagMGTJkpElsuk1Ej/9+Li5DhowXMnjV/fvH/9LfkCFDxqsYV7hIQltLUztLhgwZsxk8wO1bmGTz92zAlSFDxpmMWhuyk3CS4hr/fDJkyJjKeKooX9sapm3R5Z1lyJAxmpE2MnmrMg3B5BOQQCxDhox5jFpATAfF+OaSNESD9FWGDBkjGCmGtzlrBbsaW4YMGbMZ/emMToDmmJtjGTJkHMAg6SIPsrxsV5vvukliZciQMY7xbFG+FlJrZb6bJFaGDBmDGLxhmYY/kgDXynPBrJkMGTJGMNKiWLrtI0NjtSB+85lkyJAxjtEf5EobkK2pEBkyZBzG4AGx9qKdlDX4TDJkyBjN4IllmohyUppIB9m5DBkyBjH4RpAX4HgimhbalhgZMmQcwCBbsTRo9psKPJTLkCHjBAZPHXmTsrOJ5INoMmTImM24wsUfwK99oF0qQ4aM0YzOnFV/YCJNUzvhXoYMGW9n8FSzX0rjIbjV05AhQ8ZQBn/FzjBZ/x8A5eIyZMiQATaOtXOKzUsZMmTICBuTaWuTUFHCLEOGjAMY/ZGIToWPJLoyZMg4mZFu1PpltX5rs9jUlCFDxvsYv6470T/x/BJdAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

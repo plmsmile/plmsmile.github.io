@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Word2vec推导图文笔记 | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="深度学习,word2vec">
+    <meta name="description" content="Word meaning词意词的意思就是idea，如下：  词汇本身表达的意义 人通过词汇传达的想法 在写作、艺术中表达的意思 signifier - signified(idea or thing) - denotation  传统离散表达传统使用分类学去建立一个WordNet，其中包含许多上位词is-a和同义词集等。如下：    上义词 同义词     entity, physical_en">
+<meta name="keywords" content="深度学习,word2vec">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Word2vec推导图文笔记">
+<meta property="og:url" content="http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/index.html">
+<meta property="og:site_name" content="PLM&#39;s Notes">
+<meta property="og:description" content="Word meaning词意词的意思就是idea，如下：  词汇本身表达的意义 人通过词汇传达的想法 在写作、艺术中表达的意思 signifier - signified(idea or thing) - denotation  传统离散表达传统使用分类学去建立一个WordNet，其中包含许多上位词is-a和同义词集等。如下：    上义词 同义词     entity, physical_en">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/01_skip-gram.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/02-skip-gram-detail.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/03-gradient-down.jpg">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/04-gradient-down-2.jpg">
+<meta property="og:updated_time" content="2018-11-25T08:30:09.856Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Word2vec推导图文笔记">
+<meta name="twitter:description" content="Word meaning词意词的意思就是idea，如下：  词汇本身表达的意义 人通过词汇传达的想法 在写作、艺术中表达的意思 signifier - signified(idea or thing) - denotation  传统离散表达传统使用分类学去建立一个WordNet，其中包含许多上位词is-a和同义词集等。如下：    上义词 同义词     entity, physical_en">
+<meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/01_skip-gram.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">PLM</h5>
+          <a href="mailto:plmsmile@126.com" title="plmsmile@126.com" class="mail">plmsmile@126.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                类别
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/plmsmile" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Word2vec推导图文笔记</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Word2vec推导图文笔记</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-11-02T01:33:45.000Z" itemprop="datePublished" class="page-time">
+  2017-11-02
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/自然语言处理/">自然语言处理</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Word-meaning"><span class="post-toc-number">1.</span> <span class="post-toc-text">Word meaning</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#词意"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">词意</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#传统离散表达"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">传统离散表达</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#分布相似表达"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">分布相似表达</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#词嵌入思想"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">词嵌入思想</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Word2Vec"><span class="post-toc-number">2.</span> <span class="post-toc-text">Word2Vec</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Skip-gram"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">Skip-gram</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Word2vec细节"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">Word2vec细节</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#偏导计算"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">偏导计算</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总体梯度计算"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">总体梯度计算</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#梯度下降"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">梯度下降</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-cs224n-lecture2-word2vec" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Word2vec推导图文笔记</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-11-02 09:33:45" datetime="2017-11-02T01:33:45.000Z" itemprop="datePublished">2017-11-02</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/自然语言处理/">自然语言处理</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p><img src="" style="display:block; margin:auto" width="60%"></p>
+<h1 id="Word-meaning"><a href="#Word-meaning" class="headerlink" title="Word meaning"></a>Word meaning</h1><h2 id="词意"><a href="#词意" class="headerlink" title="词意"></a>词意</h2><p>词的意思就是<code>idea</code>，如下：</p>
+<ul>
+<li>词汇本身表达的意义</li>
+<li>人通过词汇传达的想法</li>
+<li>在写作、艺术中表达的意思</li>
+<li>signifier - signified(idea or thing) - denotation</li>
+</ul>
+<h2 id="传统离散表达"><a href="#传统离散表达" class="headerlink" title="传统离散表达"></a>传统离散表达</h2><p>传统使用分类学去建立一个WordNet，其中包含许多上位词<code>is-a</code>和同义词集等。如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">上义词</th>
+<th style="text-align:center">同义词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">entity, physical_entity,object, organism, animal</td>
+<td style="text-align:center">full, good; estimable, good, honorable, respectable</td>
+</tr>
+</tbody>
+</table>
+<p>离散表达的问题：</p>
+<ul>
+<li>丢失了细微差别，比如同义词：adept, expert, good, practiced, proficient, skillful</li>
+<li>不能处理新词汇</li>
+<li>分类太主观</li>
+<li>需要人力去构建和修改</li>
+<li><strong>很难去计算词汇相似度</strong></li>
+</ul>
+<p>每个单词使用<code>one-hot</code>编码，比如hotel=$[0, 1, 0, 0, 0]$，motel=$[0, 0, 1, 0, 0]$。 当我搜索<code>settle hotel</code>的时候也应该去匹配包含<code>settle motel</code>的文章。   但是我们的查询hotel向量和文章里面的motel向量却是<strong>正交的</strong>，<strong>算不出相似度</strong>。 </p>
+<h2 id="分布相似表达"><a href="#分布相似表达" class="headerlink" title="分布相似表达"></a>分布相似表达</h2><p>通过一个单词的上下文去表达这个单词。</p>
+<blockquote>
+<p>You shall know a word by the company it keeps.  — JR. Firth</p>
+</blockquote>
+<p>例如，下面用周围的单词去表达<strong>banking</strong> ：</p>
+<blockquote>
+<p>government debt problems turning into <strong>banking</strong> crises as has happened in<br>​           saying that Europe needs unified <strong>banking</strong> regulation to replace the hodgepodge</p>
+</blockquote>
+<p><strong>稠密词向量</strong></p>
+<p>一个单词的意义应该是由它本身的词向量来决定的。这个词向量可以预测出的上下文单词。</p>
+<p>比如lingustics的词向量是$[0.286, 0.792, -0.177, -0.107, 0.109, -0.542, 0.349]$</p>
+<h2 id="词嵌入思想"><a href="#词嵌入思想" class="headerlink" title="词嵌入思想"></a>词嵌入思想</h2><p>构建一个模型，根据中心单词$w_t$，通过自身词向量，去预测出它的上下文单词。<br>$$<br>p (context \mid w_t) = \cdots<br>$$<br> 损失函数如下，$w_{-t}$表示$w_t$的上下文（负号通常表示除了某某之外），如果完美预测，损失函数为0。<br>$$<br>J = 1 - p(w_{-t} \mid w_t)<br>$$</p>
+<h1 id="Word2Vec"><a href="#Word2Vec" class="headerlink" title="Word2Vec"></a>Word2Vec</h1><p>在每个单词和其上下文之间进行预测。</p>
+<p>有两种算法：</p>
+<ul>
+<li><strong>Skip-grams(SG)</strong>： 给目标单词，预测上下文</li>
+<li>Continuous Bag of Words(CBOW)：给上下文，预测目标单词</li>
+</ul>
+<p>两个稍微高效的训练方法：</p>
+<ul>
+<li>分层softmax</li>
+<li>负采样</li>
+</ul>
+<p>课上只是Naive softmax。两个模型，两种方法，一共有4种实现。<a href="http://www.hankcs.com/nlp/word2vec.html" target="_blank" rel="noopener">这里是word2vec详细信息</a>。</p>
+<h2 id="Skip-gram"><a href="#Skip-gram" class="headerlink" title="Skip-gram"></a>Skip-gram</h2><p>对于每个单词$w_t$，会选择一个上下文窗口$m$。 然后要预测出范围内的上下文单词，使概率$P(w_{t+i} \mid w_t)$最大。 </p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/01_skip-gram.png" style="display:block; margin:auto" width="60%"></p>
+<p><strong>目标函数</strong></p>
+<p>$\theta$是我们要训练的参数，目标函数就是所有位置预测结果的乘积，最大化目标函数：<br>$$<br>J^\prime (\theta) = \prod_{t=1}^T \prod_{-m\le j \le m} p(w_{t+j} \mid w_t ;\; \theta), \quad t \neq j<br>$$<br>一般使用<code>negative log likelihood</code> ：<a href="http://mccormickml.com/2017/01/11/word2vec-tutorial-part-2-negative-sampling/" target="_blank" rel="noopener">负采样教程</a>。 </p>
+<p>要<strong>最大化目标函数</strong>，就得得到损失函数。对于对数似然函数，<strong>取其负对数就可以得到损失函数</strong>，再最小化损失函数，其中$T$是文本长度，$m$是窗口大小：<br>$$<br>J(\theta) = - \frac{1}{T} \sum_{t=1}^T \sum_{-m\le j \le m} \log P(w_{t+j} \mid w_t)<br>$$</p>
+<ul>
+<li>Loss 函数 = Cost 函数 = Objective 函数</li>
+<li>对于softmax概率分布，一般使用交叉熵作为损失函数</li>
+<li>单词$w_{t+j}$是one-hot编码</li>
+<li>negative log probability</li>
+</ul>
+<h2 id="Word2vec细节"><a href="#Word2vec细节" class="headerlink" title="Word2vec细节"></a>Word2vec细节</h2><p>词汇和词向量符号说明：</p>
+<ul>
+<li>$u$ 上下文词向量，向量是$d$维的</li>
+<li>$v$ 词向量</li>
+<li>中心词汇$t$，对应的向量是$v_t$</li>
+<li>上下文词汇$j$ ，对应的词向量是$u_j$ </li>
+<li><p>一共有$V$个词汇 </p>
+<p>计算$p(w_{t+j} \mid w_t)$， 即：<br>$$<br>p(w_{j} \mid w_t)<br>= \mathrm{softmax} (u_j^T \cdot v_t)<br>= \frac{\exp(u_j^T \cdot v_t)} {\sum_{i=1}^V \exp(u_i^T \cdot v_t)}<br>$$<br>两个单词越相似，点积越大，向量点积如下：<br>$$<br>u^T \cdot v = \sum_{i=1}^M u_i \times v_i<br>$$<br>softmax之所以叫softmax，是因为指数会让大的数越大，小的数越小。类似于max函数。下面是计算的详细信息：</p>
+</li>
+</ul>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/02-skip-gram-detail.png" style="display:block; margin:auto" width="80%"></p>
+<p>一些理解和解释：</p>
+<ul>
+<li>$w_t$是one-hot编码的中心词汇，维数是$(V, 1)$</li>
+<li>$W$是词汇表达矩阵，维数是$(d, V)$，一列就是一个单词 </li>
+<li>$Ww_t = v_t$ 相乘得到词向量$v_t$ ，$(d, V) \cdot (V, 1) \to (d, 1)$， <strong>用$d$维向量去表达了词汇t</strong> </li>
+<li>$W^\prime$， $W^{\prime}\cdot v_t = s$，$(V, d) \cdot (d, 1) \to (V, 1)$ ， 得到 语义相似度向量$s$</li>
+<li>再对$s$进行softmax即可求得上下文词汇</li>
+<li>每个单词有两个向量，作为center单词向量和context单词向量</li>
+</ul>
+<h2 id="偏导计算"><a href="#偏导计算" class="headerlink" title="偏导计算"></a>偏导计算</h2><p>设$o$是上下文单词，$c$是中心单词，条件概率如下：<br>$$<br>P(o \mid c) = \frac{\exp(u_o^T \cdot v_c)} {\sum_{i=1}^V \exp(u_i^T \cdot v_c)}<br>$$<br>这里只计算$\log P$对$v_c$向量的偏导。 </p>
+<p>用$\mathbf{\theta}$向量表示所有的参数，有$V$个单词，$d$维向量。每个单词有2个向量。参数个数一共是$2dV$个。    </p>
+<p>向量偏导计算公式，$\mathbf{x, a}$ 均是向量<br>$$<br>\frac {\partial \mathbf{x}^T \mathbf{a}} { \partial \mathbf{x}}<br>= \frac {\partial  \mathbf{a}^T  \mathbf{x}} { \partial \mathbf{x}}<br>= \mathbf{a}<br>$$<br>函数偏导计算，<strong>链式法则</strong>，$y=f(u), u=g(x)$<br>$$<br>\frac{\mathrm{d}y}{\mathrm{d} x}<br>= \frac{\mathrm{d}y}{\mathrm{d} u} \frac{\mathrm{d}u}{\mathrm{d} x}<br>$$<br>最小化<code>损失函数</code>：<br>$$<br>J(\theta) = - \frac{1}{T} \sum_{t=1}^T \sum_{-m\le j \le m} \log P(w_{t+j} \mid w_t), \quad j \neq m<br>$$<br>这里<strong>只计算$v_c$的偏导</strong>，先进行<strong>分解原式为2个部分</strong>：<br>$$<br> \frac { \partial} {\partial v_c} \log P(o \mid c)<br>= \frac { \partial} {\partial v_c} \log \frac{\exp(u_o^T \cdot v_c)} {\sum_{i=1}^V \exp(u_i^T \cdot v_c)}<br> =  \underbrace { \frac { \partial} {\partial v_c} \log \exp (u_o^T \cdot v_c) }_{1}</p>
+<ul>
+<li>\underbrace { \frac { \partial} {\partial v_c} \log \sum_{i=1}^V \exp(u_i^T \cdot v_c) }_{2}<br>$$<br><strong>部分1推导</strong><br>$$<br>\begin{align}<br>\frac { \partial} {\partial v_c}  \color{red}{\log \exp (u_o^T \cdot v_c) }<br>&amp; = \frac { \partial} {\partial v_c}  \color{red}{u_o^T \cdot v_c} = \mathbf{u_o}<br>\end{align}<br>$$<br><strong>部分2推导</strong><br>$$<br>\begin{align}<br>\frac { \partial} {\partial v_c} \log \sum_{i=1}^V \exp(u_i^T \cdot v_c)<br>&amp; = \frac{1}{\sum_{i=1}^V \exp(u_i^T \cdot v_c)}  \cdot  \color{red}{ \frac { \partial} {\partial v_c} \sum_{x=1}^V \exp(u_x^T \cdot v_c)} \<br>&amp; = \frac{1}{A} \cdot \sum_{x=1}^V \color{red} {\frac { \partial} {\partial v_c} \exp(u_x^T \cdot v_c)} \<br>&amp; =  \frac{1}{A} \cdot \sum_{x=1}^V \exp (u_x^T \cdot v_c) \color{red} {\frac { \partial} {\partial v_c} u_x^T \cdot v_c} \<br>&amp; = \frac{1}{\sum_{i=1}^V \exp(u_i^T \cdot v_c)}  \cdot \sum_{x=1}^V \exp (u_x^T \cdot v_c)  \color{red} {u_x} \<br>&amp; = \sum_{x=1}^V \color{red} { \frac{\exp (u_x^T \cdot v_c)} {\sum_{i=1}^V \exp(u_i^T \cdot v_c)}} \cdot u_x \<br>&amp; = \sum_{x=1}^V \color{red} {P(x \mid c) }\cdot u_x<br>\end{align}<br>$$<br>所以，综合起来可以求得，单词o是单词c的上下文概率$\log P(o \mid c)$ 对center向量$v_c$的偏导：<br>$$<br>\frac { \partial} {\partial v_c} \log P(o \mid c)<br>= u_o -\sum_{x=1}^V P(x \mid c) \cdot u_x<br>= \color{blue} {\text{观察到的} - \text{期望的}}<br>$$<br>实际上偏导是，单词$o$的上下文词向量，减去，所有单词$x$的上下文向量乘以x作为$c$的上下文向量的概率。 </li>
+</ul>
+<h2 id="总体梯度计算"><a href="#总体梯度计算" class="headerlink" title="总体梯度计算"></a>总体梯度计算</h2><p>在一个window里面，对中间词汇$v_c$求了梯度， 然后再对各个上下文词汇$u_o$求梯度。 然后更新这个window里面用到的参数。</p>
+<p>比如句子<code>We like learning NLP</code>。设$m=1$：</p>
+<ul>
+<li>中间词汇求梯度 $v_{like}$</li>
+<li>上下文词汇求梯度 $u_{we}$ 和 $u_{learning}$</li>
+<li>更新参数</li>
+</ul>
+<h2 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h2><p>有了梯度之后，参数减去梯度，就可以朝着最小的方向走了。<a href="https://plmsmile.github.io/2017/08/20/ml-ng-notes/#梯度下降">机器学习梯度下降</a><br>$$<br>\theta^{new} = \theta^{old} - \alpha \frac{\partial}{\partial \theta^{old}} J(\theta),<br>\quad \quad<br>\theta^{new} = \theta^{old} - \alpha \Delta_{\theta} J(\theta)<br>$$<br><strong>随机梯度下降</strong></p>
+<p>预料会有很多个window，因此每次不能更新所有的。只更新每个window的，对于window t：<br>$$<br>\theta^{new} = \theta^{old} - \alpha \Delta_{\theta} J_t(\theta)<br>$$<br><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/03-gradient-down.jpg" style="display:block; margin:auto" width="50%"></p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/04-gradient-down-2.jpg" style="display:block; margin:auto" width="50%"></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-11-25T08:30:09.856Z" itemprop="dateUpdated">2018-11-25 16:30:09</time>
+</span><br>
+
+
+        
+        <br>原始链接：<a href="/2017/11/02/cs224n-lecture2-word2vec/" target="_blank" rel="external">http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://plmsmile.github.io">
+            <img src="/img/avatar.jpg" alt="PLM">
+            PLM
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/word2vec/">word2vec</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/深度学习/">深度学习</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/&title=《Word2vec推导图文笔记》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/&title=《Word2vec推导图文笔记》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Word2vec推导图文笔记》 — PLM's Notes&url=http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/11/02/word2vec-math/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">word2vec中的数学模型</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/10/19/subword-units/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">subword-units</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "kR8nND4dcsWgqDWIjpiH4YFj-gzGzoHsz",
+            appKey: "il7PLkcJCfDBXMR6XirLdO2K",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="bottom">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <span>
+            PLM's Notes &nbsp; &copy; &nbsp
+            </span>
+            2016 - 2018
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/&title=《Word2vec推导图文笔记》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/&title=《Word2vec推导图文笔记》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Word2vec推导图文笔记》 — PLM's Notes&url=http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACIElEQVR42u3aQW7DMAwEwPz/0+m1BWpjl3ILRBqdjMS2ND4QFKnXKx7vbyP59/7+laeWBgYGxscy3rcjv+f7nffvT9bQzouBgXEC4+rV94trAff3JPNe/o6BgYFRJoVX13nwxcDAwFhhtIE1SfiSj4KBgYGRLCUvwLVlu3/di2NgYHwgI5/+/6//pL+BgYHxUYx3OXJqXph7Lw8MDIy9GXmAy0n5v8UGNUkxMTAwNmXMjkHMAugMFh3pwMDA2JrRpnptqStpBsxKfsVKMDAwtmDMWgKzcn9+OKxNNDEwMPZm5EWxNpi2n2MWmjEwMM5hXAW+dcys6Jas5zV7DAMD46MYf9GqnO2e2+3uj2sMDIwDGG1xf9YqaMPr/Sf4pYWJgYFxACMvqK2kg3mIz8M6BgbGOYzisbIoNmtzFkcrMDAwtma0Jf48HczTzWQUhy0wMDA2ZayX+FeOWay3DTAwMPZmzIr1s+7hA8H06hNjYGBszciX2IbFZ3+pj1xgYGBszUgWNwuy9bLaj4WBgXEAo92mzspqszJctLnFwMA4gDErh7WpZLGscnYMDIxdGc+2EldaC8ONKwYGxgGMfCQHLFaCdfLOvHmAgYGxH+PZbWc7/WMBFwMD4wBGW5TPg2Pyy2N7cQwMDIxyWSvbzmRGDAwMjJUS23pS2CavGBgYJzCSTWl7LGzWJMhLexgYGOcwVhK1dms6PPIVh2wMDIztGF85i5NhCuS/9wAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

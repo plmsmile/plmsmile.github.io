@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>神经网络机器翻译 | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="机器翻译,自然语言处理,深度学习">
+    <meta name="description" content="在机器翻译、语音识别、文本摘要等领域中，Sequence-to-sequence 模型都取得了了非常好的效果。神经机器翻译(Neural Machine Translation, NMT)  使用seq2seq模型取得了巨大的成功。  本文参考谷歌NMT教程。 Basic 背景知识传统翻译是以词为核心一词一词翻译的，这样会切断句子本身的意思，翻译出来也很死板，不像我们人类说的话。 Encoder">
+<meta name="keywords" content="机器翻译,自然语言处理,深度学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="神经网络机器翻译">
+<meta property="og:url" content="http://plmsmile.github.io/2017/10/02/NMT/index.html">
+<meta property="og:site_name" content="PLM&#39;s Notes">
+<meta property="og:description" content="在机器翻译、语音识别、文本摘要等领域中，Sequence-to-sequence 模型都取得了了非常好的效果。神经机器翻译(Neural Machine Translation, NMT)  使用seq2seq模型取得了巨大的成功。  本文参考谷歌NMT教程。 Basic 背景知识传统翻译是以词为核心一词一词翻译的，这样会切断句子本身的意思，翻译出来也很死板，不像我们人类说的话。 Encoder">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/nmt/01_encdec.jpg">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/nmt/02_seq2seq.jpg">
+<meta property="og:updated_time" content="2018-11-25T08:30:10.590Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="神经网络机器翻译">
+<meta name="twitter:description" content="在机器翻译、语音识别、文本摘要等领域中，Sequence-to-sequence 模型都取得了了非常好的效果。神经机器翻译(Neural Machine Translation, NMT)  使用seq2seq模型取得了巨大的成功。  本文参考谷歌NMT教程。 Basic 背景知识传统翻译是以词为核心一词一词翻译的，这样会切断句子本身的意思，翻译出来也很死板，不像我们人类说的话。 Encoder">
+<meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/nmt/01_encdec.jpg">
+    
+        <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">PLM</h5>
+          <a href="mailto:plmsmile@126.com" title="plmsmile@126.com" class="mail">plmsmile@126.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                类别
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/plmsmile" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">神经网络机器翻译</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">神经网络机器翻译</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-10-02T02:03:31.000Z" itemprop="datePublished" class="page-time">
+  2017-10-02
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/自然语言处理/">自然语言处理</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Basic"><span class="post-toc-number">1.</span> <span class="post-toc-text">Basic</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#背景知识"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">背景知识</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#NMT模型选择"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">NMT模型选择</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-NMT" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">神经网络机器翻译</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-10-02 10:03:31" datetime="2017-10-02T02:03:31.000Z" itemprop="datePublished">2017-10-02</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/自然语言处理/">自然语言处理</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>在机器翻译、语音识别、文本摘要等领域中，<code>Sequence-to-sequence</code> 模型都取得了了非常好的效果。神经机器翻译(Neural Machine Translation, NMT)  使用seq2seq模型取得了巨大的成功。</p>
+</blockquote>
+<p>本文参考<a href="https://github.com/tensorflow/nmt" target="_blank" rel="noopener">谷歌NMT教程</a>。</p>
+<h1 id="Basic"><a href="#Basic" class="headerlink" title="Basic"></a>Basic</h1><p><img src="" style="display:block; margin:auto" width="60%"></p>
+<h2 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h2><p>传统翻译是以词为核心一词一词翻译的，这样会切断句子本身的意思，翻译出来也很死板，不像我们人类说的话。</p>
+<p><strong>Encoder-Decoder</strong></p>
+<p>现在采用<code>Encoder-Decoder</code>架构模型。如下图</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/nmt/01_encdec.jpg" style="display:block; margin:auto" width="60%"></p>
+<p>Encoder会利用整个原始句子生成一个<code>语义向量</code>，Decoder再利用这个向量翻译成其它语言的句子。这样可以把握整个句子的意思、句法结构、性别信息等等。具体框架可以参考<a href="https://mp.weixin.qq.com/s?__biz=MzI4MDYzNzg4Mw==&amp;mid=2247484196&amp;idx=1&amp;sn=efa6b79d24b138ff79f33ec3426c79e2&amp;chksm=ebb43bf0dcc3b2e6e69ff3b7d7cabf28744e276ee08ccfcfc1dc2c3f0bf52a122c9bd77ff319&amp;scene=21#wechat_redirect" target="_blank" rel="noopener">Encoder-Decoder框架</a>。</p>
+<p>举个翻译的例子，原始句子$X = (x_1, x_2, \cdots, x_m)$ ，翻译成目标句子$Y = (y_1, y_2, \cdots, y_m)$ 。</p>
+<p>Encoder对$X$ 进行<strong>非线性变换</strong>得到中间语义$C$<br>$$<br>C = \Gamma(x_1, x_2, \cdots, x_n)<br>$$<br>Decoder根据<strong>语义$C$ 和生成的历史信息</strong>$y_1, y_2, \cdots, y_{i-1}$ 来生成第$i$ 个单词 $y_i$<br>$$<br>y_i = \Psi(C, y_1, y_2, \cdots, y_{i-1})<br>$$<br>当然，在<code>Attention Model</code> 中，Decoder生成Y的时候每个单词对应的$C$不一样，记作$C_j, j \in [1, n]$ 。$C_j$ 就是体现了源语句子中不同的单词对目标句子中不同的单词的注意力概率分布。即各个单词的对齐的概率，也就是student对”学生”更重要，而对”我”不那么重要。这个在后续会用到。</p>
+<p>Encoder-Decoder是个<strong>创新大杀器</strong>，是个通用的计算框架。Encoder和Decoder具体使用什么模型，都可以自己选择。通常有CNN,RNN,BiRNN,GRU,LSTM, Deep LSTM。比如编码CNN-解码RNN, 编码BiRNN-解码Deep LSTM等等。</p>
+<p>上面的内容<strong>任意组合</strong>，只要得到的<strong>效果好</strong>，就是一个<strong>创新</strong>，就可以毕业了。（当然别人没有提出过）</p>
+<h2 id="NMT模型选择"><a href="#NMT模型选择" class="headerlink" title="NMT模型选择"></a>NMT模型选择</h2><p>有3个维度需要选择。</p>
+<ul>
+<li>方向性。是单向还是双向</li>
+<li>深度：是一层还是多层</li>
+<li>网络选择：encoder和decoder具体分别选什么</li>
+</ul>
+<p>在本文的实现中，我们选择<strong>单向的、多层的、LSTM</strong>。基于<a href="https://github.com/lmthang/thesis" target="_blank" rel="noopener">这篇论文</a>。如下图。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/nmt/02_seq2seq.jpg" style="display:block; margin:auto" width="50%"></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-11-25T08:30:10.590Z" itemprop="dateUpdated">2018-11-25 16:30:10</time>
+</span><br>
+
+
+        
+        <br>原始链接：<a href="/2017/10/02/NMT/" target="_blank" rel="external">http://plmsmile.github.io/2017/10/02/NMT/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://plmsmile.github.io">
+            <img src="/img/avatar.jpg" alt="PLM">
+            PLM
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/机器翻译/">机器翻译</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/深度学习/">深度学习</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/自然语言处理/">自然语言处理</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/10/02/NMT/&title=《神经网络机器翻译》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/10/02/NMT/&title=《神经网络机器翻译》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2017/10/02/NMT/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《神经网络机器翻译》 — PLM's Notes&url=http://plmsmile.github.io/2017/10/02/NMT/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2017/10/02/NMT/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/10/05/pytorch-start/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">PyTorch快速上手</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/09/28/crf/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">条件随机场</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "kR8nND4dcsWgqDWIjpiH4YFj-gzGzoHsz",
+            appKey: "il7PLkcJCfDBXMR6XirLdO2K",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="bottom">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <span>
+            PLM's Notes &nbsp; &copy; &nbsp
+            </span>
+            2016 - 2018
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/10/02/NMT/&title=《神经网络机器翻译》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/10/02/NMT/&title=《神经网络机器翻译》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2017/10/02/NMT/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《神经网络机器翻译》 — PLM's Notes&url=http://plmsmile.github.io/2017/10/02/NMT/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2017/10/02/NMT/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABxklEQVR42u3aS27DMAwFwNz/0i7QbWGHj5RUL0arIE7ksReE+Pl8yuv6XfVv0s+LFy4u7ph7Pa6729z9prJDZc+/O+Di4p7nPgevu617Qa2yw+33uLi4L+M+/7ISyNLjDi4u7vu5z8TeVVxc3Ddz62GoeZvw6LMgV8PFxR1w04Lpjs8b67u4uLgh9xqvdOfJfXFxcc9wKyWPemxJ06c0EcLFxT3JrYShepBatX8llcLFxd3HrZc20tZp5Wra0MXFxd3NTdOY9GgyeaRm2oOLi7uI2xuG6CUzaeMWFxf3PLfXLJmUQtKS64LeDi4u7oCbhqe0uNkb5gjeMS4u7iJu5W/pAaWCax6DcHFxj3B7qU7aRJkPXsT1XVxc3EXcdIgqHZ5Ylgjh4uIe4abnh3rTpdeGCQIlLi7uQe7kCJKObdULrLi4uP/FrYSk+hFnUmCNq7y4uLiLuM3CRHkUo/6opdQIFxf3CHcS+eqN0vnhBhcX9zx33gQNWqTl99fMz3BxcZdy00BTL2SkUfPLDri4uK/kpgnSqhQLFxf3ndy0Lbp2XAMXF/c8N22d9oqe9RGNL4EMFxd3M3dSMN0x1JUOcODi4i7l/gCNmU3UaBBQqQAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

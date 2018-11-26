@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>R-Net (Gated Self-Matching Networks) | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="论文笔记,机器阅读,Gated Attention RNN,Self-Matching,RNet,Pointer Network">
+    <meta name="description" content="微软亚研院和北大的阅读理解模型R-Net。">
+<meta name="keywords" content="论文笔记,机器阅读,Gated Attention RNN,Self-Matching,RNet,Pointer Network">
+<meta property="og:type" content="article">
+<meta property="og:title" content="R-Net (Gated Self-Matching Networks)">
+<meta property="og:url" content="http://plmsmile.github.io/2018/05/15/46-rnet-selfmatch/index.html">
+<meta property="og:site_name" content="PLM&#39;s Notes">
+<meta property="og:description" content="微软亚研院和北大的阅读理解模型R-Net。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/dl/papers/rnet.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/dl/papers/gan-selfmatch.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/dl/papers/results.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/dl/papers/gating-match.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/dl/papers/question-passage-analysis.png">
+<meta property="og:updated_time" content="2018-11-25T08:30:09.149Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="R-Net (Gated Self-Matching Networks)">
+<meta name="twitter:description" content="微软亚研院和北大的阅读理解模型R-Net。">
+<meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/dl/papers/rnet.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">PLM</h5>
+          <a href="mailto:plmsmile@126.com" title="plmsmile@126.com" class="mail">plmsmile@126.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                类别
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/plmsmile" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">R-Net (Gated Self-Matching Networks)</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">R-Net (Gated Self-Matching Networks)</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-05-15T02:46:49.000Z" itemprop="datePublished" class="page-time">
+  2018-05-15
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/机器阅读理解/">机器阅读理解</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Introduction"><span class="post-toc-number">1.</span> <span class="post-toc-text">Introduction</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#经典模型"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">经典模型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#本文模型概要"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">本文模型概要</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#模型"><span class="post-toc-number">2.</span> <span class="post-toc-text">模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#BiRNN编码Q和P"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">BiRNN编码Q和P</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Gated-Attention-based-RNN"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">Gated Attention-based RNN</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Self-Matching-Attention"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">Self-Matching Attention</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Output-Layer"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">Output Layer</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#实验"><span class="post-toc-number">3.</span> <span class="post-toc-text">实验</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#实现细节"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">实现细节</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#效果"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">效果</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#对比分析"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">对比分析</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-46-rnet-selfmatch" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">R-Net (Gated Self-Matching Networks)</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-05-15 10:46:49" datetime="2018-05-15T02:46:49.000Z" itemprop="datePublished">2018-05-15</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/机器阅读理解/">机器阅读理解</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>微软亚研院和北大的阅读理解模型R-Net。<a id="more"></a> </p>
+<blockquote>
+<ol>
+<li>Gated Attention-based RNN 来获得question-aware passage representation，即编码P</li>
+<li>Self-matching Attention来修正编码P，即P与自己做match，有效从全文中编码信息</li>
+<li>Pointer Network预测开始和结束位置</li>
+</ol>
+</blockquote>
+<p>论文地址：</p>
+<ul>
+<li><a href="http://www.aclweb.org/anthology/P17-1018" target="_blank" rel="noopener">Gated Self-Matching Networks for Reading Comprehension and Question Answering</a></li>
+<li><a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2017/05/r-net.pdf" target="_blank" rel="noopener">R-NET: MACHINE READING COMPREHENSION WITH SELF-MATCHING NETWORKS </a></li>
+</ul>
+<p><img src="" style="display:block; margin:auto" width="60%"></p>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><h2 id="经典模型"><a href="#经典模型" class="headerlink" title="经典模型"></a>经典模型</h2><p><strong>1. Match-LSTM</strong></p>
+<p><a href="https://plmsmile.github.io/2018/05/09/45-match-lstm/">Match-LSTM and Answer Pointer笔记</a></p>
+<p><strong>2. Dynamic Coatteion Network</strong></p>
+<p><a href="https://plmsmile.github.io/2018/03/15/32-dynamic-coattention-network/">DCN笔记</a>。<a href="https://plmsmile.github.io/2018/03/14/31-co-attention-vqa/">Coattention</a>同时处理P和Q，动态迭代预测答案的位置。</p>
+<p><strong>3. Bi-Directional Attention Flow Network</strong></p>
+<h2 id="本文模型概要"><a href="#本文模型概要" class="headerlink" title="本文模型概要"></a>本文模型概要</h2><p><strong>1. BiRNN 分别编码P和Q</strong> </p>
+<p>分别编码Question和Passage</p>
+<p><strong>2. gated matching layer 编码Q-Aware的Passage</strong></p>
+<p><code>Gated Attention-based RNN</code>。在<a href="https://plmsmile.github.io/2018/05/09/45-match-lstm/#match-lstm">Match-LSTM</a>上添加了<strong>门机制</strong>。</p>
+<ul>
+<li>段落有多个部分，根据与Q的相关程度，分配重要性权值</li>
+<li>忽略不重要的，强调重要的部分</li>
+</ul>
+<p><strong>3. self-matching layer</strong></p>
+<p>再次从整个Passage中提取信息。它的<code>缺点</code>：</p>
+<ul>
+<li>RNN只能存储少部分上下文内容</li>
+<li>一个候选答案不知道其他部分的线索</li>
+</ul>
+<p>解决方法：<strong>对P做self-match</strong>。使用Gated Attention-based RNN对P和P自己做match。</p>
+<p><strong>4. pointer-network</strong></p>
+<h1 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h1><p>BiRNN，GARNN（P+Q），GARNN-Selfmatch（P+P），Pointer Network</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/dl/papers/rnet.png" style="display:block; margin:auto" width="80%"></p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/dl/papers/gan-selfmatch.png" style="display:block; margin:auto" width="80%"></p>
+<h2 id="BiRNN编码Q和P"><a href="#BiRNN编码Q和P" class="headerlink" title="BiRNN编码Q和P"></a>BiRNN编码Q和P</h2><p>$Q={w_t^Q}_{t=1}^m$，$P={w_t^P}_{t=1}^n$。 P是n个单词，Q是m个单词。</p>
+<p><strong>词向量和字符向量</strong></p>
+<p><code>词向量</code>：${e_t^Q}_{t=1}^m$、${e_t^P}_{t=1}^n$</p>
+<p><code>字符向量</code>：${c_t^Q}_{t=1}^m$、${c_t^P}_{t=1}^n$</p>
+<p>字符向量，使用RNN，用每个单词的最后时刻的隐状态，作为字符向量。有助于处理OOV词汇。</p>
+<p><strong>编码Question和Passage</strong><br>$$<br>\mathbf u_t^Q = \rm{BiRNN }(u_{t-1}^Q, [e_t^Q, c_t^Q])<br>$$</p>
+<p>$$<br>\mathbf u_t^P = \rm{BiRNN }(u_{t-1}^P, [e_t^P, c_t^P])<br>$$</p>
+<h2 id="Gated-Attention-based-RNN"><a href="#Gated-Attention-based-RNN" class="headerlink" title="Gated Attention-based RNN"></a>Gated Attention-based RNN</h2><p>要基于U（$U^Q$）去编码P（$U^P$） ，得到<strong>Question-Aware的Passage编码</strong>，$V^P$。</p>
+<p><strong>1. Attention RNN</strong></p>
+<p>$p_t$与$q_j$两个单词的<strong>相关性函数</strong>（能量函数）<br>$$<br>s_j^t = v^T \tanh (W_u^Q\mathbf u_j^Q + W_u^P \mathbf u_t^P + W_v^P \mathbf v_{t-1}^P), \quad j = 1, \cdots, m<br>$$<br>$p_t$与所有Q单词的<strong>注意力权值</strong>$\mathbf \alpha^t$ <code>doc 2 query attention</code><br>$$<br>\alpha_{j}^t = \rm{softmax}(s_j^t)<br>$$<br>$p_t$基于$\mathbf \alpha^t$<strong>对$Q$的信息汇总</strong>（注意力）<code>attention pooling vector of the whole question</code><br>$$<br>\mathbf c_t = \sum_{i=1}^m \alpha_i^t \mathbf u_i^Q<br>$$<br>实际上：$\mathbf c_t  = \rm{attn}(U^Q, [\mathbf u_t^P, \mathbf v_{t-1}^P])​$。</p>
+<p><strong>注意力$\mathbf c_t $</strong>和<strong>上一时刻隐状态 $\mathbf v_{t-1}^P$</strong>，输入RNN，<strong>计算当前的信息</strong><br>$$<br>\mathbf v_t^P = \rm{RNN}(\mathbf v_{t-1}^P, \mathbf c_t)<br>$$<br>每个$\mathbf v_t^P$动态地合并了来自整个Q的匹配信息。</p>
+<p><strong>2. Match RNN</strong></p>
+<p> <a href="https://plmsmile.github.io/2018/05/09/45-match-lstm/#match-lstm">Match-LSTM</a>。在输入RNN计算时，把当前$\mathbf u_t^P$也输入进去，带上Passage的信息。输入是<strong>$\rm{input}=[\mathbf u_t^P, \mathbf c_t]$</strong>。<br>$$<br>\mathbf v_t^P = \rm{RNN}(\mathbf v_{t-1}^P, [\mathbf u_t^P, \mathbf c_t])<br>$$<br><strong>3. Gated Attention-based RNN</strong></p>
+<p>用门机制去控制每个$p_t$的重要程度。<br>$$<br>g_t = \rm{sigmoid}(W_g \cdot [\mathbf u_t^P, \mathbf c_t])<br>$$</p>
+<p>$$<br>[\mathbf u_t^P, \mathbf c_t]^* = g_t \odot [\mathbf u_t^P, \mathbf c_t]<br>$$</p>
+<p>$$<br>\mathbf v_t^P = \rm{RNN}(\mathbf v_{t-1}^P, [\mathbf u_t^P, \mathbf c_t]^*)<br>$$</p>
+<p>GARNN的<strong>门机制</strong></p>
+<ul>
+<li>与GRU和LSTM不同</li>
+<li>门机制是基于<strong>当前$p_t$</strong>和它的对应的Q的<strong>注意力向量$\mathbf c_t$</strong>（包含当前$p_t$和Q的关系）</li>
+<li><code>模拟</code>了阅读理解中，<strong>只有$P$的一部分才与问题相关</strong>的特点</li>
+</ul>
+<p>最终得到了<code>question-aware passage representation</code> ：${\mathbf v_t^P}_{t=1}^n$。它的缺点如下：</p>
+<ul>
+<li>对Passage的上下文感知太少</li>
+<li>候选答案对它窗口之外的线索未知</li>
+<li>Question和Passage在词法、句法上有区别</li>
+</ul>
+<h2 id="Self-Matching-Attention"><a href="#Self-Matching-Attention" class="headerlink" title="Self-Matching Attention"></a>Self-Matching Attention</h2><p>为了充分利用Passage的上下文信息。${\mathbf v_t^P}_{t=1}^n$</p>
+<p><strong>对P做self-match</strong>。使用Gated Attention-based RNN对P和P自己做match。</p>
+<p>注意力计算<br>$$<br>s_j^t = v^T \tanh (W_v^P \mathbf v_j^P + W_v^{\bar P} \mathbf v_t^P), \quad j = 1, \cdots, n<br>$$</p>
+<p>$$<br>\alpha_{j}^t = \rm{softmax}(s_j^t)<br>$$</p>
+<p>$$<br>\mathbf c_t = \sum_{i=1}^n \alpha_i^t \mathbf v_i^P<br>$$</p>
+<p>RNN计算<br>$$<br>\mathbf h_t^P = \rm{BiRNN}(\mathbf h_{t-1}^P, [\mathbf v_t^P, \mathbf c_t]^*)<br>$$<br>Self-Matching根据当前p单词、Q，从整个Passage中提取信息。<strong>最终得到Passage的表达$H^P$</strong>。</p>
+<h2 id="Output-Layer"><a href="#Output-Layer" class="headerlink" title="Output Layer"></a>Output Layer</h2><p>其实就是个<a href="https://plmsmile.github.io/2018/05/09/45-match-lstm/#answer-pointer%E5%B1%82">Pointer Network的边界模型</a>，预测起始位置$p^1$和结束位置$p^2$。用RNN计算两次。</p>
+<p><strong>1. 基于Q计算初始隐状态</strong></p>
+<p>初始<code>hidden state</code>是Question的<code>attention-pooling vector</code><br>$$<br>\mathbf h_{t-1}^Q = \mathbf r^Q<br>$$<br>基于Q的编码和一组参数$V_r^Q$，利用注意力机制计算$\mathbf r^Q$<br>$$<br>\mathbf r^Q = \rm{attn}(U^Q, V_r^Q)<br>$$</p>
+<p>$$<br>s_j = \mathbf v^T \tanh(W_u^Q \mathbf u_j^Q + W_v^Q V_r^Q), \quad j = 1, \cdots, m<br>$$</p>
+<p>$$<br>\alpha_i = \rm{softmax}(s_i) = \frac{\exp(s_i)}{\sum_{j=1}^m \exp(s_j)}<br>$$</p>
+<p>$$<br>\mathbf r^Q = \sum_{i=1}^m \alpha_i  \mathbf u_i^Q<br>$$</p>
+<p><strong>2. RNN计算开始位置和结束位置</strong></p>
+<p>计算t时刻的<code>attention-pooling passage</code> （<strong>注意力$\mathbf c_t$</strong>）<br>$$<br>s_j^t = \mathbf v^T \tanh(W_h^P\mathbf h_j^P + W_h^a \mathbf h_{t-1}^a)<br>$$</p>
+<p>$$<br>\alpha_i^t = \rm{softmax}(s_j^t)<br>$$</p>
+<p>$$<br>\mathbf c_t = \sum_{i=1}^n \alpha_i^t \mathbf h_i^P<br>$$</p>
+<p>RNN前向计算<br>$$<br>\mathbf h_t^a = \rm{RNN} (\mathbf h_{t-1}^a, \mathbf c_t)<br>$$<br>基于注意力权值去选择位置<br>$$<br>p^t = \arg \max_{i}(a_i^t)<br>$$</p>
+<h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><h2 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h2><p><strong>数据集</strong></p>
+<p>训练集80%，验证集10%，测试10%</p>
+<p><strong>分词</strong></p>
+<p>斯坦福的CoreNLP中的tokenizer</p>
+<p><strong>词向量</strong></p>
+<p>预训练好的Glove Vectors。训练中保持不变。</p>
+<p><strong>字符向量</strong></p>
+<p>单层的双向GRU，末尾隐状态作为该单词的字符向量</p>
+<p><strong>BiRNN编码Question和Passage</strong></p>
+<p>3层的双向GRU</p>
+<p><strong>Hidden Size大小</strong></p>
+<p>所有都是75</p>
+<p><strong>Dropout</strong></p>
+<p>每层之间的DropOut比例是0.2</p>
+<p><strong>优化器</strong></p>
+<p><a href="https://plmsmile.github.io/2018/03/30/35-nerual-network-optim/#%E5%AD%A6%E4%B9%A0%E7%8E%87%E9%80%92%E5%87%8F">AdaDelta</a>。初始学习率为1，衰减率$\beta = 0.95$，$\epsilon = 1e^{-6}$</p>
+<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/dl/papers/results.png" style="display:block; margin:auto" width="80%"></p>
+<h2 id="对比分析"><a href="#对比分析" class="headerlink" title="对比分析"></a>对比分析</h2><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/dl/papers/gating-match.png" style="display:block; margin:auto" width="60%"></p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/dl/papers/question-passage-analysis.png" style="display:block; margin:auto" width="80%"></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-11-25T08:30:09.149Z" itemprop="dateUpdated">2018-11-25 16:30:09</time>
+</span><br>
+
+
+        
+        <br>原始链接：<a href="/2018/05/15/46-rnet-selfmatch/" target="_blank" rel="external">http://plmsmile.github.io/2018/05/15/46-rnet-selfmatch/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://plmsmile.github.io">
+            <img src="/img/avatar.jpg" alt="PLM">
+            PLM
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Gated-Attention-RNN/">Gated Attention RNN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Pointer-Network/">Pointer Network</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RNet/">RNet</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Self-Matching/">Self-Matching</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/机器阅读/">机器阅读</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/论文笔记/">论文笔记</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2018/05/15/46-rnet-selfmatch/&title=《R-Net (Gated Self-Matching Networks)》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/05/15/46-rnet-selfmatch/&title=《R-Net (Gated Self-Matching Networks)》 — PLM's Notes&source=微软亚研院和北大的阅读理解模型R-Net。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2018/05/15/46-rnet-selfmatch/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《R-Net (Gated Self-Matching Networks)》 — PLM's Notes&url=http://plmsmile.github.io/2018/05/15/46-rnet-selfmatch/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2018/05/15/46-rnet-selfmatch/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/05/22/47-bidaf/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Bidirectional Attention Flow</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/05/09/45-match-lstm/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Match-LSTM and Answer Pointer</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "kR8nND4dcsWgqDWIjpiH4YFj-gzGzoHsz",
+            appKey: "il7PLkcJCfDBXMR6XirLdO2K",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="bottom">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <span>
+            PLM's Notes &nbsp; &copy; &nbsp
+            </span>
+            2016 - 2018
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2018/05/15/46-rnet-selfmatch/&title=《R-Net (Gated Self-Matching Networks)》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/05/15/46-rnet-selfmatch/&title=《R-Net (Gated Self-Matching Networks)》 — PLM's Notes&source=微软亚研院和北大的阅读理解模型R-Net。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2018/05/15/46-rnet-selfmatch/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《R-Net (Gated Self-Matching Networks)》 — PLM's Notes&url=http://plmsmile.github.io/2018/05/15/46-rnet-selfmatch/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2018/05/15/46-rnet-selfmatch/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACLElEQVR42u3a207DMBAFQP7/p+EVCZKesw5ItSdPVZTWniAte/HHR3x9/ri+37/6/PP5q9+8uvPwhYGB8baMz9vrfoH7b12t1b6maBUMDIwDGPdLJkFwBZkE8Rd7xsDAwAjCaJI4rpAwMDAw1hmzdBADAwMjZyRFbPL8fUi9v9+uhYGBcQ4j77r//+c/mW9gYGC8FePZ0NmOOWd7+GUVDAyMrRlt07/FrAfuYj8YGBibMtrwl7T421IzD8eX7TYMDIytGXlKlwTTJEznqV7e8sPAwDiNkR/qypO/JHFsV7n874GBgbEpIw+Uzzb02xdXr4iBgbERo07CRk20/LvDvwAGBsYBjLq9FbyCvABuD6W96B1iYGBsxGgbYW1QXilii2YcBgbGAYxZq6toe5UjgTpwY2BgHMCYtezbIxpPFbFLP4GBgfGGjLYQbQ9e5MfF2kZbdNgCAwPjGMYs/K2E4LY9h4GBcTJjFi5nv9OGYAwMjJMZ7TU7ELY+/vzlSQwMjAMYKwcj8pI1T0CTF3Q5HsDAwDiAsbKVWVr5wEgVAwPjGEbbvl85PLGSUL4IuBgYGBsxVkrWPHS2rf864GJgYGzNmLXGZglcPsJs01AMDIwTGO3mZmE0b/EvFbEYGBhbM4qqd7R8cqctYjEwMDBmAbdtqM2GlxgYGBizUWU7EG0Prb54EgMD4wBGPgxY2XpbSBeDBwwMjK0ZwyMOwfJ5odu+lAfSRwwMjPdgfAGx+CLgmRC07QAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

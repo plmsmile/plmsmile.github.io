@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>强化学习在NLP中的应用 | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="强化学习,TaskBot">
+    <meta name="description" content="强化学习在自然语言处理中的应用。">
+<meta name="keywords" content="强化学习,TaskBot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="强化学习在NLP中的应用">
+<meta property="og:url" content="http://plmsmile.github.io/2018/05/03/44-reinforce-nlp/index.html">
+<meta property="og:site_name" content="PLM&#39;s Notes">
+<meta property="og:description" content="强化学习在自然语言处理中的应用。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/alime/vslots.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/alime/cnn.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/alime/pretrained-alime.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/alime/TaskBot.png">
+<meta property="og:updated_time" content="2018-11-25T08:30:09.059Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="强化学习在NLP中的应用">
+<meta name="twitter:description" content="强化学习在自然语言处理中的应用。">
+<meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/alime/vslots.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">PLM</h5>
+          <a href="mailto:plmsmile@126.com" title="plmsmile@126.com" class="mail">plmsmile@126.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                类别
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/plmsmile" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">强化学习在NLP中的应用</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">强化学习在NLP中的应用</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-05-03T06:00:55.000Z" itemprop="datePublished" class="page-time">
+  2018-05-03
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/自然语言处理/">自然语言处理</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#阿里小蜜的任务型问答"><span class="post-toc-number">1.</span> <span class="post-toc-text">阿里小蜜的任务型问答</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#任务型对话"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">任务型对话</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#系统结构"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">系统结构</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Intent-Network"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">Intent Network</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Belief-Tracker"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">Belief Tracker</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Policy-Network"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">Policy Network</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#整体模型"><span class="post-toc-number">1.6.</span> <span class="post-toc-text">整体模型</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-44-reinforce-nlp" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">强化学习在NLP中的应用</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-05-03 14:00:55" datetime="2018-05-03T06:00:55.000Z" itemprop="datePublished">2018-05-03</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/自然语言处理/">自然语言处理</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>强化学习在自然语言处理中的应用。<a id="more"></a> </p>
+<p><img src="" style="display:block; margin:auto" width="70%"></p>
+<h1 id="阿里小蜜的任务型问答"><a href="#阿里小蜜的任务型问答" class="headerlink" title="阿里小蜜的任务型问答"></a>阿里小蜜的任务型问答</h1><p>小蜜包含<code>QA问答</code>、<code>开放域聊天</code>、<code>任务型对话</code>。</p>
+<h2 id="任务型对话"><a href="#任务型对话" class="headerlink" title="任务型对话"></a>任务型对话</h2><blockquote>
+<p>1、TaskBot：由任务驱动的多轮对话，每一轮去读取用户的slot信息，直到槽填满，全部ok</p>
+<p>2、Action Policy：强化学习去管理多轮对话，小蜜每一轮给出一个动作，询问用户或者完成订单</p>
+<p>3、Belief Tracker：深度学习去提取slot信息，LSTM-CRF标注</p>
+</blockquote>
+<p><strong>1. TaskBot</strong></p>
+<p>任务型对话是指<strong>由任务驱动的多轮对话</strong>。在对话中帮助用户完成某个任务，比如订机票、订酒店等。</p>
+<ul>
+<li><code>传统</code>：用<a href="https://plmsmile.github.io/2018/05/02/43-intent-detection-slot-filling/">slot filling</a>来做，但需要大量人工模板、规则和训练语料</li>
+<li><code>小蜜</code>：基于<strong>强化学习</strong>和<strong>Neural Belief Tracker</strong>的<strong>端到端</strong>可训练的TaskBot方案</li>
+</ul>
+<p>在每轮对话中，都需要抽取用户当前给的<strong>slot状态</strong>（<strong>任务需要的组件信息</strong>）。不断地去填满所有的slot，最后去下单。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/alime/vslots.png" style="display:block; margin:auto" width="60%"></p>
+<p><strong>2. Action Policy - 强化学习</strong></p>
+<p>系统如何给用户合适的回复：接着询问用户、出订单。使用<a href="https://plmsmile.github.io/2018/04/01/37-reinforce-learning/">强化学习</a>去<strong>管理这个多轮对话</strong>。各个定义如下：</p>
+<ul>
+<li>智能体：小蜜（系统）</li>
+<li><strong>策略</strong>：小蜜给用户的回答，反问哪个slot、出订单</li>
+<li>环境：用户</li>
+<li><strong>状态</strong>：用户回答中提取出的slot状态（信息）</li>
+<li><strong>反馈</strong>：继续聊天、退出、下单</li>
+</ul>
+<p><strong>3. Belief Tracker - 深度学习</strong></p>
+<p>Belief Tracker用来提取用户的slot状态，实际是一个序列标注问题。使用<code>LSTM-CRF</code>进行标注。传统是<a href="[slot filling](https://plmsmile.github.io/2018/05/02/43-intent-detection-slot-filling/">slot filling</a>)</p>
+<h2 id="系统结构"><a href="#系统结构" class="headerlink" title="系统结构"></a>系统结构</h2><p>系统分为下面三层。</p>
+<ul>
+<li><code>数据预处理层</code> ： 分词、实体抽取等。</li>
+<li><code>端到端的对话管理层</code> ：强化学习</li>
+<li><code>任务生成层</code></li>
+</ul>
+<p>强化学习包括：</p>
+<ul>
+<li><strong>Intent Network</strong> ：处理用户输入</li>
+<li><strong>Neural Belief Tracker</strong> ：记录读取slot信息</li>
+<li><strong>Policy Network</strong> ：决定小蜜的回答：反问哪个slot 或 出订单。</li>
+</ul>
+<h2 id="Intent-Network"><a href="#Intent-Network" class="headerlink" title="Intent Network"></a>Intent Network</h2><p><a href="https://plmsmile.github.io/2018/03/31/36-alime-chat/#%E6%84%8F%E5%9B%BE%E5%88%86%E7%B1%BB">阿里小蜜意图分类</a>。使用CNN学一个<code>sentence embedding</code>来表示用户的意图。后面给到Policy Network。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/alime/cnn.png" style="display:block; margin:auto" width="70%"></p>
+<h2 id="Belief-Tracker"><a href="#Belief-Tracker" class="headerlink" title="Belief Tracker"></a>Belief Tracker</h2><p>使用BiLSTM-CRF来进行标记句子，提取出slot信息。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">句子</th>
+<th style="text-align:center">first</th>
+<th style="text-align:center">class</th>
+<th style="text-align:center">fares</th>
+<th style="text-align:center">from</th>
+<th style="text-align:center">Boston</th>
+<th style="text-align:center">to</th>
+<th style="text-align:center">Denver</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>Slots</strong></td>
+<td style="text-align:center">B-机舱类别</td>
+<td style="text-align:center">I-机舱类别</td>
+<td style="text-align:center">O</td>
+<td style="text-align:center">O</td>
+<td style="text-align:center">B-出发地</td>
+<td style="text-align:center">O</td>
+<td style="text-align:center">B-目的地</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Policy-Network"><a href="#Policy-Network" class="headerlink" title="Policy Network"></a>Policy Network</h2><p>四个关键：episode、reward、state、action。</p>
+<p><strong>1. 一轮交互的定义</strong></p>
+<ul>
+<li>episode开始：识别出用户意图为<code>购买机票</code></li>
+<li>episode结束：用户<code>成功购买机票</code> 或 <code>退出会话</code></li>
+</ul>
+<p><strong>2. 反馈</strong></p>
+<p>获取用户的反馈非常关键。</p>
+<ul>
+<li>收集线上用户的反馈，如用户下单、退出等行为</li>
+<li>使用预训练环境</li>
+</ul>
+<p>预训练环境的两部分反馈</p>
+<ul>
+<li>Action Policy ：<a href="https://plmsmile.github.io/2018/04/22/41-strategy-learning/#%E7%AD%96%E7%95%A5%E6%A2%AF%E5%BA%A6">策略梯度</a> 更新模型。正反馈$r=1$，负反馈$r=-1$</li>
+<li>Belief Tracker：仅使用正反馈作为正例，出现错误由小二标出正确的slots</li>
+</ul>
+<p><strong>3. 状态</strong></p>
+<p>当前slot：Intent Network得到的Sentence Embedding，再过Belief Tracker得到的slot信息。</p>
+<p>使用当前slot+历史slot，过线性层，softmax，到各个Action。</p>
+<p><strong>4. 动作</strong></p>
+<p>订机票，Action是离散的。主要是：<strong>对各个Slot的反问</strong>和<strong>下单</strong>。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/alime/pretrained-alime.png" style="display:block; margin:auto" width="70%"></p>
+<h2 id="整体模型"><a href="#整体模型" class="headerlink" title="整体模型"></a>整体模型</h2><p>符号定义</p>
+<ul>
+<li>$q_i$ ：当前用户的问题</li>
+<li>$a_{i-1}$ ：上一轮问题的答案</li>
+<li>$S_i$ ：历史slot信息</li>
+</ul>
+<p>$$<br>\begin{align}<br>&amp; O_i = \rm{IntentNet}(q_i)  \<br>&amp; C_i = \rm{BeliefTracker}(q_i, a_{i-1}) \<br>&amp; X_i = O_i \oplus C_i \oplus S_{i-1} \<br>&amp; H_i = \rm{Linear} (X_i) \<br>&amp; P(\cdot) = \rm{Softmax}(H_i)<br>\end{align}<br>$$</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/alime/TaskBot.png" style="display:block; margin:auto" width="70%"></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-11-25T08:30:09.059Z" itemprop="dateUpdated">2018-11-25 16:30:09</time>
+</span><br>
+
+
+        
+        <br>原始链接：<a href="/2018/05/03/44-reinforce-nlp/" target="_blank" rel="external">http://plmsmile.github.io/2018/05/03/44-reinforce-nlp/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://plmsmile.github.io">
+            <img src="/img/avatar.jpg" alt="PLM">
+            PLM
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TaskBot/">TaskBot</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/强化学习/">强化学习</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2018/05/03/44-reinforce-nlp/&title=《强化学习在NLP中的应用》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/05/03/44-reinforce-nlp/&title=《强化学习在NLP中的应用》 — PLM's Notes&source=强化学习在自然语言处理中的应用。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2018/05/03/44-reinforce-nlp/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《强化学习在NLP中的应用》 — PLM's Notes&url=http://plmsmile.github.io/2018/05/03/44-reinforce-nlp/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2018/05/03/44-reinforce-nlp/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/05/09/45-match-lstm/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Match-LSTM and Answer Pointer</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/05/02/43-intent-detection-slot-filling/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">意图识别和槽填充</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "kR8nND4dcsWgqDWIjpiH4YFj-gzGzoHsz",
+            appKey: "il7PLkcJCfDBXMR6XirLdO2K",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="bottom">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <span>
+            PLM's Notes &nbsp; &copy; &nbsp
+            </span>
+            2016 - 2018
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2018/05/03/44-reinforce-nlp/&title=《强化学习在NLP中的应用》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/05/03/44-reinforce-nlp/&title=《强化学习在NLP中的应用》 — PLM's Notes&source=强化学习在自然语言处理中的应用。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2018/05/03/44-reinforce-nlp/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《强化学习在NLP中的应用》 — PLM's Notes&url=http://plmsmile.github.io/2018/05/03/44-reinforce-nlp/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2018/05/03/44-reinforce-nlp/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACNklEQVR42u3au1LDMBAFUP7/p0NDQQHm3pXDjKWjimGUyMfFRvv4+IjX69v6/p9kf7Lzt1NuXhgYGI9lvC5Xsqd90GtAfi4GBsZpjPb4/FPXYfp6T3IKBgYGRnsRTO5v6+diYGBgtNe4ldDcBmgMDIyTGfnDrRTLftvTvjIMDIzTGHnV/f//fkt/AwMD41GMV7lmF7uk3DZ7nq/PYmBgbM3IA1z+dXm4LBLU5IqJgYGxKSNJQduyWjuE0TY4f9iJgYFxDKNNLNuLYD521n4bBgbG3ozrkHpXub9NiduQjYGBsTcjunjFDcvkP+0QRvSTgIGBsTUjKW+1D7feKC0ePT8eAwPjsYx2xOqupDS/GkapNQYGxtaMlSS2LY2tv6C3lNswMDAewkgui7PRrvxB21GM6EcCAwNjC8asSdm2BGahtkiPMTAwtma0X5QPUrQXvrbQFoVdDAyMjRj50MP6MW27dHjPxcDA2I6Rh8564qwsn7WXTgwMjHMYs9GHpPQ/G+NY2YmBgbErow1/basyH5tYaUhgYGCcwMivX7N2ZjsQVr8yDAyMAxizxmFerG9fR912xcDA2JTxKtddQXYW7pe6GRgYGI9l5KttZ97V5hwOW2BgYGzHWA+ybfszbxgUARcDA+MARpH1Bn3DvMS2ksRiYGBgtGNbebI6G9R4S8DFwMDYmpEkotdpZzu0+kd7FQMD4wBGksTOCmFJ+tqW8zAwME5jLE1qjEJnO5axnvpiYGA8lvEJFL3bGe/Sp5AAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

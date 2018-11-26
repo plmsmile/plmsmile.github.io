@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>各种注意力总结 | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="论文笔记,Attention">
+    <meta name="description" content="一切都应该尽可能简单，但不能过于简单。   本文主要是总结：注意力机制、注意力机制的变体、论文中常见的注意力   注意力机制系统介绍问题背景计算能力不足 神经网络有很强的能力。但是对于复杂任务，需要大量的输入信息和复杂的计算流程。计算机的计算能力是神经网络的一个瓶颈。 减少计算复杂度 常见的：局部连接、权值共享、汇聚操作。 但仍然需要：尽量少增加模型复杂度（参数），来提高模型的表达能力。 简单文">
+<meta name="keywords" content="论文笔记,Attention">
+<meta property="og:type" content="article">
+<meta property="og:title" content="各种注意力总结">
+<meta property="og:url" content="http://plmsmile.github.io/2018/03/25/33-attention-summary/index.html">
+<meta property="og:site_name" content="PLM&#39;s Notes">
+<meta property="og:description" content="一切都应该尽可能简单，但不能过于简单。   本文主要是总结：注意力机制、注意力机制的变体、论文中常见的注意力   注意力机制系统介绍问题背景计算能力不足 神经网络有很强的能力。但是对于复杂任务，需要大量的输入信息和复杂的计算流程。计算机的计算能力是神经网络的一个瓶颈。 减少计算复杂度 常见的：局部连接、权值共享、汇聚操作。 但仍然需要：尽量少增加模型复杂度（参数），来提高模型的表达能力。 简单文">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/attention.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/transformer.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/multi-head-attention.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/attention.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/pointer-net.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/CAN-1.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/CAN.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/dynamic-attention-1.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/dynamic-attention-2.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/dynamic-attention-3.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/ap-bi-cnn-sentence-modeling.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/CAN.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/ntm.png">
+<meta property="og:updated_time" content="2018-11-25T08:30:08.584Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="各种注意力总结">
+<meta name="twitter:description" content="一切都应该尽可能简单，但不能过于简单。   本文主要是总结：注意力机制、注意力机制的变体、论文中常见的注意力   注意力机制系统介绍问题背景计算能力不足 神经网络有很强的能力。但是对于复杂任务，需要大量的输入信息和复杂的计算流程。计算机的计算能力是神经网络的一个瓶颈。 减少计算复杂度 常见的：局部连接、权值共享、汇聚操作。 但仍然需要：尽量少增加模型复杂度（参数），来提高模型的表达能力。 简单文">
+<meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/attention.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">PLM</h5>
+          <a href="mailto:plmsmile@126.com" title="plmsmile@126.com" class="mail">plmsmile@126.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                类别
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/plmsmile" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">各种注意力总结</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">各种注意力总结</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-03-25T06:14:12.000Z" itemprop="datePublished" class="page-time">
+  2018-03-25
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/自然语言处理/">自然语言处理</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#注意力机制系统介绍"><span class="post-toc-number">1.</span> <span class="post-toc-text">注意力机制系统介绍</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#问题背景"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">问题背景</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#注意力"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">注意力</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#普通注意力机制"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">普通注意力机制</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#应用与优点"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">应用与优点</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#注意力机制变体"><span class="post-toc-number">2.</span> <span class="post-toc-text">注意力机制变体</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#多头注意力"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">多头注意力</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#硬性注意力"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">硬性注意力</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#键值对注意力"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">键值对注意力</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#结构化注意力"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">结构化注意力</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#指针网络"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">指针网络</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#各种注意力计算模型"><span class="post-toc-number">3.</span> <span class="post-toc-text">各种注意力计算模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#注意力的本质"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">注意力的本质</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Local-based"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">Local-based</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#General-Attention"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">General Attention</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Concatenation-based"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">Concatenation-based</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#多层Attention"><span class="post-toc-number">3.5.</span> <span class="post-toc-text">多层Attention</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#CAN的实时问答"><span class="post-toc-number">3.6.</span> <span class="post-toc-text">CAN的实时问答</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-33-attention-summary" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">各种注意力总结</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-03-25 14:14:12" datetime="2018-03-25T06:14:12.000Z" itemprop="datePublished">2018-03-25</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/自然语言处理/">自然语言处理</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>一切都应该尽可能简单，但不能过于简单。</p>
+</blockquote>
+<blockquote>
+<p>本文主要是总结：注意力机制、注意力机制的变体、论文中常见的注意力</p>
+</blockquote>
+<p><img src="" style="display:block; margin:auto" width="80%"></p>
+<h1 id="注意力机制系统介绍"><a href="#注意力机制系统介绍" class="headerlink" title="注意力机制系统介绍"></a>注意力机制系统介绍</h1><h2 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h2><p><strong>计算能力不足</strong></p>
+<p>神经网络有很强的能力。但是对于复杂任务，需要大量的输入信息和复杂的计算流程。计算机的计算能力是神经网络的一个瓶颈。</p>
+<p><strong>减少计算复杂度</strong></p>
+<p>常见的：局部连接、权值共享、汇聚操作。</p>
+<p>但仍然需要：尽量<code>少增加模型复杂度</code>（参数），来<code>提高模型的表达能力</code>。</p>
+<p><strong>简单文本分类可以使用单向量表达文本</strong></p>
+<p>只需要一些关键信息即可，所以一个向量足以表达一篇文章，可以用来分类。</p>
+<p><strong>阅读理解需要所有的语义</strong></p>
+<p>文章比较长时，<strong>一个RNN很难反应出文章的所有语义信息</strong>。</p>
+<p>对于阅读理解任务来说，编码时并不知道会遇到什么问题。这些问题可能会涉及到文章的所有信息点，如果丢失任意一个信息就可能导致无法正确回答问题。</p>
+<p><strong>网络容量与参数成正比</strong></p>
+<p>神经网络中可以存储的信息称为<code>网络容量</code>。 存储的多，参数也就越多，网络也就越复杂。 LSTM就是一个存储和计算单元。</p>
+<p><strong>注意力和记忆力解决信息过载问题</strong></p>
+<p>输入的信息太多(<code>信息过载问题</code>)，但不能同时处理这些信息。只能选择重要的信息进行计算，同时用额外空间进行信息存储。</p>
+<ul>
+<li><code>信息选择</code>：聚焦式自上而下地选择重要信息，过滤掉无关的信息。<strong>注意力机制</strong></li>
+<li><code>外部记忆</code> ： 优化神经网络的记忆结构，使用额外的外部记忆，来提高网络的存储信息的容量。 <strong>记忆力机制 </strong> </li>
+</ul>
+<p>比如，一篇文章，一个问题。答案只与几个句子相关。所以只需把相关的片段挑选出来交给后续的神经网络来处理，而不需要把所有的文章内容都给到神经网络。</p>
+<h2 id="注意力"><a href="#注意力" class="headerlink" title="注意力"></a>注意力</h2><p>注意力机制<code>Attention Mechanism</code> 是<code>解决信息过载</code>的一种资源分配方案，把<strong>计算资源分配给更重要的任务</strong>。</p>
+<blockquote>
+<p>注意力：人脑可以有意或无意地从大量的输入信息中，选择小部分有用信息来重点处理，并忽略其它信息</p>
+</blockquote>
+<p><strong>聚焦式注意力</strong></p>
+<p>自上而下<code>有意识</code>的注意力。有预定目的、依赖任务、<code>主动有意识</code>的<code>聚焦于某一对象</code>的<code>注意力</code>。</p>
+<p>一般注意力值聚焦式注意力。聚焦式注意力会根据环境、情景或任务的不同而选择不同的信息。</p>
+<p><strong>显著性注意力</strong></p>
+<p>自下而上<code>无意识</code>的注意力。由外界刺激驱动的注意力，无需主动干预，也和任务无关。如<code>Max Pooling</code>和<code>Gating</code>。  </p>
+<p><strong>鸡尾酒效应</strong></p>
+<p>鸡尾酒效应可以理解这两种注意力。 在吵闹的酒会上</p>
+<ul>
+<li>噪音很多，依然可以听到朋友谈话的内容</li>
+<li>没有关注背景声音，但是突然有人叫自己（重要信息），依然会马上注意到</li>
+</ul>
+<h2 id="普通注意力机制"><a href="#普通注意力机制" class="headerlink" title="普通注意力机制"></a>普通注意力机制</h2><p>把目前的最大汇聚<code>Max Pooling</code>和门控<code>Gating</code> 近似地看做自下而上的基于显著性的注意力机制。  </p>
+<p>为了节省资源，选择重要的信息给到后续的神经网络进行计算，而不需要把所有的内容都给到后面的神经网络。</p>
+<p><strong>输入N个信息</strong></p>
+<p>$X_{1:N} = [\mathbf{x}_1, \cdots, \mathbf{x}_N]$， 问题$\mathbf{q}$。 要从$X$中选择一些和任务相关的信息输入给神经网络。</p>
+<p><strong>计算注意力分布</strong></p>
+<p>$\alpha_i$ : 选择第$i$个信息的概率，也称为<code>注意力分布</code> ，$z$表示被选择信息的索引位置<br>$$<br>\alpha_i = p(z = i \mid X, \mathbf{q}) =<br>\rm{softmax}\left(s(\mathbf{x}_i, \mathbf{q})\right)<br>= \frac{\exp\left(s(\mathbf{x}<em>i, \mathbf{q})\right)}{\sum</em>{j=1}^N \exp\left(s(\mathbf{x}_j, \mathbf{q})\right)}<br>$$</p>
+<p><a href="https://plmsmile.github.io/2017/10/12/Attention-based-NMT/#global-attention">NMT里面三种score打分函数</a> :<br>$$<br>\color{blue}{\rm{score}(h_t, \bar h_s)} =<br>\begin{cases}<br>h_t^T \bar h_s &amp; \text{dot} \<br>h_t^T W_a \bar h_s  &amp; \text{general} \<br>v_a^T \tanh (W_a [h_t; \bar h_s]) &amp; \text{concat} \<br>\end{cases}<br>$$<br><code>加性模型</code><br>$$<br>s(\mathbf{x}_i, \mathbf{q}) = v^T\rm{tanh} (W\mathbf{x}_i + U\mathbf{q})<br>$$<br><code>点击模型</code><br>$$<br>s(\mathbf{x}_i, \mathbf{q}) = \mathbf{x}_i^T \mathbf{q}<br>$$<br><strong>计算注意力</strong></p>
+<p><code>Soft Attention</code> 是对所有的信息进行加权求和。<code>Hard Attention</code>是选择最大信息的那一个。  </p>
+<p>使用软性注意力选择机制，对输入信息编码为，实际上也是一个期望。<br>$$<br>\rm{attn} (X, \mathbf q) = \sum_{i=1}^N \alpha_i \mathbf x_i = E_{z\sim p(z\mid X, \mathbf{q})} [X]<br>$$<br><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/attention.png" style="display:block; margin:auto" width="80%"></p>
+<h2 id="应用与优点"><a href="#应用与优点" class="headerlink" title="应用与优点"></a>应用与优点</h2><p>传统机器翻译Encoder-Decoder的缺点：</p>
+<ul>
+<li>编码向量容量瓶颈问题：所有信息都需要保存在编码向量中</li>
+<li>长距离依赖问题：长距离信息传递时，信息会丢失</li>
+</ul>
+<p><a href="https://plmsmile.github.io/2017/10/12/Attention-based-NMT/">注意力机制和PyTorch实现机器翻译</a></p>
+<p>注意力机制直接从源语言信息中选择相关的信息作为辅助，有下面几个好处：</p>
+<ul>
+<li>解码过程中每一步都直接访问源语言所有位置上的信息。无需让所有信息都通过编码向量进行传递。</li>
+<li>缩短了信息的传递距离。源语言的信息可以直接传递到解码过程中的每一步</li>
+</ul>
+<p>图像描述生成</p>
+<h1 id="注意力机制变体"><a href="#注意力机制变体" class="headerlink" title="注意力机制变体"></a>注意力机制变体</h1><h2 id="多头注意力"><a href="#多头注意力" class="headerlink" title="多头注意力"></a>多头注意力</h2><p><code>Multi-head Attention</code>利用多个查询$\mathbf{q}_{1:M}={\mathbf{q}_1, \cdots, \mathbf{q}_M}$来并行地从输入信息中选取多个信息。每个注意力关注输入信息的不同部分。比如<a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">Attention Is All You Need</a>。     </p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/transformer.png" style="display:block; margin:auto" width="60%"><br><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/multi-head-attention.png" style="display:block; margin:auto" width="80%"></p>
+<h2 id="硬性注意力"><a href="#硬性注意力" class="headerlink" title="硬性注意力"></a>硬性注意力</h2><p>硬性注意力是<code>只关注到一个位置上</code>。</p>
+<ul>
+<li>选取最高概率的输入信息</li>
+<li>在注意力分布上随机采样</li>
+</ul>
+<p>缺点：loss与注意力分布之间的函数关系不可导，无法使用反向传播训练。一般使用软性注意力。</p>
+<p>需要：硬性注意力需要强化学习来进行训练。</p>
+<h2 id="键值对注意力"><a href="#键值对注意力" class="headerlink" title="键值对注意力"></a>键值对注意力</h2><p>输入信息：键值对<code>(Key, Value)</code>。 Key用来计算注意力分布$\alpha_i$，值用来生成选择的信息。<br>$$<br>\rm{attn} (\mathbf{(K, V)}, \mathbf q) = \sum_{i=1}^N \alpha_i \mathbf v_i<br>=  \sum_{i=1}^N\frac{\exp\left(s(\mathbf{k}<em>i, \mathbf{q})\right)}{\sum</em>{j=1}^N \exp\left(s(\mathbf{k}_j, \mathbf{q})\right)} \mathbf v_i<br>$$<br><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/attention.png" style="display:block; margin:auto" width="80%"></p>
+<h2 id="结构化注意力"><a href="#结构化注意力" class="headerlink" title="结构化注意力"></a>结构化注意力</h2><p>普通注意力是在输入信息上的一个多项分布，是一个扁平结构。</p>
+<p>如果输入信息，本身就有<strong>层次化</strong>的结构，词、句子、段落、篇章等不同粒度的层次。这时用<code>层次化的注意力</code>来进行更好的信息选择。</p>
+<p>也可以使用一种图模型，来构建更加复杂的结构化注意力分布。</p>
+<h2 id="指针网络"><a href="#指针网络" class="headerlink" title="指针网络"></a>指针网络</h2><p>前面的都是计算注意力对信息进行筛选：计算注意力分布，利用分布对信息进行加权平均。</p>
+<p>指针网络<code>pointer network</code>是一种序列到序列的模型，用来指出相关信息的位置。也就是只做第一步。</p>
+<p>输入： $X_{1:n} = [\mathbf{x}_1, \cdots, \mathbf{x}_n]$ </p>
+<p>输出：$c_{1:m} = c_1, c_2, \cdots, c_m, \; c_i \in [1,n]$， 输出是序列的下标。如输入123，输出312</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/pointer-net.png" style="display:block; margin:auto" width="80%"></p>
+<p>条件概率<br>$$<br>p(c_{1:m} \mid  \mathbf x_{1:n}) =<br>\prod_{i=1}^m p(c_i \mid c_{1:i-1}, \mathbf x_{1:n})<br>\approx \prod_{i=1}^m p(c_i \mid \mathbf x_{c_1}, \cdots,  \mathbf x_{c_{i-1}}\mathbf x_{1:n})<br>$$</p>
+<p>$$<br>p(c_i \mid c_{1:i-1}, \mathbf x_{1:n}) = \rm{softmax}(s_{i,j})<br>$$</p>
+<p>第i步时，每个输入向量的得分（未归一化的注意力分布）：<br>$$<br>s_{i,j} = v^T\rm{tanh} (W\mathbf{x}_j + U\mathbf{e}_i)<br>$$<br>其中向量$\mathbf e_i$是第i个时刻，RNN对$\mathbf x_{c_1}, \cdots,  \mathbf x_{c_{i-1}}\mathbf x_{1:n}$ 的编码。</p>
+<h1 id="各种注意力计算模型"><a href="#各种注意力计算模型" class="headerlink" title="各种注意力计算模型"></a>各种注意力计算模型</h1><h2 id="注意力的本质"><a href="#注意力的本质" class="headerlink" title="注意力的本质"></a>注意力的本质</h2><p>有$k$个$d$维的特征向量$\mathbf h_i \;(i \in [1,k])$，想要整合这k个特征向量的信息。得到一个向量$\mathbf h^*$，一般也是d维。</p>
+<ul>
+<li>简单粗暴：对k个向量求平均。当然不合理啦。</li>
+<li>加权平均：$\mathbf h^* = \sum_{i=1}^k \alpha_i \mathbf h_i$ 。<code>合理</code> </li>
+</ul>
+<p>所以最重要的就是<strong>合理地求出$\alpha_i$</strong>，根据<code>所关心的对象</code>$\mathbf q$(可能是自身)去计算注意力分布   </p>
+<ul>
+<li>针对每个$\mathbf h_i$， 计算出一个<strong>得分</strong>，$s_i$。 $h_i$与$q$越相关，得分越高。 </li>
+<li>$\alpha_i = \rm{softmax}(s_i)$</li>
+</ul>
+<p>$$<br>s_i = \rm{score}(\mathbf h_i, \mathbf q)<br>$$</p>
+<p>打分函数的计算：(<a href="https://plmsmile.github.io/2017/10/12/Attention-based-NMT/#global-attention">NMT里面三种score打分函数</a> ) </p>
+<ul>
+<li><code>Local-based Attention</code> ，没有外部的关注对象，自己关注自己。</li>
+<li><code>General Attention</code>， 有外部的关注对象，直接乘积，全连接层。</li>
+<li><code>Concatenation-based Attention</code>， 有关注的对象，先concat或相加再过连接层。</li>
+</ul>
+<h2 id="Local-based"><a href="#Local-based" class="headerlink" title="Local-based"></a>Local-based</h2><p>没有外部的信息，每个向量的得分<strong>与自己相关，与外部无关</strong>。</p>
+<p>比如：<code>Where is the football?</code> ，<code>where</code>和<code>football</code>在句子中起总结性作用。Attention只与句子中的每个词有关。</p>
+<p>一个句子，有多个词，多个向量。通过自己计算注意力分布，再对这些词的注意力进行加权求和，则可以得到这个句子的最终表达。<br>$$<br>s_i  = f(\mathbf h_i) = \rm{a}(W^T \mathbf h_i + b)<br>$$</p>
+<p>$$<br>\mathbf h^* = \sum_{i=1}^n s_i \cdot \mathbf h_i<br>$$</p>
+<p>a是<a href="https://plmsmile.github.io/2017/11/23/cs224n-notes3-neural-networks/#%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0">激活函数</a>。 <code>sigmoid</code>, <code>tanh</code>, <code>relu</code>, <code>maxout</code>， <code>y=x</code>（无激活函数）。  </p>
+<p><strong>1 一个得分简单求法</strong> </p>
+<p><a href="https://openreview.net/pdf?id=SkyQWDcex" target="_blank" rel="noopener">A Context-Aware Attention Network For Interactive Question Answering</a></p>
+<p>利用自己计算注意力分布<br>$$<br>\gamma_j = \rm{softmax} (\mathbf v^T \mathbf g_j^q)<br>$$<br>利用新的注意力分布去计算最终的attention向量<br>$$<br>\mathbf u = W_{ch} \sum_{j=1}^N \gamma_j \mathbf g_j^q + \mathbf b_c ^q<br>$$<br><strong>2 两个得分合并为一个得分</strong></p>
+<p><a href="http://wnzhang.net/papers/dadm-kdd.pdf" target="_blank" rel="noopener">Dynamic Attention Deep Model for Article Recommendation by Learning Human Editors’ Demonstration </a></p>
+<p>计算两个得分<br>$$<br>\lambda _{m_t}^M = w_{m_t}^M \cdot \mathbf o + b_{m_t}^M , \quad<br>\lambda_t ^T = w_t^T \cdot \mathbf o + b_t^T<br>$$<br>权值合并，求注意力分布：<br>$$<br>p_t = \rm{softmax} (\alpha \lambda _{m_t}^M + (1-\alpha) \lambda_t ^T)<br>$$<br><strong>3 论文图片</strong></p>
+<p>CAN for QA</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/CAN-1.png" style="display:block; margin:auto" width="80%"></p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/CAN.png" style="display:block; margin:auto" width="80%"></p>
+<p>Dynamic Attention </p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/dynamic-attention-1.png" style="display:block; margin:auto" width="80%"></p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/dynamic-attention-2.png" style="display:block; margin:auto" width="80%"></p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/dynamic-attention-3.png" style="display:block; margin:auto" width="80%"></p>
+<h2 id="General-Attention"><a href="#General-Attention" class="headerlink" title="General Attention"></a>General Attention</h2><p>有外部的信息，$\mathbf h_i$ 与 $\mathbf q$进行乘积得分。 <a href="https://plmsmile.github.io/2017/10/12/Attention-based-NMT/#global-attention">机器翻译的应用</a><br>$$<br>\rm{score}(\mathbf h_i, \mathbf q) = \mathbf h_i^T W\mathbf q<br>$$</p>
+<h2 id="Concatenation-based"><a href="#Concatenation-based" class="headerlink" title="Concatenation-based"></a>Concatenation-based</h2><p>要关注的外部对象是$\mathbf h_t$， 可以随时间变化，也可以一直不变(question)。<br>$$<br>s_i = f(\mathbf h_i, \mathbf h_t) = \mathbf v^T \rm a(W_1 \mathbf h_i + W_2 \mathbf h_t + b)<br>$$<br><strong>1 多个元素组成Attention</strong> </p>
+<p><a href="https://www.comp.nus.edu.sg/~xiangnan/papers/sigir17-AttentiveCF.pdf" target="_blank" rel="noopener">Attentive Collaborative Filtering Multimedia Recommendation with Item- and Component-Level Attention_sigir17</a></p>
+<p>Item-Level Attention。可以看到需要加什么Attention，直接向公式里面一加就可以了。<br>$$<br>a(i, l) = w_1^T \phi(W_{1u} \mathbf u_i + W_{1v} \mathbf v_l + W_{1p} \mathbf p_l + W_{1x} \mathbf {\bar x}_l + \mathbf b_1) + \mathbf c_1<br>$$</p>
+<p>$$<br>\alpha(i, l) = \frac<br>{\exp (a(i, l))}<br>{\sum_{n \in R(i)} \exp (a(i, n))}<br>$$</p>
+<h2 id="多层Attention"><a href="#多层Attention" class="headerlink" title="多层Attention"></a>多层Attention</h2><p>有$m$个句子，每个句子有$k$个词语。</p>
+<p><code>Word-level Attention</code></p>
+<p>每个句子，有k个词语，每个词语一个词向量，使用<code>Local-based Attention</code> ， 可以得到这个句子的向量表达$\mathbf s_i$。</p>
+<p><code>Sentence-level Attention</code></p>
+<p>有$m$个句子，每个句子是一个句子向量$\mathbf s_i$。 可以再次Attention，得到文档的向量表达$\mathbf d$， 也可以得到每个句子的权值$\alpha_i$。</p>
+<p>得到这些信息之后，再具体问题具体分析。</p>
+<p><strong>1. 文章摘要生成</strong></p>
+<p><a href="https://staff.fnwi.uva.nl/m.derijke/wp-content/papercite-data/pdf/ren-leveraging-2017.pdf" target="_blank" rel="noopener">Leveraging Contextual Sentence Relations for Extractive Summarization Using a Neural Attention Model_SIGIR2017</a> </p>
+<p>输入一篇文档，输出它的摘要。</p>
+<ul>
+<li>第一层：<code>Local-based Attention</code>， 生成每个句子的vector</li>
+<li>第二层：当前句子作为中心，2n+1个句子。输入RNN（不明白）。将中心句子作为attention，来编码上下文。通过上下文对中心句子进行打分。作为该句子对整个文本的重要性</li>
+</ul>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/ap-bi-cnn-sentence-modeling.png" style="display:block; margin:auto" width="100%"></p>
+<h2 id="CAN的实时问答"><a href="#CAN的实时问答" class="headerlink" title="CAN的实时问答"></a>CAN的实时问答</h2><p><a href="https://openreview.net/pdf?id=SkyQWDcex" target="_blank" rel="noopener">A Context-Aware Attention Network For Interactive Question Answering</a></p>
+<p>第一层Attention</p>
+<p>对句子过GRU，每一时刻的output作为词的编码。再使用Local-Attention对这些词，得到<strong>问句的表达</strong>$\mathbf u$。 </p>
+<p>第二层Attention</p>
+<p>由于上下文有多个句子。</p>
+<p>首先，对一个句子进行过GRU，得到每一时刻单词的语义信息$\alpha^t$， 然后利用Concat-Attention对这些单词计算，得到这句话的语义信息$\mathbf y_t$。</p>
+<p>再把当前句子的语义信息给到句子的GRU</p>
+<p>第三次Attention</p>
+<p>经过GRU，得到<strong>每个句子的表达</strong>$\mathbf s_t$。 再使用Concat-Attention来得到<strong>每个句子的注意力分配</strong>$\mathbf \beta_t$, 然后加权求和得到 <strong>整个Context的表达</strong>$\mathbf m$。</p>
+<p>输出</p>
+<p>结合$\mathbf {m, u}$通过GRU去生成答案 </p>
+<ul>
+<li><code>Period Symbol</code> ：是正确答案，直接输出</li>
+<li><code>Question Mask</code>： 输出是一个问题，要继续问用户相应的信息</li>
+</ul>
+<p>用户重新给了反馈之后，对所有词汇信息使用<code>simple attention mechanism</code>， 即平均加权，所有的贡献都是一样的。得到反馈的向量表达$\mathbf f$。</p>
+<p>使用新的反馈向量和原始的问句向量，结合，重新生成新的context的语义表达$\mathbf m$。 最终得到新的$\mathbf {m, u}$ 去重新回答。<br>$$<br>\mathbf r = \tanh (W_{rf}f + \mathbf b_r^{(f)})<br>$$</p>
+<p>$$<br>\beta_t = \rm{softmax}(\mathbf u^T \mathbf s_t + \mathbf r^T \mathbf s_t)<br>$$</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/CAN.png" style="display:block; margin:auto" width="100%"></p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/ntm.png" style="display:block; margin:auto" width="80%"></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-11-25T08:30:08.584Z" itemprop="dateUpdated">2018-11-25 16:30:08</time>
+</span><br>
+
+
+        
+        <br>原始链接：<a href="/2018/03/25/33-attention-summary/" target="_blank" rel="external">http://plmsmile.github.io/2018/03/25/33-attention-summary/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://plmsmile.github.io">
+            <img src="/img/avatar.jpg" alt="PLM">
+            PLM
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Attention/">Attention</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/论文笔记/">论文笔记</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2018/03/25/33-attention-summary/&title=《各种注意力总结》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/03/25/33-attention-summary/&title=《各种注意力总结》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2018/03/25/33-attention-summary/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《各种注意力总结》 — PLM's Notes&url=http://plmsmile.github.io/2018/03/25/33-attention-summary/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2018/03/25/33-attention-summary/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/03/30/35-nerual-network-optim/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">网络优化</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/03/15/32-dynamic-coattention-network/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Dynamic Coattention Network (Plus)</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "kR8nND4dcsWgqDWIjpiH4YFj-gzGzoHsz",
+            appKey: "il7PLkcJCfDBXMR6XirLdO2K",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="bottom">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <span>
+            PLM's Notes &nbsp; &copy; &nbsp
+            </span>
+            2016 - 2018
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2018/03/25/33-attention-summary/&title=《各种注意力总结》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/03/25/33-attention-summary/&title=《各种注意力总结》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2018/03/25/33-attention-summary/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《各种注意力总结》 — PLM's Notes&url=http://plmsmile.github.io/2018/03/25/33-attention-summary/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2018/03/25/33-attention-summary/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACMklEQVR42u3aS27kMAwFwNz/0p3tDNI23qOcAC2VVo34I5UDEBSpr694vC7Gv1ev7k/emT+1NDAwMD6W8bodV/dcAZL3/3w2n/eSioGBcQDjavp8ucniktCczIuBgYExY+SJ4H0KiIGBgfEUo034kqXkqScGBsaZjFlB7Z6UB+U/3YtjYGB8IGO2Nf2b37/S38DAwPgoxqscyfTJX1bW8GZVGBgYWzOebUPmRbf1gIuBgXEOIymHta3Hdqs5O1725v+AgYGxNaNtQObltrxYNktJ/wu4GBgYBzOeaknm1DzRHJ7OwMDA+FhGsqA8vOZp30pK+ibgYmBgbMdoX/obndIkoBezY2BgbMdo07K2PDdLK/NVXXZiMTAwNmLkhf6njpG12916bRgYGJsy2lLXStOxbRVEp0UwMDC2ZrTNwjbVy++ZfVAMDIwTGLMp2+nzJC/fshZhFwMDYwvGysYyj37tlrgN1hgYGLsyVgJl2+ycXS3OjGBgYGzKyAtb98lcchRs5WNF4R4DA+MARpL2JYlduxFtmxCXT2FgYBzDaFuPswA9a20WARcDA2NTxsoBi5WjYEWTMq8XYmBgbMR4laNtZ856FHUrAgMDY2tGPmZHIp4N3G2jAgMDYyfGbAP51NW2IVF8aQwMjO0Ys+B4v9AZtW08YGBgYMwakyuHMIZbVgwMDIz8IGmZgOYFuKg9gIGBsTWjLfevpIlPFfUwMDDOYbR5V7ug9moeZDEwMA5gfAOPsZNhT400TAAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

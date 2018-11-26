@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>机器学习知识点汇总整理 | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="机器学习">
+    <meta name="description" content="Tensorflow1 Tensorflow的计算图 Tensorflow通过计算图的形式来表示计算。是一个有向图。节点代表一个计算，边代表计算之间的依赖关系。  构建计算图 执行计算图，session.run  12345678910x_data = np.float32(np.random.rand(2,100))y_data = np.dot([0.1 , 0.2] , x_data) +">
+<meta name="keywords" content="机器学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习知识点汇总整理">
+<meta property="og:url" content="http://plmsmile.github.io/2018/03/03/28-ml-interview-notes/index.html">
+<meta property="og:site_name" content="PLM&#39;s Notes">
+<meta property="og:description" content="Tensorflow1 Tensorflow的计算图 Tensorflow通过计算图的形式来表示计算。是一个有向图。节点代表一个计算，边代表计算之间的依赖关系。  构建计算图 执行计算图，session.run  12345678910x_data = np.float32(np.random.rand(2,100))y_data = np.dot([0.1 , 0.2] , x_data) +">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/itv/tf/flow-graph.jpg">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/it/knn/knn.png">
+<meta property="og:updated_time" content="2018-11-25T08:30:08.360Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习知识点汇总整理">
+<meta name="twitter:description" content="Tensorflow1 Tensorflow的计算图 Tensorflow通过计算图的形式来表示计算。是一个有向图。节点代表一个计算，边代表计算之间的依赖关系。  构建计算图 执行计算图，session.run  12345678910x_data = np.float32(np.random.rand(2,100))y_data = np.dot([0.1 , 0.2] , x_data) +">
+<meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/itv/tf/flow-graph.jpg">
+    
+        <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">PLM</h5>
+          <a href="mailto:plmsmile@126.com" title="plmsmile@126.com" class="mail">plmsmile@126.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                类别
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/plmsmile" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">机器学习知识点汇总整理</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">机器学习知识点汇总整理</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-03-03T13:32:52.000Z" itemprop="datePublished" class="page-time">
+  2018-03-03
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/机器学习/">机器学习</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Tensorflow"><span class="post-toc-number">1.</span> <span class="post-toc-text">Tensorflow</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#KNN"><span class="post-toc-number">2.</span> <span class="post-toc-text">KNN</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Logistic-Regression"><span class="post-toc-number">3.</span> <span class="post-toc-text">Logistic Regression</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-28-ml-interview-notes" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">机器学习知识点汇总整理</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-03-03 21:32:52" datetime="2018-03-03T13:32:52.000Z" itemprop="datePublished">2018-03-03</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/机器学习/">机器学习</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p><img src="" style="display:block; margin:auto" width="60%"></p>
+<h1 id="Tensorflow"><a href="#Tensorflow" class="headerlink" title="Tensorflow"></a>Tensorflow</h1><p><strong>1 Tensorflow的计算图</strong></p>
+<p>Tensorflow通过<code>计算图</code>的形式来表示计算。是一个有向图。<strong>节点</strong>代表一个<code>计算</code>，<strong>边</strong>代表计算之间的<code>依赖关系</code>。</p>
+<ul>
+<li>构建计算图</li>
+<li>执行计算图，<code>session.run</code></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">x_data = np.float32(np.random.rand(<span class="number">2</span>,<span class="number">100</span>))</span><br><span class="line">y_data = np.dot([<span class="number">0.1</span> , <span class="number">0.2</span>] , x_data) + <span class="number">0.3</span></span><br><span class="line">b = tf.Variable(tf.zeros([<span class="number">1</span>]))</span><br><span class="line">W = tf.Variable(tf.random_uniform([<span class="number">1</span>,<span class="number">2</span>],<span class="number">-1.0</span>,<span class="number">1.0</span>))</span><br><span class="line"></span><br><span class="line">y = tf.matmul(W,x_data) + b</span><br><span class="line"></span><br><span class="line">loss = tf.reduce_mean(tf.square(y - y_data))</span><br><span class="line">optimizer = tf.train.GradientDescentOptimizer(<span class="number">0.5</span>)</span><br><span class="line">train = optimizer.minimize(loss)</span><br></pre></td></tr></table></figure>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/itv/tf/flow-graph.jpg" style="display:block; margin:auto" width="30%"></p>
+<h1 id="KNN"><a href="#KNN" class="headerlink" title="KNN"></a>KNN</h1><p>看中间的绿色属于哪一类？</p>
+<ul>
+<li>和谁近就属于谁</li>
+<li>看k个</li>
+</ul>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/it/knn/knn.png" style="display:block; margin:auto" width="30%"></p>
+<p><strong>1 欧式距离和曼哈顿距离</strong></p>
+<p><code>欧式距离</code>是两点之间的距离<br>$$<br>d = \sqrt {(x_1-x_2)^2 +(y_1-y_2)^2  }<br>$$<br><code>曼哈顿距离</code>也称作<code>城市街区距离</code>，两个十字路口的实际要走的距离<br>$$<br>d = \vert x_1 - x_2\vert +  \vert y_1 -y_2 \vert<br>$$<br><strong>2 K值的选择</strong></p>
+<ul>
+<li>k较小：用较小范围进行预测。容易过拟合，模型复杂。</li>
+<li>k较大：用较大范围进行预测。较远不相似的也会起作用，会发生错误。模型简单。</li>
+<li>k=N：完全不可取。每个都是属于最多样本的类别</li>
+<li>一般选择比较小的数值。如采用<code>交叉验证法</code>来选择最优的k值。 （一部分训练，一部分测试）</li>
+</ul>
+<h1 id="Logistic-Regression"><a href="#Logistic-Regression" class="headerlink" title="Logistic Regression"></a>Logistic Regression</h1><p><a href="https://plmsmile.github.io/2017/08/20/ml-ng-notes/#逻辑回归">我的LR笔记</a> </p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">问题列表</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">1 简介LR</td>
+</tr>
+<tr>
+<td style="text-align:left">2 LR与SVM的区别和联系</td>
+</tr>
+<tr>
+<td style="text-align:left">3 LR与线性回归的区别和联系</td>
+</tr>
+</tbody>
+</table>
+<p><strong>1 简介LR</strong></p>
+<p>问一个女生喜欢你吗，SVM会告诉你喜欢或者不喜欢。很粗暴。</p>
+<p>LR则会告诉你，有多喜欢你，多不喜欢你。就是告诉你一个<code>可能性</code>。多喜欢你是取决于她的看重点权值和你身上有的东西x。<br>$$<br>p(y=1\mid x;\theta)= \sigma(\theta^Tx)=\frac{1}{1+e^{-\theta^Tx}} \quad\quad  = h_\theta(x)<br>$$</p>
+<p>$$<br>p(y=1) = h(x), \quad p(y=0) = 1-h(x)<br>$$</p>
+<p>使用<code>极大似然法</code>进行参数估计：<strong>样本恰好使联合概率密度（似然函数）取得最大值</strong>。<strong>概率密度相乘</strong>。</p>
+<p><code>对数似然函数</code>：<br>$$<br>\begin{align}<br>L(\theta)<br>&amp; = \log \prod_{i=1}^N [h(x)^{y_i} ][1-h(x)]^{1-y_i} \<br>&amp; = \sum_{i=1}^N \left( y_i \log h(x) + (1-y_i)\log(1-h(x)) \right) \<br>&amp; = \sum_{i=1}^N (y_i \theta^Tx_i - \log(1+e^{\theta^Tx}))<br>\end{align}<br>$$<br>使$L(\theta)$最大，取负数就是其<code>损失函数</code> ：<br>$$<br>J(\theta) = -\frac{1}{m} L(\theta) = -\frac{1}{m} \sum_{i=1}^N \left( y_i \log h(x) + (1-y_i)\log(1-h(x)) \right)<br>$$<br>令导数为0，发现无法解析求解。<br>$$<br>\begin{align}<br>\frac{\partial L(\theta)}{\partial \theta}<br>&amp; =\sum_{i=1}^N y_i x_i  - \sum_{i=1}^N \frac{e^{\theta^Tx}}{1 + e^{\theta^Tx}} x_i \<br>&amp; = \sum_{i=1}^N x_i (y_i - \sigma(\theta^Tx) )<br>\end{align}<br>$$<br>只能借助迭代法，如<strong>梯度下降法和拟牛顿法来进行求解</strong>。</p>
+<p><strong>2 LR和SVM的比较</strong></p>
+<p><strong>相同点</strong></p>
+<ul>
+<li>都是分类算法，都是监督学习算法</li>
+<li>如果不考虑核函数，LR和SVM都是<code>线性分类算法</code>，决策面都是线性的</li>
+<li>LR和SVM都是<a href="https://plmsmile.github.io/2017/08/04/pgm-01/#产生式和判别式">判别式模型</a>。 不关心数据怎么生成，只关心数据之间的差别。用差别来进行分类。</li>
+</ul>
+<p>判别模型： <code>KNN</code>、 <code>LR</code> 、<code>SVM</code> 。 生成式模型：<code>朴素贝叶斯</code>、 <code>HMM</code> 。</p>
+<p><strong>不同点</strong></p>
+<ul>
+<li><p>损失函数不同<br>$$<br>J(\theta)  = -\frac{1}{m} \sum_{i=1}^N \left( y_i \log h(x) + (1-y_i)\log(1-h(x)) \right)<br>$$</p>
+<p>$$<br>L(w, b, \lambda) =\frac{1}{2} |w|^2 - \sum_{i=1}^n \alpha_i \left(y_i(w^Tx_i+b) - 1\right)<br>$$</p>
+</li>
+</ul>
+<p>LR基于<code>概率理论</code>，用<code>sigmoid</code>函数表示，通过<code>极大似然法</code>估计出参数的值。</p>
+<p>SVM基于<code>间隔最大化原理</code>，认为最大几何间隔的分类面为最优分类面。</p>
+<ul>
+<li>SVM只在乎边界线附近的点(SV)，LR在乎所有的点。</li>
+<li>SVM不直接依赖于数据分布；LR受所有点影响，如果不同类别不平衡，要对数据做<code>balancing</code> </li>
+<li>处理非线性问题时，SVM使用核函数，LR不使用核函数</li>
+<li>SVM只有少数SV进行核计算，LR如果用核函数，则所有的点都会进行计算，代价太高</li>
+<li>线性SVM依赖数据的距离测度，要对数据做归一化，而LR不用</li>
+<li>SVM损失函数自带L2正则项，而LR需要额外添加</li>
+</ul>
+<p><strong>3 LR与线性回归的联系</strong></p>
+<p><strong>联系</strong></p>
+<p>LR本质上是一个线性核回归模型</p>
+<p><strong>区别</strong></p>
+<ul>
+<li>目标函数：线性回归最小二乘，LR是似然函数</li>
+<li>线性回归整个实数范围内进行预测；LR预测值限定为<code>[0,1]</code> ，<code>sigmoid</code>的非线性形式。轻松处理<code>0/1分类问题</code></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-11-25T08:30:08.360Z" itemprop="dateUpdated">2018-11-25 16:30:08</time>
+</span><br>
+
+
+        
+        <br>原始链接：<a href="/2018/03/03/28-ml-interview-notes/" target="_blank" rel="external">http://plmsmile.github.io/2018/03/03/28-ml-interview-notes/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://plmsmile.github.io">
+            <img src="/img/avatar.jpg" alt="PLM">
+            PLM
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/机器学习/">机器学习</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2018/03/03/28-ml-interview-notes/&title=《机器学习知识点汇总整理》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/03/03/28-ml-interview-notes/&title=《机器学习知识点汇总整理》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2018/03/03/28-ml-interview-notes/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《机器学习知识点汇总整理》 — PLM's Notes&url=http://plmsmile.github.io/2018/03/03/28-ml-interview-notes/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2018/03/03/28-ml-interview-notes/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/03/05/29-desicion-tree/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">决策树笔记</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/03/02/aim2offer4/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Aim2offer4(51-64)</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "kR8nND4dcsWgqDWIjpiH4YFj-gzGzoHsz",
+            appKey: "il7PLkcJCfDBXMR6XirLdO2K",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="bottom">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <span>
+            PLM's Notes &nbsp; &copy; &nbsp
+            </span>
+            2016 - 2018
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2018/03/03/28-ml-interview-notes/&title=《机器学习知识点汇总整理》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/03/03/28-ml-interview-notes/&title=《机器学习知识点汇总整理》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2018/03/03/28-ml-interview-notes/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《机器学习知识点汇总整理》 — PLM's Notes&url=http://plmsmile.github.io/2018/03/03/28-ml-interview-notes/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2018/03/03/28-ml-interview-notes/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACLUlEQVR42u3aSW7DMBAEwPz/0w6QUwBv3UM7iMniKXAsSqXDeBZ+fcXr8rPuff57XX/+eM/2qqWFgYHxsYzLw3WP8fj2CTt5ZcmzYWBgnMOYbZcj2/3zazEwMDDagHvvqihojl4BBgYGRpL8JYVomw5iYGBgzIrYnJHceCVMY2BgnMZoBwN/+fcb5xsYGBgfwriUazbmbIve+qkwMDC2ZiSttGQAmSd5s1I5CscYGBgHMGYHv/Lvt0ln3bzDwMA4hjHbNKko2xBc/xcDA2NrRtu4zwErCV87IsXAwNib0Tbl2wC9UioXLxcDA2NTRv7V9uBXvkM7HrhxRwwMjAMY63llTn3B78P1/hgYGAcw8gZZO9SctdjqMhgDA2NrRv5w7Q1mQ8qX9Q4xMDA2ZbSlbDtCaEP5cIyKgYGxKSPZbtbuT0L2Sop5d76BgYGxESMPlLOhY54ILrXnMDAwDmDM0rvZQYp82Jm/PgwMjL0ZbShsW/YzapI4PqnFMTAwNmK845DEbADQpqFvP+uBgYHxzxh5wytP8tZ/B/Kgj4GBsTej3XQWRmeFbn4QBAMDY2/GpVztUDMfZ7bDzhtdQwwMjE0ZKwcsVh5ldphjdrAMAwNjD0Y7RMzL1NkbbQeZGBgY5zBmQXY2kpytJ3fEwMDAKENqHmrzpDMaDGBgYGAs1Md5yG7HmRgYGOcw2vZZ8rj1NLUcmg5rcQwMjA9krBeQ7eGwdrSZpJUYGBibMr4BoJL6CI5WpCEAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

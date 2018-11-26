@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>基于策略函数的学习方法 | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="策略函数,策略梯度,REINFORCE,基准函数,Actot-Critic,强化学习算法总结">
+    <meta name="description" content="基于策略函数的学习方法和Actor-Critc算法。">
+<meta name="keywords" content="策略函数,策略梯度,REINFORCE,基准函数,Actot-Critic,强化学习算法总结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于策略函数的学习方法">
+<meta property="og:url" content="http://plmsmile.github.io/2018/04/22/41-strategy-learning/index.html">
+<meta property="og:site_name" content="PLM&#39;s Notes">
+<meta property="og:description" content="基于策略函数的学习方法和Actor-Critc算法。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/rl/reinforce.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/rl/reinforce-base.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/rl/actor-critic.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/rl/reinforce-all.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/rl/four-compare.png">
+<meta property="og:updated_time" content="2018-11-25T08:30:08.899Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于策略函数的学习方法">
+<meta name="twitter:description" content="基于策略函数的学习方法和Actor-Critc算法。">
+<meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/rl/reinforce.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">PLM</h5>
+          <a href="mailto:plmsmile@126.com" title="plmsmile@126.com" class="mail">plmsmile@126.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                类别
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/plmsmile" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">基于策略函数的学习方法</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">基于策略函数的学习方法</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-04-22T05:44:08.000Z" itemprop="datePublished" class="page-time">
+  2018-04-22
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/强化学习/">强化学习</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#基于策略函数的学习方法"><span class="post-toc-number">1.</span> <span class="post-toc-text">基于策略函数的学习方法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#强化学习目标"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">强化学习目标</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#策略梯度"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">策略梯度</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#REINFORCE算法"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">REINFORCE算法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#带基准线的REINFORCE算法"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">带基准线的REINFORCE算法</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Actor-Critic算法"><span class="post-toc-number">2.</span> <span class="post-toc-text">Actor-Critic算法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#思想"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">思想</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#值函数的三个功能"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">值函数的三个功能</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#算法实现步骤"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">算法实现步骤</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#强化学习算法总结"><span class="post-toc-number">3.</span> <span class="post-toc-text">强化学习算法总结</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#方法总览"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">方法总览</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#四个典型方法"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">四个典型方法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#与监督学习的区别"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">与监督学习的区别</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-41-strategy-learning" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">基于策略函数的学习方法</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-04-22 13:44:08" datetime="2018-04-22T05:44:08.000Z" itemprop="datePublished">2018-04-22</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/强化学习/">强化学习</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>基于策略函数的学习方法和Actor-Critc算法。<a id="more"></a> </p>
+<p><a href="https://plmsmile.github.io/2018/04/01/37-reinforce-learning/">强化学习基础</a> 、<a href="https://plmsmile.github.io/2018/04/21/40-value-learning/">基于值函数的学习方法</a></p>
+<p><img src="" style="display:block; margin:auto" width="60%"></p>
+<h1 id="基于策略函数的学习方法"><a href="#基于策略函数的学习方法" class="headerlink" title="基于策略函数的学习方法"></a>基于策略函数的学习方法</h1><h2 id="强化学习目标"><a href="#强化学习目标" class="headerlink" title="强化学习目标"></a>强化学习目标</h2><p>强化学习的目标是<strong>学习到一个策略$\pi_{\theta}(a\mid s)$</strong>，来<strong>最大化这个策略的期望回报</strong>。<strong>希望智能体能够获得更多的回报</strong>。本质上是策略搜索。<br>$$<br>J(\theta) = E_{\tau \sim p_{\theta}(\tau)} [\sum_{t=0}^{T-1}\gamma ^tr_{t+1}]<br>$$</p>
+<p>$$<br>J(\theta) = \int p_{\theta}(\tau) \cdot G(\tau) \, {\rm d}\tau<br>$$</p>
+<p><code>策略搜索</code>本质上是一个<code>优化问题</code>，无需值函数可以直接优化策略。参数化的策略可以处理连续状态和动作。</p>
+<ul>
+<li><strong>基于梯度的优化</strong></li>
+<li>无梯度的优化</li>
+</ul>
+<h2 id="策略梯度"><a href="#策略梯度" class="headerlink" title="策略梯度"></a>策略梯度</h2><p><strong>1. 思想和假设</strong></p>
+<p><strong>策略梯度</strong> ：是一种基于梯度的强化学习方法。</p>
+<p><strong>策略连续可微假设</strong>：假设$\pi_{\theta}(a \mid s)$是一个关于$\theta$的连续可微函数。</p>
+<p><strong>2. 优化目标</strong></p>
+<p>最大化策略的期望回报。</p>
+<p>$$<br>J(\theta) = \int p_{\theta}(\tau) \cdot G(\tau) \, {\rm d}\tau<br>$$</p>
+<p><strong>3. 策略梯度推导</strong></p>
+<p>采用梯度上升法来优化参数$\theta$来使得$J(\theta)$最大。</p>
+<p><strong>策略梯度$\frac{\partial J(\theta)}{\partial \theta}$</strong>的推导如下：</p>
+<p>1、参数$\theta$的优化方向是总回报$G(\tau)$大的轨迹$\tau$，其概率$p_\theta(\tau)$也就越大。<br>$$<br>\begin{align}<br>\frac{\partial J(\theta)}{\partial \theta}<br>&amp; = \frac{\partial} {\partial \theta}  \int p_{\theta}(\tau) \cdot G(\tau) \, {\rm d}\tau<br>= \int \left(\frac{\partial}{\partial \theta}  p_{\theta}(\tau)\right) \cdot G(\tau) \, {\rm d}\tau \<br>&amp; =  \int \color{blue}{p_{\theta}(\tau)} \cdot \left(\color{blue}{\frac{1} {p_{\theta}(\tau)}}\frac{\partial}{\partial \theta}  p_{\theta}(\tau)\right) \cdot G(\tau) \, {\rm d}\tau \<br>&amp; = \int p_{\theta}(\tau) \cdot \left( \color{blue}{ \frac{\partial}{\partial \theta} \log  p_{\theta}(\tau) }\right) \cdot G(\tau) \, {\rm d}\tau \<br>&amp; \triangleq E_{\tau \sim  p_{\theta}(\tau)} \left[ \color{blue}{\frac{\partial}{\partial \theta} \log  p_{\theta}(\tau)} \cdot G(\tau)\right]<br>\end{align}<br>$$<br>2、梯度只和策略相关，轨迹的梯度 == 各个时刻的梯度的求和<br>$$<br>\begin{align}<br>\frac{\partial}{\partial \theta} \log  p_{\theta}(\tau)<br>&amp; = \frac{\partial}{\partial \theta} \log \left( p(s_0) \cdot \prod_{t=0}^{T-1} \underbrace {\pi_{\theta}(a_t \mid s_t) }<em>{\color{blue}{执行动作}} \underbrace{p(s</em>{t+1} \mid s_t,a_t)}_{\color{blue}{环境改变}}\right) \<br>&amp; = \frac{\partial}{\partial \theta} \log  \left( \log p(s_0) + \color{blue}{\sum_{t=0}^{T-1} \log\pi_{\theta}(a_t \mid s_t) }+  \sum_{t=0}^{T-1} \log p(s_{t+1} \mid s_t,a_t)  \right) \<br>&amp; = \sum_{t=0}^{T-1} \frac{\partial}{\partial \theta}  \color{blue}{ \log\pi_{\theta}(a_t \mid s_t)}<br>\end{align}<br>$$<br>3、策略梯度 == 轨迹的梯度*轨迹的回报 的期望<br>$$<br>\begin{align}<br>\frac{\partial J(\theta)}{\partial \theta}<br>&amp; = E_{\tau \sim p_{\theta}(\tau)}\left[<br>\left(\sum_{t=0}^{T-1} \frac{\partial}{\partial \theta}  \log\pi_{\theta}(a_t \mid s_t) \right)<br>\cdot G(\tau)\right] \<br>&amp; =  E_{\tau \sim p_{\theta}(\tau)}\left[<br>\left(\sum_{t=0}^{T-1} \frac{\partial}{\partial \theta}  \log\pi_{\theta}(a_t \mid s_t) \right)<br>\cdot<br>\left( \color{blue}{G(\tau_{1:k-1}) + \gamma^k \cdot G(\tau_{k:T})}\right)<br>\right] \<br>&amp; =  E_{\tau \sim p_{\theta}(\tau)}\left[<br>\sum_{t=0}^{T-1} \left(\frac{\partial}{\partial \theta}  \log\pi_{\theta}(a_t \mid s_t) \cdot \gamma^t G(\tau_{t:T})\right)<br>\right]<br>\end{align}<br>$$<br>其中$G(\tau_{t:T})​$是从时刻$t​$作为起始时刻收到的总回报<br>$$<br>G(\tau_{t:T}) =  \sum_{i=t}^{T-1} \gamma ^{i-t} r_{i+1}<br>$$<br><strong>4. 总结</strong></p>
+<p>$$<br>\frac{\partial J(\theta)}{\partial \theta}  \triangleq E_{\tau \sim  p_{\theta}(\tau)} \left[ \color{blue}{\frac{\partial}{\partial \theta} \log  p_{\theta}(\tau)} \cdot G(\tau)\right]<br>$$</p>
+<p>$$<br>\frac{\partial}{\partial \theta} \log  p_{\theta}(\tau) =  \sum_{t=0}^{T-1} \frac{\partial}{\partial \theta}  \color{blue}{ \log\pi_{\theta}(a_t \mid s_t)}<br>$$</p>
+<p>$$<br>\begin{align}<br>\frac{\partial J(\theta)}{\partial \theta}<br>&amp; =  E_{\tau \sim p_{\theta}(\tau)}\left[<br>\sum_{t=0}^{T-1} \left(\frac{\partial}{\partial \theta}  \log\pi_{\theta}(a_t \mid s_t) \cdot \gamma^t G(\tau_{t:T})\right)<br>\right]<br>\end{align}<br>$$</p>
+<h2 id="REINFORCE算法"><a href="#REINFORCE算法" class="headerlink" title="REINFORCE算法"></a>REINFORCE算法</h2><p><strong>期望</strong>可以通过<strong>采样的方法来近似</strong>。对于当前策略$\pi_\theta$，可以<strong>随机游走采集N个轨迹</strong>。$\tau^{(1)},\cdots, \tau^{(N)}$<br>$$<br>\begin{align}<br>\frac{\partial J(\theta)}{\partial \theta}<br>&amp; \approx  \frac{1}{N}\sum_{n=1}^    N<br>\left[<br>\sum_{t=0}^{T-1} \left(\frac{\partial}{\partial \theta}  \log\pi_{\theta}(a^{(n)}_t \mid s^{(n)}<em>t) \cdot \gamma^t G(\tau^{(n)}</em>{t:T})\right)<br>\right]<br>\end{align}<br>$$<br>可微分策略函数$\pi_\theta(a\mid s)​$，折扣率$\gamma​$，学习率$\alpha​$ </p>
+<p>初始化参数$\theta$， 训练，直到$\theta$收敛</p>
+<p>1、<strong>根据$\pi_\theta(a\mid s)$生成一条轨迹</strong><br>$$<br>\tau = s_0, a_0, s_1,a_1, \cdots, s_{T-1}, a_{T-1}, s_{T}<br>$$<br>2、<strong>在每一时刻更新参数</strong> (0~T)</p>
+<ul>
+<li>计算$G(\tau_{t:T})$</li>
+<li>$\theta \leftarrow \theta + \alpha \cdot \gamma^tG(\tau_{t:T}) \cdot \frac{\partial}{\partial \theta}  \log\pi_{\theta}(a_t \mid s_t)$</li>
+</ul>
+<p>REINFORCE算法<code>缺点</code>：<strong>不同路径之间的方差很大，导致训练不稳定</strong>；需要根据一个策略<strong>采集一条完整的轨迹</strong>。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/rl/reinforce.png" style="display:block; margin:auto" width="80%"></p>
+<h2 id="带基准线的REINFORCE算法"><a href="#带基准线的REINFORCE算法" class="headerlink" title="带基准线的REINFORCE算法"></a>带基准线的REINFORCE算法</h2><blockquote>
+<p>值函数作为基准函数，去减小策略梯度的方差</p>
+</blockquote>
+<p>由于不同轨迹之间的方差很大，导致训练不稳定，使用基准函数去减小策略梯度的方差。</p>
+<p><strong>1. 减小方差的办法</strong></p>
+<p>目标：估计函数$f$的期望，同时要减小$f$的方差。</p>
+<p>方法</p>
+<ul>
+<li>引入已知期望的函数$g$</li>
+<li><strong>$\hat f = f - \alpha(g - E[g])$</strong> </li>
+<li>推导可知： $E[f] = E[\hat f]$</li>
+<li>用$g$去减小$f$的方差， $D(f)=Var(f)$</li>
+</ul>
+<p>$$<br>D(\hat f) = D(f) - 2\alpha \cdot \rm{Cov}(f,g) + \alpha^2 \cdot D(g)<br>$$</p>
+<p>$$<br>令\frac{\partial D(\hat f)}{\partial \alpha} = 0 \quad \to \quad \frac{D(\hat f)}{D(f)} = 1 - \rho^2(f, g)<br>$$</p>
+<p>所以<strong>，$f$和$g$的相关性越高，$D(\hat f)$越小</strong>。</p>
+<p><strong>2. 带基准线的REINFORCE算法核心</strong></p>
+<p>每个时刻$t$的策略梯度<br>$$<br>\frac{\partial J_t(\theta)}{\partial \theta} =<br>E_{s_t,a_t}\left[<br>\alpha \cdot \gamma^tG(\tau_{t:T}) \cdot \frac{\partial}{\partial \theta}  \log\pi_{\theta}(a_t \mid s_t)<br>\right]<br>$$<br>为了<strong>减小策略梯度的方差</strong>，引入一个和$a_t$无关的<strong>基准函数$b(s_t)$</strong>，策略梯度为：<br>$$<br>\frac{\partial \hat J_t(\theta)}{\partial \theta} =<br>E_{s_t,a_t}\left[<br>\alpha \cdot \gamma^t<br>\left( \color{blue} {G(\tau_{t:T})  - b(s_t)}\right)\cdot \frac{\partial}{\partial \theta}  \log\pi_{\theta}(a_t \mid s_t)<br>\right]<br>$$<br>因为$b(s_t)$与$a_t$无关，可以证明得到：（使用积分求平均，$\int_{a_t} \pi_{\theta}(a_t \mid s_t) \,{\rm d}  a_t= 1$）<br>$$<br>E_{a_t}\left[<br>b(s_t)\cdot \frac{\partial}{\partial \theta}  \log\pi_{\theta}(a_t \mid s_t)<br>\right] =  \frac{\partial}{\partial \theta} (b(s_t) \cdot 1) = 0<br>$$<br>所以得到：$\frac{\partial J_t(\theta)}{\partial \theta} = \frac{\partial \hat J_t(\theta)}{\partial \theta}​$</p>
+<p><strong>4. 基准函数的选择</strong></p>
+<p>为了减小策略梯度的方差，希望<strong>$b(s_t)$与$G(\tau_{t:T})$ 越相关越好</strong>，所以选择<strong>$b(s_t) = V(s_t)$</strong>（<a href="https://plmsmile.github.io/2018/04/01/37-reinforce-learning/#%E5%80%BC%E5%87%BD%E6%95%B0">值函数</a>）。</p>
+<p>1、可学习的函数$V_{\phi}(s_t)$来近似值函数，类似于<a href="https://plmsmile.github.io/2018/04/21/40-value-learning/#%E6%B7%B1%E5%BA%A6q%E7%BD%91%E7%BB%9C">Q网络</a><br>$$<br>\phi^* = \arg \min_{\phi} \left(V(s_t) - V_{\phi}(s_t)\right)^2<br>$$<br>2、<a href="https://plmsmile.github.io/2018/04/21/40-value-learning/#%E8%92%99%E7%89%B9%E5%8D%A1%E7%BD%97%E9%87%87%E6%A0%B7%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95">蒙塔卡罗方法</a>进行估计值函数 也就是<a href="https://plmsmile.github.io/2018/04/21/40-value-learning/#%E6%80%BB%E4%BD%93%E6%80%9D%E6%83%B3-1">增量计算</a>Q(s,a)嘛。</p>
+<p><strong>5. 带基准线的REINFORCE算法步骤</strong></p>
+<p>输入</p>
+<ul>
+<li>状态空间和动作空间，$\cal {S,A}$</li>
+<li>可微分的策略函数$\pi_\theta(a \mid s)$</li>
+<li>可微分的状态值函数$V_{\phi}(s_t)$</li>
+<li>折扣率$\gamma$，学习率$\alpha, \beta$</li>
+</ul>
+<p>随机初始化参数$\theta, \phi$</p>
+<p>不断训练，直到$\theta$收敛</p>
+<p>1、根据策略$\pi_\theta(a\mid s)$<strong>生成一条完整轨迹</strong> ：$\tau = s_0, a_0, s_1,a_1, \cdots, s_{T-1}, a_{T-1}, s_{T}$</p>
+<p>2、在每一时刻更新参数</p>
+<p>计算<strong>当前时刻的轨迹回报$G(\tau_{t:T})$</strong> ，再利用<code>基准函数(值函数)</code>进行修正，得到$\delta$<br>$$<br>\delta \leftarrow  G(\tau_{t:T}) - V_{\phi} (s_t)<br>$$<br>更新<strong>值函数$V_\phi(s)$的参数$\phi$</strong><br>$$<br>\phi \leftarrow  \phi + \beta \cdot \delta \cdot \frac{\partial}{ \partial \phi} V_{\phi}(s_t)<br>$$<br>更新<strong>策略函数$\pi_\theta(a \mid s)$的参数$\theta$</strong><br>$$<br>\theta \leftarrow  \theta + \alpha \cdot \gamma^t\delta \cdot \frac{\partial}{\partial \theta}  \log\pi_{\theta}(a_t \mid s_t)<br>$$<br><code>缺点</code>： 需要根据策略采集一条完整的轨迹。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/rl/reinforce-base.png" style="display:block; margin:auto" width="80%"></p>
+<h1 id="Actor-Critic算法"><a href="#Actor-Critic算法" class="headerlink" title="Actor-Critic算法"></a>Actor-Critic算法</h1><h2 id="思想"><a href="#思想" class="headerlink" title="思想"></a>思想</h2><p><code>演员-评论员算法</code>是一种结合<code>策略梯度</code>和<code>时序差分学习</code>的强化学习方法。</p>
+<p>开始，演员随机表演，评论员随机打分；不断学习，评论员评分越来越准，演员的动作越来越好。</p>
+<ul>
+<li>演员：<strong>策略函数$\pi_\theta(s,a)$</strong>，学习一个策略来得到尽可能高的回报</li>
+<li>评论员：<strong>值函数$V_\phi(s)$</strong>，评估当前策略函数（演员）的好坏</li>
+</ul>
+<p><strong>演员</strong></p>
+<p>根据$s$和策略$\pi_\theta(a\mid s)$，执行动作$a$，环境变为$s^\prime$，得到奖励$r$</p>
+<p><strong>评论员</strong></p>
+<p>根据<code>真实奖励</code>$r$和<code>之前的标准</code>，<strong>打分（估计回报）</strong>：$r + \gamma V_\phi(s^\prime)$ ，<strong>再调整自己的打分标准$\phi$</strong>。$\min_{\phi} \left(\hat G(\tau_{t:T}) - V_{\phi}(s_{t}) \right)^2$</p>
+<p>使评分更加接近环境的真实回报。</p>
+<p><strong>演员</strong></p>
+<p>演员根据评论的打分，调整自己的策略$\pi_\theta$，争取下次做得更好。</p>
+<p><code>优点</code>：可以单步更新参数，不需要等到回合结束才进行更新。</p>
+<h2 id="值函数的三个功能"><a href="#值函数的三个功能" class="headerlink" title="值函数的三个功能"></a>值函数的三个功能</h2><p><strong>1. 估计轨迹真实回报（打分）</strong><br>$$<br>\hat G(\tau_{t:T}) = r_{t+1} + \gamma V_{\phi}(s_{t+1})<br>$$<br><strong>2. 更新值函数参数$\phi$ （调整打分标准）</strong><br>$$<br>\min_{\phi} \left(\hat G(\tau_{t:T}) - V_{\phi}(s_{t}) \right)^2<br>$$<br><strong>3. 更新策略参数$\theta$时，作为基函数来减少策略梯度的方差（调整策略）</strong><br>$$<br>\theta \leftarrow  \theta + \alpha \cdot \gamma^t \left( G(\tau_{t:T}) - V_{\phi} (s_t)\right) \cdot \frac{\partial}{\partial \theta}  \log\pi_{\theta}(a_t \mid s_t)<br>$$</p>
+<h2 id="算法实现步骤"><a href="#算法实现步骤" class="headerlink" title="算法实现步骤"></a>算法实现步骤</h2><p><strong>输入</strong></p>
+<ul>
+<li>状态空间和动作空间，$\cal {S,A}$</li>
+<li>可微分的策略函数$\pi_\theta(a \mid s)$</li>
+<li>可微分的状态值函数$V_{\phi}(s_t)$</li>
+<li>折扣率$\gamma$，学习率$\alpha &gt;0,  \beta&gt;0$</li>
+</ul>
+<p><strong>随机初始化参数$\theta, \phi$</strong></p>
+<p><strong>迭代直到$\theta$收敛，初始状态$s$, $\lambda=1$</strong></p>
+<p>从s开始，直到$s$为终止状态</p>
+<p>1、状态s，选择动作$a = \pi_\theta(a\mid s)$</p>
+<p>2、执行动作$a$，得到即时奖励$r$和新状态$s^\prime$</p>
+<p>3、利用值函数作为基函数计算$\delta$，$\delta  \leftarrow  r + \gamma V_{\phi}(s^\prime) - V_{\phi}(s)$</p>
+<p>4、更新值函数：$\phi  \leftarrow  \phi + \beta \cdot \delta \cdot \frac{\partial V_{\phi}(s)}{\partial \phi}$</p>
+<p>5、更新策略函数：$\theta  \leftarrow  \theta + \alpha \cdot \lambda \delta \cdot \frac{\partial }{\partial \theta} \log \pi_\theta(a\mid s)$</p>
+<p>6、更新折扣率和状态：$\lambda \leftarrow \lambda \cdot \gamma, \quad s \leftarrow s^\prime$</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/rl/actor-critic.png" style="display:block; margin:auto" width="80%"></p>
+<h1 id="强化学习算法总结"><a href="#强化学习算法总结" class="headerlink" title="强化学习算法总结"></a>强化学习算法总结</h1><h2 id="方法总览"><a href="#方法总览" class="headerlink" title="方法总览"></a>方法总览</h2><p><strong>1. 通用步骤</strong></p>
+<ol>
+<li>执行策略，生成样本</li>
+<li>估计回报</li>
+<li>更新策略</li>
+</ol>
+<p><strong>2. 值函数与策略函数的比较</strong></p>
+<p><code>值函数的方法</code></p>
+<p>策略更新，导致值函数的改变比较大，对收敛性有一定的影响</p>
+<p><code>策略函数的方法</code></p>
+<p>策略更新，<strong>更加平稳</strong>。</p>
+<p>缺点：策略函数的解空间很大，难以进行充分采样，导致方差较大，容易陷入局部最优解。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/rl/reinforce-all.png" style="display:block; margin:auto" width="75%"></p>
+<h2 id="四个典型方法"><a href="#四个典型方法" class="headerlink" title="四个典型方法"></a>四个典型方法</h2><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/rl/four-compare.png" style="display:block; margin:auto" width="70%"></p>
+<h2 id="与监督学习的区别"><a href="#与监督学习的区别" class="headerlink" title="与监督学习的区别"></a>与监督学习的区别</h2><table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">强化学习</th>
+<th style="text-align:center">监督学习</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">样本</td>
+<td style="text-align:center">与环境进行交互产生样本，进行试错学习</td>
+<td style="text-align:center">人工收集并标注</td>
+</tr>
+<tr>
+<td style="text-align:center">反馈</td>
+<td style="text-align:center">只有奖励，并且是延迟的</td>
+<td style="text-align:center">需要明确的指导信息（每个状态对应一个动作）</td>
+</tr>
+</tbody>
+</table>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-11-25T08:30:08.899Z" itemprop="dateUpdated">2018-11-25 16:30:08</time>
+</span><br>
+
+
+        
+        <br>原始链接：<a href="/2018/04/22/41-strategy-learning/" target="_blank" rel="external">http://plmsmile.github.io/2018/04/22/41-strategy-learning/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://plmsmile.github.io">
+            <img src="/img/avatar.jpg" alt="PLM">
+            PLM
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Actot-Critic/">Actot-Critic</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/REINFORCE/">REINFORCE</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/基准函数/">基准函数</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/强化学习算法总结/">强化学习算法总结</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/策略函数/">策略函数</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/策略梯度/">策略梯度</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2018/04/22/41-strategy-learning/&title=《基于策略函数的学习方法》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/04/22/41-strategy-learning/&title=《基于策略函数的学习方法》 — PLM's Notes&source=基于策略函数的学习方法和Actor-Critc算法。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2018/04/22/41-strategy-learning/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《基于策略函数的学习方法》 — PLM's Notes&url=http://plmsmile.github.io/2018/04/22/41-strategy-learning/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2018/04/22/41-strategy-learning/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/04/24/42-reinforce-conclusion-simple/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">强化学习算法小结</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/04/21/40-value-learning/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">基于值函数的学习</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "kR8nND4dcsWgqDWIjpiH4YFj-gzGzoHsz",
+            appKey: "il7PLkcJCfDBXMR6XirLdO2K",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="bottom">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <span>
+            PLM's Notes &nbsp; &copy; &nbsp
+            </span>
+            2016 - 2018
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2018/04/22/41-strategy-learning/&title=《基于策略函数的学习方法》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/04/22/41-strategy-learning/&title=《基于策略函数的学习方法》 — PLM's Notes&source=基于策略函数的学习方法和Actor-Critc算法。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2018/04/22/41-strategy-learning/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《基于策略函数的学习方法》 — PLM's Notes&url=http://plmsmile.github.io/2018/04/22/41-strategy-learning/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2018/04/22/41-strategy-learning/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACLElEQVR42u3awXKDMAxFUf7/p+m2nRZyn0QytXy9YhLAPiw0kuXjwOO8GN//vb///s2/nzreMWTIkLEs47wdVxPUpry6n8z74tPIkCFjAwYJhbWneGgm817+LkOGDBm1V+Pl8ntkyJAhgwdcEojv00eegMqQIUMGL2LTRfzTWlyGDBkLMtJtsk9ev6W/IUOGjKUYZzjShmX/F7QqGTJkjGbwAJeSngrcfPNOhgwZuzFI0cgDZS3pvC+M0a6hDBkyBjHSBmSaGtbewN8mQ4aM2Yynjj70mwdpm0GGDBl7MtIjFCSWx1Efh+Yf1zJkyBjNqCWFz3ZKeTh+uHyVIUPGIgweInlix9uZHPPiWoYMGaMZtRI03bjvtCfjjyJDhoyhDB4E01SSL443KePOhgwZMhZnkNI0nZ4kgp0iNu6vypAhY3FGumfVD45pxlo8MyJDhoxBjNpRLd7m7DQV4sMWMmTIGMog6RpvGPC0jwRc/nFlyJCxJ4OXr7wxmX6stEUhQ4aM2YzOsvopYy1k//GUDBkyNmCkC+3/njYeggNhMmTI2IxRO4RB0r5axorOjMiQIWMQo1Omdorb2oba5dtkyJAxmsEHL27TpmN6wCI9diZDhowZjLSArLUn+VcsBlwZMmRswEjDaOcYWf+4mAwZMmSkDN4GqM3+oYArQ4aMoYx0uWm7lCevMmTI2IFBErvaUmqtAl42y5AhYwdGWjryLbC0SdAP2TJkyBjH+AJHALwqvf1STAAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

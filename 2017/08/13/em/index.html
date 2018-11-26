@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>最大期望算法 | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="机器学习,最大期望算法,Jesen不等式">
+    <meta name="description" content="EM算法定义背景如果概率模型的变量都是观测变量，那么可以直接使用极大似然估计法或贝叶斯估计法去估计模型参数。 如果模型既有观测变量又有隐变量，就不能简单使用上述方法。 EM算法，期望极大算法，就是含有隐变量的概率模型参数的极大似然估计法或极大后验概率估计法，是一种迭代算法。每次迭代分为如下两步  E步：求期望(expectation) M步：求极大(maximization)  三硬币模型有3枚硬">
+<meta name="keywords" content="机器学习,最大期望算法,Jesen不等式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="最大期望算法">
+<meta property="og:url" content="http://plmsmile.github.io/2017/08/13/em/index.html">
+<meta property="og:site_name" content="PLM&#39;s Notes">
+<meta property="og:description" content="EM算法定义背景如果概率模型的变量都是观测变量，那么可以直接使用极大似然估计法或贝叶斯估计法去估计模型参数。 如果模型既有观测变量又有隐变量，就不能简单使用上述方法。 EM算法，期望极大算法，就是含有隐变量的概率模型参数的极大似然估计法或极大后验概率估计法，是一种迭代算法。每次迭代分为如下两步  E步：求期望(expectation) M步：求极大(maximization)  三硬币模型有3枚硬">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/pgm1/Convex_b.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/dl/em/jensen.png">
+<meta property="og:updated_time" content="2018-11-25T08:30:10.103Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="最大期望算法">
+<meta name="twitter:description" content="EM算法定义背景如果概率模型的变量都是观测变量，那么可以直接使用极大似然估计法或贝叶斯估计法去估计模型参数。 如果模型既有观测变量又有隐变量，就不能简单使用上述方法。 EM算法，期望极大算法，就是含有隐变量的概率模型参数的极大似然估计法或极大后验概率估计法，是一种迭代算法。每次迭代分为如下两步  E步：求期望(expectation) M步：求极大(maximization)  三硬币模型有3枚硬">
+<meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/pgm1/Convex_b.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">PLM</h5>
+          <a href="mailto:plmsmile@126.com" title="plmsmile@126.com" class="mail">plmsmile@126.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                类别
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/plmsmile" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">最大期望算法</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">最大期望算法</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-08-13T10:37:48.000Z" itemprop="datePublished" class="page-time">
+  2017-08-13
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/机器学习/">机器学习</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#EM算法定义"><span class="post-toc-number">1.</span> <span class="post-toc-text">EM算法定义</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#背景"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">背景</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#三硬币模型"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">三硬币模型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#EM算法"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">EM算法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Jensen不等式"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">Jensen不等式</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-em" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">最大期望算法</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-08-13 18:37:48" datetime="2017-08-13T10:37:48.000Z" itemprop="datePublished">2017-08-13</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/机器学习/">机器学习</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="EM算法定义"><a href="#EM算法定义" class="headerlink" title="EM算法定义"></a>EM算法定义</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>如果概率模型的变量都是观测变量，那么可以直接使用<code>极大似然估计法</code>或<code>贝叶斯估计法</code>去估计模型参数。</p>
+<p>如果模型既有观测变量又有隐变量，就不能简单使用上述方法。</p>
+<p><code>EM</code>算法，期望极大算法，就是含有隐变量的概率模型参数的极大似然估计法或极大后验概率估计法，是一种迭代算法。每次迭代分为如下两步</p>
+<ul>
+<li>E步：求期望(expectation)</li>
+<li>M步：求极大(maximization)</li>
+</ul>
+<h2 id="三硬币模型"><a href="#三硬币模型" class="headerlink" title="三硬币模型"></a>三硬币模型</h2><p>有3枚硬币，记做ABC，每次出现正面的概率分别是$\pi, p, q$。先掷A，正面选B，反面选C。再掷B/C，得到正面1或反面0作为一次的结果。问：去估计参数$\theta = (\pi, p, q)$</p>
+<ul>
+<li>观察变量：一次 实验得到的结果1或0，记做$y$</li>
+<li>隐变量：A的结果，即掷的是B还是C，记做$z$</li>
+</ul>
+<p>对于一次实验，求出$y$的概率分布<br>$$<br>\begin{align<em>}<br>\color{blue}{P(y \mid \theta)} &amp;= \underbrace{\sum_zP(y, z \mid \theta)}_{\color{red}{把所有z的y加起来}}<br>  = \sum_z \underbrace{P(z \mid \theta)P(y \mid z, \theta)}<em>{\color{red}{贝叶斯公式}}<br>= \underbrace{\pi p^y(1-p)^{1-y}}</em>{\color{red}{z=1时}}+\underbrace{(1-\pi)q^y(1-q)^{1-y}}_{\color{red}{z=0时}}<br>\end{align</em>}<br>$$<br> 设观察序列$Y=(y_1, y_2, \cdots, y_n)^T$，隐藏数据$Z=(z_1, z_2, \cdots, z_n)^T$，则观测数据的似然函数为<br>$$<br>\begin{align<em>}<br>\color{blue}{P(Y \mid \theta)} &amp;= \sum_Z \color{red}{P(Z \mid \theta)P(Y \mid Z, \theta)} \<br>&amp;= \prod_{i=1}^n[\pi p^{y_i}(1-p)^{1-y_i} + (1-\pi)q^{y_i}(1-q)^{1-y_i}]<br>\end{align</em>}<br>$$<br>求模型参数$\theta = (\pi, p, q)$的最大似然估计，即<br>$$<br>\hat\theta = arg max_\theta \log P(Y \mid \theta)<br>$$<br>这个问题不能直接求解，只有通过迭代的方法求解。EM算法就是解决这种问题的一种迭代算法。先给$\theta^{(0)}$ 选择初始值，然后去迭代。每次迭代分为E步和M步。</p>
+<h2 id="EM算法"><a href="#EM算法" class="headerlink" title="EM算法"></a>EM算法</h2><p><strong>基本概念</strong></p>
+<p>一些概念如下</p>
+<ul>
+<li>$Y$ 观测变量，$Z$ 隐变量</li>
+<li>不完全数据：$Y$；概率分布：$P(Y \mid \theta)$；<strong>对数似然函数</strong>：$\color{red} {L(\theta) = \log P(Y \mid \theta)}$</li>
+<li>完全数据：$Y$和$Z$合在一起；概率分布：$P(Y, Z \mid \theta)$；对数似然函数：$\log P(Y, Z \mid \theta)$</li>
+</ul>
+<p>EM算法通过迭代求$L(\theta) = \log P(Y \mid \theta)$的极大似然估计。 </p>
+<p><strong>概率论函数的期望</strong></p>
+<p>设$Y$是随机变量$X$的函数，$Y = g(X)$，$g$是连续函数，那么</p>
+<p>$X$是离散型变量，$X$的分布律为$P(X = x_i) = p_i, \; i=1,2,3\cdots$，则有<br>$$<br>E(Y) = E(g(X)) = \sum_{i=1}^{\infty}g(x_i)p_i, \quad 左式收敛时成立<br>$$<br>$X$是 连续型变量，$X$的概率密度为$f(x)$，则有<br>$$<br>E(Y) = E(g(X)) = \int_{-\infty}^{+\infty} {g(x)f(x)} \, {\rm d}x, \quad 左式绝对收敛成立<br>$$<br><strong>Q函数</strong> </p>
+<p>$\color{blue}{Q(\theta, \theta^{(i)})}$是EM算法的核心。<strong>它是完全数据的对数似然函数$\log P(Y,Z \mid \theta)$的期望</strong>，是关于未观测数据$Z$的条件概率分布$P(Z \mid Y, \theta^{(i)})$，而$Z$的条件是在给定观测数据$Y$和当前参数$\theta^{(i)}$。（都是后置定语，不通顺）<br>$$<br>\begin {align<em>}<br>\color{blue}{Q(\theta, \theta^{(i)})} &amp;= E_Z[\log P(Y, Z \mid \theta) \mid Y, \theta^{(i)}]<br>= \sum_Z \color{red}{\log P(Y, Z \mid \theta)P(Z \mid Y, \theta^{(i)})}<br>\end {align</em>}<br>$$<br>下面是我具体的理解</p>
+<ul>
+<li>$\color{blue}{\theta^{(i)}}$是第$i$次迭代参数$\theta$的估计值</li>
+</ul>
+<ul>
+<li>$P(Z \mid Y, \theta^{(i)})$是以$Y$和当前参数$\theta^{(i)}$的条件下的分布律，简写为$P(Z)$。类似于上面的$X$</li>
+</ul>
+<ul>
+<li>$P(Y, Z \mid \theta)$ 是在以$\theta$为参数的分布的联合概率密度，简写为$P(Y, Z)$。类似于上面的$Y=g(X)$</li>
+</ul>
+<ul>
+<li>求对数似然函数$\log P(Y, Z)$的期望，转移到隐变量$Z$上</li>
+<li><strong>把目标函数映射到$Z$上</strong>，$g(z) = \log P(Y, Z)$，$E(g(z)) = \sum_z \log P(Y, Z) P(Z)$</li>
+<li>$\color{blue}{Q(\theta, \theta^{(i)})}$ 是因为要找到一个新的$\theta$优于之前的$\theta^{(i)}$，是代表的分布优于</li>
+</ul>
+<p><strong>EM算法步骤</strong></p>
+<p>输入：$\color{blue}{Y}$ 观测变量，$\color{blue}{Z}$ 隐藏变量，$\color{blue}{P(Y, Z \mid \theta)}$ 联合分布，条件分布 $\color{blue}{P(Z \mid Y, \theta)}$</p>
+<p>输出：模型参数$\color{blue}{\theta}$</p>
+<p>步骤</p>
+<ul>
+<li>选择参数初始值$\color{blue}{\theta^{(0)}}$，开始迭代</li>
+<li>E步：第$i+1$次迭代， 求 $\color{blue}{Q(\theta, \theta^{(i)})} = \sum_Z \color{red}{\log P(Y, Z \mid \theta)P(Z \mid Y, \theta^{(i)})}$</li>
+<li>M步：<strong>求使$Q(\theta, \theta^{(i)})$极大化的$\theta$</strong>，得到$i+1$次迭代新的估计值$\color{blue}{\theta^{(i+1)}} = \color{red}{arg \, max_\theta (Q(\theta, \theta^{(i)}))}$</li>
+<li>重复E和M步，直到收敛</li>
+</ul>
+<h2 id="Jensen不等式"><a href="#Jensen不等式" class="headerlink" title="Jensen不等式"></a>Jensen不等式</h2><p><strong>凸函数与凹函数</strong></p>
+<p>从图像上讲，在函数上两点连接一条直线。直线完全在图像上面，就是<code>凸函数 convex</code>；完全在下面，就是<code>凹函数 concave</code>。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/pgm1/Convex_b.png" style="display:block; margin:auto" width="50%"></p>
+<p> $f^{\prime\prime}(x) \ge 0 \implies f(x) 是凸函数; \quad f^{\prime\prime}(x) \le 0 \implies f(x)是凹函数$</p>
+<p><strong>Jensen不等式</strong></p>
+<p>函数$f(x)​$，上有两点$x_1, x_2​$，对于任意$\lambda \in [0,1]​$</p>
+<ul>
+<li>如果$f(x)$是凸函数，$f(\lambda x_1+(1-\lambda)x_2) \le  \lambda f(x_1) + (1-\lambda)f(x_2)$</li>
+<li>如果$f(x)$是凹函数，$f(\lambda x_1+(1-\lambda)x_2) \ge  \lambda f(x_1) + (1-\lambda)f(x_2)$</li>
+</ul>
+<p>一般地，$n$个点$x_1, x_2, \cdots, x_n$和参数$\lambda_1 + \lambda_2 + \cdots + \lambda_n = 1$，对于凸函数，则有<br>$$<br>f(\underbrace{\lambda_1x_1 + \lambda_2x_2 + \cdots + \lambda_nx_n}_{\color{red}{E[X], 总体是f(E[X])}}) \le \underbrace{f(\lambda_1x_1) + f(\lambda_2x_2) + \cdots + f(\lambda_nx_n)}<em>{\color{red}{E[f(X)]}}, \;即\color{red}{f(\sum</em>{i=1}^n\lambda_ix_i) \leq \sum_{i=1}^nf(\lambda_ix_i)}<br>$$<br>琴声不等式</p>
+<ul>
+<li>凸函数 $f(E[X]) \le E[f(X)]$，即$\color{red}{f(\sum_{i=1}^n\lambda_ix_i) \leq \sum_{i=1}^nf(\lambda_ix_i)}$</li>
+<li>凹函数 $f(E[X]) \ge E[f(X)]$，即$\color{red}{f(\sum_{i=1}^n\lambda_ix_i) \geq \sum_{i=1}^nf(\lambda_ix_i)}$</li>
+</ul>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/dl/em/jensen.png" style="display:block; margin:auto" width="50%"></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-11-25T08:30:10.103Z" itemprop="dateUpdated">2018-11-25 16:30:10</time>
+</span><br>
+
+
+        
+        <br>原始链接：<a href="/2017/08/13/em/" target="_blank" rel="external">http://plmsmile.github.io/2017/08/13/em/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://plmsmile.github.io">
+            <img src="/img/avatar.jpg" alt="PLM">
+            PLM
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Jesen不等式/">Jesen不等式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/最大期望算法/">最大期望算法</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/机器学习/">机器学习</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/08/13/em/&title=《最大期望算法》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/08/13/em/&title=《最大期望算法》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2017/08/13/em/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《最大期望算法》 — PLM's Notes&url=http://plmsmile.github.io/2017/08/13/em/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2017/08/13/em/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/08/20/ml-ng-notes/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">机器学习笔记</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/08/04/pgm-01/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">马尔可夫模型</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "kR8nND4dcsWgqDWIjpiH4YFj-gzGzoHsz",
+            appKey: "il7PLkcJCfDBXMR6XirLdO2K",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="bottom">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <span>
+            PLM's Notes &nbsp; &copy; &nbsp
+            </span>
+            2016 - 2018
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/08/13/em/&title=《最大期望算法》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/08/13/em/&title=《最大期望算法》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2017/08/13/em/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《最大期望算法》 — PLM's Notes&url=http://plmsmile.github.io/2017/08/13/em/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2017/08/13/em/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABy0lEQVR42u3ay2oDMQwF0Pz/T6fQVaGteyXZbgJnVsNkcE6yEHo9HvH1/Ly+33998ts7yf3mCxcXd8x9Lq816PvzNSU5f30yLi7uTW41eCVxJj8zeR8XF/c1ufmX9QIZLi7u+3IT3PqH4eLivgs3KX7ytKZKPFKr4eLiDriThumu+0v9XVxc3PFUohpW9gavH07AxcW9wu0VOevnOTof2IxqMlxc3CI3STIKDYtiQpP/bFxc3JvcahOz2uJMvj4fyuLi4v4vN09B9g5r1x5cXNw73LzIScar84Zp4X/FxcU9xp0sT1QXtqrFT6Eaw8XF3crN05d85WLSZv3jNFxc3IvcXuKSh7wjM2FcXNyL+wyTdYp8KJKnSoX5Dy4u7iZuOYjEqUmvwRpVabi4uIe5+eJFju61P6qjWVxc3HPcahiqDmLz95tDVlxc3APc6sJlckR12aIXRnFxcc9xmy3LQWujmnk12yK4uLgD7rznMGl8bK7VcHFxt3J7JU2+UJU3XqNPcXFxL3J7G5LVBY7JyhcuLu4rc08EuHKKg4uL+zLcasOiN3B9VA/FxcU9xs2Lnzy5ydOdQjjDxcW9wt0b7KpD1vwPwsXFvcL9AKof/DNTXwzkAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

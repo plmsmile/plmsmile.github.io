@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>简单的卷积神经网络 | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="深度学习,tensorflow,神经网络,卷积">
+    <meta name="description" content="卷积神经网络概要卷积神经网络(Convolutional Neural Network, CNN)是人工神经网络中的一种，是一种特殊的对图像识别的方式，属于非常有效的带有前向反馈的网络。也用于音频信号、文本数据、人脸识别等等。$ $ CNN不需要把特征提取和分类训练两个过程分开，在训练的时候就提取了最有效的特征，降低了对图形数据预处理的要求。  卷积神经网络的核心思想是将输入信息切分成一个个子采样">
+<meta name="keywords" content="深度学习,tensorflow,神经网络,卷积">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简单的卷积神经网络">
+<meta property="og:url" content="http://plmsmile.github.io/2017/07/18/cnn-mnist/index.html">
+<meta property="og:site_name" content="PLM&#39;s Notes">
+<meta property="og:description" content="卷积神经网络概要卷积神经网络(Convolutional Neural Network, CNN)是人工神经网络中的一种，是一种特殊的对图像识别的方式，属于非常有效的带有前向反馈的网络。也用于音频信号、文本数据、人脸识别等等。$ $ CNN不需要把特征提取和分类训练两个过程分开，在训练的时候就提取了最有效的特征，降低了对图形数据预处理的要求。  卷积神经网络的核心思想是将输入信息切分成一个个子采样">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/dl/cnn_structure.jpg">
+<meta property="og:updated_time" content="2018-11-25T08:30:09.677Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="简单的卷积神经网络">
+<meta name="twitter:description" content="卷积神经网络概要卷积神经网络(Convolutional Neural Network, CNN)是人工神经网络中的一种，是一种特殊的对图像识别的方式，属于非常有效的带有前向反馈的网络。也用于音频信号、文本数据、人脸识别等等。$ $ CNN不需要把特征提取和分类训练两个过程分开，在训练的时候就提取了最有效的特征，降低了对图形数据预处理的要求。  卷积神经网络的核心思想是将输入信息切分成一个个子采样">
+<meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/dl/cnn_structure.jpg">
+    
+        <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">PLM</h5>
+          <a href="mailto:plmsmile@126.com" title="plmsmile@126.com" class="mail">plmsmile@126.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                类别
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/plmsmile" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">简单的卷积神经网络</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">简单的卷积神经网络</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-07-18T11:23:56.000Z" itemprop="datePublished" class="page-time">
+  2017-07-18
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/深度学习/">深度学习</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#卷积神经网络"><span class="post-toc-number">1.</span> <span class="post-toc-text">卷积神经网络</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#概要"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">概要</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#网络结构"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">网络结构</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-cnn-mnist" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">简单的卷积神经网络</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-07-18 19:23:56" datetime="2017-07-18T11:23:56.000Z" itemprop="datePublished">2017-07-18</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/深度学习/">深度学习</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="卷积神经网络"><a href="#卷积神经网络" class="headerlink" title="卷积神经网络"></a>卷积神经网络</h2><h3 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h3><p><strong>卷积神经网络(Convolutional Neural Network, CNN)</strong>是人工神经网络中的一种，是一种特殊的对图像识别的方式，属于非常有效的带有前向反馈的网络。也用于音频信号、文本数据、人脸识别等等。$ $</p>
+<p>CNN不需要把特征提取和分类训练两个过程分开，在训练的时候就提取了最有效的特征，降低了对图形数据预处理的要求。</p>
+<blockquote>
+<p>卷积神经网络的核心思想是将输入信息切分成一个个子采样层进行采样，然后将提取的特征和权重值作为参数，传导到下一层</p>
+</blockquote>
+<p><strong>主要思路</strong></p>
+<ul>
+<li>每一个卷积操作只处理一小块图像，提取出最有效的特征，传给紧接着的池化层</li>
+<li>池化层用来降采样，求局部平均和二次采样</li>
+<li>循环上面两种操作</li>
+<li>不停地对基础特征进行组合和抽象，得到更高阶的特征</li>
+</ul>
+<p><strong>主要特点</strong></p>
+<ul>
+<li>局部连接：减少了连接数量</li>
+<li>权值共享：大幅度减少参数数量，防止过拟合又降低了复杂度</li>
+<li>降采样紧跟卷积层：对样本有较高的畸变容忍能力</li>
+<li>特征分区提取、时间或空间采样等规则</li>
+<li>理论上具有对图像缩放、平移和旋转的不变性，有着很强的<code>泛化性</code></li>
+</ul>
+<h3 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h3><p><strong>传统网路的问题</strong></p>
+<p>传统网络是全连接的，假如图像比较大是[200, 200, 3]，则会有$200<em>200</em>3=12000$个神经元。这样庞大的神经元做全连接结构是非常浪费的，并且有大量的参数会导致<strong>过拟合</strong>。</p>
+<p><strong>卷积神经网络</strong></p>
+<p>每一个像素点在空间上和周围的像素点实际上是有紧密联系的，但是和太遥远的像素点就不一定有什么联系了。这也是<code>视觉感受野</code>的概念，每一个感受野只接受一小块区域的信号。</p>
+<p>一个卷积神经网络通常由多个卷积层组成，每一个卷积操作只处理一小块图像（也称作卷积核滤波），提取出最有效的特征传递给后面，主要操作如下：</p>
+<ul>
+<li>一个卷积核可以提取出一种特征。一个图像经历一个卷积核之后，会输出一个新的图像，称作<code>特征图谱(Feature Map, FM)</code>。其实卷积操作也是$w * x + \vec b$，只不过对于单次的卷积操作$w$和$\vec b$是不变的，而$x$是会变的，每次取图片的一小块，会得到很多的结果，拼凑起来就是一张新的FM</li>
+<li>将前面卷积的滤波结果FM，进行非线性的激活函数处理。之前是<code>sigmoid</code>，现在是<code>Relu</code>函数，比较完美解决梯度弥散的问题。</li>
+<li>对激活函数的结果进行降采样（池化操作），比如将[2,2]将为[1,1]的图片。常用的有最大值合并、平均值合并和随机合并。思路和卷积差不多，只不过结果不用乘加，只是选择最大的就行了。</li>
+<li>最后一个子采样层一般会全连接一个或多个全连接层，全连接层的输出就是最后的输出。一般是<code>softmax</code></li>
+</ul>
+<div align="center"><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/dl/cnn_structure.jpg" style="zoom:70%; margin:auto"></div>
+
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-11-25T08:30:09.677Z" itemprop="dateUpdated">2018-11-25 16:30:09</time>
+</span><br>
+
+
+        
+        <br>原始链接：<a href="/2017/07/18/cnn-mnist/" target="_blank" rel="external">http://plmsmile.github.io/2017/07/18/cnn-mnist/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://plmsmile.github.io">
+            <img src="/img/avatar.jpg" alt="PLM">
+            PLM
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tensorflow/">tensorflow</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/卷积/">卷积</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/深度学习/">深度学习</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/神经网络/">神经网络</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/07/18/cnn-mnist/&title=《简单的卷积神经网络》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/07/18/cnn-mnist/&title=《简单的卷积神经网络》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2017/07/18/cnn-mnist/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《简单的卷积神经网络》 — PLM's Notes&url=http://plmsmile.github.io/2017/07/18/cnn-mnist/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2017/07/18/cnn-mnist/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/07/29/aim2offer/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">剑指Offer算法题</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/07/14/word2vec/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">利用tensorflow实现简版word2vec</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "kR8nND4dcsWgqDWIjpiH4YFj-gzGzoHsz",
+            appKey: "il7PLkcJCfDBXMR6XirLdO2K",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="bottom">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <span>
+            PLM's Notes &nbsp; &copy; &nbsp
+            </span>
+            2016 - 2018
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/07/18/cnn-mnist/&title=《简单的卷积神经网络》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/07/18/cnn-mnist/&title=《简单的卷积神经网络》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2017/07/18/cnn-mnist/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《简单的卷积神经网络》 — PLM's Notes&url=http://plmsmile.github.io/2017/07/18/cnn-mnist/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2017/07/18/cnn-mnist/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACLElEQVR42u3a2W7iQBAFUP7/p8nrSBPMvdUQyd3HTyjyUgekimt5POLjeXn8e86r86/v/P9Vj28cGBgYt2XkIc6Czq+6fu6brwYDA+MARpIK21tHjw+edX0+BgYGxvU51wk3SaCv7oOBgYHxPUaLxMDAwMgZs1ZaHtB1EH9ai2NgYNyQkXfd//7zV+YbGBgYt2I8yyMpTddfK+uoMDAwtmbkCa5tkOX3zP/+Jh4MDIxNGbMmfl6+tpi8GH75O2BgYGzHaNvxbbgrw8t84QMDA+McRltezsrXvGStW28YGBhbM9okO0u762POqJGHgYGxHSN5FStezhYS7iyhv/l2MTAwNmIkS1f5ULNNu7Ny95eEi4GBsSmjbWm1o8p2wLmy3oGBgXECY5jmRqR2qBA9CwMD4wBGm3Dza1cGD8V4AAMDY1PGbADZtufyVbPhsgUGBsbWjHYxK0l/z+CY/QOo33MxMDAOYLSfP7tY1rbkMDAwzmHMEugsRa6/SkabaxgYGFswZkVsy/5Go62YxGJgYGzBaG+0HmJb9BbjAQwMjAMY18G1yxmztl2UZDEwMA5gPMsjLyzbRbHkH0D9O2BgYGzBaNPcLKx8yawdSNQwDAyM2zLaAjIJ6FPNuA8UsRgYGBsxZutZyT3zZP2BWhwDAwOjDDcfGyRRLS2EYWBgHMZoh5QryOKJGBgYBzDaYUAyvGyvyl8fMTAwTmOsFKWzlYtZWfuBoSYGBsb9GD+71voIB0f19AAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

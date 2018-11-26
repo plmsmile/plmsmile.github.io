@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>协同注意力简介 | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="论文笔记,注意力,VQA">
+    <meta name="description" content="只是记录一下Co-Attention，后续再补上本篇论文的全部笔记吧。  论文：Hierarchical Question-Image Co-Attention  for Visual Question Answering  我的相关笔记：Attention-based NMT阅读笔记和NLP中的Attention笔记  Co-Attention这里以VQA里面的两个例子记录一下Co-Atten">
+<meta name="keywords" content="论文笔记,注意力,VQA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="协同注意力简介">
+<meta property="og:url" content="http://plmsmile.github.io/2018/03/14/31-co-attention-vqa/index.html">
+<meta property="og:site_name" content="PLM&#39;s Notes">
+<meta property="og:description" content="只是记录一下Co-Attention，后续再补上本篇论文的全部笔记吧。  论文：Hierarchical Question-Image Co-Attention  for Visual Question Answering  我的相关笔记：Attention-based NMT阅读笔记和NLP中的Attention笔记  Co-Attention这里以VQA里面的两个例子记录一下Co-Atten">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/coattention.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/coattention.png">
+<meta property="og:updated_time" content="2018-11-25T08:30:08.493Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="协同注意力简介">
+<meta name="twitter:description" content="只是记录一下Co-Attention，后续再补上本篇论文的全部笔记吧。  论文：Hierarchical Question-Image Co-Attention  for Visual Question Answering  我的相关笔记：Attention-based NMT阅读笔记和NLP中的Attention笔记  Co-Attention这里以VQA里面的两个例子记录一下Co-Atten">
+<meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/coattention.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">PLM</h5>
+          <a href="mailto:plmsmile@126.com" title="plmsmile@126.com" class="mail">plmsmile@126.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                类别
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/plmsmile" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">协同注意力简介</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">协同注意力简介</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-03-14T08:56:27.000Z" itemprop="datePublished" class="page-time">
+  2018-03-14
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/自然语言处理/">自然语言处理</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Co-Attention"><span class="post-toc-number">1.</span> <span class="post-toc-text">Co-Attention</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#注意力和协同注意力"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">注意力和协同注意力</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Parallel-Co-Attention"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">Parallel Co-Attention</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Alternating-Co-Attention"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">Alternating Co-Attention</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-31-co-attention-vqa" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">协同注意力简介</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-03-14 16:56:27" datetime="2018-03-14T08:56:27.000Z" itemprop="datePublished">2018-03-14</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/自然语言处理/">自然语言处理</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>只是记录一下Co-Attention，后续再补上本篇论文的全部笔记吧。</p>
+</blockquote>
+<p>论文：<a href="https://arxiv.org/abs/1606.00061" target="_blank" rel="noopener">Hierarchical Question-Image Co-Attention  for Visual Question Answering</a> </p>
+<p>我的相关笔记：<a href="https://plmsmile.github.io/2017/10/12/Attention-based-NMT/">Attention-based NMT阅读笔记</a>和<a href="https://plmsmile.github.io/2017/10/10/attention-model/#encoder-decoder">NLP中的Attention笔记</a> </p>
+<h1 id="Co-Attention"><a href="#Co-Attention" class="headerlink" title="Co-Attention"></a>Co-Attention</h1><p>这里以VQA里面的两个例子记录一下Co-Attention。即图片和问题。</p>
+<h2 id="注意力和协同注意力"><a href="#注意力和协同注意力" class="headerlink" title="注意力和协同注意力"></a>注意力和协同注意力</h2><p><strong>注意力</strong> </p>
+<p><code>注意力机制</code>就像人<strong>带着问题去阅读</strong>， 先看问题，再去文本中有目标地阅读寻找答案。</p>
+<p>机器阅读则是结合问题和文本的信息，生成一个关于文本段落各部分的<code>注意力权重</code>，再<strong>对文本信息进行加权</strong>。</p>
+<p>注意力机制可以帮助我们更好地去捕捉段落中和问题相关的信息。</p>
+<p><strong>协同注意力</strong></p>
+<p><code>协同注意力</code>是一种<strong>双向的注意力</strong>， 再利用注意力去生成文本和问句的注意力。</p>
+<ul>
+<li>给文本生成注意力权值</li>
+<li>给问句生成注意力权值</li>
+</ul>
+<p>协同注意力分为两种方式：</p>
+<ul>
+<li><strong>Parallel Co-Attention</strong> :   两种数据源A和B，先结合得到C，再基于结合信息C对A和B分别生成对应的Attention。<code>同时生成注意力</code></li>
+<li><strong>Alternating Co-Attention</strong>：  先基于A产生B的attention，得到新的B；再基于新B去产生A的attention。两次<code>交替生成注意力</code></li>
+</ul>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/coattention.png" style="display:block; margin:auto" width="100%"></p>
+<h2 id="Parallel-Co-Attention"><a href="#Parallel-Co-Attention" class="headerlink" title="Parallel Co-Attention"></a>Parallel Co-Attention</h2><p>图片特征：$V \in \mathbb {R}^{d\times N}$ ，问句特征：$Q \in \mathbb R^{d \times T}$ 。</p>
+<p><code>同时</code>生成图片和问题的注意力。</p>
+<p>先计算<code>关联矩阵</code>：<br>$$<br>C = \rm{tanh}(Q^T W_b V) \in \mathbb R^{T \times N}<br>$$<br>计算<code>注意力权值</code> $a^v$和$a^q$ </p>
+<p>方法1：直接选择最大值。$a^v_n = \max \limits_i(C_{i, n})$ ，$a_t^q = \max \limits_i (C_{t, j})$</p>
+<p>方法2：把关联矩阵当做特征给到网络中，进行计算注意力权值，再进行<code>softmax</code>。<strong>更好</strong><br>$$<br>H^v = \rm{tanh} (W_vV + (W_qQ)C), \quad \quad H^q = \rm{tanh} (W_qQ + (W_vV)C^T)<br>$$</p>
+<p>$$<br>a^v = \rm{softmax}(w_{hv}^TH^v), \quad \quad a^q = \rm{softmax}(w^T_{hq}H^q)<br>$$</p>
+<p>利用注意力和原特征向量去计算<code>新的特征向量</code><br>$$<br>\mathbf {\hat v} = \sum_{n=1}^N a^v_n \mathbf v_n, \quad \quad \mathbf { \hat q} = \sum_{t=1}^Tq_t^q \mathbf q_t<br>$$</p>
+<h2 id="Alternating-Co-Attention"><a href="#Alternating-Co-Attention" class="headerlink" title="Alternating Co-Attention"></a>Alternating Co-Attention</h2><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/coattention.png" style="display:block; margin:auto" width="100%"></p>
+<p><code>交替</code>生成图片和问题的注意力。</p>
+<ul>
+<li>把问题归纳成一个单独向量$\mathbf {q}$</li>
+<li>基于$\mathbf q$ 去和图片特征$V$去生成图像特征$\mathbf {\hat v}$</li>
+<li><p>基于$\mathbf v$和问题特征$Q$去生成问题特征$\mathbf {\hat q}$</p>
+<p>具体地，给一个$X$和<code>attention guidance</code>$\mathbf g$ ，通过$\mathbf {\hat x} = f(X, \mathbf g)$去得到特征向量$\mathbf {\hat x}$<br>$$<br>H = \rm {tanh} (W_x X+ (W_g \mathbf g) \mathbb 1^T)<br>$$<br>$\mathbf a ^x$ 是特征$X$的<code>注意力权值</code> ：<br>$$<br>\mathbf a^x = \rm(softmax)(w^T_{hx} H)<br>$$<br>新的<strong>注意力向量</strong> (<code>attended image (or question) vector)</code> :<br>$$<br>\mathbf {\hat x} = \sum a_i^x \mathbf x_i<br>$$<br>对应本例子如下：</p>
+</li>
+<li><p>$X = Q, \; g = 0 \to \mathbf q$</p>
+</li>
+<li>$X = V, \; g = \mathbf q \to \mathbf {\hat v}$</li>
+<li>$X = Q, \; g = \mathbf {\hat v} \to \mathbf {\hat q}$</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-11-25T08:30:08.493Z" itemprop="dateUpdated">2018-11-25 16:30:08</time>
+</span><br>
+
+
+        
+        <br>原始链接：<a href="/2018/03/14/31-co-attention-vqa/" target="_blank" rel="external">http://plmsmile.github.io/2018/03/14/31-co-attention-vqa/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://plmsmile.github.io">
+            <img src="/img/avatar.jpg" alt="PLM">
+            PLM
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/VQA/">VQA</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/注意力/">注意力</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/论文笔记/">论文笔记</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2018/03/14/31-co-attention-vqa/&title=《协同注意力简介》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/03/14/31-co-attention-vqa/&title=《协同注意力简介》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2018/03/14/31-co-attention-vqa/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《协同注意力简介》 — PLM's Notes&url=http://plmsmile.github.io/2018/03/14/31-co-attention-vqa/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2018/03/14/31-co-attention-vqa/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/03/15/32-dynamic-coattention-network/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Dynamic Coattention Network (Plus)</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/03/13/30-dynamic-memory-network/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">使用Dynamic Memory Network实现一个简单QA</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "kR8nND4dcsWgqDWIjpiH4YFj-gzGzoHsz",
+            appKey: "il7PLkcJCfDBXMR6XirLdO2K",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="bottom">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <span>
+            PLM's Notes &nbsp; &copy; &nbsp
+            </span>
+            2016 - 2018
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2018/03/14/31-co-attention-vqa/&title=《协同注意力简介》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/03/14/31-co-attention-vqa/&title=《协同注意力简介》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2018/03/14/31-co-attention-vqa/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《协同注意力简介》 — PLM's Notes&url=http://plmsmile.github.io/2018/03/14/31-co-attention-vqa/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2018/03/14/31-co-attention-vqa/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACI0lEQVR42u3aSW7DMAwF0Nz/0i7QbVGFn3SDWnpaBagHPS9YDnq9yuv6Xj9/r6/57cr5Xc2FgYHxWMa1XJWXra9fv6sOe3MvBgbGAYz0cesnTAJ0ei8GBgZGZVtpmF5/DgwMDIx7A25lK5MiGQMDAyMtYtPQnJamH6rFMTAwHsi4KyD+xe8PzTcwMDD+MeMKV6/gTBPNeFcYGBhbMypt/UqB2ht81tPE0sfCwMA4gJEWrr0CNS2A60NTDAyMXRmT4HhXK63U9F/vAQMDY2tG2vSfJIj1hK+XYmJgYJzG6L2m126rV6Nv/oqBgbEpo57qpcPFdCu9AxYYGBgnMNLBQO+0w4QapKcYGBhbM3qN/snYsv4hJskoBgbGTox6IlhJ49KEshd2MTAwTmNMxgDpYbK0JL4hKcTAwNiCkQ4v0/Hnvcc4glocAwNjI0a9fE0D6ORARppEYmBg7MqYJIKVl83beaV/CRgYGFsz0nQwflwLXG/zxbUvBgbGAxm9Rlg6mIzz016jDQMDY2tG5fX1jdZD6m3pIwYGxtaMSSisjAR6I89mkYyBgbEp4wrXpOitDyPjg2IYGBhbM9Iwt45v66B814fAwMA4kzEfIq6vT5/cPPCKgYFxAKMeZOtNt7Q87o0KMDAwMNIjF/VhQKV8DY66YmBgYLQOb6Vl7eQTYGBgnMBIw1yve5c24EZn3DAwMDZi9AYD6RGKe8eZTQwGBsbzGF/Lcbwq9M0YdAAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
