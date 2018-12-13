@@ -40,7 +40,7 @@
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/elmo/semantics-syntatic.png">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/elmo/layer-weights.png">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/elmo/snli-srl.png">
-<meta property="og:updated_time" content="2018-12-13T14:25:44.454Z">
+<meta property="og:updated_time" content="2018-12-13T14:53:28.442Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ELMo：Deep Contextualized Word Representations">
 <meta name="twitter:description" content="ACL2018 Best Paper, 性价比很高的效果提升方法。ELMo: Deep contextualized word representations">
@@ -239,7 +239,7 @@
 <h2 id="elmo词向量">ELMo词向量</h2>
 <p><code>Deep Contextualized Vectors</code>由如下步骤构成：</p>
 <ul>
-<li>在每一层，把双向的状态<strong>拼接起来</strong>得到该层的隐状态</li>
+<li>在每一层，<strong>把两个方向的隐状态拼接起来</strong>得到该层的隐状态</li>
 <li>把<strong>初始词向量</strong>、<strong>第一层的隐状态</strong>、<strong>第二层的隐状态</strong>，<strong>线性组合</strong>起来得到最终的词向量</li>
 </ul>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/elmo/elmo-embedding.png" style="display:block; margin:auto" width="70%"></p>
@@ -256,11 +256,11 @@
 <p>很多模型都<strong>偏爱低层的语法信息</strong>。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/elmo/layer-weights.png" style="display:block; margin:auto" width="60%"></p>
 <h2 id="小数据集提升">小数据集提升</h2>
-<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/elmo/snli-srl.png" style="display:block; margin:auto" width="60%"></p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/elmo/snli-srl.png" style="display:block; margin:auto" width="40%"></p>
 <h1 id="参考">参考</h1>
 <ol style="list-style-type: decimal">
-<li>论文 <a href="https://arxiv.org/abs/1802.05365" target="_blank" rel="noopener">ELMo: Deep contextualized word representations</a></li>
-<li><a href="https://jalammar.github.io/illustrated-bert/" class="uri" target="_blank" rel="noopener">https://jalammar.github.io/illustrated-bert/</a></li>
+<li>原始论文<a href="https://arxiv.org/abs/1802.05365" target="_blank" rel="noopener">Deep contextualized word representations</a></li>
+<li><a href="https://jalammar.github.io/illustrated-bert/" target="_blank" rel="noopener">illustrated-bert</a></li>
 <li><a href="https://www.slideshare.net/shuntaroy/a-review-of-deep-contextualized-word-representations-peters-2018" target="_blank" rel="noopener">ELMo Slide</a></li>
 </ol>
 
@@ -271,7 +271,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-12-13T14:25:44.454Z" itemprop="dateUpdated">2018-12-13 22:25:44</time>
+    最后更新时间：<time datetime="2018-12-13T14:53:28.442Z" itemprop="dateUpdated">2018-12-13 22:53:28</time>
 </span><br>
 
 
@@ -353,7 +353,14 @@ ACL2018 Best Paper, 性价比很高的效果提升方法。ELMo: Deep contextual
     </div>
 
     
-<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/12/13/51-opengpt/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">OpenAI GPT</h4>
+      </a>
+    </div>
   
 
   
