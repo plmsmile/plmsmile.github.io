@@ -14,25 +14,25 @@
     
     
     
-    <title>dfs | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <title>数据结构之搜索算法 | PLM&#39;s Notes | 好好学习，天天笔记</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
     
     
     <meta name="keywords" content="搜索">
-    <meta name="description" content="搜索算法解空间树子集树 比如n种可选物品的01背包，对其进行选择。解空间为长度为n的01向量表示。解空间树是一颗完全二叉树。 排列树 比如旅行商问题，对n进行排列。 解空间搜索方式DFS 深度优先。回溯法。  BFS 广度优先或最小耗费优先。分支限界法。  在扩展节点处，先生成所有的儿子节点，再从活节点列表中选择一个最有利的节点作为新的扩展节点。 回溯法就是穷举，深度优先去找到解空间中满足约束条件">
+    <meta name="description" content="搜索算法、装载问题">
 <meta name="keywords" content="搜索">
 <meta property="og:type" content="article">
-<meta property="og:title" content="dfs">
+<meta property="og:title" content="数据结构之搜索算法">
 <meta property="og:url" content="http://plmsmile.github.io/2017/12/31/algorithm-dfs/index.html">
 <meta property="og:site_name" content="PLM&#39;s Notes">
-<meta property="og:description" content="搜索算法解空间树子集树 比如n种可选物品的01背包，对其进行选择。解空间为长度为n的01向量表示。解空间树是一颗完全二叉树。 排列树 比如旅行商问题，对n进行排列。 解空间搜索方式DFS 深度优先。回溯法。  BFS 广度优先或最小耗费优先。分支限界法。  在扩展节点处，先生成所有的儿子节点，再从活节点列表中选择一个最有利的节点作为新的扩展节点。 回溯法就是穷举，深度优先去找到解空间中满足约束条件">
+<meta property="og:description" content="搜索算法、装载问题">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-11-25T08:30:09.556Z">
+<meta property="og:updated_time" content="2018-12-13T07:58:33.578Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="dfs">
-<meta name="twitter:description" content="搜索算法解空间树子集树 比如n种可选物品的01背包，对其进行选择。解空间为长度为n的01向量表示。解空间树是一颗完全二叉树。 排列树 比如旅行商问题，对n进行排列。 解空间搜索方式DFS 深度优先。回溯法。  BFS 广度优先或最小耗费优先。分支限界法。  在扩展节点处，先生成所有的儿子节点，再从活节点列表中选择一个最有利的节点作为新的扩展节点。 回溯法就是穷举，深度优先去找到解空间中满足约束条件">
+<meta name="twitter:title" content="数据结构之搜索算法">
+<meta name="twitter:description" content="搜索算法、装载问题">
     
         <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
     
@@ -120,7 +120,7 @@
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
         </a>
-        <div class="flex-col header-title ellipsis">dfs</div>
+        <div class="flex-col header-title ellipsis">数据结构之搜索算法</div>
         
         <div class="search-wrap" id="search-wrap">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
@@ -142,7 +142,7 @@
 <header class="content-header post-header">
 
     <div class="container fade-scale">
-        <h1 class="title">dfs</h1>
+        <h1 class="title">数据结构之搜索算法</h1>
         <h5 class="subtitle">
             
                 <time datetime="2017-12-31T07:20:28.000Z" itemprop="datePublished" class="page-time">
@@ -167,7 +167,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#搜索算法"><span class="post-toc-number">1.</span> <span class="post-toc-text">搜索算法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#解空间树"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">解空间树</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#解空间搜索方式"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">解空间搜索方式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#回溯法"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">回溯法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#分支限界法"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">分支限界法</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#装载问题"><span class="post-toc-number">2.</span> <span class="post-toc-text">装载问题</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#问题描述"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">问题描述</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#贪心解法"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">贪心解法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#BFS"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">BFS</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#搜索算法"><span class="post-toc-number">1.</span> <span class="post-toc-text">搜索算法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#解空间树"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">解空间树</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#解空间搜索方式"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">解空间搜索方式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#回溯法"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">回溯法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#分支限界法"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">分支限界法</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#装载问题"><span class="post-toc-number">2.</span> <span class="post-toc-text">装载问题</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#问题描述"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">问题描述</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#贪心解法"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">贪心解法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#bfs"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">BFS</span></a></li></ol></li></ol>
         </nav>
     </aside>
 
@@ -175,7 +175,7 @@
 <article id="post-algorithm-dfs" class="post-article article-type-post fade" itemprop="blogPost">
 
     <div class="post-card">
-        <h1 class="post-card-title">dfs</h1>
+        <h1 class="post-card-title">数据结构之搜索算法</h1>
         <div class="post-meta">
             <time class="post-time" title="2017-12-31 15:20:28" datetime="2017-12-31T07:20:28.000Z" itemprop="datePublished">2017-12-31</time>
 
@@ -192,37 +192,56 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <h1 id="搜索算法"><a href="#搜索算法" class="headerlink" title="搜索算法"></a>搜索算法</h1><h2 id="解空间树"><a href="#解空间树" class="headerlink" title="解空间树"></a>解空间树</h2><p><strong>子集树</strong></p>
+            <blockquote>
+<p>搜索算法、装载问题</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="搜索算法">搜索算法</h1>
+<h2 id="解空间树">解空间树</h2>
+<p><strong>子集树</strong></p>
 <p>比如n种可选物品的01背包，对其进行选择。解空间为长度为n的01向量表示。解空间树是一颗完全二叉树。</p>
 <p><strong>排列树</strong></p>
 <p>比如旅行商问题，对n进行排列。</p>
-<h2 id="解空间搜索方式"><a href="#解空间搜索方式" class="headerlink" title="解空间搜索方式"></a>解空间搜索方式</h2><p><strong>DFS</strong></p>
-<p>深度优先。<code>回溯法</code>。 </p>
+<h2 id="解空间搜索方式">解空间搜索方式</h2>
+<p><strong>DFS</strong></p>
+<p>深度优先。<code>回溯法</code>。</p>
 <p><strong>BFS</strong></p>
-<p>广度优先或最小耗费优先。<code>分支限界法</code>。 </p>
+<p>广度优先或最小耗费优先。<code>分支限界法</code>。</p>
 <p>在扩展节点处，先生成所有的儿子节点，再从活节点列表中选择一个最有利的节点作为新的扩展节点。</p>
-<h2 id="回溯法"><a href="#回溯法" class="headerlink" title="回溯法"></a>回溯法</h2><p>就是<strong>穷举</strong>，<strong>深度优先</strong>去找到解空间中满足约束条件的所有解，再选择一个最好的出来。</p>
+<h2 id="回溯法">回溯法</h2>
+<p>就是<strong>穷举</strong>，<strong>深度优先</strong>去找到解空间中满足约束条件的所有解，再选择一个最好的出来。</p>
 <p>类似于走迷宫：走到死路或者已经达不到最优解就<strong>及时回头</strong>。要注意<strong>剪枝</strong>。</p>
 <p><strong>搜索子集树</strong></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> t)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (t &gt; n) &#123;</span><br><span class="line">    output(x);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 0和1两种选择</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= <span class="number">1</span>; i++) &#123;</span><br><span class="line">    x[t] = i;</span><br><span class="line">    <span class="keyword">if</span> (legal(t)) &#123;</span><br><span class="line">      bfs(t+<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>搜索排列树</strong></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> t)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (t &gt; n) &#123;</span><br><span class="line">    output(x);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 遍历所有t的可能：还剩下的可选择的内容，前面t-1已经确定了</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = t; i &lt;= n; i++) &#123;</span><br><span class="line">    swap(x[t], x[i]);</span><br><span class="line">    <span class="keyword">if</span> (legal(t)) &#123;</span><br><span class="line">      bfs(t + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    swap(x[t], x[i]);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="分支限界法"><a href="#分支限界法" class="headerlink" title="分支限界法"></a>分支限界法</h2><p><strong>广度优先</strong>或者<strong>最小消费优先</strong>去搜索解空间树，去找到使目标函数达到极大或者极小解，某种意义下的最优解。</p>
+<h2 id="分支限界法">分支限界法</h2>
+<p><strong>广度优先</strong>或者<strong>最小消费优先</strong>去搜索解空间树，去找到使目标函数达到极大或者极小解，某种意义下的最优解。</p>
 <p>每个活节点只有一次机会成为扩展节点，成为时，就一次性产生其所有儿子节点。舍弃不可行或导致非最优解的儿子节点，其余儿子节点加入活节点列表。从活节点列表中取出下一个节点作为新的扩展节点。</p>
 <p><strong>广度优先搜索</strong></p>
 <p>队列式分支限界法</p>
 <p><strong>最小消费优先搜索</strong></p>
 <p>优先队列式分支限界法。每个活节点有一个优先级。通常用最大堆来实现最大优先队列。</p>
-<h1 id="装载问题"><a href="#装载问题" class="headerlink" title="装载问题"></a>装载问题</h1><h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>$n$个集装箱质量分别为$w_i$， 要装上总容量为$c$的轮船。 问，怎样装，才能使装得最多？<br>$$<br>\begin{align}<br>&amp; \max \sum_{i}^nx_i\cdot w_i \<br>&amp;  \sum_{i}^nx_i\cdot w_i \le c \<br>&amp; x_i \in{0,1}, \quad \text{表示装或不装}<br>\end{align}<br>$$</p>
-<h2 id="贪心解法"><a href="#贪心解法" class="headerlink" title="贪心解法"></a>贪心解法</h2><p>贪心策略：集装箱从轻到重排序，<strong>轻者先装</strong>， 直到超重。</p>
-<h2 id="BFS"><a href="#BFS" class="headerlink" title="BFS"></a>BFS</h2><p>有2艘轮船，$\sum_i^n w_i \le c_1 + c_2$， 怎样才能把n个集装箱装到这2艘轮船。</p>
+<h1 id="装载问题">装载问题</h1>
+<h2 id="问题描述">问题描述</h2>
+<p><span class="math inline">\(n\)</span>个集装箱质量分别为<span class="math inline">\(w_i\)</span>， 要装上总容量为<span class="math inline">\(c\)</span>的轮船。 问，怎样装，才能使装得最多？ <span class="math display">\[
+\begin{align}
+&amp; \max \sum_{i}^nx_i\cdot w_i \\
+&amp;  \sum_{i}^nx_i\cdot w_i \le c \\
+&amp; x_i \in\{0,1\}, \quad \text{表示装或不装}
+\end{align}
+\]</span></p>
+<h2 id="贪心解法">贪心解法</h2>
+<p>贪心策略：集装箱从轻到重排序，<strong>轻者先装</strong>， 直到超重。</p>
+<h2 id="bfs">BFS</h2>
+<p>有2艘轮船，<span class="math inline">\(\sum_i^n w_i \le c_1 + c_2\)</span>， 怎样才能把n个集装箱装到这2艘轮船。</p>
 <p>可知最优方案：<strong>尽量把第一艘轮船装满</strong>，剩余的装到第二艘上。</p>
 <p>定义Solution</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="comment">// 集装箱数量</span></span><br><span class="line">        <span class="keyword">int</span> n;</span><br><span class="line">        <span class="comment">// 集装箱的重量</span></span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; w;</span><br><span class="line">        <span class="comment">// 船的载重</span></span><br><span class="line">        <span class="keyword">int</span> c;</span><br><span class="line">        <span class="comment">// 当前重量</span></span><br><span class="line">        <span class="keyword">int</span> cw;</span><br><span class="line">        <span class="comment">// 最优重量</span></span><br><span class="line">        <span class="keyword">int</span> bestw;</span><br><span class="line">		<span class="comment">// 回溯遍历index=i的箱子</span></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">backtrack</span><span class="params">(<span class="keyword">int</span> i)</span></span>;</span><br><span class="line">		</span><br><span class="line">  		<span class="comment">// 构造函数</span></span><br><span class="line">        Solution(<span class="keyword">const</span> <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;w, <span class="keyword">int</span> c):w(w), c(c) &#123;</span><br><span class="line">            <span class="keyword">this</span>-&gt;cw = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">this</span>-&gt;bestw = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">this</span>-&gt;n = w.size();</span><br><span class="line">        &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">max_loading</span><span class="params">(<span class="keyword">const</span> <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;w, <span class="keyword">int</span> c)</span> </span>&#123;</span><br><span class="line">    <span class="function">Solution <span class="title">solu</span><span class="params">(w, c)</span></span>;</span><br><span class="line">    solu.backtrack(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">return</span> solu.bestw;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>无剪枝的dfs</strong></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Solution::backtrack(<span class="keyword">int</span> i) &#123;</span><br><span class="line">    <span class="keyword">if</span> (i == n) &#123;</span><br><span class="line">        <span class="keyword">if</span> (cw &gt; bestw) &#123;</span><br><span class="line">            bestw = cw;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">// 选择i</span></span><br><span class="line">    <span class="keyword">if</span> (cw + w[i] &lt;= c) &#123;</span><br><span class="line">        cw = cw + w[i];</span><br><span class="line">        backtrack(i + <span class="number">1</span>);</span><br><span class="line">        cw = cw - w[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 不选择i</span></span><br><span class="line">    backtrack(i + <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>剪枝的dfs</strong></p>
-<p>进入下一步遍历之前，检查$\rm{cw+rest &gt; bestw}$ ，如果剩下的所有加上都小于最优解的话，那么就不用进入了。</p>
+<p>进入下一步遍历之前，检查<span class="math inline">\(\rm{cw+rest &gt; bestw}\)</span> ，如果剩下的所有加上都小于最优解的话，那么就不用进入了。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 剪枝的dfs</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">void</span> Solution::dfs(<span class="keyword">int</span> i) &#123;</span><br><span class="line">    <span class="keyword">if</span> (i == n) &#123;</span><br><span class="line">        <span class="keyword">if</span> (cw &gt; bestw) &#123;</span><br><span class="line">            bestw = cw;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 剩余</span></span><br><span class="line">    r = r - w[i];</span><br><span class="line">    <span class="comment">// 选择i</span></span><br><span class="line">    <span class="keyword">if</span> (cw + w[i] &lt;= c) &#123;</span><br><span class="line">        cw += w[i];</span><br><span class="line">        <span class="comment">// 剪枝</span></span><br><span class="line">        <span class="keyword">if</span> (cw + r &gt; bestw) &#123;</span><br><span class="line">            dfs(i + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        cw -= w[i];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 不选择i，剪枝</span></span><br><span class="line">    <span class="keyword">if</span> (cw + r &gt; bestw) &#123;</span><br><span class="line">        dfs(i + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    r = r + w[i];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
         </div>
@@ -232,7 +251,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-11-25T08:30:09.556Z" itemprop="dateUpdated">2018-11-25 16:30:09</time>
+    最后更新时间：<time datetime="2018-12-13T07:58:33.578Z" itemprop="dateUpdated">2018-12-13 15:58:33</time>
 </span><br>
 
 
@@ -268,7 +287,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/12/31/algorithm-dfs/&title=《dfs》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/12/31/algorithm-dfs/&title=《数据结构之搜索算法》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -278,7 +297,9 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/12/31/algorithm-dfs/&title=《dfs》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/12/31/algorithm-dfs/&title=《数据结构之搜索算法》 — PLM's Notes&source=
+搜索算法、装载问题
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -288,7 +309,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《dfs》 — PLM's Notes&url=http://plmsmile.github.io/2017/12/31/algorithm-dfs/&via=http://plmsmile.github.io" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《数据结构之搜索算法》 — PLM's Notes&url=http://plmsmile.github.io/2017/12/31/algorithm-dfs/&via=http://plmsmile.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
@@ -318,14 +339,14 @@
     <div class="waves-block waves-effect prev">
       <a href="/2018/01/07/aim2offer3/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">Aim2offer3(21-40)</h4>
+        <h4 class="title">剑指offer3(21-40)</h4>
       </a>
     </div>
   
 
   
     <div class="waves-block waves-effect next">
-      <a href="/2017/12/29/trees/" id="post-next" class="post-nav-link">
+      <a href="/2017/12/29/10-trees/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
         <h4 class="title">树的总结</h4>
       </a>
@@ -439,7 +460,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/12/31/algorithm-dfs/&title=《dfs》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/12/31/algorithm-dfs/&title=《数据结构之搜索算法》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -449,7 +470,9 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/12/31/algorithm-dfs/&title=《dfs》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/12/31/algorithm-dfs/&title=《数据结构之搜索算法》 — PLM's Notes&source=
+搜索算法、装载问题
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -459,7 +482,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《dfs》 — PLM's Notes&url=http://plmsmile.github.io/2017/12/31/algorithm-dfs/&via=http://plmsmile.github.io" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《数据结构之搜索算法》 — PLM's Notes&url=http://plmsmile.github.io/2017/12/31/algorithm-dfs/&via=http://plmsmile.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>

@@ -167,7 +167,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#背景"><span class="post-toc-number">1.</span> <span class="post-toc-text">背景</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#阅读理解任务"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">阅读理解任务</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Squad数据集"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">Squad数据集</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Match-LSTM"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">Match-LSTM</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Pointer-Net"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">Pointer-Net</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#模型"><span class="post-toc-number">2.</span> <span class="post-toc-text">模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#LSTM编码层"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">LSTM编码层</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Match-LSTM层"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">Match-LSTM层</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Answer-Pointer层"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">Answer-Pointer层</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#背景"><span class="post-toc-number">1.</span> <span class="post-toc-text">背景</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#阅读理解任务"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">阅读理解任务</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#squad数据集"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">Squad数据集</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#match-lstm"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">Match-LSTM</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#pointer-net"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">Pointer-Net</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#模型"><span class="post-toc-number">2.</span> <span class="post-toc-text">模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#lstm编码层"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">LSTM编码层</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#match-lstm层"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">Match-LSTM层</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#answer-pointer层"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">Answer-Pointer层</span></a></li></ol></li></ol>
         </nav>
     </aside>
 
@@ -192,11 +192,14 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <p>最初的Match-LSTM阅读理解模型。<a id="more"></a> </p>
+            <p>最初的Match-LSTM阅读理解模型。<a id="more"></a></p>
 <p>论文地址：<a href="https://arxiv.org/abs/1608.07905" target="_blank" rel="noopener">Machine Comprehension Using Match-LSTM and Answer Pointer</a></p>
-<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><h2 id="阅读理解任务"><a href="#阅读理解任务" class="headerlink" title="阅读理解任务"></a>阅读理解任务</h2><p>后面会详细补充。</p>
+<h1 id="背景">背景</h1>
+<h2 id="阅读理解任务">阅读理解任务</h2>
+<p>后面会详细补充。</p>
 <p>传统解决问答的方法：语言分析、特征工程等，具体包括句法分析、命名实体识别、问题分类、语义分析等。</p>
-<h2 id="Squad数据集"><a href="#Squad数据集" class="headerlink" title="Squad数据集"></a>Squad数据集</h2><ul>
+<h2 id="squad数据集">Squad数据集</h2>
+<ul>
 <li>答案是文章中出现的任意长度片段</li>
 <li>Wiki文章为主</li>
 <li>众包人工标注产生</li>
@@ -204,42 +207,69 @@
 <li>数量较大：500多篇文章，2万多个段落，10万个问题</li>
 <li>鼓励用自己的语言提问</li>
 </ul>
-<h2 id="Match-LSTM"><a href="#Match-LSTM" class="headerlink" title="Match-LSTM"></a>Match-LSTM</h2><p><strong>1. 文本蕴含任务</strong></p>
+<h2 id="match-lstm">Match-LSTM</h2>
+<p><strong>1. 文本蕴含任务</strong></p>
 <p>一个前提集合P，一个假设H。去预测P里是否能蕴含出H。</p>
 <p><strong>2. Match-LSTM</strong></p>
-<p>有K个前提${P_1, \cdots, P_K}$，1个假设$H$。假设的长度为m。遍历假设的每一个词汇$h_i$</p>
+<p>有K个前提<span class="math inline">\(\{P_1, \cdots, P_K\}\)</span>，1个假设<span class="math inline">\(H\)</span>。假设的长度为m。遍历假设的每一个词汇<span class="math inline">\(h_i\)</span></p>
 <ul>
-<li><p>在$h_i$处，利用注意力机制，综合K个前提，得到一个向量$p_i$ </p>
-</li>
-<li><p>聚合匹配$[h_i, p_i]$一起，给到LSTM</p>
-</li>
+<li><p>在<span class="math inline">\(h_i\)</span>处，利用注意力机制，综合K个前提，得到一个向量<span class="math inline">\(p_i\)</span></p></li>
+<li><p>聚合匹配<span class="math inline">\([h_i, p_i]\)</span>一起，给到LSTM</p></li>
 </ul>
 <p>其实类似于Attention-Based NMT的解码过程。</p>
-<h2 id="Pointer-Net"><a href="#Pointer-Net" class="headerlink" title="Pointer-Net"></a>Pointer-Net</h2><p>从一个输入序列中，选择一个位置作为输出。</p>
+<h2 id="pointer-net">Pointer-Net</h2>
+<p>从一个输入序列中，选择一个位置作为输出。</p>
 <ul>
 <li>序列模型：选择多个位置，就组成一个序列</li>
 <li>边界模型：选择开始和结束位置，中间的片段是答案</li>
 </ul>
-<h1 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h1><p>段落$P$有m个单词，问题$Q$有n个单词。</p>
-<h2 id="LSTM编码层"><a href="#LSTM编码层" class="headerlink" title="LSTM编码层"></a>LSTM编码层</h2><p>单向LSTM编码<br>$$<br>H^p = \rm{LSTM}(P), \quad H^q = \rm{LSTM}(Q)<br>$$<br>取每一时刻的隐状态，得到对文章和问题的编码。$H^p \in \mathbb  R^{m \times h}, H^q \in \mathbb R^{n \times h}$。$h$是编码的维度。</p>
-<h2 id="Match-LSTM层"><a href="#Match-LSTM层" class="headerlink" title="Match-LSTM层"></a>Match-LSTM层</h2><p>这一层实际上是一个LSTM，<strong>输入依次是P中的各个单词$p_i$</strong>。每一时刻，利用注意力机制计算相对应的Q的编码。</p>
-<p><strong>问题–前提，段落–假设，看问题蕴含P的哪些部分</strong>。</p>
-<p>先计算<code>注意力权值</code><br>$$<br>\overrightarrow{ G_i} = \tanh (W^qH^q + (W^p\mathbf h_i^p + W^r \overrightarrow{\mathbf h_{i-1}^r} + \mathbf b^p) \otimes \mathbf e_Q)<br>$$</p>
-<p>$$<br>\overrightarrow{ \mathbf \alpha_i} = \rm{softmax}(\mathbf w^T  \overrightarrow{ G_i} + b \otimes \mathbf e_Q)<br>$$</p>
-<p>利用注意力机制，计算所有Q基于当前$p_i$的<code>注意力</code>，把<strong>注意力和$\mathbf h_i^p$拼接起来</strong><br>$$<br>\overrightarrow {\mathbf z_i} = [\mathbf h_i^p, \underbrace{H^q \overrightarrow{ \mathbf \alpha_i}}_{\color{blue}{\rm{attention}}}]<br>$$<br>把match后的结果，输入到LSTM，<br>$$<br>\overrightarrow {\mathbf h_i^r} = \rm{LSTM}(\overrightarrow {\mathbf z_i}, \overrightarrow {\mathbf h_{i-1}^r})<br>$$<br>定义从右向左，得到$\overleftarrow {\mathbf h_i^r}$。最终，拼接两个方向的向量，得到<br>$$<br>H^r = [\overrightarrow{H^r}, \overleftarrow{H^r}] \quad \in \mathbb R^{m \times 2h}<br>$$</p>
-<h2 id="Answer-Pointer层"><a href="#Answer-Pointer层" class="headerlink" title="Answer-Pointer层"></a>Answer-Pointer层</h2><p>输入Match-LSTM层对Passage的编码结果$H^r$，输出一个序列。</p>
+<h1 id="模型">模型</h1>
+<p>段落<span class="math inline">\(P\)</span>有m个单词，问题<span class="math inline">\(Q\)</span>有n个单词。</p>
+<h2 id="lstm编码层">LSTM编码层</h2>
+<p>单向LSTM编码 <span class="math display">\[
+H^p = \rm{LSTM}(P), \quad H^q = \rm{LSTM}(Q)
+\]</span> 取每一时刻的隐状态，得到对文章和问题的编码。<span class="math inline">\(H^p \in \mathbb R^{m \times h}, H^q \in \mathbb R^{n \times h}\)</span>。<span class="math inline">\(h\)</span>是编码的维度。</p>
+<h2 id="match-lstm层">Match-LSTM层</h2>
+<p>这一层实际上是一个LSTM，<strong>输入依次是P中的各个单词<span class="math inline">\(p_i\)</span></strong>。每一时刻，利用注意力机制计算相对应的Q的编码。</p>
+<p><strong>问题--前提，段落--假设，看问题蕴含P的哪些部分</strong>。</p>
+<p>先计算<code>注意力权值</code> <span class="math display">\[
+\overrightarrow{ G_i} = \tanh (W^qH^q + (W^p\mathbf h_i^p + W^r \overrightarrow{\mathbf h_{i-1}^r} + \mathbf b^p) \otimes \mathbf e_Q)
+\]</span></p>
+<p><span class="math display">\[
+\overrightarrow{ \mathbf \alpha_i} = \rm{softmax}(\mathbf w^T  \overrightarrow{ G_i} + b \otimes \mathbf e_Q)
+\]</span></p>
+<p>利用注意力机制，计算所有Q基于当前<span class="math inline">\(p_i\)</span>的<code>注意力</code>，把<strong>注意力和<span class="math inline">\(\mathbf h_i^p\)</span>拼接起来</strong> <span class="math display">\[
+\overrightarrow {\mathbf z_i} = [\mathbf h_i^p, \underbrace{H^q \overrightarrow{ \mathbf \alpha_i}}_{\color{blue}{\rm{attention}}}]
+\]</span> 把match后的结果，输入到LSTM， <span class="math display">\[
+\overrightarrow {\mathbf h_i^r} = \rm{LSTM}(\overrightarrow {\mathbf z_i}, \overrightarrow {\mathbf h_{i-1}^r})
+\]</span> 定义从右向左，得到<span class="math inline">\(\overleftarrow {\mathbf h_i^r}\)</span>。最终，拼接两个方向的向量，得到 <span class="math display">\[
+H^r = [\overrightarrow{H^r}, \overleftarrow{H^r}] \quad \in \mathbb R^{m \times 2h}
+\]</span></p>
+<h2 id="answer-pointer层">Answer-Pointer层</h2>
+<p>输入Match-LSTM层对Passage的编码结果<span class="math inline">\(H^r\)</span>，输出一个序列。</p>
 <p><strong>序列模型</strong></p>
-<p>不断生成一个序列$\mathbf a = (a_1, a_2, \cdots)$，表示P中的位置。</p>
-<p>在P的末尾设置一个停止标记，如果选择它，则停止迭代。新的$\bar H^r \in \mathbb R^{(m+1) \times 2h}$</p>
-<p>1、计算<strong>注意力权值</strong>$\mathbf \beta_k$，$\beta_{k,j}$表示，选$p_j$作为$a_k$的概率<br>$$<br>F_k = \tanh(V \bar H^r + (W^a \mathbf h_{k-1}^a + \mathbf b^a) \otimes \mathbf e_{(m+1)})<br>$$</p>
-<p>$$<br>\mathbf \beta_k = \rm{softmax}(\mathbf v^TF_k + \mathbf c \otimes \mathbf e_{(m+1)})<br>$$</p>
-<p>2、使用<strong>注意力机制</strong>得到<strong>当前时刻需要的$H^r$的信息</strong>，结合<strong>上一时刻的隐状态</strong>，输入到LSTM中<br>$$<br>\mathbf h_k^a = \overrightarrow{\rm{LSTM}} ( \underbrace{\bar H^r \mathbf \beta_k^T}<em>{\color{blue}{\rm{attention}}}, \mathbf h</em>{k-1}^r)<br>$$<br>答案的概率计算如下：<br>$$<br>p(\mathbf a \mid H^r) = \prod_{k} p(a_k \mid a_1, \cdots, a_{k-1}, H^r)<br>$$</p>
-<p>$$<br>p(a_k = j \mid a_1, \cdots, a_{k-1}, H^r) = \beta_{k,j}<br>$$</p>
-<p>目标函数：<br>$$</p>
-<ul>
-<li>\sum_{n=1}^N \log p(\mathbf a_n \mid P_n, Q_n)<br>$$<br><strong>边界模型</strong></li>
-</ul>
-<p>不用预测完整的序列，只<strong>预测开始和结束位置</strong>就可以了。<br>$$<br>p(\mathbf a \mid H^r) = p(a_s \mid H^r) \cdot p(a_e \mid a_s, H^r)<br>$$</p>
+<p>不断生成一个序列<span class="math inline">\(\mathbf a = (a_1, a_2, \cdots)\)</span>，表示P中的位置。</p>
+<p>在P的末尾设置一个停止标记，如果选择它，则停止迭代。新的<span class="math inline">\(\bar H^r \in \mathbb R^{(m+1) \times 2h}\)</span></p>
+<p>1、计算<strong>注意力权值</strong><span class="math inline">\(\mathbf \beta_k\)</span>，<span class="math inline">\(\beta_{k,j}\)</span>表示，选<span class="math inline">\(p_j\)</span>作为<span class="math inline">\(a_k\)</span>的概率 <span class="math display">\[
+F_k = \tanh(V \bar H^r + (W^a \mathbf h_{k-1}^a + \mathbf b^a) \otimes \mathbf e_{(m+1)})
+\]</span></p>
+<p><span class="math display">\[
+\mathbf \beta_k = \rm{softmax}(\mathbf v^TF_k + \mathbf c \otimes \mathbf e_{(m+1)})
+\]</span></p>
+<p>2、使用<strong>注意力机制</strong>得到<strong>当前时刻需要的<span class="math inline">\(H^r\)</span>的信息</strong>，结合<strong>上一时刻的隐状态</strong>，输入到LSTM中 <span class="math display">\[
+\mathbf h_k^a = \overrightarrow{\rm{LSTM}} ( \underbrace{\bar H^r \mathbf \beta_k^T}_{\color{blue}{\rm{attention}}}, \mathbf h_{k-1}^r)
+\]</span> 答案的概率计算如下： <span class="math display">\[
+p(\mathbf a \mid H^r) = \prod_{k} p(a_k \mid a_1, \cdots, a_{k-1}, H^r)
+\]</span></p>
+<p><span class="math display">\[
+p(a_k = j \mid a_1, \cdots, a_{k-1}, H^r) = \beta_{k,j}
+\]</span></p>
+<p>目标函数： <span class="math display">\[
+- \sum_{n=1}^N \log p(\mathbf a_n \mid P_n, Q_n)
+\]</span> <strong>边界模型</strong></p>
+<p>不用预测完整的序列，只<strong>预测开始和结束位置</strong>就可以了。 <span class="math display">\[
+p(\mathbf a \mid H^r) = p(a_s \mid H^r) \cdot p(a_e \mid a_s, H^r)
+\]</span></p>
 
         </div>
 

@@ -20,23 +20,23 @@
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="自然语言处理,条件随机场">
-    <meta name="description" content="条件随机场(Conditional Random Field, CRF)是给定一组输入随机变量条件下另一组输出随机变量的条件概率分布模型。常常用于标注问题。隐马尔科夫模型和条件随机场是自然语言处理中最重要的算法。CRF最重要的就是根据观测序列，把标记序列给推测出来。  概率无向图模型概率无向图模型又称为马尔科夫随机场，是一个可以由无向图表示的联合概率分布。一些类似内容。 有一组随机变量$Y \i">
-<meta name="keywords" content="自然语言处理,条件随机场">
+    <meta name="keywords" content="条件随机场,概率无向图,概率计算问题,学习算法,预测问题,维特比,前向后向,迭代尺度法">
+    <meta name="description" content="条件随机场(Conditional Random Field, CRF)是给定一组输入随机变量条件下另一组输出随机变量的条件概率分布模型。">
+<meta name="keywords" content="条件随机场,概率无向图,概率计算问题,学习算法,预测问题,维特比,前向后向,迭代尺度法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="条件随机场">
 <meta property="og:url" content="http://plmsmile.github.io/2017/09/28/crf/index.html">
 <meta property="og:site_name" content="PLM&#39;s Notes">
-<meta property="og:description" content="条件随机场(Conditional Random Field, CRF)是给定一组输入随机变量条件下另一组输出随机变量的条件概率分布模型。常常用于标注问题。隐马尔科夫模型和条件随机场是自然语言处理中最重要的算法。CRF最重要的就是根据观测序列，把标记序列给推测出来。  概率无向图模型概率无向图模型又称为马尔科夫随机场，是一个可以由无向图表示的联合概率分布。一些类似内容。 有一组随机变量$Y \i">
+<meta property="og:description" content="条件随机场(Conditional Random Field, CRF)是给定一组输入随机变量条件下另一组输出随机变量的条件概率分布模型。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/crf/01_%E6%97%A0%E5%90%91%E5%9B%BE%E5%9B%A2.png">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/crf/04_%E6%A0%87%E6%B3%A8%E5%81%8F%E7%BD%AE.png">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/crf/02_%E7%BA%BF%E6%80%A7%E9%93%BE%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA.png">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/crf/03_%E7%8A%B6%E6%80%81%E8%B7%AF%E5%BE%84.png">
-<meta property="og:updated_time" content="2018-11-25T08:30:09.751Z">
+<meta property="og:updated_time" content="2018-12-13T09:09:10.249Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="条件随机场">
-<meta name="twitter:description" content="条件随机场(Conditional Random Field, CRF)是给定一组输入随机变量条件下另一组输出随机变量的条件概率分布模型。常常用于标注问题。隐马尔科夫模型和条件随机场是自然语言处理中最重要的算法。CRF最重要的就是根据观测序列，把标记序列给推测出来。  概率无向图模型概率无向图模型又称为马尔科夫随机场，是一个可以由无向图表示的联合概率分布。一些类似内容。 有一组随机变量$Y \i">
+<meta name="twitter:description" content="条件随机场(Conditional Random Field, CRF)是给定一组输入随机变量条件下另一组输出随机变量的条件概率分布模型。">
 <meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/crf/01_%E6%97%A0%E5%90%91%E5%9B%BE%E5%9B%A2.png">
     
         <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
@@ -172,7 +172,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#概率无向图模型"><span class="post-toc-number">1.</span> <span class="post-toc-text">概率无向图模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#定义"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">定义</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#概率无向图因子分解"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">概率无向图因子分解</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#条件随机场的定义与形式"><span class="post-toc-number">2.</span> <span class="post-toc-text">条件随机场的定义与形式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#HMM的问题"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">HMM的问题</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#定义-1"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">定义</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#基本形式"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">基本形式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#简化形式"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">简化形式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#向量形式"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">向量形式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#矩阵形式"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">矩阵形式</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#条件随机场的概率计算问题"><span class="post-toc-number">3.</span> <span class="post-toc-text">条件随机场的概率计算问题</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前向后向算法"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">前向后向算法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#条件概率计算"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">条件概率计算</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#特征期望值计算"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">特征期望值计算</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#学习算法"><span class="post-toc-number">4.</span> <span class="post-toc-text">学习算法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#改进的迭代尺度法"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">改进的迭代尺度法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#拟牛顿法"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">拟牛顿法</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#预测算法"><span class="post-toc-number">5.</span> <span class="post-toc-text">预测算法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#预测问题"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">预测问题</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#维特比算法"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">维特比算法</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#概率无向图模型"><span class="post-toc-number">1.</span> <span class="post-toc-text">概率无向图模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#定义"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">定义</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#概率无向图因子分解"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">概率无向图因子分解</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#条件随机场的定义与形式"><span class="post-toc-number">2.</span> <span class="post-toc-text">条件随机场的定义与形式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#hmm的问题"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">HMM的问题</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#定义-1"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">定义</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#基本形式"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">基本形式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#简化形式"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">简化形式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#向量形式"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">向量形式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#矩阵形式"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">矩阵形式</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#条件随机场的概率计算问题"><span class="post-toc-number">3.</span> <span class="post-toc-text">条件随机场的概率计算问题</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前向后向算法"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">前向后向算法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#条件概率计算"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">条件概率计算</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#特征期望值计算"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">特征期望值计算</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#学习算法"><span class="post-toc-number">4.</span> <span class="post-toc-text">学习算法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#改进的迭代尺度法"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">改进的迭代尺度法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#拟牛顿法"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">拟牛顿法</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#预测算法"><span class="post-toc-number">5.</span> <span class="post-toc-text">预测算法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#预测问题"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">预测问题</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#维特比算法"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">维特比算法</span></a></li></ol></li></ol>
         </nav>
     </aside>
 
@@ -198,85 +198,314 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <blockquote>
-<p>条件随机场(Conditional Random Field, CRF)是给定一组输入随机变量条件下另一组输出随机变量的条件概率分布模型。常常用于<code>标注问题</code>。<code>隐马尔科夫模型</code>和<code>条件随机场</code>是自然语言处理中最重要的算法。CRF最重要的就是根据观测序列，把标记序列给推测出来。</p>
+<p>条件随机场(Conditional Random Field, CRF)是给定一组输入随机变量条件下另一组输出随机变量的条件概率分布模型。<a id="more"></a>常常用于<code>标注问题</code>。<code>隐马尔科夫模型</code>和<code>条件随机场</code>是自然语言处理中最重要的算法。CRF最重要的就是根据观测序列，把标记序列给推测出来。</p>
 </blockquote>
-<h1 id="概率无向图模型"><a href="#概率无向图模型" class="headerlink" title="概率无向图模型"></a>概率无向图模型</h1><p>概率无向图模型又称为<code>马尔科夫随机场</code>，是一个可以<strong>由无向图表示的联合概率分布</strong>。<a href="https://plmsmile.github.io/2017/08/04/pgm-01/#概率图模型">一些类似内容</a>。</p>
-<p>有一组随机变量$Y \in \Gamma$，联合概率分布为$P(Y)$，由图$G=(V,E)$表示。节点v代表<strong>变量</strong>$Y_v$，节点之间的边代表两个变量的<strong>概率依赖关系</strong>。</p>
+<h1 id="概率无向图模型">概率无向图模型</h1>
+<p>概率无向图模型又称为<code>马尔科夫随机场</code>，是一个可以<strong>由无向图表示的联合概率分布</strong>。<a href="https://plmsmile.github.io/2017/08/04/pgm-01/#概率图模型">一些类似内容</a>。</p>
+<p>有一组随机变量<span class="math inline">\(Y \in \Gamma\)</span>，联合概率分布为<span class="math inline">\(P(Y)\)</span>，由图<span class="math inline">\(G=(V,E)\)</span>表示。节点v代表<strong>变量</strong><span class="math inline">\(Y_v\)</span>，节点之间的边代表两个变量的<strong>概率依赖关系</strong>。</p>
 <p><img src="" style="display:block; margin:auto" width="60%"></p>
-<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>马尔可夫性就是说，给定一些条件下，没有连接的节点之间是条件独立的。</p>
+<h2 id="定义">定义</h2>
+<p>马尔可夫性就是说，给定一些条件下，没有连接的节点之间是条件独立的。</p>
 <p><strong>成对马尔可夫性</strong></p>
-<p>设$u$和$v$是两个没有边连接的节点，其它所有节点为$O$。<code>成对马尔可夫性</code>是说，给定随机变量组$Y_O$的条件下，<strong>随机变量$Y_u$和$Y_v$是独立的</strong>。即有如下：<br>$$<br>P(Y_u, Y_v \mid Y_O) = P(Y_u \mid Y_O)P(Y_v \mid Y_O)<br>$$<br><strong>局部马尔可夫性</strong></p>
-<p>节点$v$，$W$是与$v$连接的所有节点，$O$是与$v$没有连接的节点。<code>局部马尔可夫性</code>认为，给定$Y_w$的条件下，$Y_v$和$Y_O$独立。即有：<br>$$<br>P(Y_v, Y_O \mid Y_W) = P(Y_v \mid Y_W) P(Y_O \mid Y_W)<br>$$<br><strong>全局马尔可夫性</strong></p>
-<p>节点集合$A$，$B$被中间节点集合$C$分隔开，即不相连。<code>全局马尔可夫性</code>认为，给定$Y_C$的条件下，$Y_A$和$Y_B$是独立的。即有：<br>$$<br>P(Y_A, Y_B \mid Y_C) = P(Y_A \mid Y_C) P(Y_B \mid Y_C)<br>$$<br>上面的3个马尔可夫性的定义是等价的。</p>
+<p>设<span class="math inline">\(u\)</span>和<span class="math inline">\(v\)</span>是两个没有边连接的节点，其它所有节点为<span class="math inline">\(O\)</span>。<code>成对马尔可夫性</code>是说，给定随机变量组<span class="math inline">\(Y_O\)</span>的条件下，<strong>随机变量<span class="math inline">\(Y_u\)</span>和<span class="math inline">\(Y_v\)</span>是独立的</strong>。即有如下： <span class="math display">\[
+P(Y_u, Y_v \mid Y_O) = P(Y_u \mid Y_O)P(Y_v \mid Y_O)
+\]</span> <strong>局部马尔可夫性</strong></p>
+<p>节点<span class="math inline">\(v\)</span>，<span class="math inline">\(W\)</span>是与<span class="math inline">\(v\)</span>连接的所有节点，<span class="math inline">\(O\)</span>是与<span class="math inline">\(v\)</span>没有连接的节点。<code>局部马尔可夫性</code>认为，给定<span class="math inline">\(Y_w\)</span>的条件下，<span class="math inline">\(Y_v\)</span>和<span class="math inline">\(Y_O\)</span>独立。即有： <span class="math display">\[
+P(Y_v, Y_O \mid Y_W) = P(Y_v \mid Y_W) P(Y_O \mid Y_W)
+\]</span> <strong>全局马尔可夫性</strong></p>
+<p>节点集合<span class="math inline">\(A\)</span>，<span class="math inline">\(B\)</span>被中间节点集合<span class="math inline">\(C\)</span>分隔开，即不相连。<code>全局马尔可夫性</code>认为，给定<span class="math inline">\(Y_C\)</span>的条件下，<span class="math inline">\(Y_A\)</span>和<span class="math inline">\(Y_B\)</span>是独立的。即有： <span class="math display">\[
+P(Y_A, Y_B \mid Y_C) = P(Y_A \mid Y_C) P(Y_B \mid Y_C)
+\]</span> 上面的3个马尔可夫性的定义是等价的。</p>
 <p><strong>概率无向图模型</strong></p>
-<p>设有联合概率密度$P(Y)$，由无向图$G=(V,E)$表示。节点表示随机变量，边表示随机变量之间的依赖关系。如果联合概率密度$P(Y)$满足马尔可夫性，那么就称此联合概率分布为<code>概率图模型</code>，或<code>马尔可夫随机场</code>。</p>
+<p>设有联合概率密度<span class="math inline">\(P(Y)\)</span>，由无向图<span class="math inline">\(G=(V,E)\)</span>表示。节点表示随机变量，边表示随机变量之间的依赖关系。如果联合概率密度<span class="math inline">\(P(Y)\)</span>满足马尔可夫性，那么就称此联合概率分布为<code>概率图模型</code>，或<code>马尔可夫随机场</code>。</p>
 <p>实际上我们更关心怎么求联合概率密度，<strong>一般是把整体的联合概率写成若干个子联合概率的乘积</strong>，即进行<code>因子分解</code>。概率无向图模型最大的优点就是易于因子分解。</p>
-<h2 id="概率无向图因子分解"><a href="#概率无向图因子分解" class="headerlink" title="概率无向图因子分解"></a>概率无向图因子分解</h2><p><strong>团与最大团</strong></p>
+<h2 id="概率无向图因子分解">概率无向图因子分解</h2>
+<p><strong>团与最大团</strong></p>
 <p><code>团</code>：无向图中的一个子集，任何两个节点<strong>均有边连接</strong>。</p>
 <p><code>最大团</code>：无向图中的一个子集，任何两个节点均有边连接。不能再加入一个节点组成更大的团了。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/crf/01_%E6%97%A0%E5%90%91%E5%9B%BE%E5%9B%A2.png" style="display:block; margin:auto" width="20%"></p>
-<p>如${Y_1, Y_2}$，${Y_1, Y_2, Y_3}$ 都是团，其中后者是最大团。而${Y_1, Y_2, Y_3, Y_4}$ 不是团，因为$Y_1$和$Y_4$没有边连接。</p>
+<p>如<span class="math inline">\(\{Y_1, Y_2\}\)</span>，<span class="math inline">\(\{Y_1, Y_2, Y_3\}\)</span> 都是团，其中后者是最大团。而<span class="math inline">\(\{Y_1, Y_2, Y_3, Y_4\}\)</span> 不是团，因为<span class="math inline">\(Y_1\)</span>和<span class="math inline">\(Y_4\)</span>没有边连接。</p>
 <p><strong>因子分解</strong></p>
-<p>有无向图模型$G$, $C$ 是 $G$ 上的最大团，有很多个。$Y_C$ 是$C$ 对应的随机变量。则<strong>联合概率分布$P(Y)$ 可以写成多个最大团$C$ 上的势函数的乘积</strong>。<br>$$<br>\color{blue}{P(Y)} = \frac {1} {Z} \prod_C \Psi_C(Y_C),<br>\quad Z = \sum_Y \prod_C \Psi_C(Y_C)<br>$$<br>其中$Z$是<code>规范化因子</code>。$\Psi_C(Y_C)$是 <code>势函数</code>，是一个严格正函数。等式左右两端都取条件概率也是可以的。下文就是。<br>$$<br>\color{blue}{\Psi_C(Y_C)} = \exp \left(-E(Y_C) \right)<br>$$<br>其中$\color{blue}{E(Y_C) }$ 是<code>能量函数</code>。</p>
-<h1 id="条件随机场的定义与形式"><a href="#条件随机场的定义与形式" class="headerlink" title="条件随机场的定义与形式"></a>条件随机场的定义与形式</h1><h2 id="HMM的问题"><a href="#HMM的问题" class="headerlink" title="HMM的问题"></a>HMM的问题</h2><p><a href="https://plmsmile.github.io/2017/08/04/pgm-01/#隐马尔可夫模型">这里是HMM的讲解</a> 。HMM有下面几个问题</p>
+<p>有无向图模型<span class="math inline">\(G\)</span>, <span class="math inline">\(C\)</span> 是 <span class="math inline">\(G\)</span> 上的最大团，有很多个。<span class="math inline">\(Y_C\)</span> 是<span class="math inline">\(C\)</span> 对应的随机变量。则<strong>联合概率分布<span class="math inline">\(P(Y)\)</span> 可以写成多个最大团<span class="math inline">\(C\)</span> 上的势函数的乘积</strong>。 <span class="math display">\[
+\color{blue}{P(Y)} = \frac {1} {Z} \prod_C \Psi_C(Y_C), 
+\quad Z = \sum_Y \prod_C \Psi_C(Y_C)
+\]</span> 其中<span class="math inline">\(Z\)</span>是<code>规范化因子</code>。<span class="math inline">\(\Psi_C(Y_C)\)</span>是 <code>势函数</code>，是一个严格正函数。等式左右两端都取条件概率也是可以的。下文就是。 <span class="math display">\[
+\color{blue}{\Psi_C(Y_C)} = \exp \left(-E(Y_C) \right)
+\]</span> 其中<span class="math inline">\(\color{blue}{E(Y_C) }\)</span> 是<code>能量函数</code>。</p>
+<h1 id="条件随机场的定义与形式">条件随机场的定义与形式</h1>
+<h2 id="hmm的问题">HMM的问题</h2>
+<p><a href="https://plmsmile.github.io/2017/08/04/pgm-01/#隐马尔可夫模型">这里是HMM的讲解</a> 。HMM有下面几个问题</p>
 <ul>
-<li>需要给出<strong>隐状态和观察符号的联合概率分布</strong>，即<code>发射概率</code> $b_j(k)$，是生成式模型，也是它们的通病。</li>
+<li>需要给出<strong>隐状态和观察符号的联合概率分布</strong>，即<code>发射概率</code> <span class="math inline">\(b_j(k)\)</span>，是生成式模型，也是它们的通病。</li>
 <li>观察符号需要是<strong>离散的</strong>，可以枚举的，要<strong>遍历所有</strong>观察符号。如果是一个连续序列，则不行。</li>
 <li>观察符号是独立的，<strong>没有观察相互之间的依赖关系</strong>。如一个句子的前后，都有关联才是。即<code>输出独立性假设问题</code>。</li>
 <li>无法考虑除了字词顺序以外的<strong>其它特征</strong>。比如字母为大小写，包含数字等。</li>
 <li><code>标注偏置问题</code>。</li>
 </ul>
-<p>标注偏置问题，举例，是说有两个单词”rib-123”和”rob-456”，”ri”应该标记为”12”，”ro”应该标记为”45”。</p>
-<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/crf/04_%E6%A0%87%E6%B3%A8%E5%81%8F%E7%BD%AE.png" style="display:block; margin:auto" width="50%"><br>$$<br>\begin {align}<br>&amp; P(12 \mid ri) = P(1 \mid r)P(2 \mid i, r=1) = P(1 \mid r) \cdot 1 = P(1 \mid r)  \<br>&amp; P(45 \mid ro) = P(4 \mid r)P(5 \mid o, r=4) = P(4 \mid r) \cdot 1 = P(4 \mid r) \<br>\end {align}<br>$$<br>由上面计算概率可知，ri标为12和 ro标为45的概率最终变成r标为1和4的概率。但是由于语料库中”rob”的出现次数很多，所以$P(4 \mid r) &gt; P(1 \mid r)$ ，所以可能会一直把”rib”中的”i”标记为1，会导致标记出错。这就是标记偏置问题。</p>
-<h2 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h2><p><code>条件随机场</code>是给定随机变量$X$条件下，随机变量$Y$ 的马尔可夫随机场。我们主要关心<code>线性链随机场</code>，它可以用于标注问题。</p>
+<p>标注偏置问题，举例，是说有两个单词&quot;rib-123&quot;和&quot;rob-456&quot;，&quot;ri&quot;应该标记为&quot;12&quot;，&quot;ro&quot;应该标记为&quot;45&quot;。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/crf/04_%E6%A0%87%E6%B3%A8%E5%81%8F%E7%BD%AE.png" style="display:block; margin:auto" width="50%"> <span class="math display">\[
+\begin {align}
+&amp; P(12 \mid ri) = P(1 \mid r)P(2 \mid i, r=1) = P(1 \mid r) \cdot 1 = P(1 \mid r)  \\ 
+&amp; P(45 \mid ro) = P(4 \mid r)P(5 \mid o, r=4) = P(4 \mid r) \cdot 1 = P(4 \mid r) \\ 
+\end {align}
+\]</span> 由上面计算概率可知，ri标为12和 ro标为45的概率最终变成r标为1和4的概率。但是由于语料库中&quot;rob&quot;的出现次数很多，所以<span class="math inline">\(P(4 \mid r) &gt; P(1 \mid r)\)</span> ，所以可能会一直把&quot;rib&quot;中的&quot;i&quot;标记为1，会导致标记出错。这就是标记偏置问题。</p>
+<h2 id="定义-1">定义</h2>
+<p><code>条件随机场</code>是给定随机变量<span class="math inline">\(X\)</span>条件下，随机变量<span class="math inline">\(Y\)</span> 的马尔可夫随机场。我们主要关心<code>线性链随机场</code>，它可以用于标注问题。</p>
 <p><strong>条件随机场</strong></p>
-<p>$X$与$Y$是随机变量，条件概率分布$P(Y \mid X)$。随机变量$Y$可以构成一个无向图表示的马尔可夫随机场。任意一节点$Y_v$，$Y_A$是与$v$相连接的节点，$Y_B$是除了$v$以外的所有节点。若都有<br>$$<br>P(Y_v \mid X, Y_B) = P(Y_v \mid X, Y_A)<br>$$<br>则<strong>称$P(Y \mid X)$ 为条件随机场</strong>。并不要求$X$和$Y$ 具有相同的结构。</p>
+<p><span class="math inline">\(X\)</span>与<span class="math inline">\(Y\)</span>是随机变量，条件概率分布<span class="math inline">\(P(Y \mid X)\)</span>。随机变量<span class="math inline">\(Y\)</span>可以构成一个无向图表示的马尔可夫随机场。任意一节点<span class="math inline">\(Y_v\)</span>，<span class="math inline">\(Y_A\)</span>是与<span class="math inline">\(v\)</span>相连接的节点，<span class="math inline">\(Y_B\)</span>是除了<span class="math inline">\(v\)</span>以外的所有节点。若都有 <span class="math display">\[
+P(Y_v \mid X, Y_B) = P(Y_v \mid X, Y_A)
+\]</span> 则<strong>称<span class="math inline">\(P(Y \mid X)\)</span> 为条件随机场</strong>。并不要求<span class="math inline">\(X\)</span>和<span class="math inline">\(Y\)</span> 具有相同的结构。</p>
 <p><strong>线性链条件随机场</strong></p>
-<p>$X$和$Y$ 有相同的线性结构。设$X = (X_1, X_2, \cdots, X_n)$，$Y = (Y_1, Y_2, \cdots, Y_n)$均为线性链表示的随机变量序列。每个最大团包含2个节点。</p>
-<p>$P(Y \mid X)$ 构成条件随机场，即满足马尔可夫性<br>$$<br>P(Y_i \mid X, Y_1, \cdots, Y_{i-1}, Y_{i+1}, \cdots, Y_n) = P(Y_i \mid X, Y_{i-1}, Y_{i+1}), \quad i=1,\cdots, n。 \; (1和n时只考虑单边)<br>$$<br>则称$P(Y \mid X)$为<code>线性链条件随机场</code>。</p>
+<p><span class="math inline">\(X\)</span>和<span class="math inline">\(Y\)</span> 有相同的线性结构。设<span class="math inline">\(X = (X_1, X_2, \cdots, X_n)\)</span>，<span class="math inline">\(Y = (Y_1, Y_2, \cdots, Y_n)\)</span>均为线性链表示的随机变量序列。每个最大团包含2个节点。</p>
+<p><span class="math inline">\(P(Y \mid X)\)</span> 构成条件随机场，即满足马尔可夫性 <span class="math display">\[
+P(Y_i \mid X, Y_1, \cdots, Y_{i-1}, Y_{i+1}, \cdots, Y_n) = P(Y_i \mid X, Y_{i-1}, Y_{i+1}), \quad i=1,\cdots, n。 \; (1和n时只考虑单边)
+\]</span> 则称<span class="math inline">\(P(Y \mid X)\)</span>为<code>线性链条件随机场</code>。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/crf/02_%E7%BA%BF%E6%80%A7%E9%93%BE%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA.png" style="display:block; margin:auto" width="60%"></p>
 <p>HMM，每个观察状态只与当前的隐状态有关系，分离了关系。就像1个字1个字地向后讲。输出观察符号还需要条件独立。</p>
-<p>线性链条件随机场， 每个状态都与整个序列有关系。即先想好了整句话，再依照相应的次序去说出来。更加直击语言模型的核心。$X_1, X_2$ 不需要条件独立。</p>
-<h2 id="基本形式"><a href="#基本形式" class="headerlink" title="基本形式"></a>基本形式</h2><p><strong>两种特征函数</strong></p>
-<p><code>状态转移特征函数t</code>，只依赖与当前和前一个位置，即$y_i$和$y_{i-1}$。一般是01函数。<br>$$<br>t(y_{i-1}, y_i, x, i) =<br>\begin {cases}<br>1, \quad &amp; 满足某种条件, i \in [2, n].  \;例如y_{i-1}+y_{i}=3 \<br>0, \quad &amp; 其他<br>\end {cases}<br>$$<br><code>状态特征函数s</code>，只依赖与当前位置$y_i$<br>$$<br>s(y_i, x, i) =<br>\begin {cases}<br>1, \quad &amp; 满足某种条件, i \in [1, n].  \;例如y_{i}是偶数 \<br>0, \quad &amp; 其他<br>\end {cases}<br>$$<br><strong>基础形式</strong></p>
-<p>设有$K_1$个状态特征转移函数，$K_2$个状态特征函数。分别对应的权值是$\lambda_{k_1}$和$\mu_{k_2}$。则<code>线性链条件随机场参数化形式</code>$P(y \mid x)$ 如下：<br>$$<br>P(y \mid x) = \frac {1}{Z(x)}<br>    \exp \left(<br>    \sum_k^{K_1}\lambda_k \sum_{i=2}^n t_k(y_{i-1}, y_i, x, i) </p>
-<pre><code>+  \sum_k^{K_2}\mu_k \sum_{i=1}^n s_k(y_i, x, i) 
+<p>线性链条件随机场， 每个状态都与整个序列有关系。即先想好了整句话，再依照相应的次序去说出来。更加直击语言模型的核心。<span class="math inline">\(X_1, X_2\)</span> 不需要条件独立。</p>
+<h2 id="基本形式">基本形式</h2>
+<p><strong>两种特征函数</strong></p>
+<p><code>状态转移特征函数t</code>，只依赖与当前和前一个位置，即<span class="math inline">\(y_i\)</span>和<span class="math inline">\(y_{i-1}\)</span>。一般是01函数。 <span class="math display">\[
+t(y_{i-1}, y_i, x, i) = 
+\begin {cases}
+1, \quad &amp; 满足某种条件, i \in [2, n].  \;例如y_{i-1}+y_{i}=3 \\
+0, \quad &amp; 其他
+\end {cases}
+\]</span> <code>状态特征函数s</code>，只依赖与当前位置<span class="math inline">\(y_i\)</span> <span class="math display">\[
+s(y_i, x, i) = 
+\begin {cases}
+1, \quad &amp; 满足某种条件, i \in [1, n].  \;例如y_{i}是偶数 \\
+0, \quad &amp; 其他
+\end {cases}
+\]</span> <strong>基础形式</strong></p>
+<p>设有<span class="math inline">\(K_1\)</span>个状态特征转移函数，<span class="math inline">\(K_2\)</span>个状态特征函数。分别对应的权值是<span class="math inline">\(\lambda_{k_1}\)</span>和<span class="math inline">\(\mu_{k_2}\)</span>。则<code>线性链条件随机场参数化形式</code><span class="math inline">\(P(y \mid x)\)</span> 如下： <span class="math display">\[
+P(y \mid x) = \frac {1}{Z(x)} 
+    \exp \left(
+    \sum_k^{K_1}\lambda_k \sum_{i=2}^n t_k(y_{i-1}, y_i, x, i) 
+    +  \sum_k^{K_2}\mu_k \sum_{i=1}^n s_k(y_i, x, i) 
+    \right)
+\]</span> 其中<span class="math inline">\(Z(x)\)</span>是<code>规范化因子</code>，如下 <span class="math display">\[
+Z(x) = 
+\sum_x
+\exp \left(
+    \sum_k^{K_1}\lambda_k \sum_{i=2}^nt_k(y_{i-1}, y_i, x, i) 
+    +  \sum_k^{K_2}\mu_k \sum_{i=1}^n s_k(y_i, x, i) 
 \right)
-</code></pre><p>$$<br>其中$Z(x)$是<code>规范化因子</code>，如下<br>$$<br>Z(x) =<br>\sum_x<br>\exp \left(<br>    \sum_k^{K_1}\lambda_k \sum_{i=2}^nt_k(y_{i-1}, y_i, x, i) </p>
-<pre><code>+  \sum_k^{K_2}\mu_k \sum_{i=1}^n s_k(y_i, x, i) 
-</code></pre><p>\right)<br>$$<br><strong>条件随机场完全由特征函数$t_{k_1}$ 、$s_{k_2}$，和对应的权值$\lambda_{k_1}$ 和$\mu_{k_2}$ 决定的。</strong> 特征函数实际上也是势函数。</p>
-<h2 id="简化形式"><a href="#简化形式" class="headerlink" title="简化形式"></a>简化形式</h2><p>有$K=K_1 + K_2$个特征，特征函数如下：<br>$$<br>f_k(y_{i-1}, y_i, i) =<br>\begin {cases}<br>t_k(y_{i-1}, y_i, x, i)  \quad &amp; k = 1,  \cdots, K_1 \<br> s_k(y_i, x, i)  \quad &amp; k = K_1 + l; \; l = 1, \cdots, K_2   \<br>\end {cases}<br>$$<br>同一个特征函数，要在整个$Y​$序列的各个位置进行计算，可以进行求和，即转化为<code>全局特征函数</code>， <strong>新的特征函数$f_k (y, x)​$</strong>如下：<br>$$<br>\color{blue} {f_k (y, x)} = \sum _{i=1} ^n f_k(y_{i-1}, y_i, i), \quad k = 1, \cdots, K<br>$$<br>$f_k (y, x)$ 对应的<strong>新的权值$w_k$</strong>如下<br>$$<br>\color{blue} {w_k} =<br>\begin {cases}<br>\lambda_{k}, \quad &amp; k = 1, \cdots, K_1 \<br>\mu_{k - K_1}, \quad &amp; k = K_1 + 1,  K_1 + 2, \cdots, K \<br>\end {cases}<br>$$<br>所以新的<strong>条件随机场形式</strong>如下：<br>$$<br>P(y \mid x) =<br>\frac {1} {Z(x)} \exp \sum_{k=1} ^K w_k f_k(y, x)<br>, \quad<br>Z(x) = \sum_y  \exp \sum_{k=1} ^K w_k f_k(y, x)<br>$$<br>可以看出，格式和<a href="https://plmsmile.github.io/2017/09/20/maxentmodel/#最大熵模型-1">最大熵模型</a>很像。条件随机场最重要的就是，<strong>根据观察序列，把标记序列给推测出来</strong>。</p>
-<h2 id="向量形式"><a href="#向量形式" class="headerlink" title="向量形式"></a>向量形式</h2><p>向量化特征函数和权值<br>$$<br>F(y, x) = (f_1(y, x), \cdots, f_K(y, x))^T, \quad w = (w_1, \cdots, w_K)^T<br>$$<br>可以写成向量内积的形式<br>$$<br>P_w (y \mid x) =<br>\frac{1}{Z(x)}  \exp (w \cdot F(y, x))<br>, \quad<br>Z(x) = \sum_y \exp (w \cdot F(y, x))<br>$$</p>
-<h2 id="矩阵形式"><a href="#矩阵形式" class="headerlink" title="矩阵形式"></a>矩阵形式</h2><p>为状态序列$Y$设置起点和终点标记，$y_0 = start$ 和$y_{n+1} = stop$。从$0 \to n+1$中，<strong>有$n+1$次的状态转移</strong>。我们可以用$n+1$ 个<code>状态转移矩阵</code>来表示状态转移的概率。</p>
+\]</span> <strong>条件随机场完全由特征函数<span class="math inline">\(t_{k_1}\)</span> 、<span class="math inline">\(s_{k_2}\)</span>，和对应的权值<span class="math inline">\(\lambda_{k_1}\)</span> 和<span class="math inline">\(\mu_{k_2}\)</span> 决定的。</strong> 特征函数实际上也是势函数。</p>
+<h2 id="简化形式">简化形式</h2>
+<p>有<span class="math inline">\(K=K_1 + K_2\)</span>个特征，特征函数如下： <span class="math display">\[
+f_k(y_{i-1}, y_i, i) = 
+\begin {cases}
+t_k(y_{i-1}, y_i, x, i)  \quad &amp; k = 1,  \cdots, K_1 \\
+ s_k(y_i, x, i)  \quad &amp; k = K_1 + l; \; l = 1, \cdots, K_2   \\
+\end {cases}
+\]</span> 同一个特征函数，要在整个<span class="math inline">\(Y​\)</span>序列的各个位置进行计算，可以进行求和，即转化为<code>全局特征函数</code>， <strong>新的特征函数<span class="math inline">\(f_k (y, x)​\)</span></strong>如下： <span class="math display">\[
+\color{blue} {f_k (y, x)} = \sum _{i=1} ^n f_k(y_{i-1}, y_i, i), \quad k = 1, \cdots, K
+\]</span> <span class="math inline">\(f_k (y, x)\)</span> 对应的<strong>新的权值<span class="math inline">\(w_k\)</span></strong>如下 <span class="math display">\[
+\color{blue} {w_k} = 
+\begin {cases}
+\lambda_{k}, \quad &amp; k = 1, \cdots, K_1 \\
+\mu_{k - K_1}, \quad &amp; k = K_1 + 1,  K_1 + 2, \cdots, K \\
+\end {cases}
+\]</span> 所以新的<strong>条件随机场形式</strong>如下： <span class="math display">\[
+P(y \mid x) =  
+\frac {1} {Z(x)} \exp \sum_{k=1} ^K w_k f_k(y, x)
+, \quad
+Z(x) = \sum_y  \exp \sum_{k=1} ^K w_k f_k(y, x)
+\]</span> 可以看出，格式和<a href="https://plmsmile.github.io/2017/09/20/maxentmodel/#最大熵模型-1">最大熵模型</a>很像。条件随机场最重要的就是，<strong>根据观察序列，把标记序列给推测出来</strong>。</p>
+<h2 id="向量形式">向量形式</h2>
+<p>向量化特征函数和权值 <span class="math display">\[
+F(y, x) = (f_1(y, x), \cdots, f_K(y, x))^T, \quad w = (w_1, \cdots, w_K)^T
+\]</span> 可以写成向量内积的形式 <span class="math display">\[
+P_w (y \mid x) = 
+\frac{1}{Z(x)}  \exp (w \cdot F(y, x))
+, \quad 
+Z(x) = \sum_y \exp (w \cdot F(y, x))
+\]</span></p>
+<h2 id="矩阵形式">矩阵形式</h2>
+<p>为状态序列<span class="math inline">\(Y\)</span>设置起点和终点标记，<span class="math inline">\(y_0 = start\)</span> 和<span class="math inline">\(y_{n+1} = stop\)</span>。从<span class="math inline">\(0 \to n+1\)</span>中，<strong>有<span class="math inline">\(n+1\)</span>次的状态转移</strong>。我们可以用<span class="math inline">\(n+1\)</span> 个<code>状态转移矩阵</code>来表示状态转移的概率。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/crf/03_%E7%8A%B6%E6%80%81%E8%B7%AF%E5%BE%84.png" style="display:block; margin:auto" width="60%"></p>
-<p>设$\color{blue}{M_i(x)}$ 是$i-1 \to i$的转移矩阵，是$m$阶，$m$ 是$y_i$ 取值的个数。表示了<strong>各种取值情况互相转化的概率</strong>。<br>$$<br>M_1(x) =<br>  \begin{bmatrix}<br>  a_{01} &amp; a_{02} \<br>  0 &amp; 0 \<br>  \end{bmatrix}<br>  , \;<br>  M_2(x) =<br>  \begin{bmatrix}<br>  b_{11} &amp; b_{12} \<br>  b_{21} &amp; b_{22} \<br>  \end{bmatrix}<br>    , \;<br>   M_3(x) =<br>  \begin{bmatrix}<br>  c_{11} &amp; c_{12} \<br>  c_{21} &amp; c_{22} \<br>  \end{bmatrix}<br>    , \;<br>  M_4(x) =<br>  \begin{bmatrix}<br>  1 &amp; 0 \<br>  1 &amp; 0 \<br>  \end{bmatrix}<br>$$<br>要求什么样的路径概率，则相乘相应的数值概率即可。那么这些矩阵里面的数值是怎么来的呢。有下面的<strong>矩阵定义</strong> ：<br>$$<br>\color{blue} {g(y_{i-1}, y_i, x, i)} =<br>M_i(y_{i-1}, y_i \mid x) =<br>\exp \sum_{k=1}^K w_kf_k(y_{i-1}, y_i, i, x)<br>,\quad<br>\color{blue} {M_i(x)}<br>= [g(y_{i-1}, y_i, x, i) ]<br>$$<br>每一步转移的时候，由于$(y_{i-1}, y_i)$ <strong>有$m^2$ 种情况，计算$g$时会得到多个值，即可得到一个矩阵</strong>。</p>
-<p>其中$g(y_{i-1}, y_i, x, i)$ 在计算的时候，<strong>会根据$i$ 的不同，而选择不同的特征函数进行计算</strong>。不要忘记了$f_k$函数的定义。<br>$$<br>\color{blue} {f_k(y_{i-1}, y_i, i)} =<br>\begin {cases}<br>t_k(y_{i-1}, y_i, x, i)  \quad &amp; k = 1,  \cdots, K_1 \<br> s_k(y_i, x, i)  \quad &amp; k = K_1 + l; \; l = 1, \cdots, K_2   \<br>\end {cases}<br>$$<br>所以非规范化条件概率可以通过矩阵的某些元素的乘积表示，有<br>$$<br>P_w( y \mid x) = \frac {1}{Z_w(x)} \prod_{i=1}^{n+1} M_i(y_{i-1}, y_i \mid x)<br>$$<br>其中<code>规范化因子</code> 是<strong>$n+1$的矩阵相乘</strong>的结果矩阵中，第$(start, stop)$ 元素。例如第$(0, 0)$。其中是$(start, end)$ 是<strong>矩阵下标对应</strong>。</p>
-<h1 id="条件随机场的概率计算问题"><a href="#条件随机场的概率计算问题" class="headerlink" title="条件随机场的概率计算问题"></a>条件随机场的概率计算问题</h1><p>主要问题是给定条件随机场$P(Y \mid X)$ ，给定输入序列$x$ 和输出序列$y$，求$P(Y_i = y_i \mid x)$ 和$P(Y_{i-1} = y_{i-1}, Y_i = y_{i} \mid X)$， 以及相应的期望问题。</p>
+<p>设<span class="math inline">\(\color{blue}{M_i(x)}\)</span> 是<span class="math inline">\(i-1 \to i\)</span>的转移矩阵，是<span class="math inline">\(m\)</span>阶，<span class="math inline">\(m\)</span> 是<span class="math inline">\(y_i\)</span> 取值的个数。表示了<strong>各种取值情况互相转化的概率</strong>。 <span class="math display">\[
+M_1(x) = 
+  \begin{bmatrix}
+  a_{01} &amp; a_{02} \\
+  0 &amp; 0 \\
+  \end{bmatrix}
+  , \;
+  M_2(x) = 
+  \begin{bmatrix}
+  b_{11} &amp; b_{12} \\
+  b_{21} &amp; b_{22} \\
+  \end{bmatrix}
+    , \;
+   M_3(x) = 
+  \begin{bmatrix}
+  c_{11} &amp; c_{12} \\
+  c_{21} &amp; c_{22} \\
+  \end{bmatrix}
+    , \;
+  M_4(x) = 
+  \begin{bmatrix}
+  1 &amp; 0 \\
+  1 &amp; 0 \\
+  \end{bmatrix}
+\]</span> 要求什么样的路径概率，则相乘相应的数值概率即可。那么这些矩阵里面的数值是怎么来的呢。有下面的<strong>矩阵定义</strong> ： <span class="math display">\[
+\color{blue} {g(y_{i-1}, y_i, x, i)} = 
+M_i(y_{i-1}, y_i \mid x) =
+\exp \sum_{k=1}^K w_kf_k(y_{i-1}, y_i, i, x)
+,\quad
+\color{blue} {M_i(x)}
+= [g(y_{i-1}, y_i, x, i) ]
+\]</span> 每一步转移的时候，由于<span class="math inline">\((y_{i-1}, y_i)\)</span> <strong>有<span class="math inline">\(m^2\)</span> 种情况，计算<span class="math inline">\(g\)</span>时会得到多个值，即可得到一个矩阵</strong>。</p>
+<p>其中<span class="math inline">\(g(y_{i-1}, y_i, x, i)\)</span> 在计算的时候，<strong>会根据<span class="math inline">\(i\)</span> 的不同，而选择不同的特征函数进行计算</strong>。不要忘记了<span class="math inline">\(f_k\)</span>函数的定义。 <span class="math display">\[
+\color{blue} {f_k(y_{i-1}, y_i, i)} = 
+\begin {cases}
+t_k(y_{i-1}, y_i, x, i)  \quad &amp; k = 1,  \cdots, K_1 \\
+ s_k(y_i, x, i)  \quad &amp; k = K_1 + l; \; l = 1, \cdots, K_2   \\
+\end {cases}
+\]</span> 所以非规范化条件概率可以通过矩阵的某些元素的乘积表示，有 <span class="math display">\[
+P_w( y \mid x) = \frac {1}{Z_w(x)} \prod_{i=1}^{n+1} M_i(y_{i-1}, y_i \mid x)
+\]</span> 其中<code>规范化因子</code> 是<strong><span class="math inline">\(n+1\)</span>的矩阵相乘</strong>的结果矩阵中，第<span class="math inline">\((start, stop)\)</span> 元素。例如第<span class="math inline">\((0, 0)\)</span>。其中是<span class="math inline">\((start, end)\)</span> 是<strong>矩阵下标对应</strong>。</p>
+<h1 id="条件随机场的概率计算问题">条件随机场的概率计算问题</h1>
+<p>主要问题是给定条件随机场<span class="math inline">\(P(Y \mid X)\)</span> ，给定输入序列<span class="math inline">\(x\)</span> 和输出序列<span class="math inline">\(y\)</span>，求<span class="math inline">\(P(Y_i = y_i \mid x)\)</span> 和<span class="math inline">\(P(Y_{i-1} = y_{i-1}, Y_i = y_{i} \mid X)\)</span>， 以及相应的期望问题。</p>
 <p>关键是求这些特征函数期望值，当模型训练好之后，去验证我们的模型。</p>
-<h2 id="前向后向算法"><a href="#前向后向算法" class="headerlink" title="前向后向算法"></a>前向后向算法</h2><p>$y_i$ 确定后， $\color{blue} {\alpha_i(y_i \mid x) }$ 表示，从$start \to i$，就是$y = (start, y_1, \cdots, y_i) $ 的<strong>概率</strong>，也就是从前面到位置$y_i$ 的概率。特别地<br>$$<br>\alpha_0(y \mid x) =<br>\begin{cases}<br>1, \quad &amp; y=start  \<br>0, \quad &amp; 其他 \<br>\end{cases}<br>$$<br>而$y_i​$ 的取值有$m​$ 种， 所以<code>前向变量</code> $\color{blue}{\alpha_i(x)}​$ 到$y​$ 到第 $i​$ 个位置 的所有<strong>概率取值向量</strong>。<br>$$<br>\color{blue} {\alpha_i^T(x)}  =<br>\alpha_{i-1}^T(x)  \cdot M_i(x)<br>,\quad<br>i = 1,2,\cdots, n+1<br>$$<br>$y_i$ 确定后， $\color{blue} {\beta_i (y_i \mid x) }$ 表示，位置$i$的标记为$y_i$ ，并且后面为$y_{i+1}, \cdots, y_n, stop$ 的概率。同理一个是概率值。特别地<br>$$<br>\beta_{n+1}(y \mid x) =<br>\begin{cases}<br>1, \quad &amp; y=stop  \<br>0, \quad &amp; 其他 \<br>\end{cases}<br>$$<br>后向变量 $\color{blue} {\beta_i (y \mid x) }​$，是一个m维向量<br>$$<br>\color{blue} {\beta_i (x) } =<br>M_{i+1}(x) \cdot \beta_{i+1}(x)<br>$$</p>
-<p>可以得到$Z(x)$：<br>$$<br>Z(x) = \alpha_n^T(x) \cdot 1 = 1^T \cdot \beta_{i+1}(x)<br>$$</p>
-<h2 id="条件概率计算"><a href="#条件概率计算" class="headerlink" title="条件概率计算"></a>条件概率计算</h2><p>位置是$i$ 标记$y_i$ 的条件概率$P(Y_i = y_i \mid x)$是<br>$$<br>P(Y_i = y_i \mid x) = \frac {1}{Z(x)} \cdot  \alpha_i(y_i \mid x) \beta_i(y_i \mid x)<br>$$<br>位置$i-1, i$ 分别标记为$y_{i-1}, y_i$ 的概率是<br>$$<br>P(Y_{i-1} = y_{i-1}, Y_i = y_i \mid x) = \frac{1}{Z(x)} \cdot  \alpha_{i-1}(y_{i-1} \mid x)  M_i(y_{i-1}, y_i \mid x) \beta_i (y_i \mid x)<br>$$</p>
-<h2 id="特征期望值计算"><a href="#特征期望值计算" class="headerlink" title="特征期望值计算"></a>特征期望值计算</h2><p>两个期望值和<a href="https://plmsmile.github.io/2017/09/20/maxentmodel/#约束条件等式">最大熵模型的约束条件等式</a> 有点像。</p>
-<p>特征函数$f_k$ 关于条件概率分布$P(Y \mid X)$ 的概率<br>$$<br>E_{P(Y \mid X)}(f_k)<br>= \sum_y P(y \mid x) f_k(y, x)<br>= \sum_{i=1}^{n+1}\sum_{y_{i-1}y_i} f_k(y_{i-1}, y_i, x, i) P(y_{i-1}, y_i \mid x)<br>$$<br>特征函数$f_k$ 关于条件概率分布$P(X, Y)$ 的概率，$\hat P(x)$ 是经验分布<br>$$<br>E_{P(X, Y)}(f_k)<br>= \sum_{x, y} P(x, y) \sum_{i=1}^{n+1}  f_k(y_{i-1}, y_i, x, i)<br>= \sum_{x} \hat P(x) \sum_y P(y \mid x) \sum_{i=1}^{n+1}  f_k(y_{i-1}, y_i, x, i)<br>$$<br>通过前向和后向向量可以计算出两个概率，然后可以计算出相应的期望值。就可以与我们训练出的模型进行比较。</p>
-<h1 id="学习算法"><a href="#学习算法" class="headerlink" title="学习算法"></a>学习算法</h1><p>条件随机场模型实际上是定义在时序数据上的对数线性模型，学习方法有极大似然估计和正则化的极大似然估计。具体的优化实现算法有：改进的迭代尺度法IIS、梯度下降法和拟牛顿法。</p>
-<h2 id="改进的迭代尺度法"><a href="#改进的迭代尺度法" class="headerlink" title="改进的迭代尺度法"></a>改进的迭代尺度法</h2><p>这里是最大熵模型中的<a href="https://plmsmile.github.io/2017/09/20/maxentmodel/#改进的迭代尺度法">改进的迭代尺度算法</a>。每次更新一个$\delta_i$ 使得似然函数的该变量的下界增大，即似然函数增大。</p>
-<p>已知经验分布$\hat P(X, Y)$，和模型如下<br>$$<br>P(y \mid x) =<br>\frac {1} {Z(x)} \exp \sum_{k=1} ^K w_k f_k(y, x)<br>, \quad<br>Z(x) = \sum_y  \exp \sum_{k=1} ^K w_k f_k(y, x)<br>$$<br>对数似然函数和<a href="https://plmsmile.github.io/2017/09/20/maxentmodel/#极大似然估计">最大熵算法的极大似然函数</a>很相似，如下：<br>$$<br>L(w) = L_{\hat P}(P_w)<br>= \log \prod_{x,y} P_w(y \mid x) ^ {\widetilde P(x, y)}<br>= \sum_{x,y} \widetilde P(x, y) \log P_w(y \mid x)<br>$$<br>对数似然函数$L(w)$<br>$$<br>L(w) = \sum_{j=1}^{N} \sum_{k=1}^K w_k f_k(y_j, x_j) - \sum_{j=1}^N \log Z_w(x_j)<br>$$<br>数据$(x, y)$ 中出现的<strong>特征总数$T(x, y)$</strong> ：<br>$$<br>T(x, y) = \sum_k f_k(y, x) = \sum_{k=1}^K \sum_{i=1}^{n+1}f_k(y_{i-1}, y_i, x)<br>$$<br>输入：特征函数$t_1, t_2, \cdots, t_{K_1}$和$s_1, s_2, \cdots, s_{K_2}$ ；经验分布$\hat P(x, y)$</p>
-<p>输出：模型参数$\hat w$，模型$P_{\hat w}$</p>
+<h2 id="前向后向算法">前向后向算法</h2>
+<p><span class="math inline">\(y_i\)</span> 确定后， <span class="math inline">\(\color{blue} {\alpha_i(y_i \mid x) }\)</span> 表示，从<span class="math inline">\(start \to i\)</span>，就是$y = (start, y_1, , y_i) $ 的<strong>概率</strong>，也就是从前面到位置<span class="math inline">\(y_i\)</span> 的概率。特别地 <span class="math display">\[
+\alpha_0(y \mid x) = 
+\begin{cases}
+1, \quad &amp; y=start  \\
+0, \quad &amp; 其他 \\
+\end{cases}
+\]</span> 而<span class="math inline">\(y_i​\)</span> 的取值有<span class="math inline">\(m​\)</span> 种， 所以<code>前向变量</code> <span class="math inline">\(\color{blue}{\alpha_i(x)}​\)</span> 到<span class="math inline">\(y​\)</span> 到第 <span class="math inline">\(i​\)</span> 个位置 的所有<strong>概率取值向量</strong>。 <span class="math display">\[
+\color{blue} {\alpha_i^T(x)}  = 
+\alpha_{i-1}^T(x)  \cdot M_i(x)
+,\quad
+i = 1,2,\cdots, n+1
+\]</span> <span class="math inline">\(y_i\)</span> 确定后， <span class="math inline">\(\color{blue} {\beta_i (y_i \mid x) }\)</span> 表示，位置<span class="math inline">\(i\)</span>的标记为<span class="math inline">\(y_i\)</span> ，并且后面为<span class="math inline">\(y_{i+1}, \cdots, y_n, stop\)</span> 的概率。同理一个是概率值。特别地 <span class="math display">\[
+\beta_{n+1}(y \mid x) = 
+\begin{cases}
+1, \quad &amp; y=stop  \\
+0, \quad &amp; 其他 \\
+\end{cases}
+\]</span> 后向变量 <span class="math inline">\(\color{blue} {\beta_i (y \mid x) }​\)</span>，是一个m维向量 <span class="math display">\[
+\color{blue} {\beta_i (x) } = 
+M_{i+1}(x) \cdot \beta_{i+1}(x)
+\]</span></p>
+<p>可以得到<span class="math inline">\(Z(x)\)</span>： <span class="math display">\[
+Z(x) = \alpha_n^T(x) \cdot 1 = 1^T \cdot \beta_{i+1}(x)
+\]</span></p>
+<h2 id="条件概率计算">条件概率计算</h2>
+<p>位置是<span class="math inline">\(i\)</span> 标记<span class="math inline">\(y_i\)</span> 的条件概率<span class="math inline">\(P(Y_i = y_i \mid x)\)</span>是 <span class="math display">\[
+P(Y_i = y_i \mid x) = \frac {1}{Z(x)} \cdot  \alpha_i(y_i \mid x) \beta_i(y_i \mid x)
+\]</span> 位置<span class="math inline">\(i-1, i\)</span> 分别标记为<span class="math inline">\(y_{i-1}, y_i\)</span> 的概率是 <span class="math display">\[
+P(Y_{i-1} = y_{i-1}, Y_i = y_i \mid x) = \frac{1}{Z(x)} \cdot  \alpha_{i-1}(y_{i-1} \mid x)  M_i(y_{i-1}, y_i \mid x) \beta_i (y_i \mid x)
+\]</span></p>
+<h2 id="特征期望值计算">特征期望值计算</h2>
+<p>两个期望值和<a href="https://plmsmile.github.io/2017/09/20/maxentmodel/#约束条件等式">最大熵模型的约束条件等式</a> 有点像。</p>
+<p>特征函数<span class="math inline">\(f_k\)</span> 关于条件概率分布<span class="math inline">\(P(Y \mid X)\)</span> 的概率 <span class="math display">\[
+E_{P(Y \mid X)}(f_k) 
+= \sum_y P(y \mid x) f_k(y, x)
+= \sum_{i=1}^{n+1}\sum_{y_{i-1}y_i} f_k(y_{i-1}, y_i, x, i) P(y_{i-1}, y_i \mid x)
+\]</span> 特征函数<span class="math inline">\(f_k\)</span> 关于条件概率分布<span class="math inline">\(P(X, Y)\)</span> 的概率，<span class="math inline">\(\hat P(x)\)</span> 是经验分布 <span class="math display">\[
+E_{P(X, Y)}(f_k) 
+= \sum_{x, y} P(x, y) \sum_{i=1}^{n+1}  f_k(y_{i-1}, y_i, x, i)
+= \sum_{x} \hat P(x) \sum_y P(y \mid x) \sum_{i=1}^{n+1}  f_k(y_{i-1}, y_i, x, i)
+\]</span> 通过前向和后向向量可以计算出两个概率，然后可以计算出相应的期望值。就可以与我们训练出的模型进行比较。</p>
+<h1 id="学习算法">学习算法</h1>
+<p>条件随机场模型实际上是定义在时序数据上的对数线性模型，学习方法有极大似然估计和正则化的极大似然估计。具体的优化实现算法有：改进的迭代尺度法IIS、梯度下降法和拟牛顿法。</p>
+<h2 id="改进的迭代尺度法">改进的迭代尺度法</h2>
+<p>这里是最大熵模型中的<a href="https://plmsmile.github.io/2017/09/20/maxentmodel/#改进的迭代尺度法">改进的迭代尺度算法</a>。每次更新一个<span class="math inline">\(\delta_i\)</span> 使得似然函数的该变量的下界增大，即似然函数增大。</p>
+<p>已知经验分布<span class="math inline">\(\hat P(X, Y)\)</span>，和模型如下 <span class="math display">\[
+P(y \mid x) =  
+\frac {1} {Z(x)} \exp \sum_{k=1} ^K w_k f_k(y, x)
+, \quad
+Z(x) = \sum_y  \exp \sum_{k=1} ^K w_k f_k(y, x)
+\]</span> 对数似然函数和<a href="https://plmsmile.github.io/2017/09/20/maxentmodel/#极大似然估计">最大熵算法的极大似然函数</a>很相似，如下：<br>
+<span class="math display">\[
+L(w) = L_{\hat P}(P_w)
+= \log \prod_{x,y} P_w(y \mid x) ^ {\widetilde P(x, y)}
+= \sum_{x,y} \widetilde P(x, y) \log P_w(y \mid x)
+\]</span> 对数似然函数<span class="math inline">\(L(w)\)</span> <span class="math display">\[
+L(w) = \sum_{j=1}^{N} \sum_{k=1}^K w_k f_k(y_j, x_j) - \sum_{j=1}^N \log Z_w(x_j)
+\]</span> 数据<span class="math inline">\((x, y)\)</span> 中出现的<strong>特征总数<span class="math inline">\(T(x, y)\)</span></strong> ： <span class="math display">\[
+T(x, y) = \sum_k f_k(y, x) = \sum_{k=1}^K \sum_{i=1}^{n+1}f_k(y_{i-1}, y_i, x)
+\]</span> 输入：特征函数<span class="math inline">\(t_1, t_2, \cdots, t_{K_1}\)</span>和<span class="math inline">\(s_1, s_2, \cdots, s_{K_2}\)</span> ；经验分布<span class="math inline">\(\hat P(x, y)\)</span></p>
+<p>输出：模型参数<span class="math inline">\(\hat w\)</span>，模型<span class="math inline">\(P_{\hat w}\)</span></p>
 <p>步骤：</p>
-<p>1 赋初值 $w_k = 0$</p>
-<p>2 对所有$k$，求解方程，解为$\delta_k$<br>$$<br>\begin{align}<br>&amp; \sum_{x, y} \hat P(x) P(y \mid x) \sum_{i=1}^{n+1} t_k(y_{i-1}, y_i, x, i) \exp (\delta_k T(x, y)) = E_{\hat p}[t_k]<br>, \quad k = 1, 2, \cdots, K_1 时<br>\<br>&amp; \sum_{x, y} \hat P(x) P(y \mid x) \sum_{i=1}^{n+1} s_l(y_{i-1}, y_i, x, i) \exp (\delta_k T(x, y)) = E_{\hat p}[s_l]<br>, \quad k = K_1 + l,  l = 1, 2, \cdots, K_2 时<br>\<br>\end{align}<br>$$<br>3 更新$w_k + \delta_k \to w_k$ ，如果还有$w_k$未收敛，则继续2</p>
+<p>1 赋初值 <span class="math inline">\(w_k = 0\)</span></p>
+<p>2 对所有<span class="math inline">\(k\)</span>，求解方程，解为<span class="math inline">\(\delta_k\)</span> <span class="math display">\[
+\begin{align}
+&amp; \sum_{x, y} \hat P(x) P(y \mid x) \sum_{i=1}^{n+1} t_k(y_{i-1}, y_i, x, i) \exp (\delta_k T(x, y)) = E_{\hat p}[t_k]
+, \quad k = 1, 2, \cdots, K_1 时
+\\
+&amp; \sum_{x, y} \hat P(x) P(y \mid x) \sum_{i=1}^{n+1} s_l(y_{i-1}, y_i, x, i) \exp (\delta_k T(x, y)) = E_{\hat p}[s_l] 
+, \quad k = K_1 + l,  l = 1, 2, \cdots, K_2 时
+\\
+\end{align}
+\]</span> 3 更新<span class="math inline">\(w_k + \delta_k \to w_k\)</span> ，如果还有<span class="math inline">\(w_k\)</span>未收敛，则继续2</p>
 <p><strong>算法S</strong></p>
-<p>对于不同的数据$(x, y)$的特征出现次数$T(x, y)$ 可能不同，可以<strong>选取一个尽量大的数$S$作为特征总数</strong>，使得所有松弛特征$s(x, y) \ge 0$ ：<br>$$<br>s(x, y) = S - \sum_{i=1}^{n+1}\sum_{k=1}^K f_k(y_{i-1}, y_i, x, i)<br>$$<br>  所以可以直接解得$\delta_k$ ，当然$f_k$ 要分为$t_k$和$s_k$，对应的期望值计算也不一样。具体见书上。<br>$$<br>\delta_k = \frac{1}{S} \log \frac{E_{ \hat P}[f_k] } {E_P[f_k]}<br>$$<br><strong>算法T</strong></p>
-<p>算法S中$S$会选择很大，导致每一步的迭代增量会加大，算法收敛会变慢，算法T重新选择一个<strong>特征总数 T(x)</strong><br>$$<br>T(x) = \max \limits_y T(x, y)<br>$$<br>使用前后向递推公式，可以算得$T(x)=t$ 。</p>
-<p>对于$k \in [1, K_1]$的$t_k$关于经验分布的期望：<br>$$<br>E_{\hat P}[t_k] = \sum_{t=0}^{T_{max}} a_{k,t} \beta_{k}^t<br>$$<br>其中，$a_{k,t}$是$t_k$的期待值，  $\delta_k = \log \beta_k$</p>
-<p>对于$k \in [1+K_1, K]$的$s_k$关于经验分布的期望：<br>$$<br>E_{\hat P}[s_k] = \sum_{t=0}^{T_{max}} b_{k,t} \gamma_{k}^t<br>$$<br>其中$\gamma_k^t$是特征$s_k$的期望值，$\delta_k = \log \gamma_k$。当然，求根也可以使用牛顿法去求解。</p>
-<h2 id="拟牛顿法"><a href="#拟牛顿法" class="headerlink" title="拟牛顿法"></a>拟牛顿法</h2><h1 id="预测算法"><a href="#预测算法" class="headerlink" title="预测算法"></a>预测算法</h1><h2 id="预测问题"><a href="#预测问题" class="headerlink" title="预测问题"></a>预测问题</h2><p>给定条件随机场$P(Y \mid X)$和输入序列$x$，求条件概率最大的输出序列（标记序列）$y^<em>$，即对观测序列进行标注。<br>$$<br>\begin{align}<br>y^</em><br>&amp; = \arg \max \limits_y P_w(y \mid x)   = \arg \max \limits_y \frac{\exp (w \cdot F(y, x))}{Z_w(x)}  \<br>&amp; =   \arg \max \limits_y ( w \cdot F(y, x)) \<br>\end {align}<br>$$<br>其中路径$y$表示标记序列，下面是参数说明<br>$$<br>\begin {align}<br>&amp; w = (w_1, w_2, \cdots, w_k)^T \<br>&amp; F(y, x) =  (f_1(y, x), \cdots, f_K(y, x))^T, \quad w = (w_1, \cdots, w_K)^T \<br>&amp; f_k (y, x) = \sum _{i=1} ^n f_k(y_{i-1}, y_i, x, i) \<br>&amp; F_i(y_{i-1}, y_i, x) = \left(f_1(y_{i-1}, y_i, x, i), f_2(y_{i-1}, y_i, x, i),\cdots, f_k(y_{i-1}, y_i, x, i) \right)^T<br>\end {align}<br>$$<br>所以，为了求解最优路径，只需计算非规范化概率，即转换为下面的问题：<br>$$<br>\max \limits_y \quad  \sum_{i=1}^n w \cdot F_i(y_{i-1}, y_i, x)<br>$$</p>
-<h2 id="维特比算法"><a href="#维特比算法" class="headerlink" title="维特比算法"></a>维特比算法</h2><p><a href="https://plmsmile.github.io/2017/08/04/pgm-01/#维特比算法">HMM的维特比算法</a>。</p>
-<p>维特比变量$\delta_i(l)$，到达位置$i$， 标记为$l \in [1, m]$ 的概率<br>$$<br>\delta_i(l) = \max \limits_{1 \le j \le m}<br>{  \delta_{i-1}(j) + w \cdot F_i(y_{i-1} = j, y_i = l, x) }, \quad j = 1, 2, \cdots, m<br>$$<br>记忆路径$\psi_i(l) = a$ 当前时刻$t$标记为l, $t-1$时刻标记为a<br>$$<br>\psi_i(l) = = \arg \max \limits_{1 \le j \le m}<br>{  \delta_{i-1}(j) + w \cdot F_i(y_{i-1} = j, y_i = l, x) }<br>$$<br> 算法主体</p>
-<p>输入：特征向量$F(y, x)$和权值向量$\mathbf{w}$，观测向量$x = (x_1, x_2, \cdots. x_n)$</p>
-<p>输出：最优路径$y^<em> = (y_1^</em>, y_2^<em>, \cdots, y_n^</em>)$</p>
+<p>对于不同的数据<span class="math inline">\((x, y)\)</span>的特征出现次数<span class="math inline">\(T(x, y)\)</span> 可能不同，可以<strong>选取一个尽量大的数<span class="math inline">\(S\)</span>作为特征总数</strong>，使得所有松弛特征<span class="math inline">\(s(x, y) \ge 0\)</span> ： <span class="math display">\[
+s(x, y) = S - \sum_{i=1}^{n+1}\sum_{k=1}^K f_k(y_{i-1}, y_i, x, i)
+\]</span> 所以可以直接解得<span class="math inline">\(\delta_k\)</span> ，当然<span class="math inline">\(f_k\)</span> 要分为<span class="math inline">\(t_k\)</span>和<span class="math inline">\(s_k\)</span>，对应的期望值计算也不一样。具体见书上。<br>
+<span class="math display">\[
+\delta_k = \frac{1}{S} \log \frac{E_{ \hat P}[f_k] } {E_P[f_k]}
+\]</span> <strong>算法T</strong></p>
+<p>算法S中<span class="math inline">\(S\)</span>会选择很大，导致每一步的迭代增量会加大，算法收敛会变慢，算法T重新选择一个<strong>特征总数 T(x)</strong> <span class="math display">\[
+T(x) = \max \limits_y T(x, y)
+\]</span> 使用前后向递推公式，可以算得<span class="math inline">\(T(x)=t\)</span> 。</p>
+<p>对于<span class="math inline">\(k \in [1, K_1]\)</span>的<span class="math inline">\(t_k\)</span>关于经验分布的期望： <span class="math display">\[
+E_{\hat P}[t_k] = \sum_{t=0}^{T_{max}} a_{k,t} \beta_{k}^t
+\]</span> 其中，<span class="math inline">\(a_{k,t}\)</span>是<span class="math inline">\(t_k\)</span>的期待值， <span class="math inline">\(\delta_k = \log \beta_k\)</span></p>
+<p>对于<span class="math inline">\(k \in [1+K_1, K]\)</span>的<span class="math inline">\(s_k\)</span>关于经验分布的期望： <span class="math display">\[
+E_{\hat P}[s_k] = \sum_{t=0}^{T_{max}} b_{k,t} \gamma_{k}^t
+\]</span> 其中<span class="math inline">\(\gamma_k^t\)</span>是特征<span class="math inline">\(s_k\)</span>的期望值，<span class="math inline">\(\delta_k = \log \gamma_k\)</span>。当然，求根也可以使用牛顿法去求解。</p>
+<h2 id="拟牛顿法">拟牛顿法</h2>
+<h1 id="预测算法">预测算法</h1>
+<h2 id="预测问题">预测问题</h2>
+<p>给定条件随机场<span class="math inline">\(P(Y \mid X)\)</span>和输入序列<span class="math inline">\(x\)</span>，求条件概率最大的输出序列（标记序列）<span class="math inline">\(y^*\)</span>，即对观测序列进行标注。 <span class="math display">\[
+\begin{align}
+y^* 
+&amp; = \arg \max \limits_y P_w(y \mid x)   = \arg \max \limits_y \frac{\exp (w \cdot F(y, x))}{Z_w(x)}  \\
+&amp; =   \arg \max \limits_y ( w \cdot F(y, x)) \\
+\end {align}
+\]</span> 其中路径<span class="math inline">\(y\)</span>表示标记序列，下面是参数说明 <span class="math display">\[
+\begin {align}
+&amp; w = (w_1, w_2, \cdots, w_k)^T \\
+&amp; F(y, x) =  (f_1(y, x), \cdots, f_K(y, x))^T, \quad w = (w_1, \cdots, w_K)^T \\
+&amp; f_k (y, x) = \sum _{i=1} ^n f_k(y_{i-1}, y_i, x, i) \\
+&amp; F_i(y_{i-1}, y_i, x) = \left(f_1(y_{i-1}, y_i, x, i), f_2(y_{i-1}, y_i, x, i),\cdots, f_k(y_{i-1}, y_i, x, i) \right)^T
+\end {align}
+\]</span> 所以，为了求解最优路径，只需计算非规范化概率，即转换为下面的问题： <span class="math display">\[
+\max \limits_y \quad  \sum_{i=1}^n w \cdot F_i(y_{i-1}, y_i, x)
+\]</span></p>
+<h2 id="维特比算法">维特比算法</h2>
+<p><a href="https://plmsmile.github.io/2017/08/04/pgm-01/#维特比算法">HMM的维特比算法</a>。</p>
+<p>维特比变量<span class="math inline">\(\delta_i(l)\)</span>，到达位置<span class="math inline">\(i\)</span>， 标记为<span class="math inline">\(l \in [1, m]\)</span> 的概率 <span class="math display">\[
+\delta_i(l) = \max \limits_{1 \le j \le m} 
+\{  \delta_{i-1}(j) + w \cdot F_i(y_{i-1} = j, y_i = l, x) \}, \quad j = 1, 2, \cdots, m
+\]</span> 记忆路径<span class="math inline">\(\psi_i(l) = a\)</span> 当前时刻<span class="math inline">\(t\)</span>标记为l, <span class="math inline">\(t-1\)</span>时刻标记为a <span class="math display">\[
+\psi_i(l) = = \arg \max \limits_{1 \le j \le m} 
+\{  \delta_{i-1}(j) + w \cdot F_i(y_{i-1} = j, y_i = l, x) \}
+\]</span> 算法主体</p>
+<p>输入：特征向量<span class="math inline">\(F(y, x)\)</span>和权值向量<span class="math inline">\(\mathbf{w}\)</span>，观测向量<span class="math inline">\(x = (x_1, x_2, \cdots. x_n)\)</span></p>
+<p>输出：最优路径<span class="math inline">\(y^* = (y_1^*, y_2^*, \cdots, y_n^*)\)</span></p>
 <p>步骤如下</p>
-<p>初始化<br>$$<br>\delta_1(j) = w \cdot F_1(y_0 = start, y_1 = j, x), \quad j = 1, \cdots, m<br>$$<br>递推<br>$$<br>\begin{align}<br>&amp; \delta_i(l) = \max \limits_{1 \le j \le m}<br>{  \delta_{i-1}(j) + w \cdot F_i(y_{i-1} = j, y_i = l, x) }, \quad j = 1, 2, \cdots, m \<br>&amp; \psi_i(l) =  \arg \max \limits_{1 \le j \le m} \delta_i(j), \quad \text{即上式的参数j} \<br>\end{align}<br>$$<br>终止<br>$$<br>\begin{align}<br>&amp; \max \limits_y (w \cdot F(y, x)) = \max \limits_{1 \le j \le m} \delta_n(j) \<br>&amp;  y_n^<em> = \arg \max \limits_{1 \le j \le m} \delta_n(j) \<br>\end{align}<br>$$<br>返回路径<br>$$<br>y_i^</em> = \psi_{i+1} (y_{i+1}^<em>), \quad i = n-1, n-2, \cdots, 1<br>$$<br>求得最优路径$y^</em> = (y_1^<em>, y_2^</em>, \cdots, y_n^*)$    </p>
+<p>初始化 <span class="math display">\[
+\delta_1(j) = w \cdot F_1(y_0 = start, y_1 = j, x), \quad j = 1, \cdots, m
+\]</span> 递推 <span class="math display">\[
+\begin{align}
+&amp; \delta_i(l) = \max \limits_{1 \le j \le m} 
+\{  \delta_{i-1}(j) + w \cdot F_i(y_{i-1} = j, y_i = l, x) \}, \quad j = 1, 2, \cdots, m \\
+&amp; \psi_i(l) =  \arg \max \limits_{1 \le j \le m} \delta_i(j), \quad \text{即上式的参数j} \\
+\end{align}
+\]</span> 终止 <span class="math display">\[
+\begin{align}
+&amp; \max \limits_y (w \cdot F(y, x)) = \max \limits_{1 \le j \le m} \delta_n(j) \\
+&amp;  y_n^* = \arg \max \limits_{1 \le j \le m} \delta_n(j) \\
+\end{align}
+\]</span> 返回路径 <span class="math display">\[
+y_i^* = \psi_{i+1} (y_{i+1}^*), \quad i = n-1, n-2, \cdots, 1
+\]</span> 求得最优路径<span class="math inline">\(y^* = (y_1^*, y_2^*, \cdots, y_n^*)\)</span></p>
 
         </div>
 
@@ -285,7 +514,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-11-25T08:30:09.751Z" itemprop="dateUpdated">2018-11-25 16:30:09</time>
+    最后更新时间：<time datetime="2018-12-13T09:09:10.249Z" itemprop="dateUpdated">2018-12-13 17:09:10</time>
 </span><br>
 
 
@@ -311,7 +540,7 @@
 
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/条件随机场/">条件随机场</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/自然语言处理/">自然语言处理</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/前向后向/">前向后向</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/学习算法/">学习算法</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/条件随机场/">条件随机场</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/概率无向图/">概率无向图</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/概率计算问题/">概率计算问题</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/维特比/">维特比</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/迭代尺度法/">迭代尺度法</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/预测问题/">预测问题</a></li></ul>
 
 
             
@@ -331,7 +560,8 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/09/28/crf/&title=《条件随机场》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/09/28/crf/&title=《条件随机场》 — PLM's Notes&source=
+条件随机场(Conditional Random Field, CRF)是给定一组输入随机变量条件下另一组输出随机变量的条件概率分布模型。" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -371,7 +601,7 @@
     <div class="waves-block waves-effect prev">
       <a href="/2017/10/02/NMT/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">神经网络机器翻译</h4>
+        <h4 class="title">最初RNN神经翻译简略笔记</h4>
       </a>
     </div>
   
@@ -502,7 +732,8 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/09/28/crf/&title=《条件随机场》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/09/28/crf/&title=《条件随机场》 — PLM's Notes&source=
+条件随机场(Conditional Random Field, CRF)是给定一组输入随机变量条件下另一组输出随机变量的条件概率分布模型。" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>

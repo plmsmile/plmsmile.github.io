@@ -21,13 +21,13 @@
     
     
     <meta name="keywords" content="机器学习,SVM,拉格朗日对偶性,对偶问题,支持向量,核函数,感知机,损失函数">
-    <meta name="description" content="Support Vector Machine简单笔记。    特征空间上的间隔最大的线性分类器。学习策略是间隔最大化，转化为一个凸二次规划问题的求解。   SVM概览线性分类器逻辑回归的图像和公式如下，预测的分类为1的概率。 $$h_\theta(x) = g(\theta^Tx), \quad g(z) = \frac{1}{1+e^{-z}},\quadg(z) = \begin{cases">
+    <meta name="description" content="Support Vector Machine简单笔记。 特征空间上的间隔最大的线性分类器。学习策略是间隔最大化，转化为一个凸二次规划问题的求解。">
 <meta name="keywords" content="机器学习,SVM,拉格朗日对偶性,对偶问题,支持向量,核函数,感知机,损失函数">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SVM笔记">
 <meta property="og:url" content="http://plmsmile.github.io/2018/03/01/27-svm-notes/index.html">
 <meta property="og:site_name" content="PLM&#39;s Notes">
-<meta property="og:description" content="Support Vector Machine简单笔记。    特征空间上的间隔最大的线性分类器。学习策略是间隔最大化，转化为一个凸二次规划问题的求解。   SVM概览线性分类器逻辑回归的图像和公式如下，预测的分类为1的概率。 $$h_\theta(x) = g(\theta^Tx), \quad g(z) = \frac{1}{1+e^{-z}},\quadg(z) = \begin{cases">
+<meta property="og:description" content="Support Vector Machine简单笔记。 特征空间上的间隔最大的线性分类器。学习策略是间隔最大化，转化为一个凸二次规划问题的求解。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ml/lr/sigmoid%E5%87%BD%E6%95%B0.png">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ml/svm/linear-desicion">
@@ -41,10 +41,10 @@
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ml/svm/svm-logistic-tree">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ml/svm/Optimal-Hyper-Plane-2.png">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ml/svm/perceptron">
-<meta property="og:updated_time" content="2018-11-25T08:30:08.297Z">
+<meta property="og:updated_time" content="2018-12-13T07:56:12.341Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SVM笔记">
-<meta name="twitter:description" content="Support Vector Machine简单笔记。    特征空间上的间隔最大的线性分类器。学习策略是间隔最大化，转化为一个凸二次规划问题的求解。   SVM概览线性分类器逻辑回归的图像和公式如下，预测的分类为1的概率。 $$h_\theta(x) = g(\theta^Tx), \quad g(z) = \frac{1}{1+e^{-z}},\quadg(z) = \begin{cases">
+<meta name="twitter:description" content="Support Vector Machine简单笔记。 特征空间上的间隔最大的线性分类器。学习策略是间隔最大化，转化为一个凸二次规划问题的求解。">
 <meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ml/lr/sigmoid%E5%87%BD%E6%95%B0.png">
     
         <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
@@ -180,7 +180,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#SVM概览"><span class="post-toc-number">1.</span> <span class="post-toc-text">SVM概览</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#线性分类器"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">线性分类器</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#函数间隔与几何间隔"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">函数间隔与几何间隔</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#最大间隔分类器"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">最大间隔分类器</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#线性SVM"><span class="post-toc-number">2.</span> <span class="post-toc-text">线性SVM</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#拉格朗日对偶性"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">拉格朗日对偶性</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#原始问题到对偶问题"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">原始问题到对偶问题</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#求解对偶问题"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">求解对偶问题</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#简单总结"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">简单总结</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#非线性SVM"><span class="post-toc-number">3.</span> <span class="post-toc-text">非线性SVM</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#核函数"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">核函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#核函数处理非线性数据"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">核函数处理非线性数据</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#常用核函数"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">常用核函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#核函数总结"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">核函数总结</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#松弛变量软间隔最大化"><span class="post-toc-number">4.</span> <span class="post-toc-text">松弛变量软间隔最大化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#定义"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">定义</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#求解"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">求解</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#SVM的深层理解"><span class="post-toc-number">5.</span> <span class="post-toc-text">SVM的深层理解</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#感知机算法"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">感知机算法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#损失函数"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">损失函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#SVM的合页损失函数"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">SVM的合页损失函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#最小二乘法"><span class="post-toc-number">5.4.</span> <span class="post-toc-text">最小二乘法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#SMO"><span class="post-toc-number">5.5.</span> <span class="post-toc-text">SMO</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#svm概览"><span class="post-toc-number">1.</span> <span class="post-toc-text">SVM概览</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#线性分类器"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">线性分类器</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#函数间隔与几何间隔"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">函数间隔与几何间隔</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#最大间隔分类器"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">最大间隔分类器</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#线性svm"><span class="post-toc-number">2.</span> <span class="post-toc-text">线性SVM</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#拉格朗日对偶性"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">拉格朗日对偶性</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#原始问题到对偶问题"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">原始问题到对偶问题</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#求解对偶问题"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">求解对偶问题</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#简单总结"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">简单总结</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#非线性svm"><span class="post-toc-number">3.</span> <span class="post-toc-text">非线性SVM</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#核函数"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">核函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#核函数处理非线性数据"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">核函数处理非线性数据</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#常用核函数"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">常用核函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#核函数总结"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">核函数总结</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#松弛变量软间隔最大化"><span class="post-toc-number">4.</span> <span class="post-toc-text">松弛变量软间隔最大化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#定义"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">定义</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#求解"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">求解</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#svm的深层理解"><span class="post-toc-number">5.</span> <span class="post-toc-text">SVM的深层理解</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#感知机算法"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">感知机算法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#损失函数"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">损失函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#svm的合页损失函数"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">SVM的合页损失函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#最小二乘法"><span class="post-toc-number">5.4.</span> <span class="post-toc-text">最小二乘法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#smo"><span class="post-toc-number">5.5.</span> <span class="post-toc-text">SMO</span></a></li></ol></li></ol>
         </nav>
     </aside>
 
@@ -206,115 +206,305 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <blockquote>
-<p>Support Vector Machine简单笔记。    特征空间上的间隔最大的线性分类器。学习策略是间隔最大化，转化为一个凸二次规划问题的求解。</p>
+<p>Support Vector Machine简单笔记。 特征空间上的间隔最大的线性分类器。学习策略是间隔最大化，转化为一个凸二次规划问题的求解。</p>
 </blockquote>
+<a id="more"></a>
 <p><img src="" style="display:block; margin:auto" width="60%"></p>
-<h1 id="SVM概览"><a href="#SVM概览" class="headerlink" title="SVM概览"></a>SVM概览</h1><h2 id="线性分类器"><a href="#线性分类器" class="headerlink" title="线性分类器"></a>线性分类器</h2><p><a href="https://plmsmile.github.io/2017/08/20/ml-ng-notes/#逻辑回归">逻辑回归</a>的图像和公式如下，预测的分类为1的概率。</p>
-<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ml/lr/sigmoid%E5%87%BD%E6%95%B0.png" style="display:block; margin:auto" width="50%"><br>$$<br>h_\theta(x) = g(\theta^Tx), \quad g(z) = \frac{1}{1+e^{-z}},<br>\quad<br>g(z) = \begin{cases}<br>1, &amp; z\ge 0 \<br>-1, &amp; z &lt; 0 \<br>\end{cases}<br>$$</p>
-<p>$$<br>y = \begin{cases}    1, \;  &amp; h_\theta(x) \ge 0.5, \;即\; \theta^Tx \ge 0\    0, \; &amp; h_\theta(x) &lt; 0.5,  \; 即 \; \theta^Tx &lt; 0 \\end{cases}<br>$$</p>
-<p>其中$\theta^Tx=w^Tx+b=0$ 是一个<code>超平面</code>。 用<code>分类函数</code>表示$f(x)=w^Tx+b$ 。 $w$是这个超平面的<strong>法向量</strong>。 </p>
+<h1 id="svm概览">SVM概览</h1>
+<h2 id="线性分类器">线性分类器</h2>
+<p><a href="https://plmsmile.github.io/2017/08/20/ml-ng-notes/#逻辑回归">逻辑回归</a>的图像和公式如下，预测的分类为1的概率。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ml/lr/sigmoid%E5%87%BD%E6%95%B0.png" style="display:block; margin:auto" width="50%"> <span class="math display">\[
+h_\theta(x) = g(\theta^Tx), \quad g(z) = \frac{1}{1+e^{-z}},
+\quad
+g(z) = \begin{cases}
+1, &amp; z\ge 0 \\
+-1, &amp; z &lt; 0 \\
+\end{cases}
+\]</span></p>
+<p><span class="math display">\[
+y = \begin{cases}    1, \;  &amp; h_\theta(x) \ge 0.5, \;即\; \theta^Tx \ge 0\\    0, \; &amp; h_\theta(x) &lt; 0.5,  \; 即 \; \theta^Tx &lt; 0 \\\end{cases}
+\]</span></p>
+<p>其中<span class="math inline">\(\theta^Tx=w^Tx+b=0\)</span> 是一个<code>超平面</code>。 用<code>分类函数</code>表示<span class="math inline">\(f(x)=w^Tx+b\)</span> 。 <span class="math inline">\(w\)</span>是这个超平面的<strong>法向量</strong>。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ml/svm/linear-desicion" style="display:block; margin:auto" width="35%"></p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ml/svm/linear-desicion2" style="display:block; margin:auto" width="60%"></p>
-<p>即对于任意一个x，有如下<strong>预测类别</strong>：<br>$$<br>\hat y=\begin{cases}<br>1, &amp; f(x) \ge 0\<br>-1, &amp; f(x) &lt; 0 \<br>\end{cases}<br>$$</p>
-<h2 id="函数间隔与几何间隔"><a href="#函数间隔与几何间隔" class="headerlink" title="函数间隔与几何间隔"></a>函数间隔与几何间隔</h2><p><strong>函数间隔</strong> </p>
-<p>超平面$w^Tx+b=0$确定后， $\vert w\cdot x+b\vert$表示点x到平面的<code>距离</code>，表示分类<strong>可靠性</strong>。<strong>距离越远，分类越可信</strong>。$y$与$w\cdot x+b$的<code>符号的一致性</code>表示分类的<strong>正确性</strong>。  </p>
-<p>超平面$(w,b)$关于样本点$(x_i, y_i)$的<strong>函数间隔$\hat \gamma_i$</strong>如下：<br>$$<br>\hat \gamma_i = y_i (w^T \cdot x_i + b)<br>$$<br>超平面关于所有样本点的函数间隔$\hat \gamma​$ ：<br>$$<br>\hat \gamma = \min \hat \gamma_i<br>$$<br>函数间隔的<strong>问题</strong>：w和b成比例改变，超平面未变，但函数间隔已变。</p>
+<p>即对于任意一个x，有如下<strong>预测类别</strong>： <span class="math display">\[
+\hat y=\begin{cases}
+1, &amp; f(x) \ge 0\\
+-1, &amp; f(x) &lt; 0 \\
+\end{cases}
+\]</span></p>
+<h2 id="函数间隔与几何间隔">函数间隔与几何间隔</h2>
+<p><strong>函数间隔</strong></p>
+<p>超平面<span class="math inline">\(w^Tx+b=0\)</span>确定后， <span class="math inline">\(\vert w\cdot x+b\vert\)</span>表示点x到平面的<code>距离</code>，表示分类<strong>可靠性</strong>。<strong>距离越远，分类越可信</strong>。<span class="math inline">\(y\)</span>与<span class="math inline">\(w\cdot x+b\)</span>的<code>符号的一致性</code>表示分类的<strong>正确性</strong>。</p>
+<p>超平面<span class="math inline">\((w,b)\)</span>关于样本点<span class="math inline">\((x_i, y_i)\)</span>的<strong>函数间隔<span class="math inline">\(\hat \gamma_i\)</span></strong>如下： <span class="math display">\[
+\hat \gamma_i = y_i (w^T \cdot x_i + b)
+\]</span> 超平面关于所有样本点的函数间隔<span class="math inline">\(\hat \gamma​\)</span> ： <span class="math display">\[
+\hat \gamma = \min \hat \gamma_i
+\]</span> 函数间隔的<strong>问题</strong>：w和b成比例改变，超平面未变，但函数间隔已变。</p>
 <p><strong>几何间隔</strong></p>
-<p>对函数间隔除以法向量的<a href="https://plmsmile.github.io/2017/11/26/cs224n-notes3-neural-networks-2/#范数">二范数</a>，则得到超平面与点$(x_i,y_i)$的<strong>几何间隔$\gamma_i$</strong> ：<br>$$<br>\gamma_i = \frac{\hat \gamma_i}{|w|} = \frac{y_i(w^T\cdot x_i + b)}{|w|}<br>$$<br>超平面关于所有样本点的几何间隔：<br>$$<br>\gamma = \min \gamma_i<br>$$<br><code>几何间隔</code>才是直观上<strong>点到超平面的距离</strong>。</p>
-<h2 id="最大间隔分类器"><a href="#最大间隔分类器" class="headerlink" title="最大间隔分类器"></a>最大间隔分类器</h2><p>分类时，超平面离数据点的<strong>间隔越大</strong>，<strong>分类的确信度也越大</strong>。 所以要<strong>最大化这个几何间隔</strong>，目标函数如下：<br>$$<br>L = \max_\limits{w, b} \gamma, \quad s.t,\quad \gamma_i \ge \gamma<br>$$<br><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ml/svm/margin-1" style="display:block; margin:auto" width="40%"></p>
-<p>用函数间隔$\hat \gamma$描写为：<br>$$<br>L = \max_\limits{w, b} \frac{\hat \gamma}{|w|}, \quad s.t, \quad \hat \gamma_i \ge \hat \gamma, \; \text{ 其中 }\hat \gamma_i = y_i(w^T \cdot x_i + b)<br>$$<br><strong>函数间隔</strong>$\hat \gamma​$的取值并<strong>不会影响最优化问题的解</strong>。 $\lambda w, \lambda b \to \lambda \hat \gamma​$</p>
-<p><strong>目标函数</strong> </p>
-<p><strong>取函数间隔为1</strong>，$\hat \gamma = 1$， 则有<strong>目标函数</strong>：<br>$$<br>L = \max_\limits{w,b} \frac{1}{|w|}, \quad s.t, \quad y_i(w^Tx_i+b) \ge 1<br>$$<br><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ml/svm/margin-2" style="display:block; margin:auto" width="50%"></p>
-<p><code>支持向量</code>是虚线边界上的点，则有：<br>$$<br>\begin{cases}<br>y_i(w^Tx_i+b)=1, &amp; 支持向量 \<br>y_i(w^Tx_i+b) &gt;1, &amp; 其他点 \<br>\end{cases}<br>$$</p>
-<p>分类<br>$$<br>\hat y=\begin{cases}<br>1, &amp; f(x) \ge 0\<br>-1, &amp; f(x) &lt; 0 \<br>\end{cases}<br>$$</p>
-<h1 id="线性SVM"><a href="#线性SVM" class="headerlink" title="线性SVM"></a>线性SVM</h1><h2 id="拉格朗日对偶性"><a href="#拉格朗日对偶性" class="headerlink" title="拉格朗日对偶性"></a>拉格朗日对偶性</h2><p><strong>1 原始问题</strong></p>
-<p>$f(x), c_i(x), h_j(x)$都连续可微。</p>
-<p>最优化：<br>$$<br>\min_\limits{x\in R} f(x)<br>$$<br>有很多个约束条件（不等式约束和等式约束）：<br>$$<br>c_i(x) \le 0 ,\quad h_j(x) = 0<br>$$<br><strong>求解原始问题</strong> </p>
+<p>对函数间隔除以法向量的<a href="https://plmsmile.github.io/2017/11/26/cs224n-notes3-neural-networks-2/#范数">二范数</a>，则得到超平面与点<span class="math inline">\((x_i,y_i)\)</span>的<strong>几何间隔<span class="math inline">\(\gamma_i\)</span></strong> ： <span class="math display">\[
+\gamma_i = \frac{\hat \gamma_i}{\|w\|} = \frac{y_i(w^T\cdot x_i + b)}{\|w\|}
+\]</span> 超平面关于所有样本点的几何间隔： <span class="math display">\[
+\gamma = \min \gamma_i
+\]</span> <code>几何间隔</code>才是直观上<strong>点到超平面的距离</strong>。</p>
+<h2 id="最大间隔分类器">最大间隔分类器</h2>
+<p>分类时，超平面离数据点的<strong>间隔越大</strong>，<strong>分类的确信度也越大</strong>。 所以要<strong>最大化这个几何间隔</strong>，目标函数如下： <span class="math display">\[
+L = \max_\limits{w, b} \gamma, \quad s.t,\quad \gamma_i \ge \gamma
+\]</span> <img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ml/svm/margin-1" style="display:block; margin:auto" width="40%"></p>
+<p>用函数间隔<span class="math inline">\(\hat \gamma\)</span>描写为： <span class="math display">\[
+L = \max_\limits{w, b} \frac{\hat \gamma}{\|w\|}, \quad s.t, \quad \hat \gamma_i \ge \hat \gamma, \; \text{ 其中 }\hat \gamma_i = y_i(w^T \cdot x_i + b)
+\]</span> <strong>函数间隔</strong><span class="math inline">\(\hat \gamma​\)</span>的取值并<strong>不会影响最优化问题的解</strong>。 <span class="math inline">\(\lambda w, \lambda b \to \lambda \hat \gamma​\)</span></p>
+<p><strong>目标函数</strong></p>
+<p><strong>取函数间隔为1</strong>，<span class="math inline">\(\hat \gamma = 1\)</span>， 则有<strong>目标函数</strong>： <span class="math display">\[
+L = \max_\limits{w,b} \frac{1}{\|w\|}, \quad s.t, \quad y_i(w^Tx_i+b) \ge 1
+\]</span> <img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ml/svm/margin-2" style="display:block; margin:auto" width="50%"></p>
+<p><code>支持向量</code>是虚线边界上的点，则有： <span class="math display">\[
+\begin{cases}
+y_i(w^Tx_i+b)=1, &amp; 支持向量 \\
+y_i(w^Tx_i+b) &gt;1, &amp; 其他点 \\
+\end{cases}
+\]</span></p>
+<p>分类 <span class="math display">\[
+\hat y=\begin{cases}
+1, &amp; f(x) \ge 0\\
+-1, &amp; f(x) &lt; 0 \\
+\end{cases}
+\]</span></p>
+<h1 id="线性svm">线性SVM</h1>
+<h2 id="拉格朗日对偶性">拉格朗日对偶性</h2>
+<p><strong>1 原始问题</strong></p>
+<p><span class="math inline">\(f(x), c_i(x), h_j(x)\)</span>都连续可微。</p>
+<p>最优化： <span class="math display">\[
+\min_\limits{x\in R} f(x)
+\]</span> 有很多个约束条件（不等式约束和等式约束）： <span class="math display">\[
+c_i(x) \le 0 ,\quad h_j(x) = 0
+\]</span> <strong>求解原始问题</strong></p>
 <p>将约束问题无约束化。</p>
-<p>引入<strong>拉格朗日函数</strong>，其中$\alpha_i (\ge 0)$和$\beta_j$是<strong>拉格朗日乘子</strong><br>$$<br>L(x, \alpha, \beta) = f(x) + \sum\alpha_ic_i(x) + \sum \beta_j h_j(x)<br>$$<br>定义关于$x$的函数<strong>$\theta_p(x)$</strong>：<br>$$<br>\theta_p(x) = \max_\limits{\alpha,\beta:\alpha_i\ge0} L(x, \alpha, \beta)<br>$$</p>
-<p>$$<br>\theta_p(x) = \begin{cases}<br>f(x), &amp;x满足约束 \<br>+\infty, &amp; 其他 \<br>\end{cases}<br>$$</p>
-<p>$f(x)$求最小，则对$\theta_p(x)$求最小。</p>
-<p>原始问题：  <strong>先固定x，优化出参数$\alpha, \beta$，再优化x</strong>。<br>$$<br>\min_\limits{x} \; \theta_p(x) =  \min_\limits{x} \max_\limits{\alpha, \beta:\alpha_i\ge0} L(x, \alpha, \beta)<br>$$<br>所以<strong>原始最优化问题</strong> 变为 拉格朗日函数的<strong>极小极大问题</strong>。</p>
-<p>定义原始问题的最优解$p^<em>$ ：<br>$$<br>p^</em> = \min_\limits{x} \theta_p(x)<br>$$<br><strong>2 对偶问题</strong></p>
-<p>定义关于$\alpha, \beta$的函数$\theta_d(\alpha, \beta)$<br>$$<br>\theta_d(\alpha, \beta) = \min_x L(x, \alpha, \beta)<br>$$<br>对偶问题：<strong>先固定参数$\alpha, \beta$ ，优化出x，再优化出参数</strong>。 <strong>先优化x</strong>。<br>$$<br>\max_\limits{\alpha, \beta:\alpha_i\ge0} \theta_d(\alpha, \beta) = \max_\limits{\alpha, \beta:\alpha_i\ge0} \min_x L(x, \alpha, \beta)<br>$$<br>原始问题： <strong>先固定x，优化出参数$\alpha, \beta$，再优化x</strong>。先优化参数。<br>$$<br>\min_\limits{x} \; \theta_p(x) =  \min_\limits{x} \max_\limits{\alpha, \beta:\alpha_i\ge0} L(x, \alpha, \beta)<br>$$<br>定义对偶问题的最优值：<br>$$<br>d^* = \max_\limits{\alpha, \beta:\alpha_i\ge0} \theta_d(\alpha, \beta)<br>$$</p>
+<p>引入<strong>拉格朗日函数</strong>，其中<span class="math inline">\(\alpha_i (\ge 0)\)</span>和<span class="math inline">\(\beta_j\)</span>是<strong>拉格朗日乘子</strong><br>
+<span class="math display">\[
+L(x, \alpha, \beta) = f(x) + \sum\alpha_ic_i(x) + \sum \beta_j h_j(x)
+\]</span> 定义关于<span class="math inline">\(x\)</span>的函数<strong><span class="math inline">\(\theta_p(x)\)</span></strong>： <span class="math display">\[
+\theta_p(x) = \max_\limits{\alpha,\beta:\alpha_i\ge0} L(x, \alpha, \beta) 
+\]</span></p>
+<p><span class="math display">\[
+\theta_p(x) = \begin{cases}
+f(x), &amp;x满足约束 \\
++\infty, &amp; 其他 \\
+\end{cases}
+\]</span></p>
+<p><span class="math inline">\(f(x)\)</span>求最小，则对<span class="math inline">\(\theta_p(x)\)</span>求最小。</p>
+<p>原始问题： <strong>先固定x，优化出参数<span class="math inline">\(\alpha, \beta\)</span>，再优化x</strong>。 <span class="math display">\[
+\min_\limits{x} \; \theta_p(x) =  \min_\limits{x} \max_\limits{\alpha, \beta:\alpha_i\ge0} L(x, \alpha, \beta)
+\]</span> 所以<strong>原始最优化问题</strong> 变为 拉格朗日函数的<strong>极小极大问题</strong>。</p>
+<p>定义原始问题的最优解<span class="math inline">\(p^*\)</span> ： <span class="math display">\[
+p^* = \min_\limits{x} \theta_p(x)
+\]</span> <strong>2 对偶问题</strong></p>
+<p>定义关于<span class="math inline">\(\alpha, \beta\)</span>的函数<span class="math inline">\(\theta_d(\alpha, \beta)\)</span> <span class="math display">\[
+\theta_d(\alpha, \beta) = \min_x L(x, \alpha, \beta)
+\]</span> 对偶问题：<strong>先固定参数<span class="math inline">\(\alpha, \beta\)</span> ，优化出x，再优化出参数</strong>。 <strong>先优化x</strong>。 <span class="math display">\[
+\max_\limits{\alpha, \beta:\alpha_i\ge0} \theta_d(\alpha, \beta) = \max_\limits{\alpha, \beta:\alpha_i\ge0} \min_x L(x, \alpha, \beta)
+\]</span> 原始问题： <strong>先固定x，优化出参数<span class="math inline">\(\alpha, \beta\)</span>，再优化x</strong>。先优化参数。 <span class="math display">\[
+\min_\limits{x} \; \theta_p(x) =  \min_\limits{x} \max_\limits{\alpha, \beta:\alpha_i\ge0} L(x, \alpha, \beta)
+\]</span> 定义对偶问题的最优值： <span class="math display">\[
+d^* = \max_\limits{\alpha, \beta:\alpha_i\ge0} \theta_d(\alpha, \beta)
+\]</span></p>
 <p><strong>3 原始问题与对偶问题的关系</strong></p>
-<p>因为：<br>$$<br>\theta_d(\alpha, \beta) = \min_x L(x, \alpha, \beta) \le \max_\limits{\alpha,\beta:\alpha_i\ge0} L(x, \alpha, \beta) = \theta_p(x)<br>$$<br>定理1：如果原始问题与对偶问题均有最优值，则有：$d^<em> \le p^</em>$<br>$$<br>d^<em> = \max_\limits{\alpha, \beta:\alpha_i\ge0} \min_x L(x, \alpha, \beta)<br>  \le \min_\limits{x} \max_\limits{\alpha, \beta:\alpha_i\ge0} L(x, \alpha, \beta) = p^</em><br>$$<br>推论1：如果$d^<em> = p^</em>$， 那么$x^<em>, \alpha^</em>, \beta^*$分别是原始问题和对偶问题的最优解。</p>
+<p>因为： <span class="math display">\[
+\theta_d(\alpha, \beta) = \min_x L(x, \alpha, \beta) \le \max_\limits{\alpha,\beta:\alpha_i\ge0} L(x, \alpha, \beta) = \theta_p(x)
+\]</span> 定理1：如果原始问题与对偶问题均有最优值，则有：<span class="math inline">\(d^* \le p^*\)</span> <span class="math display">\[
+d^* = \max_\limits{\alpha, \beta:\alpha_i\ge0} \min_x L(x, \alpha, \beta)
+  \le \min_\limits{x} \max_\limits{\alpha, \beta:\alpha_i\ge0} L(x, \alpha, \beta) = p^*
+\]</span> 推论1：如果<span class="math inline">\(d^* = p^*\)</span>， 那么<span class="math inline">\(x^*, \alpha^*, \beta^*\)</span>分别是原始问题和对偶问题的最优解。</p>
 <p>通过对偶问题，来解决原始问题。</p>
 <p><strong>4 KKT条件</strong></p>
-<p>满足什么条件，才能使$d^<em> = p^</em>$呢 ？  </p>
+<p>满足什么条件，才能使<span class="math inline">\(d^* = p^*\)</span>呢 ？</p>
 <p>首先满足下面的大条件：</p>
 <blockquote>
-<p>假设$f(x)$和$c_i(x)$都是<a href="https://plmsmile.github.io/2017/08/13/em/#em算法">凸函数</a>， $h_j(x)$是仿射函数；假设不等式约束$c_i(x)$是严格可行的。  </p>
+<p>假设<span class="math inline">\(f(x)\)</span>和<span class="math inline">\(c_i(x)\)</span>都是<a href="https://plmsmile.github.io/2017/08/13/em/#em算法">凸函数</a>， <span class="math inline">\(h_j(x)\)</span>是仿射函数；假设不等式约束<span class="math inline">\(c_i(x)\)</span>是严格可行的。</p>
 </blockquote>
-<p>定理2：则存在解，$x^<em>$是原始问题的最优解，$\alpha^</em>, \beta^<em>$是对偶问题的最优解。  并且：<br>$$<br>d^</em> = p^<em> = L(x^</em>, \alpha^<em>, \beta^</em>)<br>$$<br>KKT条件：则$x^<em>$是原始问题、$\alpha^</em>, \beta^<em>$是对偶问题的最优解的<code>充分必要条件</code>是**$x^</em>, \alpha^<em>, \beta^</em>$满足下面的KKT条件<strong>：<br>$$<br>\begin{align}<br>&amp; 偏导为0条件\<br>&amp; \nabla_x L(x^<em>, \alpha^</em>, \beta^<em>)  = 0 \<br>&amp; \nabla_\alpha L(x^</em>, \alpha^<em>, \beta^</em>)  = 0 \<br>&amp; \nabla_\beta L(x^<em>, \alpha^</em>, \beta^<em>)  = 0 \<br>&amp; 约束条件 \<br>&amp; c_i(x^</em>) \le 0 \<br>&amp; h_j(x^<em>) = 0 \<br>&amp; \alpha_i^</em> \ge 0 \<br>&amp; \rm{KKT}对偶互补条件 \<br>&amp; \alpha_i^<em> c_i(x^</em>) = 0 \<br>\end{align}<br>$$<br>由</strong>KKT对偶互补条件*<em>可知，若$\alpha_i^</em> &gt;0$， 则$c_i(x^*)=0$ 。SVM推导会用到。</p>
-<p>若$\alpha_i&gt;0$， <strong>则对应的$x_i$是支持向量</strong>， 有$y_i(w^<em>\cdot x+ b^</em>) = 1$。 所有的非支持向量，都有$\alpha_i =0$。  </p>
-<h2 id="原始问题到对偶问题"><a href="#原始问题到对偶问题" class="headerlink" title="原始问题到对偶问题"></a>原始问题到对偶问题</h2><p>先前的目标函数：<br>$$<br>J = \max_\limits{w,b} \frac{1}{|w|}, \quad s.t, \quad y_i(w^Tx_i+b) \ge 1<br>$$<br>最大变为最小，则有<code>原始问题</code>如下。目标函数是二次的，约束条件是线性的。所以是个<code>凸二次规划问题</code>。<br>$$<br>J = \min_{w,b} \frac{1}{2} |w|^2, \quad s.t, \quad y_i(w^Tx_i+b) \ge 1<br>$$<br>构造<strong>拉格朗日函数</strong> ：<br>$$<br>L(w, b, \lambda) =\frac{1}{2} |w|^2 - \sum_{i=1}^n \alpha_i \left(y_i(w^Tx_i+b) - 1\right)<br>$$<br><strong>原始问题</strong><br>$$<br>\theta_p(w,b) = \max_{\lambda_i \ge 0} L(w, b, \alpha)<br>$$</p>
-<p>$$<br>p^* = \min_{w, b} \theta_p(w, b) =  \min_{w, b} \max_{\lambda_i \ge 0} L(w, b, \alpha)<br>$$</p>
-<p><strong>对偶问题</strong><br>$$<br>\theta_d(\alpha) = \min_{w,b} L(w, b, \alpha)<br>$$</p>
-<p>$$<br>d^* = \max_{\alpha_i \ge 0} \theta_d(\alpha) =  \max_{\alpha_i \ge 0} \min_{w,b} L(w, b, \alpha)<br>$$</p>
-<p>我们知道$d^<em> \le p^</em>​$， 有时相等。原始问题可以转化为对偶问题求解，好处是：<strong>近似解</strong>，<strong>好求解</strong>。</p>
-<h2 id="求解对偶问题"><a href="#求解对偶问题" class="headerlink" title="求解对偶问题"></a>求解对偶问题</h2><p><strong>拉格朗日函数</strong>：<br>$$<br>L(w, b, \lambda) =\frac{1}{2} |w|^2 - \sum_{i=1}^n \alpha_i \left(y_i(w^Tx_i+b) - 1\right)<br>$$<br>化简后：<br>$$<br>L(w, b, \lambda) =\frac{1}{2} |w|^2 -\sum_{i=1}^n\alpha_iy_iw^Tx_i- \sum_{i=1}^n\alpha_iy_ib + \sum_{i=1}^n\alpha_i<br>$$<br><strong>目标函数</strong>：<br>$$<br>d^* = \max_{\alpha_i \ge 0} \theta_d(\alpha) =  \max_\limits{\alpha_i \ge 0} \min_\limits{w,b} L(w, b, \alpha)<br>$$<br>主要是三个步骤：</p>
+<p>定理2：则存在解，<span class="math inline">\(x^*\)</span>是原始问题的最优解，<span class="math inline">\(\alpha^*, \beta^*\)</span>是对偶问题的最优解。 并且： <span class="math display">\[
+d^* = p^* = L(x^*, \alpha^*, \beta^*)
+\]</span> KKT条件：则<span class="math inline">\(x^*\)</span>是原始问题、<span class="math inline">\(\alpha^*, \beta^*\)</span>是对偶问题的最优解的<code>充分必要条件</code>是<strong><span class="math inline">\(x^*, \alpha^*, \beta^*\)</span>满足下面的KKT条件</strong>： <span class="math display">\[
+\begin{align}
+&amp; 偏导为0条件\\
+&amp; \nabla_x L(x^*, \alpha^*, \beta^*)  = 0 \\
+&amp; \nabla_\alpha L(x^*, \alpha^*, \beta^*)  = 0 \\
+&amp; \nabla_\beta L(x^*, \alpha^*, \beta^*)  = 0 \\
+&amp; 约束条件 \\
+&amp; c_i(x^*) \le 0 \\
+&amp; h_j(x^*) = 0 \\
+&amp; \alpha_i^* \ge 0 \\
+&amp; \rm{KKT}对偶互补条件 \\
+&amp; \alpha_i^* c_i(x^*) = 0 \\
+\end{align}
+\]</span> 由<strong>KKT对偶互补条件</strong>可知，若<span class="math inline">\(\alpha_i^* &gt;0\)</span>， 则<span class="math inline">\(c_i(x^*)=0\)</span> 。SVM推导会用到。</p>
+<p>若<span class="math inline">\(\alpha_i&gt;0\)</span>， <strong>则对应的<span class="math inline">\(x_i\)</span>是支持向量</strong>， 有<span class="math inline">\(y_i(w^*\cdot x+ b^*) = 1\)</span>。 所有的非支持向量，都有<span class="math inline">\(\alpha_i =0\)</span>。</p>
+<h2 id="原始问题到对偶问题">原始问题到对偶问题</h2>
+<p>先前的目标函数： <span class="math display">\[
+J = \max_\limits{w,b} \frac{1}{\|w\|}, \quad s.t, \quad y_i(w^Tx_i+b) \ge 1
+\]</span> 最大变为最小，则有<code>原始问题</code>如下。目标函数是二次的，约束条件是线性的。所以是个<code>凸二次规划问题</code>。 <span class="math display">\[
+J = \min_{w,b} \frac{1}{2} \|w\|^2, \quad s.t, \quad y_i(w^Tx_i+b) \ge 1
+\]</span> 构造<strong>拉格朗日函数</strong> ： <span class="math display">\[
+L(w, b, \lambda) =\frac{1}{2} \|w\|^2 - \sum_{i=1}^n \alpha_i \left(y_i(w^Tx_i+b) - 1\right)
+\]</span> <strong>原始问题</strong> <span class="math display">\[
+\theta_p(w,b) = \max_{\lambda_i \ge 0} L(w, b, \alpha)
+\]</span></p>
+<p><span class="math display">\[
+p^* = \min_{w, b} \theta_p(w, b) =  \min_{w, b} \max_{\lambda_i \ge 0} L(w, b, \alpha)
+\]</span></p>
+<p><strong>对偶问题</strong> <span class="math display">\[
+\theta_d(\alpha) = \min_{w,b} L(w, b, \alpha)
+\]</span></p>
+<p><span class="math display">\[
+d^* = \max_{\alpha_i \ge 0} \theta_d(\alpha) =  \max_{\alpha_i \ge 0} \min_{w,b} L(w, b, \alpha)
+\]</span></p>
+<p>我们知道<span class="math inline">\(d^* \le p^*​\)</span>， 有时相等。原始问题可以转化为对偶问题求解，好处是：<strong>近似解</strong>，<strong>好求解</strong>。</p>
+<h2 id="求解对偶问题">求解对偶问题</h2>
+<p><strong>拉格朗日函数</strong>： <span class="math display">\[
+L(w, b, \lambda) =\frac{1}{2} \|w\|^2 - \sum_{i=1}^n \alpha_i \left(y_i(w^Tx_i+b) - 1\right)
+\]</span> 化简后： <span class="math display">\[
+L(w, b, \lambda) =\frac{1}{2} \|w\|^2 -\sum_{i=1}^n\alpha_iy_iw^Tx_i- \sum_{i=1}^n\alpha_iy_ib + \sum_{i=1}^n\alpha_i
+\]</span> <strong>目标函数</strong>： <span class="math display">\[
+d^* = \max_{\alpha_i \ge 0} \theta_d(\alpha) =  \max_\limits{\alpha_i \ge 0} \min_\limits{w,b} L(w, b, \alpha)
+\]</span> 主要是三个步骤：</p>
 <ul>
-<li>固定参数$\alpha$， 求 极小化$\min_{w,b} L(w, b, \alpha)$的w和b  </li>
-<li>带入w和b，对$L$求参数$\alpha$ 的极大化</li>
-<li>利用SMO算法求解对偶问题中的拉格朗日乘子$\alpha$</li>
+<li>固定参数<span class="math inline">\(\alpha\)</span>， 求 极小化<span class="math inline">\(\min_{w,b} L(w, b, \alpha)\)</span>的w和b<br>
+</li>
+<li>带入w和b，对<span class="math inline">\(L\)</span>求参数<span class="math inline">\(\alpha\)</span> 的极大化</li>
+<li>利用SMO算法求解对偶问题中的拉格朗日乘子<span class="math inline">\(\alpha\)</span></li>
 </ul>
-<p><strong>1 极小求出w和b  $\min_\limits{w,b} L(w, b, \alpha)$ </strong> </p>
-<p>对w和b求偏导，使其等于0。<br>$$<br>\frac{\partial L}{\partial w} = w -\sum_{i=1}^n\alpha_iy_ix_i<br>\begin{equation}\xlongequal {令}{} 0  \end{equation}<br>\quad \to \quad w = \sum_{i=1}^n\alpha_iy_ix_i<br>$$</p>
-<p>$$<br>\frac{\partial L}{\partial b} = - \sum_{i=1}^n \alpha_iy_i \xlongequal {令}{} 0  \quad \to \quad  \sum_{i=1}^n \alpha_iy_i=0<br>$$</p>
-<p>特别地范式求导：$\frac{\partial |w|^2}{\partial w} = 2w​$<br>$$<br>\frac{\partial |w|^2}{\partial w} = w<br>$$<br><strong>把上面两个结论，带入原式进行化简</strong>，得到：<br>$$<br>\begin{align}<br>L(w, b, \alpha) &amp;=\frac{1}{2}w^Tw -  \sum_{i=1}^n\alpha_iy_iw^Tx_i- \sum_{i=1}^n\alpha_iy_ib + \sum_{i=1}^n\alpha_i \<br>&amp; = \frac{1}{2} w^T\sum_{i=1}^n\alpha_iy_ix_i - w^T \sum_{i=1}^n\alpha_iy_ix_i - b\sum_{i=1}^n\alpha_iy_i + \sum_{i=1}^n\alpha_i   \quad\text{(带入w，提出b，带入0)}\<br>&amp; = -\frac{1}{2}\left(\sum_{i=1}^n\alpha_iy_ix_i\right)^T\left(\sum_{i=1}^n\alpha_iy_ix_i\right) + \sum_{i=1}^n\alpha_i \quad{(只有x是向量，直接转置)}\<br>&amp;= -\frac{1}{2}\left(\sum_{i=1}^n\alpha_iy_ix_i^T\right)\left(\sum_{i=1}^n\alpha_iy_ix_i\right) + \sum_{i=1}^n\alpha_i \<br>&amp; = \sum_{i=1}^n\alpha_i -\frac{1}{2}\sum_{i=1}^n\sum_{i=1}^n\alpha_i \alpha_j y_i y_j x_i^T x_j<br>\end{align}<br>$$<br>得到<strong>只用$\alpha$表示的拉格朗日函数</strong>：<br>$$<br>L(w, b, \alpha) =\sum_{i=1}^n\alpha_i -\frac{1}{2}\sum_{i=1}^n\sum_{i=1}^n\alpha_i \alpha_j y_i y_j x_i^T x_j<br>$$<br><strong>2 求出对$\alpha​$的极大  $\max_{\alpha_i \ge 0} \theta_d(\alpha) = \max_\limits{\alpha_i \ge 0} \min_\limits{w,b} L(w, b, \alpha)​$</strong></p>
+<p><strong>1 极小求出w和b <span class="math inline">\(\min_\limits{w,b} L(w, b, \alpha)\)</span> </strong></p>
+<p>对w和b求偏导，使其等于0。 <span class="math display">\[
+\frac{\partial L}{\partial w} = w -\sum_{i=1}^n\alpha_iy_ix_i 
+\begin{equation}\xlongequal {令}{} 0  \end{equation}
+\quad \to \quad w = \sum_{i=1}^n\alpha_iy_ix_i
+\]</span></p>
+<p><span class="math display">\[
+\frac{\partial L}{\partial b} = - \sum_{i=1}^n \alpha_iy_i \xlongequal {令}{} 0  \quad \to \quad  \sum_{i=1}^n \alpha_iy_i=0
+\]</span></p>
+<p>特别地范式求导：<span class="math inline">\(\frac{\partial \|w\|^2}{\partial w} = 2w​\)</span> <span class="math display">\[
+\frac{\partial \|w\|^2}{\partial w} = w
+\]</span> <strong>把上面两个结论，带入原式进行化简</strong>，得到： <span class="math display">\[
+\begin{align}
+L(w, b, \alpha) &amp;=\frac{1}{2}w^Tw -  \sum_{i=1}^n\alpha_iy_iw^Tx_i- \sum_{i=1}^n\alpha_iy_ib + \sum_{i=1}^n\alpha_i \\
+&amp; = \frac{1}{2} w^T\sum_{i=1}^n\alpha_iy_ix_i - w^T \sum_{i=1}^n\alpha_iy_ix_i - b\sum_{i=1}^n\alpha_iy_i + \sum_{i=1}^n\alpha_i   \quad\text{(带入w，提出b，带入0)}\\
+&amp; = -\frac{1}{2}\left(\sum_{i=1}^n\alpha_iy_ix_i\right)^T\left(\sum_{i=1}^n\alpha_iy_ix_i\right) + \sum_{i=1}^n\alpha_i \quad{(只有x是向量，直接转置)}\\
+&amp;= -\frac{1}{2}\left(\sum_{i=1}^n\alpha_iy_ix_i^T\right)\left(\sum_{i=1}^n\alpha_iy_ix_i\right) + \sum_{i=1}^n\alpha_i \\
+&amp; = \sum_{i=1}^n\alpha_i -\frac{1}{2}\sum_{i=1}^n\sum_{i=1}^n\alpha_i \alpha_j y_i y_j x_i^T x_j
+\end{align}
+\]</span> 得到<strong>只用<span class="math inline">\(\alpha\)</span>表示的拉格朗日函数</strong>： <span class="math display">\[
+L(w, b, \alpha) =\sum_{i=1}^n\alpha_i -\frac{1}{2}\sum_{i=1}^n\sum_{i=1}^n\alpha_i \alpha_j y_i y_j x_i^T x_j
+\]</span> <strong>2 求出对<span class="math inline">\(\alpha​\)</span>的极大 <span class="math inline">\(\max_{\alpha_i \ge 0} \theta_d(\alpha) = \max_\limits{\alpha_i \ge 0} \min_\limits{w,b} L(w, b, \alpha)​\)</span></strong></p>
 <p><strong>对偶问题</strong> 如下：</p>
-<p>目标函数：<br>$$<br>\max_\limits{\alpha} \; \sum_{i=1}^n\alpha_i -\frac{1}{2}\sum_{i=1}^n\sum_{i=1}^n\alpha_i \alpha_j y_i y_j x_i^T x_j<br>$$<br>约束条件：<br>$$<br>\begin{align} &amp;\alpha_i \ge 0 \<br>&amp; \sum_{i=1}^n \alpha_iy_i = 0\<br>\end{align}<br>$$<br>利用<code>SMO算法</code>求出拉格朗日乘子$\alpha^*$。 </p>
+<p>目标函数： <span class="math display">\[
+\max_\limits{\alpha} \; \sum_{i=1}^n\alpha_i -\frac{1}{2}\sum_{i=1}^n\sum_{i=1}^n\alpha_i \alpha_j y_i y_j x_i^T x_j
+\]</span> 约束条件： <span class="math display">\[
+\begin{align} &amp;\alpha_i \ge 0 \\
+&amp; \sum_{i=1}^n \alpha_iy_i = 0\\
+\end{align}
+\]</span> 利用<code>SMO算法</code>求出拉格朗日乘子<span class="math inline">\(\alpha^*\)</span>。</p>
 <p><strong>3 求出w和b，得到分离超平面和决策函数</strong></p>
-<p>根据前面的公式得到<strong>$w^*$</strong>：<br>$$<br>w<em> =\sum_{i=1}^n\alpha_i^</em>y_ix_i<br>$$<br>选一个<strong>$\alpha^*_j &gt; 0$对应的点</strong>$(x_j, y_j)$ 就是<strong>支持向量</strong>。由于支持向量<strong>$y_j(w^<em>\cdot x+ b^</em>) -1 = 0$</strong> ，$y_j^2=1$  </p>
-<p>得到<strong>$b^*$</strong> ：<br>$$<br>b^<em>  = y_j - \sum_{i=1}^n\alpha_i^</em>y_i(x_i\cdot x_j), \quad\quad \text{($x_i\cdot x_j$是向量内积，后面同理)}<br>$$<br>通过公式可以看出，<strong>决定w和b的是支持向量</strong>， 其它点对超平面是没有影响的。</p>
-<p><strong>分离超平面</strong><br>$$<br>f(x) = \sum_{i=1}^n\alpha_i^<em>y_i(x_i\cdot x) + b^</em> = 0<br>$$<br><strong>分类决策函数</strong><br>$$<br>f(x) = \rm{sign}\left(\sum_{i=1}^n\alpha_i^<em>y_i(x_i\cdot x) + b^</em> \right)<br>$$</p>
-<h2 id="简单总结"><a href="#简单总结" class="headerlink" title="简单总结"></a>简单总结</h2><p>目标函数<br>$$<br>J = \min_{w,b} \frac{1}{2} |w|^2, \quad s.t, \quad y_i(w^Tx_i+b) \ge 1<br>$$<br>拉格朗日函数<br>$$<br>L(w, b, \lambda) =\frac{1}{2} |w|^2 - \sum_{i=1}^n \alpha_i \left(y_i(w^Tx_i+b) - 1\right)<br>$$<br>转化为<code>对偶问题求解</code>， 需要<strong>会求解过程、会推导公式</strong>。<br>$$<br>\max_{\alpha_i \ge 0} \min_{w,b} L(w, b, \alpha)<br>$$<br>主要是下面4个求解步骤：<strong>十分重要!!!</strong></p>
-<ol>
-<li>固定$\alpha$， <strong>L对w和b求偏导</strong>，得到两个等式</li>
-<li>结果带入L，消去w和b，得到<strong>只有$\alpha$的L</strong> </li>
-<li>利用<code>SMO</code>求出$\alpha^*$</li>
-<li><strong>利用$\alpha^*$和支持向量，算出w和b</strong>。得出分离超平面和分界函数。 </li>
+<p>根据前面的公式得到<strong><span class="math inline">\(w^*\)</span></strong>： <span class="math display">\[
+w* =\sum_{i=1}^n\alpha_i^*y_ix_i
+\]</span> 选一个<strong><span class="math inline">\(\alpha^*_j &gt; 0\)</span>对应的点</strong><span class="math inline">\((x_j, y_j)\)</span> 就是<strong>支持向量</strong>。由于支持向量<strong><span class="math inline">\(y_j(w^*\cdot x+ b^*) -1 = 0\)</span></strong> ，<span class="math inline">\(y_j^2=1\)</span></p>
+<p>得到<strong><span class="math inline">\(b^*\)</span></strong> ： <span class="math display">\[
+b^*  = y_j - \sum_{i=1}^n\alpha_i^*y_i(x_i\cdot x_j), \quad\quad \text{($x_i\cdot x_j$是向量内积，后面同理)}
+\]</span> 通过公式可以看出，<strong>决定w和b的是支持向量</strong>， 其它点对超平面是没有影响的。</p>
+<p><strong>分离超平面</strong> <span class="math display">\[
+f(x) = \sum_{i=1}^n\alpha_i^*y_i(x_i\cdot x) + b^* = 0
+\]</span> <strong>分类决策函数</strong> <span class="math display">\[
+f(x) = \rm{sign}\left(\sum_{i=1}^n\alpha_i^*y_i(x_i\cdot x) + b^* \right)
+\]</span></p>
+<h2 id="简单总结">简单总结</h2>
+<p>目标函数 <span class="math display">\[
+J = \min_{w,b} \frac{1}{2} \|w\|^2, \quad s.t, \quad y_i(w^Tx_i+b) \ge 1
+\]</span> 拉格朗日函数 <span class="math display">\[
+L(w, b, \lambda) =\frac{1}{2} \|w\|^2 - \sum_{i=1}^n \alpha_i \left(y_i(w^Tx_i+b) - 1\right)
+\]</span> 转化为<code>对偶问题求解</code>， 需要<strong>会求解过程、会推导公式</strong>。 <span class="math display">\[
+\max_{\alpha_i \ge 0} \min_{w,b} L(w, b, \alpha)
+\]</span> 主要是下面4个求解步骤：<strong>十分重要!!!</strong></p>
+<ol style="list-style-type: decimal">
+<li>固定<span class="math inline">\(\alpha\)</span>， <strong>L对w和b求偏导</strong>，得到两个等式</li>
+<li>结果带入L，消去w和b，得到<strong>只有<span class="math inline">\(\alpha\)</span>的L</strong></li>
+<li>利用<code>SMO</code>求出<span class="math inline">\(\alpha^*\)</span></li>
+<li><strong>利用<span class="math inline">\(\alpha^*\)</span>和支持向量，算出w和b</strong>。得出分离超平面和分界函数。</li>
 </ol>
-<p>求导后消去w和b，得到L<br>$$<br>L(w, b, \alpha) =\sum_{i=1}^n\alpha_i -\frac{1}{2}\sum_{i=1}^n\sum_{i=1}^n\alpha_i \alpha_j y_i y_j x_i^T x_j<br>$$<br>利用SMO求得$\alpha^<em>$后， 带回原式，得到w和b：<br>$$<br>w</em> =\sum_{i=1}^n\alpha_i^<em>y_ix_i, \quad b^</em>  = y_j - \sum_{i=1}^n\alpha_i^<em>y_i(x_i\cdot x_j),<br>$$<br>实际上最重要是<code>向量内积</code>来进行决策<br>$$<br>f(x) = \rm{sign}\left(\sum_{i=1}^n\alpha_i^</em>y_i \color{red}{(x_i\cdot x}) + b^* \right)<br>$$<br>目标函数<br>$$<br>\max_\limits{\alpha_i \ge 0}L(w, b, \lambda) =<br>\max_\limits{\alpha_i \ge 0} \frac{1}{2} |w|^2 - \sum_{i=1}^n \alpha_i \color{red}{\left(y_i(w^Tx_i+b) - 1\right)}<br>$$<br>两种数据点</p>
+<p>求导后消去w和b，得到L <span class="math display">\[
+L(w, b, \alpha) =\sum_{i=1}^n\alpha_i -\frac{1}{2}\sum_{i=1}^n\sum_{i=1}^n\alpha_i \alpha_j y_i y_j x_i^T x_j
+\]</span> 利用SMO求得<span class="math inline">\(\alpha^*\)</span>后， 带回原式，得到w和b： <span class="math display">\[
+w* =\sum_{i=1}^n\alpha_i^*y_ix_i, \quad b^*  = y_j - \sum_{i=1}^n\alpha_i^*y_i(x_i\cdot x_j),
+\]</span> 实际上最重要是<code>向量内积</code>来进行决策 <span class="math display">\[
+f(x) = \rm{sign}\left(\sum_{i=1}^n\alpha_i^*y_i \color{red}{(x_i\cdot x}) + b^* \right)
+\]</span> 目标函数 <span class="math display">\[
+\max_\limits{\alpha_i \ge 0}L(w, b, \lambda) =
+\max_\limits{\alpha_i \ge 0} \frac{1}{2} \|w\|^2 - \sum_{i=1}^n \alpha_i \color{red}{\left(y_i(w^Tx_i+b) - 1\right)}
+\]</span> 两种数据点</p>
 <ul>
-<li>支持向量：红色为0，$\alpha_i &gt; 0$。 后面为0。</li>
-<li>其它点：红色大于1，$\alpha_i=0$。 后面为0。</li>
+<li>支持向量：红色为0，<span class="math inline">\(\alpha_i &gt; 0\)</span>。 后面为0。</li>
+<li>其它点：红色大于1，<span class="math inline">\(\alpha_i=0\)</span>。 后面为0。</li>
 </ul>
-<h1 id="非线性SVM"><a href="#非线性SVM" class="headerlink" title="非线性SVM"></a>非线性SVM</h1><h2 id="核函数"><a href="#核函数" class="headerlink" title="核函数"></a>核函数</h2><p><strong>问题</strong></p>
+<h1 id="非线性svm">非线性SVM</h1>
+<h2 id="核函数">核函数</h2>
+<p><strong>问题</strong></p>
 <p>大部分数据不是线性可分的，前面的超平面根本不存在。可以用一个超曲面进行分离，这就是<code>非线性可分问题</code>。</p>
-<p>SVM可以通过<code>核函数</code>把输入<strong>映射到高维特征空间</strong>，最终<strong>在高维特征空间中构造最优分离超平面</strong>。 </p>
+<p>SVM可以通过<code>核函数</code>把输入<strong>映射到高维特征空间</strong>，最终<strong>在高维特征空间中构造最优分离超平面</strong>。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ml/svm/hyper_plane" style="display:block; margin:auto" width="60%"></p>
 <p>需要映射和学习线性SVM：</p>
 <ul>
 <li>把输入<code>映射</code>到特征空间F</li>
 <li>在特征空间F中使用<code>线性学习器</code>分类</li>
 </ul>
-<p>$$<br>f(x) = \sum_{i=1}^n\alpha_i^<em>y_i \color{red}{(\phi(x_i)\cdot \phi(x)}) + b^</em><br>$$</p>
+<p><span class="math display">\[
+f(x) = \sum_{i=1}^n\alpha_i^*y_i \color{red}{(\phi(x_i)\cdot \phi(x)}) + b^*
+\]</span></p>
 <p><strong>核函数的功能</strong></p>
-<p><code>核函数</code>在特征空间中<strong>直接计算内积</strong>，就像在原始输入点的函数中一样，两个步骤合二为一：<br>$$<br>K(x, z) = \phi(x) \cdot \phi(z)<br>$$<br>分类函数：<br>$$<br>f(x) = \sum_{i=1}^n\alpha_i^<em>y_i \color{red}{k(x_i, x)} + b^</em><br>$$<br>对偶问题：<br>$$<br>\begin{align}<br>&amp; \max_\limits{\alpha} \; \sum_{i=1}^n\alpha_i -\frac{1}{2}\sum_{i=1}^n\sum_{i=1}^n\alpha_i \alpha_j y_i y_j k(x_i, x) \<br>&amp; s.t, \quad \alpha_i \ge 0, \quad \sum_{i=1}^n \alpha_i y_i = 0<br>\end{align}<br>$$</p>
-<h2 id="核函数处理非线性数据"><a href="#核函数处理非线性数据" class="headerlink" title="核函数处理非线性数据"></a>核函数处理非线性数据</h2><p><strong>简单例子</strong> </p>
+<p><code>核函数</code>在特征空间中<strong>直接计算内积</strong>，就像在原始输入点的函数中一样，两个步骤合二为一： <span class="math display">\[
+K(x, z) = \phi(x) \cdot \phi(z)
+\]</span> 分类函数： <span class="math display">\[
+f(x) = \sum_{i=1}^n\alpha_i^*y_i \color{red}{k(x_i, x)} + b^*
+\]</span> 对偶问题： <span class="math display">\[
+\begin{align}
+&amp; \max_\limits{\alpha} \; \sum_{i=1}^n\alpha_i -\frac{1}{2}\sum_{i=1}^n\sum_{i=1}^n\alpha_i \alpha_j y_i y_j k(x_i, x) \\
+&amp; s.t, \quad \alpha_i \ge 0, \quad \sum_{i=1}^n \alpha_i y_i = 0
+\end{align}
+\]</span></p>
+<h2 id="核函数处理非线性数据">核函数处理非线性数据</h2>
+<p><strong>简单例子</strong></p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ml/svm/kernal1.png" style="display:block; margin:auto" width="40%"></p>
-<p>上面的数据线性不可分，两个维度<code>(a, b)</code>。 应该用<code>二次曲线</code>(特殊圆)来区分：<br>$$<br>w_1a + w_2a^2 +w_3b + w_4b^2 + w_5ab + b=0<br>$$<br>看做映<code>射到了五维空间</code>：<br>$$<br>w_1z_1 + w_2z_2 + w_3z_3 + w_4z_4 + w_5z_5 + b = \sum_{i=1}^5 w_iz_i + b = 0<br>$$<br>如下图：（实际映射到了三维空间的图），<strong>可以使用一个平面来分开</strong>：</p>
+<p>上面的数据线性不可分，两个维度<code>(a, b)</code>。 应该用<code>二次曲线</code>(特殊圆)来区分： <span class="math display">\[
+w_1a + w_2a^2 +w_3b + w_4b^2 + w_5ab + b=0
+\]</span> 看做映<code>射到了五维空间</code>： <span class="math display">\[
+w_1z_1 + w_2z_2 + w_3z_3 + w_4z_4 + w_5z_5 + b = \sum_{i=1}^5 w_iz_i + b = 0
+\]</span> 如下图：（实际映射到了三维空间的图），<strong>可以使用一个平面来分开</strong>：</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ml/svm/kernal2.gif" style="display:block; margin:auto" width="40%"></p>
 <p><strong>问题</strong></p>
 <p>五维是由1维和2维进行<strong>组合</strong>，就可以解决问题。所以对输入数据无脑组合映射到高维可以吗？当然是不可以的。维数太高，根本没法计算，<strong>不能无脑组合映射</strong>。</p>
 <p><strong>核函数的功能</strong></p>
-<p>看<code>核函数</code>：<br>$$<br>k(x_1, x_2) = (x_1 \cdot x_2 + 1)^2<br>$$<br>核函数和上面映射空间的结果是一样的！区别：</p>
+<p>看<code>核函数</code>： <span class="math display">\[
+k(x_1, x_2) = (x_1 \cdot x_2 + 1)^2
+\]</span> 核函数和上面映射空间的结果是一样的！区别：</p>
 <ul>
 <li>映射计算：先映射到高维空间，然后根据内积进行计算</li>
 <li><code>核函数</code>：<strong>直接在原来的低维空间中计算</strong>，而不需显示写出映射后的结果。<strong>避开了在高维空间中的计算</strong>！</li>
 </ul>
-<h2 id="常用核函数"><a href="#常用核函数" class="headerlink" title="常用核函数"></a>常用核函数</h2><p><strong>1 线性核</strong><br>$$<br>k(x_1, x_2) = x_1 \cdot x_2 \quad\quad\text{(原始空间的内积)}<br>$$<br>目的：映射前和映射后，形式上统一了起来。写个通用模板，再带入不同的核就可以了。</p>
-<p><strong>2 高斯核</strong><br>$$<br>k(x_1, x_2) = \exp \left( - \frac{|x_1 - x_2|^2}{2\sigma^2}\right)<br>$$<br>高斯核函数，非常灵活，应用很广泛。可以映射到无穷维。</p>
-<p>$\sigma$ 的选择</p>
+<h2 id="常用核函数">常用核函数</h2>
+<p><strong>1 线性核</strong> <span class="math display">\[
+k(x_1, x_2) = x_1 \cdot x_2 \quad\quad\text{(原始空间的内积)}
+\]</span> 目的：映射前和映射后，形式上统一了起来。写个通用模板，再带入不同的核就可以了。</p>
+<p><strong>2 高斯核</strong> <span class="math display">\[
+k(x_1, x_2) = \exp \left( - \frac{\|x_1 - x_2\|^2}{2\sigma^2}\right)
+\]</span> 高斯核函数，非常灵活，应用很广泛。可以映射到无穷维。</p>
+<p><span class="math inline">\(\sigma\)</span> 的选择</p>
 <ul>
 <li>太大：权重衰减快，相当于映射到低维子空间</li>
 <li>太小：将任意数据线性可分，容易陷入严重过拟合</li>
 </ul>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ml/svm/kernal3" style="display:block; margin:auto" width="60%"></p>
-<p><strong>3 多项式核</strong><br>$$<br>k(x_1, x_2) = ((x_1, x_2) + R)^d<br>$$</p>
-<h2 id="核函数总结"><a href="#核函数总结" class="headerlink" title="核函数总结"></a>核函数总结</h2><p>问题的出现</p>
+<p><strong>3 多项式核</strong> <span class="math display">\[
+k(x_1, x_2) = ((x_1, x_2) + R)^d
+\]</span></p>
+<h2 id="核函数总结">核函数总结</h2>
+<p>问题的出现</p>
 <ul>
 <li>数据线性不可分，要映射到高维空间中去</li>
 <li>不能无脑低维组合映射到高维空间，维度太大根本没法计算</li>
@@ -328,56 +518,111 @@
 </ul>
 <p>SVM曲线，逻辑回归和决策树是直线。SVM的效果好。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ml/svm/svm-logistic-tree" style="display:block; margin:auto" width="70%"></p>
-<h1 id="松弛变量软间隔最大化"><a href="#松弛变量软间隔最大化" class="headerlink" title="松弛变量软间隔最大化"></a>松弛变量软间隔最大化</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>数据可能有一些噪声<code>特异点outlier</code>导致不是线性可分或者效果不好。 如果不处理outlier，则会非常影响SVM。因为本身支持向量就只有几个。</p>
+<h1 id="松弛变量软间隔最大化">松弛变量软间隔最大化</h1>
+<h2 id="定义">定义</h2>
+<p>数据可能有一些噪声<code>特异点outlier</code>导致不是线性可分或者效果不好。 如果不处理outlier，则会非常影响SVM。因为本身支持向量就只有几个。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ml/svm/Optimal-Hyper-Plane-2.png" style="display:block; margin:auto" width="30%"></p>
-<p>给每个数据点加上<code>松弛变量</code>$\xi_i \ge 0$， 使<strong>函数间隔+松弛变量大于等于1</strong>，即约束条件：<br>$$<br>y_i(w \cdot x_i + b) \ge 1 - \xi_i, \quad \xi_i \ge 0<br>$$<br>为每个松弛变量$\xi_i$支付一个代价$\xi_i$， 新的目标函数和约束条件如下：<br>$$<br>\min \frac{1}{2} |w|^2 + C\sum_{i=1}^n \xi_i<br>$$</p>
-<p>$$<br>s.t, \quad \quad y_i(w \cdot x_i + b) \ge 1 - \xi_i, \quad \xi_i \ge 0<br>$$</p>
+<p>给每个数据点加上<code>松弛变量</code><span class="math inline">\(\xi_i \ge 0\)</span>， 使<strong>函数间隔+松弛变量大于等于1</strong>，即约束条件： <span class="math display">\[
+y_i(w \cdot x_i + b) \ge 1 - \xi_i, \quad \xi_i \ge 0
+\]</span> 为每个松弛变量<span class="math inline">\(\xi_i\)</span>支付一个代价<span class="math inline">\(\xi_i\)</span>， 新的目标函数和约束条件如下： <span class="math display">\[
+\min \frac{1}{2} \|w\|^2 + C\sum_{i=1}^n \xi_i
+\]</span></p>
+<p><span class="math display">\[
+s.t, \quad \quad y_i(w \cdot x_i + b) \ge 1 - \xi_i, \quad \xi_i \ge 0
+\]</span></p>
 <p><code>惩罚系数</code>C是一个常数</p>
 <ul>
 <li>C大时，对误分类的惩罚增大</li>
 <li>C来调节权衡：使间隔尽量大；误分类点个数尽量少</li>
 </ul>
-<h2 id="求解"><a href="#求解" class="headerlink" title="求解"></a>求解</h2><p>定义新的拉格朗日函数：<br>$$<br>L(w,b,\xi,\alpha, r) = \frac{1}{2} |w|^2 + C\sum_{i=1}^n \xi_i<br>-\sum_{i=1}^n \alpha_i \left(y_i(w^Tx_i+b) - 1 + \xi_i\right) </p>
-<ul>
-<li>\sum_{i=1}^nr_i\xi_i<br>$$<br>和前面对偶问题求解一样，求导求解：<br>$$<br>\frac{\partial L}{\partial w} = 0<br>\quad \to \quad w = \sum_{i=1}^n\alpha_iy_ix_i<br>$$</li>
-</ul>
-<p>$$<br>\frac{\partial L}{\partial b} = 0<br>\quad \to \quad \sum_{i=1}^n\alpha_iy_i = 0<br>$$</p>
-<p>$$<br>\frac{\partial L}{\partial \xi} = 0<br>\quad \to \quad C -\alpha_i - r_i = 0<br>$$</p>
-<p>带入，得到新的L<br>$$<br>\max_{\alpha} L = \sum_{i=1}^n\alpha_i -\frac{1}{2}\sum_{i=1}^n\sum_{i=1}^n\alpha_i \alpha_j y_i y_j( x_i \cdot  x_j)<br>$$<br>约束条件：<br>$$<br>0 \le \alpha_i \le C, \quad \sum_{i=1}^n \alpha_i y_i = 0<br>$$</p>
-<h1 id="SVM的深层理解"><a href="#SVM的深层理解" class="headerlink" title="SVM的深层理解"></a>SVM的深层理解</h1><h2 id="感知机算法"><a href="#感知机算法" class="headerlink" title="感知机算法"></a>感知机算法</h2><p>感知机算法是一个二类分类的线性模型，也是找一个超平面进行划分数据：<br>$$<br>f(x) = \rm{sign}(w\cdot x + b)<br>$$<br><code>损失函数</code>是<strong>所有误分类点到超平面的总距离</strong>：<br>$$<br>\min_\limits{w, b} L(w, b) = - \sum_{x_i \in M}y_i(w\cdot x_i + b)<br>$$<br>可以使用<code>SGD</code>对损失函数进行优化。 </p>
+<h2 id="求解">求解</h2>
+<p>定义新的拉格朗日函数： <span class="math display">\[
+L(w,b,\xi,\alpha, r) = \frac{1}{2} \|w\|^2 + C\sum_{i=1}^n \xi_i
+-\sum_{i=1}^n \alpha_i \left(y_i(w^Tx_i+b) - 1 + \xi_i\right) 
+- \sum_{i=1}^nr_i\xi_i
+\]</span> 和前面对偶问题求解一样，求导求解： <span class="math display">\[
+\frac{\partial L}{\partial w} = 0
+\quad \to \quad w = \sum_{i=1}^n\alpha_iy_ix_i
+\]</span></p>
+<p><span class="math display">\[
+\frac{\partial L}{\partial b} = 0
+\quad \to \quad \sum_{i=1}^n\alpha_iy_i = 0
+\]</span></p>
+<p><span class="math display">\[
+\frac{\partial L}{\partial \xi} = 0
+\quad \to \quad C -\alpha_i - r_i = 0
+\]</span></p>
+<p>带入，得到新的L <span class="math display">\[
+\max_{\alpha} L = \sum_{i=1}^n\alpha_i -\frac{1}{2}\sum_{i=1}^n\sum_{i=1}^n\alpha_i \alpha_j y_i y_j( x_i \cdot  x_j)
+\]</span> 约束条件： <span class="math display">\[
+0 \le \alpha_i \le C, \quad \sum_{i=1}^n \alpha_i y_i = 0
+\]</span></p>
+<h1 id="svm的深层理解">SVM的深层理解</h1>
+<h2 id="感知机算法">感知机算法</h2>
+<p>感知机算法是一个二类分类的线性模型，也是找一个超平面进行划分数据： <span class="math display">\[
+f(x) = \rm{sign}(w\cdot x + b)
+\]</span> <code>损失函数</code>是<strong>所有误分类点到超平面的总距离</strong>： <span class="math display">\[
+\min_\limits{w, b} L(w, b) = - \sum_{x_i \in M}y_i(w\cdot x_i + b)
+\]</span> 可以使用<code>SGD</code>对损失函数进行优化。</p>
 <p>当训练数据集线性可分时，感知机算法是<code>收敛的</code>。可以在一定迭代次数上，找到一个超平面，有很多个解。</p>
 <p>感知机的超平面不是最优效果，<code>最优是SVM</code>。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ml/svm/perceptron" style="display:block; margin:auto" width="50%"></p>
-<h2 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h2><p>数据$x$， 预测值$f(x)=\hat y$， 真实值$y$。 </p>
+<h2 id="损失函数">损失函数</h2>
+<p>数据<span class="math inline">\(x\)</span>， 预测值<span class="math inline">\(f(x)=\hat y\)</span>， 真实值<span class="math inline">\(y\)</span>。</p>
 <p><strong>常见损失</strong></p>
-<ol>
+<ol style="list-style-type: decimal">
 <li>01损失</li>
 </ol>
-<p>$$<br>L(y, \hat y) = \begin{cases}<br>1, &amp; y \neq \hat y \<br>0, &amp; y = \hat y<br>\end{cases}<br>$$</p>
-<ol start="2">
-<li><p>平方损失<br>$$<br>L(y, \hat y) = (y - \hat y)^ 2<br>$$</p>
-</li>
-<li><p>绝对损失<br>$$<br>L(y, \hat y) = \vert y - \hat y\vert<br>$$</p>
-</li>
-<li><p>对数损失<br>$$<br>L(y, \hat y) = -\log P(y \hat x)<br>$$</p>
-</li>
+<p><span class="math display">\[
+L(y, \hat y) = \begin{cases}
+1, &amp; y \neq \hat y \\
+0, &amp; y = \hat y
+\end{cases}
+\]</span></p>
+<ol start="2" style="list-style-type: decimal">
+<li><p>平方损失 <span class="math display">\[
+   L(y, \hat y) = (y - \hat y)^ 2
+   \]</span></p></li>
+<li><p>绝对损失 <span class="math display">\[
+   L(y, \hat y) = \vert y - \hat y\vert
+   \]</span></p></li>
+<li><p>对数损失 <span class="math display">\[
+   L(y, \hat y) = -\log P(y \hat x)
+   \]</span></p></li>
 </ol>
 <p><strong>期望损失</strong></p>
-<p><code>期望损失</code>也称为<code>风险函数</code>，需要知道联合概率分布$P(X, Y)$， 一般不知道。<br>$$<br>R_{\rm{exp}} = E_p[L(y, \hat y)]  = \int_{(x,y)} L(y, \hat y) P(x, y) {\rm d}x{\rm d}y<br>$$<br><strong>经验损失</strong></p>
-<p><code>经验损失</code>也成为<code>经验风险</code> ，所以<code>监督学习</code>就是要<code>经验风险最小化</code>。<br>$$<br>R_{\rm emp}(f) = \frac{1}{N} \sum_{i=1}^NL(y_i, \hat y_i)<br>$$<br><strong>结构风险最小化</strong></p>
-<p>样本数量太小时，容易<code>过拟合</code>。需要加上<code>正则化项</code>，也称为<code>惩罚项</code>。 模型越复杂，越大。<br>$$<br>R_{\rm srm}(f) = \frac{1}{N} \sum_{i=1}^NL(y_i, \hat y_i) + \lambda J(f)<br>$$<br>$\lambda\ge0$ 是系数，<code>权衡经验风险和模型复杂度</code>。 监督学习，就是要使结构风险最小化。</p>
+<p><code>期望损失</code>也称为<code>风险函数</code>，需要知道联合概率分布<span class="math inline">\(P(X, Y)\)</span>， 一般不知道。 <span class="math display">\[
+R_{\rm{exp}} = E_p[L(y, \hat y)]  = \int_{(x,y)} L(y, \hat y) P(x, y) {\rm d}x{\rm d}y
+\]</span> <strong>经验损失</strong></p>
+<p><code>经验损失</code>也成为<code>经验风险</code> ，所以<code>监督学习</code>就是要<code>经验风险最小化</code>。 <span class="math display">\[
+R_{\rm emp}(f) = \frac{1}{N} \sum_{i=1}^NL(y_i, \hat y_i)
+\]</span> <strong>结构风险最小化</strong></p>
+<p>样本数量太小时，容易<code>过拟合</code>。需要加上<code>正则化项</code>，也称为<code>惩罚项</code>。 模型越复杂，越大。 <span class="math display">\[
+R_{\rm srm}(f) = \frac{1}{N} \sum_{i=1}^NL(y_i, \hat y_i) + \lambda J(f)
+\]</span> <span class="math inline">\(\lambda\ge0\)</span> 是系数，<code>权衡经验风险和模型复杂度</code>。 监督学习，就是要使结构风险最小化。</p>
 <p>SVM也是<strong>最优化+损失最小</strong>。 可以从损失函数和优化算法角度去看SVM、boosting、LR，可能会有不同的收获。</p>
-<h2 id="SVM的合页损失函数"><a href="#SVM的合页损失函数" class="headerlink" title="SVM的合页损失函数"></a>SVM的合页损失函数</h2><p>从最优化+损失最小的角度去理解SVM。</p>
-<h2 id="最小二乘法"><a href="#最小二乘法" class="headerlink" title="最小二乘法"></a>最小二乘法</h2><p>最小二乘法，就是通过<strong>最小化误差的平方</strong>来进行数学优化。对参数进行求偏导，进行求解。</p>
-<h2 id="SMO"><a href="#SMO" class="headerlink" title="SMO"></a>SMO</h2><p><strong>模型</strong><br>$$<br>\min \frac{1}{2} |w|^2 + C\sum_{i=1}^n \xi_i<br>$$</p>
-<p>$$<br>s.t, \quad \quad y_i(w \cdot x_i + b) \ge 1 - \xi_i, \quad \xi_i \ge 0<br>$$</p>
-<p><code>序列最小最优化SMO</code> (Sequential minimal optimization)，解决求解$\alpha$的问题：<br>$$<br>\min_{\alpha} L = \frac{1}{2}\sum_{i=1}^n\sum_{i=1}^n\alpha_i \alpha_j y_i y_jK(x_i,  x_j) - \sum_{i=1}^n\alpha_i<br>$$</p>
-<p>$$<br>s.t, \quad \quad0 \le \alpha_i \le C, \quad \sum_{i=1}^n \alpha_i y_i = 0<br>$$</p>
+<h2 id="svm的合页损失函数">SVM的合页损失函数</h2>
+<p>从最优化+损失最小的角度去理解SVM。</p>
+<h2 id="最小二乘法">最小二乘法</h2>
+<p>最小二乘法，就是通过<strong>最小化误差的平方</strong>来进行数学优化。对参数进行求偏导，进行求解。</p>
+<h2 id="smo">SMO</h2>
+<p><strong>模型</strong> <span class="math display">\[
+\min \frac{1}{2} \|w\|^2 + C\sum_{i=1}^n \xi_i
+\]</span></p>
+<p><span class="math display">\[
+s.t, \quad \quad y_i(w \cdot x_i + b) \ge 1 - \xi_i, \quad \xi_i \ge 0
+\]</span></p>
+<p><code>序列最小最优化SMO</code> (Sequential minimal optimization)，解决求解<span class="math inline">\(\alpha\)</span>的问题： <span class="math display">\[
+\min_{\alpha} L = \frac{1}{2}\sum_{i=1}^n\sum_{i=1}^n\alpha_i \alpha_j y_i y_jK(x_i,  x_j) - \sum_{i=1}^n\alpha_i
+\]</span></p>
+<p><span class="math display">\[
+s.t, \quad \quad0 \le \alpha_i \le C, \quad \sum_{i=1}^n \alpha_i y_i = 0
+\]</span></p>
 <p>如果所有变量的解都满足KKT条件，则最优化问题的解已经得到。</p>
 <p><strong>思想</strong></p>
-<p>每次抽取两个乘子$\alpha_1, \alpha_2$，然后固定其他乘子，针对这两个变量构建一个子二次规划问题，进行求解。不断迭代求解子问题，最终解得原问题。</p>
+<p>每次抽取两个乘子<span class="math inline">\(\alpha_1, \alpha_2\)</span>，然后固定其他乘子，针对这两个变量构建一个子二次规划问题，进行求解。不断迭代求解子问题，最终解得原问题。</p>
 <p><strong>选择乘子</strong></p>
-<p>$\alpha_1$选择违反KKT条件最严重的，$\alpha_2$选择让$\alpha_1$变化最大的。  </p>
+<p><span class="math inline">\(\alpha_1\)</span>选择违反KKT条件最严重的，<span class="math inline">\(\alpha_2\)</span>选择让<span class="math inline">\(\alpha_1\)</span>变化最大的。</p>
 
         </div>
 
@@ -386,7 +631,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-11-25T08:30:08.297Z" itemprop="dateUpdated">2018-11-25 16:30:08</time>
+    最后更新时间：<time datetime="2018-12-13T07:56:12.341Z" itemprop="dateUpdated">2018-12-13 15:56:12</time>
 </span><br>
 
 
@@ -432,7 +677,9 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/03/01/27-svm-notes/&title=《SVM笔记》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/03/01/27-svm-notes/&title=《SVM笔记》 — PLM's Notes&source=
+Support Vector Machine简单笔记。 特征空间上的间隔最大的线性分类器。学习策略是间隔最大化，转化为一个凸二次规划问题的求解。
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -472,16 +719,16 @@
     <div class="waves-block waves-effect prev">
       <a href="/2018/03/02/aim2offer4/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">Aim2offer4(51-64)</h4>
+        <h4 class="title">剑指offer4(51-64)</h4>
       </a>
     </div>
   
 
   
     <div class="waves-block waves-effect next">
-      <a href="/2018/02/10/ide-envs/" id="post-next" class="post-nav-link">
+      <a href="/2018/02/10/12-ide-envs/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">ide-envs</h4>
+        <h4 class="title">IDE配置</h4>
       </a>
     </div>
   
@@ -603,7 +850,9 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/03/01/27-svm-notes/&title=《SVM笔记》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/03/01/27-svm-notes/&title=《SVM笔记》 — PLM's Notes&source=
+Support Vector Machine简单笔记。 特征空间上的间隔最大的线性分类器。学习策略是间隔最大化，转化为一个凸二次规划问题的求解。
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>

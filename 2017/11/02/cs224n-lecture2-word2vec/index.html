@@ -14,29 +14,29 @@
     
     
     
-    <title>Word2vec推导图文笔记 | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <title>Word2vec之公式推导笔记 | PLM&#39;s Notes | 好好学习，天天笔记</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
     
     
     <meta name="keywords" content="深度学习,word2vec">
-    <meta name="description" content="Word meaning词意词的意思就是idea，如下：  词汇本身表达的意义 人通过词汇传达的想法 在写作、艺术中表达的意思 signifier - signified(idea or thing) - denotation  传统离散表达传统使用分类学去建立一个WordNet，其中包含许多上位词is-a和同义词集等。如下：    上义词 同义词     entity, physical_en">
+    <meta name="description" content="cs224n word2vec 简介和公式推导">
 <meta name="keywords" content="深度学习,word2vec">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Word2vec推导图文笔记">
+<meta property="og:title" content="Word2vec之公式推导笔记">
 <meta property="og:url" content="http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/index.html">
 <meta property="og:site_name" content="PLM&#39;s Notes">
-<meta property="og:description" content="Word meaning词意词的意思就是idea，如下：  词汇本身表达的意义 人通过词汇传达的想法 在写作、艺术中表达的意思 signifier - signified(idea or thing) - denotation  传统离散表达传统使用分类学去建立一个WordNet，其中包含许多上位词is-a和同义词集等。如下：    上义词 同义词     entity, physical_en">
+<meta property="og:description" content="cs224n word2vec 简介和公式推导">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/01_skip-gram.png">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/02-skip-gram-detail.png">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/03-gradient-down.jpg">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/04-gradient-down-2.jpg">
-<meta property="og:updated_time" content="2018-11-25T08:30:09.856Z">
+<meta property="og:updated_time" content="2018-12-13T08:19:24.593Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Word2vec推导图文笔记">
-<meta name="twitter:description" content="Word meaning词意词的意思就是idea，如下：  词汇本身表达的意义 人通过词汇传达的想法 在写作、艺术中表达的意思 signifier - signified(idea or thing) - denotation  传统离散表达传统使用分类学去建立一个WordNet，其中包含许多上位词is-a和同义词集等。如下：    上义词 同义词     entity, physical_en">
+<meta name="twitter:title" content="Word2vec之公式推导笔记">
+<meta name="twitter:description" content="cs224n word2vec 简介和公式推导">
 <meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/01_skip-gram.png">
     
         <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
@@ -125,7 +125,7 @@
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
         </a>
-        <div class="flex-col header-title ellipsis">Word2vec推导图文笔记</div>
+        <div class="flex-col header-title ellipsis">Word2vec之公式推导笔记</div>
         
         <div class="search-wrap" id="search-wrap">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
@@ -147,7 +147,7 @@
 <header class="content-header post-header">
 
     <div class="container fade-scale">
-        <h1 class="title">Word2vec推导图文笔记</h1>
+        <h1 class="title">Word2vec之公式推导笔记</h1>
         <h5 class="subtitle">
             
                 <time datetime="2017-11-02T01:33:45.000Z" itemprop="datePublished" class="page-time">
@@ -172,7 +172,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Word-meaning"><span class="post-toc-number">1.</span> <span class="post-toc-text">Word meaning</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#词意"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">词意</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#传统离散表达"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">传统离散表达</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#分布相似表达"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">分布相似表达</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#词嵌入思想"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">词嵌入思想</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Word2Vec"><span class="post-toc-number">2.</span> <span class="post-toc-text">Word2Vec</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Skip-gram"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">Skip-gram</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Word2vec细节"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">Word2vec细节</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#偏导计算"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">偏导计算</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总体梯度计算"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">总体梯度计算</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#梯度下降"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">梯度下降</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#word-meaning"><span class="post-toc-number">1.</span> <span class="post-toc-text">Word meaning</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#词意"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">词意</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#传统离散表达"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">传统离散表达</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#分布相似表达"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">分布相似表达</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#词嵌入思想"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">词嵌入思想</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#word2vec"><span class="post-toc-number">2.</span> <span class="post-toc-text">Word2Vec</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#skip-gram"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">Skip-gram</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#word2vec细节"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">Word2vec细节</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#偏导计算"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">偏导计算</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总体梯度计算"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">总体梯度计算</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#梯度下降"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">梯度下降</span></a></li></ol></li></ol>
         </nav>
     </aside>
 
@@ -180,7 +180,7 @@
 <article id="post-cs224n-lecture2-word2vec" class="post-article article-type-post fade" itemprop="blogPost">
 
     <div class="post-card">
-        <h1 class="post-card-title">Word2vec推导图文笔记</h1>
+        <h1 class="post-card-title">Word2vec之公式推导笔记</h1>
         <div class="post-meta">
             <time class="post-time" title="2017-11-02 09:33:45" datetime="2017-11-02T01:33:45.000Z" itemprop="datePublished">2017-11-02</time>
 
@@ -197,26 +197,37 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <p><img src="" style="display:block; margin:auto" width="60%"></p>
-<h1 id="Word-meaning"><a href="#Word-meaning" class="headerlink" title="Word meaning"></a>Word meaning</h1><h2 id="词意"><a href="#词意" class="headerlink" title="词意"></a>词意</h2><p>词的意思就是<code>idea</code>，如下：</p>
+            <blockquote>
+<p>cs224n word2vec 简介和公式推导</p>
+</blockquote>
+<a id="more"></a>
+<p><img src="" style="display:block; margin:auto" width="60%"></p>
+<h1 id="word-meaning">Word meaning</h1>
+<h2 id="词意">词意</h2>
+<p>词的意思就是<code>idea</code>，如下：</p>
 <ul>
 <li>词汇本身表达的意义</li>
 <li>人通过词汇传达的想法</li>
 <li>在写作、艺术中表达的意思</li>
 <li>signifier - signified(idea or thing) - denotation</li>
 </ul>
-<h2 id="传统离散表达"><a href="#传统离散表达" class="headerlink" title="传统离散表达"></a>传统离散表达</h2><p>传统使用分类学去建立一个WordNet，其中包含许多上位词<code>is-a</code>和同义词集等。如下：</p>
+<h2 id="传统离散表达">传统离散表达</h2>
+<p>传统使用分类学去建立一个WordNet，其中包含许多上位词<code>is-a</code>和同义词集等。如下：</p>
 <table>
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
 <thead>
-<tr>
-<th style="text-align:center">上义词</th>
-<th style="text-align:center">同义词</th>
+<tr class="header">
+<th align="center">上义词</th>
+<th align="center">同义词</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:center">entity, physical_entity,object, organism, animal</td>
-<td style="text-align:center">full, good; estimable, good, honorable, respectable</td>
+<tr class="odd">
+<td align="center">entity, physical_entity,object, organism, animal</td>
+<td align="center">full, good; estimable, good, honorable, respectable</td>
 </tr>
 </tbody>
 </table>
@@ -228,20 +239,27 @@
 <li>需要人力去构建和修改</li>
 <li><strong>很难去计算词汇相似度</strong></li>
 </ul>
-<p>每个单词使用<code>one-hot</code>编码，比如hotel=$[0, 1, 0, 0, 0]$，motel=$[0, 0, 1, 0, 0]$。 当我搜索<code>settle hotel</code>的时候也应该去匹配包含<code>settle motel</code>的文章。   但是我们的查询hotel向量和文章里面的motel向量却是<strong>正交的</strong>，<strong>算不出相似度</strong>。 </p>
-<h2 id="分布相似表达"><a href="#分布相似表达" class="headerlink" title="分布相似表达"></a>分布相似表达</h2><p>通过一个单词的上下文去表达这个单词。</p>
+<p>每个单词使用<code>one-hot</code>编码，比如hotel=<span class="math inline">\([0, 1, 0, 0, 0]\)</span>，motel=<span class="math inline">\([0, 0, 1, 0, 0]\)</span>。 当我搜索<code>settle hotel</code>的时候也应该去匹配包含<code>settle motel</code>的文章。 但是我们的查询hotel向量和文章里面的motel向量却是<strong>正交的</strong>，<strong>算不出相似度</strong>。</p>
+<h2 id="分布相似表达">分布相似表达</h2>
+<p>通过一个单词的上下文去表达这个单词。</p>
 <blockquote>
-<p>You shall know a word by the company it keeps.  — JR. Firth</p>
+<p>You shall know a word by the company it keeps. --- JR. Firth</p>
 </blockquote>
 <p>例如，下面用周围的单词去表达<strong>banking</strong> ：</p>
 <blockquote>
-<p>government debt problems turning into <strong>banking</strong> crises as has happened in<br>​           saying that Europe needs unified <strong>banking</strong> regulation to replace the hodgepodge</p>
+<p>government debt problems turning into <strong>banking</strong> crises as has happened in ​ saying that Europe needs unified <strong>banking</strong> regulation to replace the hodgepodge</p>
 </blockquote>
 <p><strong>稠密词向量</strong></p>
 <p>一个单词的意义应该是由它本身的词向量来决定的。这个词向量可以预测出的上下文单词。</p>
-<p>比如lingustics的词向量是$[0.286, 0.792, -0.177, -0.107, 0.109, -0.542, 0.349]$</p>
-<h2 id="词嵌入思想"><a href="#词嵌入思想" class="headerlink" title="词嵌入思想"></a>词嵌入思想</h2><p>构建一个模型，根据中心单词$w_t$，通过自身词向量，去预测出它的上下文单词。<br>$$<br>p (context \mid w_t) = \cdots<br>$$<br> 损失函数如下，$w_{-t}$表示$w_t$的上下文（负号通常表示除了某某之外），如果完美预测，损失函数为0。<br>$$<br>J = 1 - p(w_{-t} \mid w_t)<br>$$</p>
-<h1 id="Word2Vec"><a href="#Word2Vec" class="headerlink" title="Word2Vec"></a>Word2Vec</h1><p>在每个单词和其上下文之间进行预测。</p>
+<p>比如lingustics的词向量是<span class="math inline">\([0.286, 0.792, -0.177, -0.107, 0.109, -0.542, 0.349]\)</span></p>
+<h2 id="词嵌入思想">词嵌入思想</h2>
+<p>构建一个模型，根据中心单词<span class="math inline">\(w_t\)</span>，通过自身词向量，去预测出它的上下文单词。 <span class="math display">\[
+p (context \mid w_t) = \cdots
+\]</span> 损失函数如下，<span class="math inline">\(w_{-t}\)</span>表示<span class="math inline">\(w_t\)</span>的上下文（负号通常表示除了某某之外），如果完美预测，损失函数为0。 <span class="math display">\[
+J = 1 - p(w_{-t} \mid w_t)
+\]</span></p>
+<h1 id="word2vec">Word2Vec</h1>
+<p>在每个单词和其上下文之间进行预测。</p>
 <p>有两种算法：</p>
 <ul>
 <li><strong>Skip-grams(SG)</strong>： 给目标单词，预测上下文</li>
@@ -253,52 +271,104 @@
 <li>负采样</li>
 </ul>
 <p>课上只是Naive softmax。两个模型，两种方法，一共有4种实现。<a href="http://www.hankcs.com/nlp/word2vec.html" target="_blank" rel="noopener">这里是word2vec详细信息</a>。</p>
-<h2 id="Skip-gram"><a href="#Skip-gram" class="headerlink" title="Skip-gram"></a>Skip-gram</h2><p>对于每个单词$w_t$，会选择一个上下文窗口$m$。 然后要预测出范围内的上下文单词，使概率$P(w_{t+i} \mid w_t)$最大。 </p>
+<h2 id="skip-gram">Skip-gram</h2>
+<p>对于每个单词<span class="math inline">\(w_t\)</span>，会选择一个上下文窗口<span class="math inline">\(m\)</span>。 然后要预测出范围内的上下文单词，使概率<span class="math inline">\(P(w_{t+i} \mid w_t)\)</span>最大。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/01_skip-gram.png" style="display:block; margin:auto" width="60%"></p>
 <p><strong>目标函数</strong></p>
-<p>$\theta$是我们要训练的参数，目标函数就是所有位置预测结果的乘积，最大化目标函数：<br>$$<br>J^\prime (\theta) = \prod_{t=1}^T \prod_{-m\le j \le m} p(w_{t+j} \mid w_t ;\; \theta), \quad t \neq j<br>$$<br>一般使用<code>negative log likelihood</code> ：<a href="http://mccormickml.com/2017/01/11/word2vec-tutorial-part-2-negative-sampling/" target="_blank" rel="noopener">负采样教程</a>。 </p>
-<p>要<strong>最大化目标函数</strong>，就得得到损失函数。对于对数似然函数，<strong>取其负对数就可以得到损失函数</strong>，再最小化损失函数，其中$T$是文本长度，$m$是窗口大小：<br>$$<br>J(\theta) = - \frac{1}{T} \sum_{t=1}^T \sum_{-m\le j \le m} \log P(w_{t+j} \mid w_t)<br>$$</p>
+<p><span class="math inline">\(\theta\)</span>是我们要训练的参数，目标函数就是所有位置预测结果的乘积，最大化目标函数： <span class="math display">\[
+J^\prime (\theta) = \prod_{t=1}^T \prod_{-m\le j \le m} p(w_{t+j} \mid w_t ;\; \theta), \quad t \neq j
+\]</span> 一般使用<code>negative log likelihood</code> ：<a href="http://mccormickml.com/2017/01/11/word2vec-tutorial-part-2-negative-sampling/" target="_blank" rel="noopener">负采样教程</a>。</p>
+<p>要<strong>最大化目标函数</strong>，就得得到损失函数。对于对数似然函数，<strong>取其负对数就可以得到损失函数</strong>，再最小化损失函数，其中<span class="math inline">\(T\)</span>是文本长度，<span class="math inline">\(m\)</span>是窗口大小： <span class="math display">\[
+J(\theta) = - \frac{1}{T} \sum_{t=1}^T \sum_{-m\le j \le m} \log P(w_{t+j} \mid w_t)
+\]</span></p>
 <ul>
 <li>Loss 函数 = Cost 函数 = Objective 函数</li>
 <li>对于softmax概率分布，一般使用交叉熵作为损失函数</li>
-<li>单词$w_{t+j}$是one-hot编码</li>
+<li>单词<span class="math inline">\(w_{t+j}\)</span>是one-hot编码</li>
 <li>negative log probability</li>
 </ul>
-<h2 id="Word2vec细节"><a href="#Word2vec细节" class="headerlink" title="Word2vec细节"></a>Word2vec细节</h2><p>词汇和词向量符号说明：</p>
+<h2 id="word2vec细节">Word2vec细节</h2>
+<p>词汇和词向量符号说明：</p>
 <ul>
-<li>$u$ 上下文词向量，向量是$d$维的</li>
-<li>$v$ 词向量</li>
-<li>中心词汇$t$，对应的向量是$v_t$</li>
-<li>上下文词汇$j$ ，对应的词向量是$u_j$ </li>
-<li><p>一共有$V$个词汇 </p>
-<p>计算$p(w_{t+j} \mid w_t)$， 即：<br>$$<br>p(w_{j} \mid w_t)<br>= \mathrm{softmax} (u_j^T \cdot v_t)<br>= \frac{\exp(u_j^T \cdot v_t)} {\sum_{i=1}^V \exp(u_i^T \cdot v_t)}<br>$$<br>两个单词越相似，点积越大，向量点积如下：<br>$$<br>u^T \cdot v = \sum_{i=1}^M u_i \times v_i<br>$$<br>softmax之所以叫softmax，是因为指数会让大的数越大，小的数越小。类似于max函数。下面是计算的详细信息：</p>
-</li>
+<li><span class="math inline">\(u\)</span> 上下文词向量，向量是<span class="math inline">\(d\)</span>维的</li>
+<li><span class="math inline">\(v\)</span> 词向量</li>
+<li>中心词汇<span class="math inline">\(t\)</span>，对应的向量是<span class="math inline">\(v_t\)</span></li>
+<li>上下文词汇<span class="math inline">\(j\)</span> ，对应的词向量是<span class="math inline">\(u_j\)</span></li>
+<li>一共有<span class="math inline">\(V\)</span>个词汇</li>
 </ul>
+<p>计算<span class="math inline">\(p(w_{t+j} \mid w_t)\)</span>， 即： <span class="math display">\[
+p(w_{j} \mid w_t)
+= \mathrm{softmax} (u_j^T \cdot v_t) 
+= \frac{\exp(u_j^T \cdot v_t)} {\sum_{i=1}^V \exp(u_i^T \cdot v_t)}
+\]</span> 两个单词越相似，点积越大，向量点积如下： <span class="math display">\[
+u^T \cdot v = \sum_{i=1}^M u_i \times v_i
+\]</span> softmax之所以叫softmax，是因为指数会让大的数越大，小的数越小。类似于max函数。下面是计算的详细信息：</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/02-skip-gram-detail.png" style="display:block; margin:auto" width="80%"></p>
 <p>一些理解和解释：</p>
 <ul>
-<li>$w_t$是one-hot编码的中心词汇，维数是$(V, 1)$</li>
-<li>$W$是词汇表达矩阵，维数是$(d, V)$，一列就是一个单词 </li>
-<li>$Ww_t = v_t$ 相乘得到词向量$v_t$ ，$(d, V) \cdot (V, 1) \to (d, 1)$， <strong>用$d$维向量去表达了词汇t</strong> </li>
-<li>$W^\prime$， $W^{\prime}\cdot v_t = s$，$(V, d) \cdot (d, 1) \to (V, 1)$ ， 得到 语义相似度向量$s$</li>
-<li>再对$s$进行softmax即可求得上下文词汇</li>
+<li><span class="math inline">\(w_t\)</span>是one-hot编码的中心词汇，维数是<span class="math inline">\((V, 1)\)</span></li>
+<li><span class="math inline">\(W\)</span>是词汇表达矩阵，维数是<span class="math inline">\((d, V)\)</span>，一列就是一个单词</li>
+<li><span class="math inline">\(Ww_t = v_t\)</span> 相乘得到词向量<span class="math inline">\(v_t\)</span> ，<span class="math inline">\((d, V) \cdot (V, 1) \to (d, 1)\)</span>， <strong>用<span class="math inline">\(d\)</span>维向量去表达了词汇t</strong></li>
+<li><span class="math inline">\(W^\prime\)</span>， <span class="math inline">\(W^{\prime}\cdot v_t = s\)</span>，<span class="math inline">\((V, d) \cdot (d, 1) \to (V, 1)\)</span> ， 得到 语义相似度向量<span class="math inline">\(s\)</span></li>
+<li>再对<span class="math inline">\(s\)</span>进行softmax即可求得上下文词汇</li>
 <li>每个单词有两个向量，作为center单词向量和context单词向量</li>
 </ul>
-<h2 id="偏导计算"><a href="#偏导计算" class="headerlink" title="偏导计算"></a>偏导计算</h2><p>设$o$是上下文单词，$c$是中心单词，条件概率如下：<br>$$<br>P(o \mid c) = \frac{\exp(u_o^T \cdot v_c)} {\sum_{i=1}^V \exp(u_i^T \cdot v_c)}<br>$$<br>这里只计算$\log P$对$v_c$向量的偏导。 </p>
-<p>用$\mathbf{\theta}$向量表示所有的参数，有$V$个单词，$d$维向量。每个单词有2个向量。参数个数一共是$2dV$个。    </p>
-<p>向量偏导计算公式，$\mathbf{x, a}$ 均是向量<br>$$<br>\frac {\partial \mathbf{x}^T \mathbf{a}} { \partial \mathbf{x}}<br>= \frac {\partial  \mathbf{a}^T  \mathbf{x}} { \partial \mathbf{x}}<br>= \mathbf{a}<br>$$<br>函数偏导计算，<strong>链式法则</strong>，$y=f(u), u=g(x)$<br>$$<br>\frac{\mathrm{d}y}{\mathrm{d} x}<br>= \frac{\mathrm{d}y}{\mathrm{d} u} \frac{\mathrm{d}u}{\mathrm{d} x}<br>$$<br>最小化<code>损失函数</code>：<br>$$<br>J(\theta) = - \frac{1}{T} \sum_{t=1}^T \sum_{-m\le j \le m} \log P(w_{t+j} \mid w_t), \quad j \neq m<br>$$<br>这里<strong>只计算$v_c$的偏导</strong>，先进行<strong>分解原式为2个部分</strong>：<br>$$<br> \frac { \partial} {\partial v_c} \log P(o \mid c)<br>= \frac { \partial} {\partial v_c} \log \frac{\exp(u_o^T \cdot v_c)} {\sum_{i=1}^V \exp(u_i^T \cdot v_c)}<br> =  \underbrace { \frac { \partial} {\partial v_c} \log \exp (u_o^T \cdot v_c) }_{1}</p>
+<h2 id="偏导计算">偏导计算</h2>
+<p>设<span class="math inline">\(o\)</span>是上下文单词，<span class="math inline">\(c\)</span>是中心单词，条件概率如下： <span class="math display">\[
+P(o \mid c) = \frac{\exp(u_o^T \cdot v_c)} {\sum_{i=1}^V \exp(u_i^T \cdot v_c)}
+\]</span> 这里只计算<span class="math inline">\(\log P\)</span>对<span class="math inline">\(v_c\)</span>向量的偏导。</p>
+<p>用<span class="math inline">\(\mathbf{\theta}\)</span>向量表示所有的参数，有<span class="math inline">\(V\)</span>个单词，<span class="math inline">\(d\)</span>维向量。每个单词有2个向量。参数个数一共是<span class="math inline">\(2dV\)</span>个。</p>
+<p>向量偏导计算公式，<span class="math inline">\(\mathbf{x, a}\)</span> 均是向量 <span class="math display">\[
+\frac {\partial \mathbf{x}^T \mathbf{a}} { \partial \mathbf{x}}
+= \frac {\partial  \mathbf{a}^T  \mathbf{x}} { \partial \mathbf{x}} 
+= \mathbf{a}
+\]</span> 函数偏导计算，<strong>链式法则</strong>，<span class="math inline">\(y=f(u), u=g(x)\)</span> <span class="math display">\[
+\frac{\mathrm{d}y}{\mathrm{d} x}
+= \frac{\mathrm{d}y}{\mathrm{d} u} \frac{\mathrm{d}u}{\mathrm{d} x}
+\]</span> 最小化<code>损失函数</code>： <span class="math display">\[
+J(\theta) = - \frac{1}{T} \sum_{t=1}^T \sum_{-m\le j \le m} \log P(w_{t+j} \mid w_t), \quad j \neq m
+\]</span> 这里<strong>只计算<span class="math inline">\(v_c\)</span>的偏导</strong>，先进行<strong>分解原式为2个部分</strong>： <span class="math display">\[
+ \frac { \partial} {\partial v_c} \log P(o \mid c)
+= \frac { \partial} {\partial v_c} \log \frac{\exp(u_o^T \cdot v_c)} {\sum_{i=1}^V \exp(u_i^T \cdot v_c)}
+ =  \underbrace { \frac { \partial} {\partial v_c} \log \exp (u_o^T \cdot v_c) }_{1}
+ -   \underbrace { \frac { \partial} {\partial v_c} \log \sum_{i=1}^V \exp(u_i^T \cdot v_c) }_{2}
+\]</span> <strong>部分1推导</strong> <span class="math display">\[
+\begin{align}
+\frac { \partial} {\partial v_c}  \color{red}{\log \exp (u_o^T \cdot v_c) }
+&amp; = \frac { \partial} {\partial v_c}  \color{red}{u_o^T \cdot v_c} = \mathbf{u_o}
+\end{align}
+\]</span> <strong>部分2推导</strong> <span class="math display">\[
+\begin{align}
+ \frac { \partial} {\partial v_c} \log \sum_{i=1}^V \exp(u_i^T \cdot v_c)
+ &amp; = \frac{1}{\sum_{i=1}^V \exp(u_i^T \cdot v_c)}  \cdot  \color{red}{ \frac { \partial} {\partial v_c} \sum_{x=1}^V \exp(u_x^T \cdot v_c)} \\
+ &amp; = \frac{1}{A} \cdot \sum_{x=1}^V \color{red} {\frac { \partial} {\partial v_c} \exp(u_x^T \cdot v_c)} \\
+ &amp; =  \frac{1}{A} \cdot \sum_{x=1}^V \exp (u_x^T \cdot v_c) \color{red} {\frac { \partial} {\partial v_c} u_x^T \cdot v_c} \\
+ &amp; = \frac{1}{\sum_{i=1}^V \exp(u_i^T \cdot v_c)}  \cdot \sum_{x=1}^V \exp (u_x^T \cdot v_c)  \color{red} {u_x} \\
+ &amp; = \sum_{x=1}^V \color{red} { \frac{\exp (u_x^T \cdot v_c)} {\sum_{i=1}^V \exp(u_i^T \cdot v_c)}} \cdot u_x \\
+ &amp; = \sum_{x=1}^V \color{red} {P(x \mid c) }\cdot u_x 
+\end{align}
+\]</span> 所以，综合起来可以求得，单词o是单词c的上下文概率<span class="math inline">\(\log P(o \mid c)\)</span> 对center向量<span class="math inline">\(v_c\)</span>的偏导： <span class="math display">\[
+\frac { \partial} {\partial v_c} \log P(o \mid c)
+= u_o -\sum_{x=1}^V P(x \mid c) \cdot u_x 
+= \color{blue} {\text{观察到的} - \text{期望的}}
+\]</span> 实际上偏导是，单词<span class="math inline">\(o\)</span>的上下文词向量，减去，所有单词<span class="math inline">\(x\)</span>的上下文向量乘以x作为<span class="math inline">\(c\)</span>的上下文向量的概率。</p>
+<h2 id="总体梯度计算">总体梯度计算</h2>
+<p>在一个window里面，对中间词汇<span class="math inline">\(v_c\)</span>求了梯度， 然后再对各个上下文词汇<span class="math inline">\(u_o\)</span>求梯度。 然后更新这个window里面用到的参数。</p>
+<p>比如句子<code>We like learning NLP</code>。设<span class="math inline">\(m=1\)</span>：</p>
 <ul>
-<li>\underbrace { \frac { \partial} {\partial v_c} \log \sum_{i=1}^V \exp(u_i^T \cdot v_c) }_{2}<br>$$<br><strong>部分1推导</strong><br>$$<br>\begin{align}<br>\frac { \partial} {\partial v_c}  \color{red}{\log \exp (u_o^T \cdot v_c) }<br>&amp; = \frac { \partial} {\partial v_c}  \color{red}{u_o^T \cdot v_c} = \mathbf{u_o}<br>\end{align}<br>$$<br><strong>部分2推导</strong><br>$$<br>\begin{align}<br>\frac { \partial} {\partial v_c} \log \sum_{i=1}^V \exp(u_i^T \cdot v_c)<br>&amp; = \frac{1}{\sum_{i=1}^V \exp(u_i^T \cdot v_c)}  \cdot  \color{red}{ \frac { \partial} {\partial v_c} \sum_{x=1}^V \exp(u_x^T \cdot v_c)} \<br>&amp; = \frac{1}{A} \cdot \sum_{x=1}^V \color{red} {\frac { \partial} {\partial v_c} \exp(u_x^T \cdot v_c)} \<br>&amp; =  \frac{1}{A} \cdot \sum_{x=1}^V \exp (u_x^T \cdot v_c) \color{red} {\frac { \partial} {\partial v_c} u_x^T \cdot v_c} \<br>&amp; = \frac{1}{\sum_{i=1}^V \exp(u_i^T \cdot v_c)}  \cdot \sum_{x=1}^V \exp (u_x^T \cdot v_c)  \color{red} {u_x} \<br>&amp; = \sum_{x=1}^V \color{red} { \frac{\exp (u_x^T \cdot v_c)} {\sum_{i=1}^V \exp(u_i^T \cdot v_c)}} \cdot u_x \<br>&amp; = \sum_{x=1}^V \color{red} {P(x \mid c) }\cdot u_x<br>\end{align}<br>$$<br>所以，综合起来可以求得，单词o是单词c的上下文概率$\log P(o \mid c)$ 对center向量$v_c$的偏导：<br>$$<br>\frac { \partial} {\partial v_c} \log P(o \mid c)<br>= u_o -\sum_{x=1}^V P(x \mid c) \cdot u_x<br>= \color{blue} {\text{观察到的} - \text{期望的}}<br>$$<br>实际上偏导是，单词$o$的上下文词向量，减去，所有单词$x$的上下文向量乘以x作为$c$的上下文向量的概率。 </li>
-</ul>
-<h2 id="总体梯度计算"><a href="#总体梯度计算" class="headerlink" title="总体梯度计算"></a>总体梯度计算</h2><p>在一个window里面，对中间词汇$v_c$求了梯度， 然后再对各个上下文词汇$u_o$求梯度。 然后更新这个window里面用到的参数。</p>
-<p>比如句子<code>We like learning NLP</code>。设$m=1$：</p>
-<ul>
-<li>中间词汇求梯度 $v_{like}$</li>
-<li>上下文词汇求梯度 $u_{we}$ 和 $u_{learning}$</li>
+<li>中间词汇求梯度 <span class="math inline">\(v_{like}\)</span></li>
+<li>上下文词汇求梯度 <span class="math inline">\(u_{we}\)</span> 和 <span class="math inline">\(u_{learning}\)</span></li>
 <li>更新参数</li>
 </ul>
-<h2 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h2><p>有了梯度之后，参数减去梯度，就可以朝着最小的方向走了。<a href="https://plmsmile.github.io/2017/08/20/ml-ng-notes/#梯度下降">机器学习梯度下降</a><br>$$<br>\theta^{new} = \theta^{old} - \alpha \frac{\partial}{\partial \theta^{old}} J(\theta),<br>\quad \quad<br>\theta^{new} = \theta^{old} - \alpha \Delta_{\theta} J(\theta)<br>$$<br><strong>随机梯度下降</strong></p>
-<p>预料会有很多个window，因此每次不能更新所有的。只更新每个window的，对于window t：<br>$$<br>\theta^{new} = \theta^{old} - \alpha \Delta_{\theta} J_t(\theta)<br>$$<br><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/03-gradient-down.jpg" style="display:block; margin:auto" width="50%"></p>
+<h2 id="梯度下降">梯度下降</h2>
+<p>有了梯度之后，参数减去梯度，就可以朝着最小的方向走了。<a href="https://plmsmile.github.io/2017/08/20/ml-ng-notes/#梯度下降">机器学习梯度下降</a> <span class="math display">\[
+\theta^{new} = \theta^{old} - \alpha \frac{\partial}{\partial \theta^{old}} J(\theta),
+\quad \quad
+\theta^{new} = \theta^{old} - \alpha \Delta_{\theta} J(\theta)
+\]</span> <strong>随机梯度下降</strong></p>
+<p>预料会有很多个window，因此每次不能更新所有的。只更新每个window的，对于window t： <span class="math display">\[
+\theta^{new} = \theta^{old} - \alpha \Delta_{\theta} J_t(\theta)
+\]</span> <img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/03-gradient-down.jpg" style="display:block; margin:auto" width="50%"></p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/04-gradient-down-2.jpg" style="display:block; margin:auto" width="50%"></p>
 
         </div>
@@ -308,7 +378,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-11-25T08:30:09.856Z" itemprop="dateUpdated">2018-11-25 16:30:09</time>
+    最后更新时间：<time datetime="2018-12-13T08:19:24.593Z" itemprop="dateUpdated">2018-12-13 16:19:24</time>
 </span><br>
 
 
@@ -344,7 +414,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/&title=《Word2vec推导图文笔记》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/&title=《Word2vec之公式推导笔记》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -354,7 +424,9 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/&title=《Word2vec推导图文笔记》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/&title=《Word2vec之公式推导笔记》 — PLM's Notes&source=
+cs224n word2vec 简介和公式推导
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -364,7 +436,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Word2vec推导图文笔记》 — PLM's Notes&url=http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/&via=http://plmsmile.github.io" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Word2vec之公式推导笔记》 — PLM's Notes&url=http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/&via=http://plmsmile.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
@@ -394,7 +466,7 @@
     <div class="waves-block waves-effect prev">
       <a href="/2017/11/02/word2vec-math/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">word2vec中的数学模型</h4>
+        <h4 class="title">Word2vec之数学模型</h4>
       </a>
     </div>
   
@@ -515,7 +587,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/&title=《Word2vec推导图文笔记》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/&title=《Word2vec之公式推导笔记》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -525,7 +597,9 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/&title=《Word2vec推导图文笔记》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/&title=《Word2vec之公式推导笔记》 — PLM's Notes&source=
+cs224n word2vec 简介和公式推导
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -535,7 +609,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Word2vec推导图文笔记》 — PLM's Notes&url=http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/&via=http://plmsmile.github.io" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Word2vec之公式推导笔记》 — PLM's Notes&url=http://plmsmile.github.io/2017/11/02/cs224n-lecture2-word2vec/&via=http://plmsmile.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>

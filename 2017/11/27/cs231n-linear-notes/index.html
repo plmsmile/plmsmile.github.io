@@ -21,13 +21,13 @@
     
     
     <meta name="keywords" content="cs231n,线性分类,svm">
-    <meta name="description" content="线性分类器，svm和交叉熵损失函数  线性分类器得分函数图片是三维数组，元素在0-255的整数。宽度-高度-3 ，3代表RGB颜色通道。 对图像进行零中心化。 输入图片$D=32 \times 32 \times 3 = 3072$个像素，压缩成1维向量，一共有$K=10$个类别。$$f(x_i, W, b) = Wx_i + b$$分析  $W$的每一行都是一个类别的分类器，一共10个 得到">
+    <meta name="description" content="线性分类器，svm和交叉熵损失函数">
 <meta name="keywords" content="cs231n,线性分类,svm">
 <meta property="og:type" content="article">
 <meta property="og:title" content="cs231n线性分类器和损失函数">
 <meta property="og:url" content="http://plmsmile.github.io/2017/11/27/cs231n-linear-notes/index.html">
 <meta property="og:site_name" content="PLM&#39;s Notes">
-<meta property="og:description" content="线性分类器，svm和交叉熵损失函数  线性分类器得分函数图片是三维数组，元素在0-255的整数。宽度-高度-3 ，3代表RGB颜色通道。 对图像进行零中心化。 输入图片$D=32 \times 32 \times 3 = 3072$个像素，压缩成1维向量，一共有$K=10$个类别。$$f(x_i, W, b) = Wx_i + b$$分析  $W$的每一行都是一个类别的分类器，一共10个 得到">
+<meta property="og:description" content="线性分类器，svm和交叉熵损失函数">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/cs231n/linear/linear.jpg">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/cs231n/linear/linear2.jpg">
@@ -35,10 +35,10 @@
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/cs231n/linear/linear-decision.jpg">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/cs231n/linear/hinge-loss.jpg">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/cs231n/linear/svm-softmax.jpg">
-<meta property="og:updated_time" content="2018-11-25T08:30:10.047Z">
+<meta property="og:updated_time" content="2018-12-13T08:12:52.940Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="cs231n线性分类器和损失函数">
-<meta name="twitter:description" content="线性分类器，svm和交叉熵损失函数  线性分类器得分函数图片是三维数组，元素在0-255的整数。宽度-高度-3 ，3代表RGB颜色通道。 对图像进行零中心化。 输入图片$D=32 \times 32 \times 3 = 3072$个像素，压缩成1维向量，一共有$K=10$个类别。$$f(x_i, W, b) = Wx_i + b$$分析  $W$的每一行都是一个类别的分类器，一共10个 得到">
+<meta name="twitter:description" content="线性分类器，svm和交叉熵损失函数">
 <meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/cs231n/linear/linear.jpg">
     
         <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
@@ -174,7 +174,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#线性分类器"><span class="post-toc-number">1.</span> <span class="post-toc-text">线性分类器</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#得分函数"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">得分函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#理解"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">理解</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#损失函数"><span class="post-toc-number">2.</span> <span class="post-toc-text">损失函数</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#SVM"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">SVM</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#正则化"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">正则化</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Softmax"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">Softmax</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#SVM和Softmax比较"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">SVM和Softmax比较</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#线性分类器"><span class="post-toc-number">1.</span> <span class="post-toc-text">线性分类器</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#得分函数"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">得分函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#理解"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">理解</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#损失函数"><span class="post-toc-number">2.</span> <span class="post-toc-text">损失函数</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#svm"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">SVM</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#正则化"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">正则化</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#softmax"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">Softmax</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#svm和softmax比较"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">SVM和Softmax比较</span></a></li></ol></li></ol>
         </nav>
     </aside>
 
@@ -203,37 +203,82 @@
 <blockquote>
 <p>线性分类器，svm和交叉熵损失函数</p>
 </blockquote>
-<h1 id="线性分类器"><a href="#线性分类器" class="headerlink" title="线性分类器"></a>线性分类器</h1><h2 id="得分函数"><a href="#得分函数" class="headerlink" title="得分函数"></a>得分函数</h2><p>图片是三维数组，元素在0-255的整数。<code>宽度-高度-3</code> ，3代表RGB颜色通道。 对图像进行<code>零中心化</code>。</p>
-<p>输入图片$D=32 \times 32 \times 3 = 3072$个像素，压缩成1维向量，一共有$K=10$个类别。<br>$$<br>f(x_i, W, b) = Wx_i + b<br>$$<br>分析</p>
+<a id="more"></a>
+<h1 id="线性分类器">线性分类器</h1>
+<h2 id="得分函数">得分函数</h2>
+<p>图片是三维数组，元素在0-255的整数。<code>宽度-高度-3</code> ，3代表RGB颜色通道。 对图像进行<code>零中心化</code>。</p>
+<p>输入图片<span class="math inline">\(D=32 \times 32 \times 3 = 3072\)</span>个像素，压缩成1维向量，一共有<span class="math inline">\(K=10\)</span>个类别。<br>
+<span class="math display">\[
+f(x_i, W, b) = Wx_i + b
+\]</span> 分析</p>
 <ul>
-<li>$W$的每一行都是一个类别的分类器，一共10个</li>
+<li><span class="math inline">\(W\)</span>的每一行都是一个类别的分类器，一共10个</li>
 <li>得到分为每个类的<code>score</code></li>
-<li>改变$W, b$ ，使得分类准确，正确的score高，错误的score低</li>
+<li>改变<span class="math inline">\(W, b\)</span> ，使得分类准确，正确的score高，错误的score低</li>
 </ul>
-<p>为x添加一维，$x \in \mathbb R^{D+1}$ ，  写为：<br>$$<br>f (x_i, W) = Wx_i<br>$$<br><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/cs231n/linear/linear.jpg" style="display:block; margin:auto" width="60%"></p>
+<p>为x添加一维，<span class="math inline">\(x \in \mathbb R^{D+1}\)</span> ， 写为： <span class="math display">\[
+f (x_i, W) = Wx_i
+\]</span> <img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/cs231n/linear/linear.jpg" style="display:block; margin:auto" width="60%"></p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/cs231n/linear/linear2.jpg" style="display:block; margin:auto" width="60%"></p>
-<h2 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h2><p><strong>权重</strong></p>
+<h2 id="理解">理解</h2>
+<p><strong>权重</strong></p>
 <p>输入4个像素，<strong>函数会根据权重对某些位置的某些颜色表现出喜好或者厌恶</strong>（正负）。</p>
 <p>比如船类别，一般周围有很多蓝色的水，那么蓝色通道的权值就会很大（正）。绿色和红色就比较低（负）。那么如果出现绿色和红色的像素，就会降低是船的概率。</p>
 <p><strong>权重解释2</strong></p>
-<p>$W$的每一行对应于一个分类的<code>模板</code>(原型)， 用图像和模板去比较，计算得分（<code>点积</code>），找到最相似的模板。 </p>
+<p><span class="math inline">\(W\)</span>的每一行对应于一个分类的<code>模板</code>(原型)， 用图像和模板去比较，计算得分（<code>点积</code>），找到最相似的模板。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/cs231n/linear/10template.jpg" style="display:block; margin:auto" width="100%"></p>
 <p><strong>线性函数</strong></p>
-<p>实际上，每个输入$x_i$就是<strong>3072维空间</strong>中的一个<code>点</code>，线性函数就是对这些点进行<code>边界决策分类</code>。  与线的距离越大，得分越高。</p>
+<p>实际上，每个输入<span class="math inline">\(x_i\)</span>就是<strong>3072维空间</strong>中的一个<code>点</code>，线性函数就是对这些点进行<code>边界决策分类</code>。 与线的距离越大，得分越高。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/cs231n/linear/linear-decision.jpg" style="display:block; margin:auto" width="60%"></p>
-<h1 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h1><p>最常用两个分类器：<code>SVM</code>和<code>Softmax</code>。分别使用<code>SVM loss</code>和<code>交叉熵loss</code>。</p>
-<h2 id="SVM"><a href="#SVM" class="headerlink" title="SVM"></a>SVM</h2><p><code>多类支持向量积损失</code>（Multiclass Support Vector Machine）。<strong>正确分类比错误分类的得分高出一个边界值</strong>$\Delta (一般= 1)$ 。 </p>
-<p>记$x_i$分为第j个类别的<code>得分</code>为$s_j = f(x_i, W)_j$ ，单个<code>折叶损失 hinge loss</code>， 也称作<code>max margin loss</code> ，如下：<br>$$<br>\begin {align}<br>loss &amp;<br>= \max(0, s_j  - s_{y_i}+ \Delta)=<br>\begin {cases}<br>&amp; 0, &amp; s_{y_i} - s_j &gt;  \Delta  \<br>&amp;  s_j  - s_{y_i}+ \Delta, &amp; 其它 \<br>\end{cases} \ \<br>&amp; =\max(0, w_j^Tx_i - w_{y_i}^Tx_i + \Delta) \<br>\end{align}<br>$$<br>如果错误分类进入红色区域，就开始计算loss。</p>
+<h1 id="损失函数">损失函数</h1>
+<p>最常用两个分类器：<code>SVM</code>和<code>Softmax</code>。分别使用<code>SVM loss</code>和<code>交叉熵loss</code>。</p>
+<h2 id="svm">SVM</h2>
+<p><code>多类支持向量积损失</code>（Multiclass Support Vector Machine）。<strong>正确分类比错误分类的得分高出一个边界值</strong><span class="math inline">\(\Delta (一般= 1)\)</span> 。</p>
+<p>记<span class="math inline">\(x_i\)</span>分为第j个类别的<code>得分</code>为<span class="math inline">\(s_j = f(x_i, W)_j\)</span> ，单个<code>折叶损失 hinge loss</code>， 也称作<code>max margin loss</code> ，如下： <span class="math display">\[
+\begin {align}
+loss &amp; 
+= \max(0, s_j  - s_{y_i}+ \Delta)=
+\begin {cases}
+&amp; 0, &amp; s_{y_i} - s_j &gt;  \Delta  \\
+&amp;  s_j  - s_{y_i}+ \Delta, &amp; 其它 \\
+\end{cases} \\ \\
+&amp; =\max(0, w_j^Tx_i - w_{y_i}^Tx_i + \Delta) \\
+\end{align}
+\]</span> 如果错误分类进入红色区域，就开始计算loss。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/cs231n/linear/hinge-loss.jpg" style="display:block; margin:auto" width="80%"></p>
-<p>第$i$个数据的loss就是<strong>把所有错误类别的loss加起来</strong>：<br>$$<br>L_i = \sum_{j \neq y_i} \max(0, s_j  - s_{y_i}+ \Delta)<br>$$</p>
-<h2 id="正则化"><a href="#正则化" class="headerlink" title="正则化"></a>正则化</h2><p><a href="https://plmsmile.github.io/2017/11/26/cs224n-notes3-neural-networks-2/#l2正则化权重衰减">plmsmile的L2正则化</a> </p>
-<p>使用L2正则化，对$W$的元素进行平方惩罚， 抑制大数值的权值。<code>正则化loss</code>（正则化惩罚）如下：<br>$$<br>R(W) = \sum_k\sum_l W_{kl}^2<br>$$<br>最终loss就是<strong>数据损失+正则化损失</strong>， $\lambda$ 是<code>正则化强度</code>。<br>$$<br>L = \underbrace {\frac{1}{N}\sum_{i}L_i}<em>{\text{data loss}} + \underbrace {\lambda R(W)}</em>{\text{正则化 loss}}<br>$$<br>引入正则化以后，SVM就有了<code>最大边界max margin</code> 这一个良好性质。（不是很懂，后面再解决）</p>
-<h2 id="Softmax"><a href="#Softmax" class="headerlink" title="Softmax"></a>Softmax</h2><p><a href="https://plmsmile.github.io/2017/07/31/nlp-notes/#相对熵和交叉熵">plmsmile的交叉熵</a> </p>
-<p>每个类别的得分<br>$$<br>s_j = f(x_i, W)_j = f_j<br>$$<br><code>Softmax函数</code>求得$x_i$分为第$j$ 类的概率，这样会求得所有类别的概率，即预测的结果。<br>$$<br>p(j \mid x_i) = \frac {\exp(f_j)} {\sum_{k} \exp(f_k)}<br>$$<br>单个数据的<code>loss</code>，就是取<strong>其概率的负对数 </strong> ：<br>$$<br>L_i = - \log p(y_i \mid x_i) = - \log \left( \frac{e^{f_{y_i}}}{\sum e^{f_k}}\right) = -f_{y_i} + \log \sum_{k}e^{f_k}<br>$$<br>从直观上看，最小化loss就是要最大化正确的概率（最小化正确分类的负对数概率），最小化其它分类的概率。</p>
+<p>第<span class="math inline">\(i\)</span>个数据的loss就是<strong>把所有错误类别的loss加起来</strong>： <span class="math display">\[
+L_i = \sum_{j \neq y_i} \max(0, s_j  - s_{y_i}+ \Delta)
+\]</span></p>
+<h2 id="正则化">正则化</h2>
+<p><a href="https://plmsmile.github.io/2017/11/26/cs224n-notes3-neural-networks-2/#l2正则化权重衰减">plmsmile的L2正则化</a></p>
+<p>使用L2正则化，对<span class="math inline">\(W\)</span>的元素进行平方惩罚， 抑制大数值的权值。<code>正则化loss</code>（正则化惩罚）如下： <span class="math display">\[
+R(W) = \sum_k\sum_l W_{kl}^2
+\]</span> 最终loss就是<strong>数据损失+正则化损失</strong>， <span class="math inline">\(\lambda\)</span> 是<code>正则化强度</code>。 <span class="math display">\[
+L = \underbrace {\frac{1}{N}\sum_{i}L_i}_{\text{data loss}} + \underbrace {\lambda R(W)}_{\text{正则化 loss}}
+\]</span> 引入正则化以后，SVM就有了<code>最大边界max margin</code> 这一个良好性质。（不是很懂，后面再解决）</p>
+<h2 id="softmax">Softmax</h2>
+<p><a href="https://plmsmile.github.io/2017/07/31/nlp-notes/#相对熵和交叉熵">plmsmile的交叉熵</a></p>
+<p>每个类别的得分 <span class="math display">\[
+s_j = f(x_i, W)_j = f_j
+\]</span> <code>Softmax函数</code>求得<span class="math inline">\(x_i\)</span>分为第<span class="math inline">\(j\)</span> 类的概率，这样会求得所有类别的概率，即预测的结果。 <span class="math display">\[
+p(j \mid x_i) = \frac {\exp(f_j)} {\sum_{k} \exp(f_k)}
+\]</span> 单个数据的<code>loss</code>，就是取<strong>其概率的负对数 </strong> ： <span class="math display">\[
+L_i = - \log p(y_i \mid x_i) = - \log \left( \frac{e^{f_{y_i}}}{\sum e^{f_k}}\right) = -f_{y_i} + \log \sum_{k}e^{f_k}
+\]</span> 从直观上看，最小化loss就是要最大化正确的概率（最小化正确分类的负对数概率），最小化其它分类的概率。</p>
 <p><strong>交叉熵的体现</strong></p>
-<p>程序会预测一个所有类别的概率分布$q = (p(1 \mid x_i), \cdots, p(K \mid x_i))$ 。真实label概率$p = (0, \cdots, 1, 0,\cdots, 0)$ ，交叉熵：<br>$$<br>\begin{align}<br>H(p, q) &amp; = - \sum_{x} p(x) \log q(x) \<br>&amp; = - (p(y_i) \cdot \log q(y_i)) = - (1 \cdot  \log  p(y_i \mid x_i) ) =  - \log p(y_i \mid x_i)<br>\end{align}<br>$$<br>由于$H(p) = 0$， 唯一确定，熵为0。交叉熵就等于真实和预测的分布的<code>KL距离</code> 。也就是说想要两个概率分布一样，即预测的所有概率密度都在正确类别上面。<br>$$<br>H(p, q) = H(p) + D_{KL}(p || q) = D_{KL}(p || q)<br>$$<br><strong>结合正则化</strong></p>
-<p>结合正则化<br>$$<br>L = \underbrace {\frac{1}{N}\sum_{i}L_i}<em>{\text{data loss}} + \underbrace {\lambda R(W)}</em>{\text{正则化 loss}}<br>$$<br>最小化正确概率分类的负对数概率，就是在进行最大似然估计。正则化部分就是对W的高斯先验，这里进行的是最大后验估计。（不懂）</p>
-<h2 id="SVM和Softmax比较"><a href="#SVM和Softmax比较" class="headerlink" title="SVM和Softmax比较"></a>SVM和Softmax比较</h2><p>SVM loss：希望正确分类比其他分类的得分高出一个边界值。</p>
+<p>程序会预测一个所有类别的概率分布<span class="math inline">\(q = (p(1 \mid x_i), \cdots, p(K \mid x_i))\)</span> 。真实label概率<span class="math inline">\(p = (0, \cdots, 1, 0,\cdots, 0)\)</span> ，交叉熵： <span class="math display">\[
+\begin{align}
+H(p, q) &amp; = - \sum_{x} p(x) \log q(x) \\
+&amp; = - (p(y_i) \cdot \log q(y_i)) = - (1 \cdot  \log  p(y_i \mid x_i) ) =  - \log p(y_i \mid x_i) 
+\end{align}
+\]</span> 由于<span class="math inline">\(H(p) = 0\)</span>， 唯一确定，熵为0。交叉熵就等于真实和预测的分布的<code>KL距离</code> 。也就是说想要两个概率分布一样，即预测的所有概率密度都在正确类别上面。 <span class="math display">\[
+H(p, q) = H(p) + D_{KL}(p || q) = D_{KL}(p || q) 
+\]</span> <strong>结合正则化</strong></p>
+<p>结合正则化 <span class="math display">\[
+L = \underbrace {\frac{1}{N}\sum_{i}L_i}_{\text{data loss}} + \underbrace {\lambda R(W)}_{\text{正则化 loss}}
+\]</span> 最小化正确概率分类的负对数概率，就是在进行最大似然估计。正则化部分就是对W的高斯先验，这里进行的是最大后验估计。（不懂）</p>
+<h2 id="svm和softmax比较">SVM和Softmax比较</h2>
+<p>SVM loss：希望正确分类比其他分类的得分高出一个边界值。</p>
 <p>Softmax 交叉熵loss：希望正确分类概率大，其它分类概率小。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/cs231n/linear/svm-softmax.jpg" style="display:block; margin:auto" width="60%"></p>
 
@@ -244,7 +289,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-11-25T08:30:10.047Z" itemprop="dateUpdated">2018-11-25 16:30:10</time>
+    最后更新时间：<time datetime="2018-12-13T08:12:52.940Z" itemprop="dateUpdated">2018-12-13 16:12:52</time>
 </span><br>
 
 
@@ -290,7 +335,10 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/11/27/cs231n-linear-notes/&title=《cs231n线性分类器和损失函数》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/11/27/cs231n-linear-notes/&title=《cs231n线性分类器和损失函数》 — PLM's Notes&source=
+
+线性分类器，svm和交叉熵损失函数
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -328,9 +376,9 @@
 <nav class="post-nav flex-row flex-justify-between">
   
     <div class="waves-block waves-effect prev">
-      <a href="/2017/12/03/nlp-labels/" id="post-prev" class="post-nav-link">
+      <a href="/2017/12/03/11-nlp-labels/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">nlp-labels</h4>
+        <h4 class="title">词性标注和句法依存的表示符号</h4>
       </a>
     </div>
   
@@ -461,7 +509,10 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/11/27/cs231n-linear-notes/&title=《cs231n线性分类器和损失函数》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/11/27/cs231n-linear-notes/&title=《cs231n线性分类器和损失函数》 — PLM's Notes&source=
+
+线性分类器，svm和交叉熵损失函数
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>

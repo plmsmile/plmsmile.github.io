@@ -21,20 +21,20 @@
     
     
     <meta name="keywords" content="论文笔记,注意力,VQA">
-    <meta name="description" content="只是记录一下Co-Attention，后续再补上本篇论文的全部笔记吧。  论文：Hierarchical Question-Image Co-Attention  for Visual Question Answering  我的相关笔记：Attention-based NMT阅读笔记和NLP中的Attention笔记  Co-Attention这里以VQA里面的两个例子记录一下Co-Atten">
+    <meta name="description" content="只是记录一下Co-Attention，后续再补上本篇论文的全部笔记吧。">
 <meta name="keywords" content="论文笔记,注意力,VQA">
 <meta property="og:type" content="article">
 <meta property="og:title" content="协同注意力简介">
 <meta property="og:url" content="http://plmsmile.github.io/2018/03/14/31-co-attention-vqa/index.html">
 <meta property="og:site_name" content="PLM&#39;s Notes">
-<meta property="og:description" content="只是记录一下Co-Attention，后续再补上本篇论文的全部笔记吧。  论文：Hierarchical Question-Image Co-Attention  for Visual Question Answering  我的相关笔记：Attention-based NMT阅读笔记和NLP中的Attention笔记  Co-Attention这里以VQA里面的两个例子记录一下Co-Atten">
+<meta property="og:description" content="只是记录一下Co-Attention，后续再补上本篇论文的全部笔记吧。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/coattention.png">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/coattention.png">
-<meta property="og:updated_time" content="2018-11-25T08:30:08.493Z">
+<meta property="og:updated_time" content="2018-12-13T07:53:38.618Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="协同注意力简介">
-<meta name="twitter:description" content="只是记录一下Co-Attention，后续再补上本篇论文的全部笔记吧。  论文：Hierarchical Question-Image Co-Attention  for Visual Question Answering  我的相关笔记：Attention-based NMT阅读笔记和NLP中的Attention笔记  Co-Attention这里以VQA里面的两个例子记录一下Co-Atten">
+<meta name="twitter:description" content="只是记录一下Co-Attention，后续再补上本篇论文的全部笔记吧。">
 <meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/coattention.png">
     
         <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
@@ -170,7 +170,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Co-Attention"><span class="post-toc-number">1.</span> <span class="post-toc-text">Co-Attention</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#注意力和协同注意力"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">注意力和协同注意力</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Parallel-Co-Attention"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">Parallel Co-Attention</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Alternating-Co-Attention"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">Alternating Co-Attention</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#co-attention"><span class="post-toc-number">1.</span> <span class="post-toc-text">Co-Attention</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#注意力和协同注意力"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">注意力和协同注意力</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#parallel-co-attention"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">Parallel Co-Attention</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#alternating-co-attention"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">Alternating Co-Attention</span></a></li></ol></li></ol>
         </nav>
     </aside>
 
@@ -198,10 +198,13 @@
             <blockquote>
 <p>只是记录一下Co-Attention，后续再补上本篇论文的全部笔记吧。</p>
 </blockquote>
-<p>论文：<a href="https://arxiv.org/abs/1606.00061" target="_blank" rel="noopener">Hierarchical Question-Image Co-Attention  for Visual Question Answering</a> </p>
-<p>我的相关笔记：<a href="https://plmsmile.github.io/2017/10/12/Attention-based-NMT/">Attention-based NMT阅读笔记</a>和<a href="https://plmsmile.github.io/2017/10/10/attention-model/#encoder-decoder">NLP中的Attention笔记</a> </p>
-<h1 id="Co-Attention"><a href="#Co-Attention" class="headerlink" title="Co-Attention"></a>Co-Attention</h1><p>这里以VQA里面的两个例子记录一下Co-Attention。即图片和问题。</p>
-<h2 id="注意力和协同注意力"><a href="#注意力和协同注意力" class="headerlink" title="注意力和协同注意力"></a>注意力和协同注意力</h2><p><strong>注意力</strong> </p>
+<a id="more"></a>
+<p>论文：<a href="https://arxiv.org/abs/1606.00061" target="_blank" rel="noopener">Hierarchical Question-Image Co-Attention for Visual Question Answering</a></p>
+<p>我的相关笔记：<a href="https://plmsmile.github.io/2017/10/12/Attention-based-NMT/">Attention-based NMT阅读笔记</a>和<a href="https://plmsmile.github.io/2017/10/10/attention-model/#encoder-decoder">NLP中的Attention笔记</a></p>
+<h1 id="co-attention">Co-Attention</h1>
+<p>这里以VQA里面的两个例子记录一下Co-Attention。即图片和问题。</p>
+<h2 id="注意力和协同注意力">注意力和协同注意力</h2>
+<p><strong>注意力</strong></p>
 <p><code>注意力机制</code>就像人<strong>带着问题去阅读</strong>， 先看问题，再去文本中有目标地阅读寻找答案。</p>
 <p>机器阅读则是结合问题和文本的信息，生成一个关于文本段落各部分的<code>注意力权重</code>，再<strong>对文本信息进行加权</strong>。</p>
 <p>注意力机制可以帮助我们更好地去捕捉段落中和问题相关的信息。</p>
@@ -213,29 +216,45 @@
 </ul>
 <p>协同注意力分为两种方式：</p>
 <ul>
-<li><strong>Parallel Co-Attention</strong> :   两种数据源A和B，先结合得到C，再基于结合信息C对A和B分别生成对应的Attention。<code>同时生成注意力</code></li>
-<li><strong>Alternating Co-Attention</strong>：  先基于A产生B的attention，得到新的B；再基于新B去产生A的attention。两次<code>交替生成注意力</code></li>
+<li><strong>Parallel Co-Attention</strong> : 两种数据源A和B，先结合得到C，再基于结合信息C对A和B分别生成对应的Attention。<code>同时生成注意力</code></li>
+<li><strong>Alternating Co-Attention</strong>： 先基于A产生B的attention，得到新的B；再基于新B去产生A的attention。两次<code>交替生成注意力</code></li>
 </ul>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/coattention.png" style="display:block; margin:auto" width="100%"></p>
-<h2 id="Parallel-Co-Attention"><a href="#Parallel-Co-Attention" class="headerlink" title="Parallel Co-Attention"></a>Parallel Co-Attention</h2><p>图片特征：$V \in \mathbb {R}^{d\times N}$ ，问句特征：$Q \in \mathbb R^{d \times T}$ 。</p>
+<h2 id="parallel-co-attention">Parallel Co-Attention</h2>
+<p>图片特征：<span class="math inline">\(V \in \mathbb {R}^{d\times N}\)</span> ，问句特征：<span class="math inline">\(Q \in \mathbb R^{d \times T}\)</span> 。</p>
 <p><code>同时</code>生成图片和问题的注意力。</p>
-<p>先计算<code>关联矩阵</code>：<br>$$<br>C = \rm{tanh}(Q^T W_b V) \in \mathbb R^{T \times N}<br>$$<br>计算<code>注意力权值</code> $a^v$和$a^q$ </p>
-<p>方法1：直接选择最大值。$a^v_n = \max \limits_i(C_{i, n})$ ，$a_t^q = \max \limits_i (C_{t, j})$</p>
-<p>方法2：把关联矩阵当做特征给到网络中，进行计算注意力权值，再进行<code>softmax</code>。<strong>更好</strong><br>$$<br>H^v = \rm{tanh} (W_vV + (W_qQ)C), \quad \quad H^q = \rm{tanh} (W_qQ + (W_vV)C^T)<br>$$</p>
-<p>$$<br>a^v = \rm{softmax}(w_{hv}^TH^v), \quad \quad a^q = \rm{softmax}(w^T_{hq}H^q)<br>$$</p>
-<p>利用注意力和原特征向量去计算<code>新的特征向量</code><br>$$<br>\mathbf {\hat v} = \sum_{n=1}^N a^v_n \mathbf v_n, \quad \quad \mathbf { \hat q} = \sum_{t=1}^Tq_t^q \mathbf q_t<br>$$</p>
-<h2 id="Alternating-Co-Attention"><a href="#Alternating-Co-Attention" class="headerlink" title="Alternating Co-Attention"></a>Alternating Co-Attention</h2><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/coattention.png" style="display:block; margin:auto" width="100%"></p>
+<p>先计算<code>关联矩阵</code>： <span class="math display">\[
+C = \rm{tanh}(Q^T W_b V) \in \mathbb R^{T \times N}
+\]</span> 计算<code>注意力权值</code> <span class="math inline">\(a^v\)</span>和<span class="math inline">\(a^q\)</span></p>
+<p>方法1：直接选择最大值。<span class="math inline">\(a^v_n = \max \limits_i(C_{i, n})\)</span> ，<span class="math inline">\(a_t^q = \max \limits_i (C_{t, j})\)</span></p>
+<p>方法2：把关联矩阵当做特征给到网络中，进行计算注意力权值，再进行<code>softmax</code>。<strong>更好</strong> <span class="math display">\[
+H^v = \rm{tanh} (W_vV + (W_qQ)C), \quad \quad H^q = \rm{tanh} (W_qQ + (W_vV)C^T)
+\]</span></p>
+<p><span class="math display">\[
+a^v = \rm{softmax}(w_{hv}^TH^v), \quad \quad a^q = \rm{softmax}(w^T_{hq}H^q)
+\]</span></p>
+<p>利用注意力和原特征向量去计算<code>新的特征向量</code> <span class="math display">\[
+\mathbf {\hat v} = \sum_{n=1}^N a^v_n \mathbf v_n, \quad \quad \mathbf { \hat q} = \sum_{t=1}^Tq_t^q \mathbf q_t
+\]</span></p>
+<h2 id="alternating-co-attention">Alternating Co-Attention</h2>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/coattention.png" style="display:block; margin:auto" width="100%"></p>
 <p><code>交替</code>生成图片和问题的注意力。</p>
 <ul>
-<li>把问题归纳成一个单独向量$\mathbf {q}$</li>
-<li>基于$\mathbf q$ 去和图片特征$V$去生成图像特征$\mathbf {\hat v}$</li>
-<li><p>基于$\mathbf v$和问题特征$Q$去生成问题特征$\mathbf {\hat q}$</p>
-<p>具体地，给一个$X$和<code>attention guidance</code>$\mathbf g$ ，通过$\mathbf {\hat x} = f(X, \mathbf g)$去得到特征向量$\mathbf {\hat x}$<br>$$<br>H = \rm {tanh} (W_x X+ (W_g \mathbf g) \mathbb 1^T)<br>$$<br>$\mathbf a ^x$ 是特征$X$的<code>注意力权值</code> ：<br>$$<br>\mathbf a^x = \rm(softmax)(w^T_{hx} H)<br>$$<br>新的<strong>注意力向量</strong> (<code>attended image (or question) vector)</code> :<br>$$<br>\mathbf {\hat x} = \sum a_i^x \mathbf x_i<br>$$<br>对应本例子如下：</p>
-</li>
-<li><p>$X = Q, \; g = 0 \to \mathbf q$</p>
-</li>
-<li>$X = V, \; g = \mathbf q \to \mathbf {\hat v}$</li>
-<li>$X = Q, \; g = \mathbf {\hat v} \to \mathbf {\hat q}$</li>
+<li>把问题归纳成一个单独向量<span class="math inline">\(\mathbf {q}\)</span></li>
+<li>基于<span class="math inline">\(\mathbf q\)</span> 去和图片特征<span class="math inline">\(V\)</span>去生成图像特征<span class="math inline">\(\mathbf {\hat v}\)</span></li>
+<li>基于<span class="math inline">\(\mathbf v\)</span>和问题特征<span class="math inline">\(Q\)</span>去生成问题特征<span class="math inline">\(\mathbf {\hat q}\)</span></li>
+</ul>
+<p>具体地，给一个<span class="math inline">\(X\)</span>和<code>attention guidance</code><span class="math inline">\(\mathbf g\)</span> ，通过<span class="math inline">\(\mathbf {\hat x} = f(X, \mathbf g)\)</span>去得到特征向量<span class="math inline">\(\mathbf {\hat x}\)</span> <span class="math display">\[
+H = \rm {tanh} (W_x X+ (W_g \mathbf g) \mathbb 1^T)
+\]</span> <span class="math inline">\(\mathbf a ^x\)</span> 是特征<span class="math inline">\(X\)</span>的<code>注意力权值</code> ： <span class="math display">\[
+\mathbf a^x = \rm(softmax)(w^T_{hx} H)
+\]</span> 新的<strong>注意力向量</strong> (<code>attended image (or question) vector)</code> : <span class="math display">\[
+\mathbf {\hat x} = \sum a_i^x \mathbf x_i
+\]</span> 对应本例子如下：</p>
+<ul>
+<li><span class="math inline">\(X = Q, \; g = 0 \to \mathbf q\)</span></li>
+<li><span class="math inline">\(X = V, \; g = \mathbf q \to \mathbf {\hat v}\)</span></li>
+<li><span class="math inline">\(X = Q, \; g = \mathbf {\hat v} \to \mathbf {\hat q}\)</span></li>
 </ul>
 
         </div>
@@ -245,7 +264,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-11-25T08:30:08.493Z" itemprop="dateUpdated">2018-11-25 16:30:08</time>
+    最后更新时间：<time datetime="2018-12-13T07:53:38.618Z" itemprop="dateUpdated">2018-12-13 15:53:38</time>
 </span><br>
 
 
@@ -291,7 +310,9 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/03/14/31-co-attention-vqa/&title=《协同注意力简介》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/03/14/31-co-attention-vqa/&title=《协同注意力简介》 — PLM's Notes&source=
+只是记录一下Co-Attention，后续再补上本篇论文的全部笔记吧。
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -462,7 +483,9 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/03/14/31-co-attention-vqa/&title=《协同注意力简介》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/03/14/31-co-attention-vqa/&title=《协同注意力简介》 — PLM's Notes&source=
+只是记录一下Co-Attention，后续再补上本篇论文的全部笔记吧。
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>

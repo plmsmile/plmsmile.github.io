@@ -21,19 +21,19 @@
     
     
     <meta name="keywords" content="cs224n,assignment,word2vec,cbow,skip-gram">
-    <meta name="description" content="SoftmaxSoftmax常数不变性$$\rm{softmax}(\mathbf{x})_i = \frac{e^{\mathbf x_i}}{\sum_{j}e^{\mathbf{x}_j}}$$ 一般在计算softmax的时候，避免太大的数，要加一个常数。 一般是减去最大的数。$$\rm{softmax}(x) = \rm{softmax}(x+c)$$ 关键代码12345678def s">
+    <meta name="description" content="cs224n的第一个作业，包括softmax、神经网络基础和词向量">
 <meta name="keywords" content="cs224n,assignment,word2vec,cbow,skip-gram">
 <meta property="og:type" content="article">
 <meta property="og:title" content="cs224n作业一">
 <meta property="og:url" content="http://plmsmile.github.io/2017/12/17/cs224n-assignment-1/index.html">
 <meta property="og:site_name" content="PLM&#39;s Notes">
-<meta property="og:description" content="SoftmaxSoftmax常数不变性$$\rm{softmax}(\mathbf{x})_i = \frac{e^{\mathbf x_i}}{\sum_{j}e^{\mathbf{x}_j}}$$ 一般在计算softmax的时候，避免太大的数，要加一个常数。 一般是减去最大的数。$$\rm{softmax}(x) = \rm{softmax}(x+c)$$ 关键代码12345678def s">
+<meta property="og:description" content="cs224n的第一个作业，包括softmax、神经网络基础和词向量">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/cs224n/note3/three_layer.png">
-<meta property="og:updated_time" content="2018-11-25T08:30:09.801Z">
+<meta property="og:updated_time" content="2018-12-13T08:11:55.495Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="cs224n作业一">
-<meta name="twitter:description" content="SoftmaxSoftmax常数不变性$$\rm{softmax}(\mathbf{x})_i = \frac{e^{\mathbf x_i}}{\sum_{j}e^{\mathbf{x}_j}}$$ 一般在计算softmax的时候，避免太大的数，要加一个常数。 一般是减去最大的数。$$\rm{softmax}(x) = \rm{softmax}(x+c)$$ 关键代码12345678def s">
+<meta name="twitter:description" content="cs224n的第一个作业，包括softmax、神经网络基础和词向量">
 <meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/cs224n/note3/three_layer.png">
     
         <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
@@ -169,7 +169,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Softmax"><span class="post-toc-number">1.</span> <span class="post-toc-text">Softmax</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Softmax常数不变性"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">Softmax常数不变性</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#关键代码"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">关键代码</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#神经网络基础"><span class="post-toc-number">2.</span> <span class="post-toc-text">神经网络基础</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Sigmoid实现"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">Sigmoid实现</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Softmax求梯度"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">Softmax求梯度</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#交叉熵求梯度"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">交叉熵求梯度</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#简单网络"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">简单网络</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#梯度检查"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">梯度检查</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Word2Vec"><span class="post-toc-number">3.</span> <span class="post-toc-text">Word2Vec</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#词向量的梯度"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">词向量的梯度</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#softmax"><span class="post-toc-number">1.</span> <span class="post-toc-text">Softmax</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#softmax常数不变性"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">Softmax常数不变性</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#关键代码"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">关键代码</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#神经网络基础"><span class="post-toc-number">2.</span> <span class="post-toc-text">神经网络基础</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#sigmoid实现"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">Sigmoid实现</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#softmax求梯度"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">Softmax求梯度</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#交叉熵求梯度"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">交叉熵求梯度</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#简单网络"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">简单网络</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#梯度检查"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">梯度检查</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#word2vec"><span class="post-toc-number">3.</span> <span class="post-toc-text">Word2Vec</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#词向量的梯度"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">词向量的梯度</span></a></li></ol></li></ol>
         </nav>
     </aside>
 
@@ -194,64 +194,182 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <p><img src="" style="display:block; margin:auto" width="60%"></p>
-<h1 id="Softmax"><a href="#Softmax" class="headerlink" title="Softmax"></a>Softmax</h1><h2 id="Softmax常数不变性"><a href="#Softmax常数不变性" class="headerlink" title="Softmax常数不变性"></a>Softmax常数不变性</h2><p>$$<br>\rm{softmax}(\mathbf{x})_i = \frac{e^{\mathbf x_i}}{\sum_{j}e^{\mathbf{x}_j}}<br>$$</p>
-<p>一般在计算<code>softmax</code>的时候，<strong>避免太大的数，要加一个常数</strong>。 一般是减去最大的数。<br>$$<br>\rm{softmax}(x) = \rm{softmax}(x+c)<br>$$</p>
-<h2 id="关键代码"><a href="#关键代码" class="headerlink" title="关键代码"></a>关键代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">softmax</span><span class="params">(x)</span>:</span></span><br><span class="line">    exp_func = <span class="keyword">lambda</span> x: np.exp(x - np.max(x))</span><br><span class="line">    sum_func = <span class="keyword">lambda</span> x: <span class="number">1.0</span> / np.sum(x)</span><br><span class="line">    x = np.apply_along_axis(exp_func, <span class="number">-1</span>, x)</span><br><span class="line">    denom = np.apply_along_axis(sum_func, <span class="number">-1</span>, x)</span><br><span class="line">    denom = denom[..., np.newaxis]</span><br><span class="line">    x = x * denom</span><br><span class="line">   	<span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
-<h1 id="神经网络基础"><a href="#神经网络基础" class="headerlink" title="神经网络基础"></a>神经网络基础</h1><h2 id="Sigmoid实现"><a href="#Sigmoid实现" class="headerlink" title="Sigmoid实现"></a>Sigmoid实现</h2><p><a href="https://plmsmile.github.io/2017/11/23/cs224n-notes3-neural-networks/#sigmoid">我的sigmoid笔记</a><br>$$<br>\begin{align}<br>&amp; \sigma (z) = \frac {1} {1 + \exp(-z)}, \; \sigma(z) \in (0,1) \ \<br>&amp; \sigma^\prime (z) = \sigma(z) (1 - \sigma(z)) \<br>\end{align}<br>$$<br><strong>关键代码</strong></p>
+            <blockquote>
+<p>cs224n的第一个作业，包括softmax、神经网络基础和词向量</p>
+</blockquote>
+<a id="more"></a>
+<p><img src="" style="display:block; margin:auto" width="60%"></p>
+<h1 id="softmax">Softmax</h1>
+<h2 id="softmax常数不变性">Softmax常数不变性</h2>
+<p><span class="math display">\[
+\rm{softmax}(\mathbf{x})_i = \frac{e^{\mathbf x_i}}{\sum_{j}e^{\mathbf{x}_j}}
+\]</span></p>
+<p>一般在计算<code>softmax</code>的时候，<strong>避免太大的数，要加一个常数</strong>。 一般是减去最大的数。 <span class="math display">\[
+\rm{softmax}(x) = \rm{softmax}(x+c)
+\]</span></p>
+<h2 id="关键代码">关键代码</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">softmax</span><span class="params">(x)</span>:</span></span><br><span class="line">    exp_func = <span class="keyword">lambda</span> x: np.exp(x - np.max(x))</span><br><span class="line">    sum_func = <span class="keyword">lambda</span> x: <span class="number">1.0</span> / np.sum(x)</span><br><span class="line">    x = np.apply_along_axis(exp_func, <span class="number">-1</span>, x)</span><br><span class="line">    denom = np.apply_along_axis(sum_func, <span class="number">-1</span>, x)</span><br><span class="line">    denom = denom[..., np.newaxis]</span><br><span class="line">    x = x * denom</span><br><span class="line">   	<span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+<h1 id="神经网络基础">神经网络基础</h1>
+<h2 id="sigmoid实现">Sigmoid实现</h2>
+<p><a href="https://plmsmile.github.io/2017/11/23/cs224n-notes3-neural-networks/#sigmoid">我的sigmoid笔记</a> <span class="math display">\[
+\begin{align}
+&amp; \sigma (z) = \frac {1} {1 + \exp(-z)}, \; \sigma(z) \in (0,1) \\ \\
+&amp; \sigma^\prime (z) = \sigma(z) (1 - \sigma(z)) \\
+\end{align}
+\]</span> <strong>关键代码</strong></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span><span class="params">(x)</span>:</span></span><br><span class="line">    s = <span class="number">1.0</span> / (<span class="number">1</span> + np.exp(-x))</span><br><span class="line">    <span class="keyword">return</span> s</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid_grad</span><span class="params">(s)</span>:</span></span><br><span class="line">    <span class="string">""" 对sigmoid的函数值，求梯度</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    ds = s * (<span class="number">1</span> - s)</span><br><span class="line">    <span class="keyword">return</span> ds</span><br></pre></td></tr></table></figure>
-<h2 id="Softmax求梯度"><a href="#Softmax求梯度" class="headerlink" title="Softmax求梯度"></a>Softmax求梯度</h2><p>交叉熵和softmax如下，记softmax的输入为$\theta$ ，$y$是真实one-hot向量。<br>$$<br>\begin{align}<br>&amp; \rm{CE}(y, \hat y) = - \sum_{i} y_i \times \log (\hat y_i) \ \<br>&amp; \hat y = \rm{softmax} (\theta)\<br>\end{align}<br>$$<br><strong>softmax求导</strong></p>
-<p>引入记号：<br>$$<br>\begin{align}<br>&amp; f_i = e^{\theta_i} &amp; \text{分子} \<br>&amp; g_i = \sum_{k=1}^{K}e^{\theta_k} &amp; \text{分母，与i无关} \<br>&amp; \hat y_i = S_i = \frac{f_i}{g_i} &amp; \text{softmax}\<br>\end{align}<br>$$<br>则有$S_i​$对其中的一个数据$\theta_j​$ 求梯度：<br>$$<br>\frac{\partial S_i}{\partial \theta_j} = \frac{f_i^{\prime} g_i - f_i g_i^{\prime}}{g_i^2}<br>$$<br>其中两个导数<br>$$<br>f^{\prime}_i(\theta_j) =<br>\begin{cases}<br>&amp; e^{\theta_j}, &amp; i = j\<br>&amp; 0, &amp; i \ne j \<br>\end{cases}<br>$$</p>
-<p>$$<br>g^{\prime}_i(\theta_j) = e^{\theta_j}<br>$$</p>
-<p><strong>$i=j$时</strong><br>$$<br>\begin{align}<br>\frac{\partial S_i}{\partial \theta_j}<br>&amp; = \frac{e^{\theta_j} \cdot \sum_{k}e^{\theta_k}-  e^{\theta_i} \cdot e^{\theta_j}}{\left( \sum_ke^{\theta_k}\right)^2} \ \<br>&amp; = \frac{e^{\theta_j}}{\sum_ke^{\theta_k}} \cdot \left( 1 - \frac{e^{\theta_j}}{\sum_k e^{\theta_k}} \right)  \ \<br>&amp; = S_i \cdot (1 - S_i)<br>\end{align}<br>$$<br><strong>$i \ne j$时</strong><br>$$<br>\begin{align}<br>\frac{\partial S_i}{\partial \theta_j}<br>&amp; = \frac{ -  e^{\theta_i} \cdot e^{\theta_j}}{\left( \sum_ke^{\theta_k}\right)^2}  = - S_i \cdot  S_j<br>\end{align}<br>$$</p>
-<h2 id="交叉熵求梯度"><a href="#交叉熵求梯度" class="headerlink" title="交叉熵求梯度"></a>交叉熵求梯度</h2><p>$$<br>\begin{align}<br>&amp; \rm{CE}(y, \hat y) = - \sum_{i} y_i \times \log (\hat y_i) \ \<br>&amp; \hat y = \rm{S} (\theta)\<br>\end{align}<br>$$</p>
-<p>只关注有关系的部分，带入$y_i =1$ ：<br>$$<br>\begin{align}<br>\frac{\partial CE}{\partial \theta_i}<br>&amp; =  -\frac{\partial \log \hat y_i}{\partial \theta_i}<br> = - \frac{1}{\hat y_i} \cdot  \frac{\partial \hat y_i}{\partial \theta_i} \ \<br>&amp; = - \frac{1}{S_i} \cdot \frac{\partial S_i}{\partial \theta_i}<br> = S_i - 1  \ \<br> &amp; = \hat y_i - y_i<br>\end{align}<br>$$<br>不带入求导<br>$$<br>\begin{align}<br>\frac{\partial CE}{\partial \theta_i}<br>&amp; = - \sum_{k}y_k \times \frac{\partial \log S_k}{\partial \theta_i} \<br>&amp; = - \sum_{k}y_k \times \frac{1}{S_k}\times \frac{\partial S_k}{\partial \theta_i}   \<br>&amp; = - y_i (1 - S_i) - \sum_{k \ne i} y_k \cdot \frac{1}{S_k} \cdot (- S_i \cdot S_k) \<br>&amp; = - y_i (1 - S_i) + \sum_{k \ne i} y_k \cdot S_i \<br>&amp; =  S_i - y_i<br>\end{align}<br>$$<br>所以，交叉熵的导数是<br>$$<br>\frac{\partial CE}{\partial \theta_i} = \hat y_i  - y_i, \quad \quad \frac{\partial CE(y, \hat y)}{\partial \theta} = \hat y  - y<br>$$</p>
-<p>即<br>$$<br>\frac{\partial CE(y, \hat y)}{\partial \theta_i} =<br>\begin{cases}<br>&amp; \hat y_i - 1, &amp; \text{i是label} \<br>&amp;\hat y_i, &amp; \text{其它}\<br>\end{cases}<br>$$</p>
-<h2 id="简单网络"><a href="#简单网络" class="headerlink" title="简单网络"></a>简单网络</h2><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/cs224n/note3/three_layer.png" style="display:block; margin:auto" width="40%"></p>
-<p><strong>前向计算</strong><br>$$<br>\begin{align}<br>&amp; z_1 = xW_1 + b_1 \ \<br>&amp; h = \rm{sigmoid}(z1) \ \<br>&amp; z_2 = hW_2 + b_2 \ \<br>&amp; \hat y = \rm{softmax}(z_2)<br>\end{align}<br>$$<br>关键代码：</p>
+<h2 id="softmax求梯度">Softmax求梯度</h2>
+<p>交叉熵和softmax如下，记softmax的输入为<span class="math inline">\(\theta\)</span> ，<span class="math inline">\(y\)</span>是真实one-hot向量。 <span class="math display">\[
+\begin{align}
+&amp; \rm{CE}(y, \hat y) = - \sum_{i} y_i \times \log (\hat y_i) \\ \\
+&amp; \hat y = \rm{softmax} (\theta)\\
+\end{align}
+\]</span> <strong>softmax求导</strong></p>
+<p>引入记号： <span class="math display">\[
+\begin{align}
+&amp; f_i = e^{\theta_i} &amp; \text{分子} \\
+&amp; g_i = \sum_{k=1}^{K}e^{\theta_k} &amp; \text{分母，与i无关} \\
+&amp; \hat y_i = S_i = \frac{f_i}{g_i} &amp; \text{softmax}\\
+\end{align}
+\]</span> 则有<span class="math inline">\(S_i​\)</span>对其中的一个数据<span class="math inline">\(\theta_j​\)</span> 求梯度： <span class="math display">\[
+\frac{\partial S_i}{\partial \theta_j} = \frac{f_i^{\prime} g_i - f_i g_i^{\prime}}{g_i^2}
+\]</span> 其中两个导数 <span class="math display">\[
+f^{\prime}_i(\theta_j) =
+\begin{cases}
+&amp; e^{\theta_j}, &amp; i = j\\
+&amp; 0, &amp; i \ne j \\
+\end{cases}
+\]</span></p>
+<p><span class="math display">\[
+g^{\prime}_i(\theta_j) = e^{\theta_j}
+\]</span></p>
+<p><strong><span class="math inline">\(i=j\)</span>时</strong> <span class="math display">\[
+\begin{align}
+\frac{\partial S_i}{\partial \theta_j}
+&amp; = \frac{e^{\theta_j} \cdot \sum_{k}e^{\theta_k}-  e^{\theta_i} \cdot e^{\theta_j}}{\left( \sum_ke^{\theta_k}\right)^2} \\ \\
+&amp; = \frac{e^{\theta_j}}{\sum_ke^{\theta_k}} \cdot \left( 1 - \frac{e^{\theta_j}}{\sum_k e^{\theta_k}} \right)  \\ \\
+&amp; = S_i \cdot (1 - S_i)
+\end{align}
+\]</span> <strong><span class="math inline">\(i \ne j\)</span>时</strong> <span class="math display">\[
+\begin{align}
+\frac{\partial S_i}{\partial \theta_j}
+&amp; = \frac{ -  e^{\theta_i} \cdot e^{\theta_j}}{\left( \sum_ke^{\theta_k}\right)^2}  = - S_i \cdot  S_j
+\end{align}
+\]</span></p>
+<h2 id="交叉熵求梯度">交叉熵求梯度</h2>
+<p><span class="math display">\[
+\begin{align}
+&amp; \rm{CE}(y, \hat y) = - \sum_{i} y_i \times \log (\hat y_i) \\ \\
+&amp; \hat y = \rm{S} (\theta)\\
+\end{align}
+\]</span></p>
+<p>只关注有关系的部分，带入<span class="math inline">\(y_i =1\)</span> ： <span class="math display">\[
+\begin{align}
+\frac{\partial CE}{\partial \theta_i}
+&amp; =  -\frac{\partial \log \hat y_i}{\partial \theta_i} 
+ = - \frac{1}{\hat y_i} \cdot  \frac{\partial \hat y_i}{\partial \theta_i} \\ \\
+&amp; = - \frac{1}{S_i} \cdot \frac{\partial S_i}{\partial \theta_i} 
+ = S_i - 1  \\ \\
+ &amp; = \hat y_i - y_i
+\end{align}
+\]</span> 不带入求导 <span class="math display">\[
+\begin{align}
+\frac{\partial CE}{\partial \theta_i}
+&amp; = - \sum_{k}y_k \times \frac{\partial \log S_k}{\partial \theta_i} \\
+&amp; = - \sum_{k}y_k \times \frac{1}{S_k}\times \frac{\partial S_k}{\partial \theta_i}   \\ 
+&amp; = - y_i (1 - S_i) - \sum_{k \ne i} y_k \cdot \frac{1}{S_k} \cdot (- S_i \cdot S_k) \\ 
+&amp; = - y_i (1 - S_i) + \sum_{k \ne i} y_k \cdot S_i \\
+&amp; =  S_i - y_i 
+\end{align}
+\]</span> 所以，交叉熵的导数是 <span class="math display">\[
+\frac{\partial CE}{\partial \theta_i} = \hat y_i  - y_i, \quad \quad \frac{\partial CE(y, \hat y)}{\partial \theta} = \hat y  - y
+\]</span></p>
+<p>即 <span class="math display">\[
+\frac{\partial CE(y, \hat y)}{\partial \theta_i} = 
+\begin{cases}
+&amp; \hat y_i - 1, &amp; \text{i是label} \\
+&amp;\hat y_i, &amp; \text{其它}\\
+\end{cases}
+\]</span></p>
+<h2 id="简单网络">简单网络</h2>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/cs224n/note3/three_layer.png" style="display:block; margin:auto" width="40%"></p>
+<p><strong>前向计算</strong> <span class="math display">\[
+\begin{align}
+&amp; z_1 = xW_1 + b_1 \\ \\
+&amp; h = \rm{sigmoid}(z1) \\ \\
+&amp; z_2 = hW_2 + b_2 \\ \\
+&amp; \hat y = \rm{softmax}(z_2) 
+\end{align}
+\]</span> 关键代码：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward_backward_prop</span><span class="params">(data, labels, params, dimensions)</span>:</span></span><br><span class="line">    h = sigmoid(np.dot(data, W1) + b1)</span><br><span class="line">    yhat = softmax(np.dot(h, W2) + b2)</span><br></pre></td></tr></table></figure>
-<p><strong>loss函数</strong><br>$$<br>J = \rm{CE}(y, \hat y)<br>$$<br>关键代码：</p>
+<p><strong>loss函数</strong> <span class="math display">\[
+J = \rm{CE}(y, \hat y)
+\]</span> 关键代码：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward_backward_prop</span><span class="params">(data, labels, params, dimensions)</span>:</span></span><br><span class="line">    <span class="comment"># yhat[labels==1]实际上是boolean索引，见我的numpy_api.ipynb</span></span><br><span class="line">    cost = np.sum(-np.log(yhat[labels == <span class="number">1</span>])) / data.shape[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
-<p><strong>反向传播</strong><br>$$<br>\begin {align}<br>&amp; \delta_2 = \frac{\partial J}{\partial z_2} = \hat y - y \ \<br>&amp; \frac{\partial J}{\partial h} = \delta_2 \cdot \frac{\partial z_2}{\partial h} = \delta_2  W_2^T \ \<br>&amp; \delta_1 = \frac{\partial J}{\partial z_1}<br>= \frac{\partial J}{\partial h} \cdot \frac{\partial h}{\partial z_1} = \delta_2  W_2^T \circ \sigma^{\prime}(z_1) \ \<br>&amp;  \frac{\partial J}{\partial x} = \delta_1 W_1^T<br>\end{align}<br>$$<br>一共有$(d_x + 1) \cdot d_h + (d_h +1) \cdot d_y$ 个参数。</p>
+<p><strong>反向传播</strong> <span class="math display">\[
+\begin {align}
+&amp; \delta_2 = \frac{\partial J}{\partial z_2} = \hat y - y \\ \\
+&amp; \frac{\partial J}{\partial h} = \delta_2 \cdot \frac{\partial z_2}{\partial h} = \delta_2  W_2^T \\ \\
+&amp; \delta_1 = \frac{\partial J}{\partial z_1} 
+= \frac{\partial J}{\partial h} \cdot \frac{\partial h}{\partial z_1} = \delta_2  W_2^T \circ \sigma^{\prime}(z_1) \\ \\
+&amp;  \frac{\partial J}{\partial x} = \delta_1 W_1^T
+\end{align}
+\]</span> 一共有<span class="math inline">\((d_x + 1) \cdot d_h + (d_h +1) \cdot d_y\)</span> 个参数。</p>
 <p>关键代码：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward_backward_prop</span><span class="params">(data, labels, params, dimensions)</span>:</span></span><br><span class="line">    <span class="comment"># 前面推导的softmax梯度公式</span></span><br><span class="line">    gradyhat = (yhat - labels) / data.shape[<span class="number">0</span>]</span><br><span class="line">    <span class="comment"># 链式法则</span></span><br><span class="line">    gradW2 = np.dot(h.T, gradyhat)</span><br><span class="line">    <span class="comment"># 本地导数是1，把第1维的所有加起来</span></span><br><span class="line">    gradb2 = np.sum(gradyhat, axis=<span class="number">0</span>, keepdims=<span class="keyword">True</span>)</span><br><span class="line">    gradh = np.dot(gradyhat, W2.T)</span><br><span class="line">    gradz1 = gradh * sigmoid_grad(h)</span><br><span class="line">    gradW1 = np.dot(data.T, gradz1)</span><br><span class="line">    gradb1 = np.sum(gradz1, axis=<span class="number">0</span>, keepdims=<span class="keyword">True</span>)</span><br><span class="line">    </span><br><span class="line">    grad = np.concatenate((gradW1.flatten(), gradb1.flatten(),</span><br><span class="line">            gradW2.flatten(), gradb2.flatten()))</span><br><span class="line">    <span class="keyword">return</span> cost, grad</span><br></pre></td></tr></table></figure>
-<h2 id="梯度检查"><a href="#梯度检查" class="headerlink" title="梯度检查"></a>梯度检查</h2><p><a href="https://plmsmile.github.io/2017/11/23/cs224n-notes3-neural-networks/#梯度检查">我的梯度检查</a></p>
+<h2 id="梯度检查">梯度检查</h2>
+<p><a href="https://plmsmile.github.io/2017/11/23/cs224n-notes3-neural-networks/#梯度检查">我的梯度检查</a></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradcheck_naive</span><span class="params">(f, x)</span>:</span></span><br><span class="line">    fx, grad = f(x) <span class="comment"># Evaluate function value at original point</span></span><br><span class="line">    h = <span class="number">1e-4</span>        <span class="comment"># Do not change this!</span></span><br><span class="line">    <span class="comment"># Iterate over all indexes in x</span></span><br><span class="line">    it = np.nditer(x, flags=[<span class="string">'multi_index'</span>], op_flags=[<span class="string">'readwrite'</span>])</span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">not</span> it.finished:</span><br><span class="line">        ix = it.multi_index</span><br><span class="line">        <span class="comment"># 关键代码</span></span><br><span class="line">        x[ix] += h</span><br><span class="line">        random.setstate(rndstate)</span><br><span class="line">        new_f1 = f(x)[<span class="number">0</span>]</span><br><span class="line">        x[ix] -= <span class="number">2</span> * h</span><br><span class="line">        random.setstate(rndstate)</span><br><span class="line">        new_f2 = f(x)[<span class="number">0</span>]</span><br><span class="line">        x[ix] += h</span><br><span class="line">        numgrad = (new_f1 - new_f2) / (<span class="number">2</span> * h)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Compare gradients</span></span><br><span class="line">        reldiff = abs(numgrad - grad[ix]) / max(<span class="number">1</span>, abs(numgrad), abs(grad[ix]))</span><br><span class="line">        <span class="keyword">if</span> reldiff &gt; <span class="number">1e-5</span>:</span><br><span class="line">            <span class="keyword">print</span> (<span class="string">"Gradient check failed."</span>)</span><br><span class="line">            <span class="keyword">print</span> (<span class="string">"First gradient error found at index %s"</span> % str(ix))</span><br><span class="line">            <span class="keyword">print</span> (<span class="string">"Your gradient: %f \t Numerical gradient: %f"</span> % (</span><br><span class="line">                grad[ix], numgrad))</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">        it.iternext() <span class="comment"># Step to next dimension</span></span><br></pre></td></tr></table></figure>
-<h1 id="Word2Vec"><a href="#Word2Vec" class="headerlink" title="Word2Vec"></a>Word2Vec</h1><p><a href="https://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/#word2vec">我的word2vec笔记</a></p>
-<h2 id="词向量的梯度"><a href="#词向量的梯度" class="headerlink" title="词向量的梯度"></a>词向量的梯度</h2><p>符号定义</p>
+<h1 id="word2vec">Word2Vec</h1>
+<p><a href="https://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/#word2vec">我的word2vec笔记</a></p>
+<h2 id="词向量的梯度">词向量的梯度</h2>
+<p>符号定义</p>
 <ul>
-<li>$v_c$ 中心词向量，输入词向量，$V$， $\mathbb{R}^{W\times d}$    </li>
-<li>$u_o$ 上下文词向量，输出词向量，$U=[u_1, u_2, \cdots, u_w]$ , $\mathbb{R}^{d\times W}$   </li>
+<li><span class="math inline">\(v_c\)</span> 中心词向量，输入词向量，<span class="math inline">\(V\)</span>， <span class="math inline">\(\mathbb{R}^{W\times d}\)</span><br>
+</li>
+<li><span class="math inline">\(u_o\)</span> 上下文词向量，输出词向量，<span class="math inline">\(U=[u_1, u_2, \cdots, u_w]\)</span> , <span class="math inline">\(\mathbb{R}^{d\times W}\)</span></li>
 </ul>
 <p><strong>前向</strong></p>
-<p>预测o是c的上下文概率，o为正确单词<br>$$<br>\hat y_o = p(o \mid c) = \rm{softmax}(o) = \frac{\exp(u_o^T v_c)}{\sum_{w} \exp(u_w^T v_c)}<br>$$<br>得分向量：<br>$$<br>z=U^T \cdot v_c, \quad  [W,d] \times[ d] \in ,\mathbb{R}^{W }<br>$$<br><strong>loss及梯度</strong><br>$$<br>J_{\rm{softmax-CE}}(v_c, o, U) = CE(y, \hat y), \quad \text{其中} \; \frac{\partial CE(y, \hat y)}{\partial \theta} = \hat y  - y<br>$$</p>
+<p>预测o是c的上下文概率，o为正确单词 <span class="math display">\[
+\hat y_o = p(o \mid c) = \rm{softmax}(o) = \frac{\exp(u_o^T v_c)}{\sum_{w} \exp(u_w^T v_c)}
+\]</span> 得分向量： <span class="math display">\[
+z=U^T \cdot v_c, \quad  [W,d] \times[ d] \in ,\mathbb{R}^{W }
+\]</span> <strong>loss及梯度</strong> <span class="math display">\[
+J_{\rm{softmax-CE}}(v_c, o, U) = CE(y, \hat y), \quad \text{其中} \; \frac{\partial CE(y, \hat y)}{\partial \theta} = \hat y  - y
+\]</span></p>
 <table>
+<colgroup>
+<col width="35%">
+<col width="8%">
+<col width="42%">
+<col width="13%">
+</colgroup>
 <thead>
-<tr>
-<th style="text-align:center">梯度</th>
-<th style="text-align:center">中文</th>
-<th style="text-align:center">计算</th>
-<th style="text-align:center">维数</th>
+<tr class="header">
+<th align="center">梯度</th>
+<th align="center">中文</th>
+<th align="center">计算</th>
+<th align="center">维数</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:center">$\frac{\partial J}{\partial z}$</td>
-<td style="text-align:center">softmax</td>
-<td style="text-align:center">$\hat y  - y$</td>
-<td style="text-align:center">$W$</td>
+<tr class="odd">
+<td align="center"><span class="math inline">\(\frac{\partial J}{\partial z}\)</span></td>
+<td align="center">softmax</td>
+<td align="center"><span class="math inline">\(\hat y - y\)</span></td>
+<td align="center"><span class="math inline">\(W\)</span></td>
 </tr>
-<tr>
-<td style="text-align:center">$\frac{\partial J}{\partial v_c}$</td>
-<td style="text-align:center">中心词</td>
-<td style="text-align:center">$\frac{\partial J}{\partial z} \cdot \frac{\partial z}{\partial v_c} =  (\hat y  - y) \cdot U^T$</td>
-<td style="text-align:center">$d$</td>
+<tr class="even">
+<td align="center"><span class="math inline">\(\frac{\partial J}{\partial v_c}\)</span></td>
+<td align="center">中心词</td>
+<td align="center"><span class="math inline">\(\frac{\partial J}{\partial z} \cdot \frac{\partial z}{\partial v_c} = (\hat y - y) \cdot U^T\)</span></td>
+<td align="center"><span class="math inline">\(d\)</span></td>
 </tr>
-<tr>
-<td style="text-align:center">$\frac{\partial J}{\partial U}$</td>
-<td style="text-align:center">上下文</td>
-<td style="text-align:center">$\frac{\partial J}{\partial z} \cdot \frac{\partial z}{\partial U^T}= (\hat y  - y) \cdot v_c$</td>
-<td style="text-align:center">$d \times W$</td>
+<tr class="odd">
+<td align="center"><span class="math inline">\(\frac{\partial J}{\partial U}\)</span></td>
+<td align="center">上下文</td>
+<td align="center"><span class="math inline">\(\frac{\partial J}{\partial z} \cdot \frac{\partial z}{\partial U^T}= (\hat y - y) \cdot v_c\)</span></td>
+<td align="center"><span class="math inline">\(d \times W\)</span></td>
 </tr>
 </tbody>
 </table>
@@ -265,7 +383,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-11-25T08:30:09.801Z" itemprop="dateUpdated">2018-11-25 16:30:09</time>
+    最后更新时间：<time datetime="2018-12-13T08:11:55.495Z" itemprop="dateUpdated">2018-12-13 16:11:55</time>
 </span><br>
 
 
@@ -311,7 +429,9 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/12/17/cs224n-assignment-1/&title=《cs224n作业一》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/12/17/cs224n-assignment-1/&title=《cs224n作业一》 — PLM's Notes&source=
+cs224n的第一个作业，包括softmax、神经网络基础和词向量
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -349,18 +469,18 @@
 <nav class="post-nav flex-row flex-justify-between">
   
     <div class="waves-block waves-effect prev">
-      <a href="/2017/12/25/cpp-pointer-object-reference/" id="post-prev" class="post-nav-link">
+      <a href="/2017/12/25/15-cpp-pointer-object-reference/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">cpp-pointer-object-reference</h4>
+        <h4 class="title">C++类对象和指针的区别</h4>
       </a>
     </div>
   
 
   
     <div class="waves-block waves-effect next">
-      <a href="/2017/12/03/nlp-labels/" id="post-next" class="post-nav-link">
+      <a href="/2017/12/03/11-nlp-labels/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">nlp-labels</h4>
+        <h4 class="title">词性标注和句法依存的表示符号</h4>
       </a>
     </div>
   
@@ -482,7 +602,9 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/12/17/cs224n-assignment-1/&title=《cs224n作业一》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/12/17/cs224n-assignment-1/&title=《cs224n作业一》 — PLM's Notes&source=
+cs224n的第一个作业，包括softmax、神经网络基础和词向量
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>

@@ -14,27 +14,27 @@
     
     
     
-    <title>神经网络机器翻译 | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <title>最初RNN神经翻译简略笔记 | PLM&#39;s Notes | 好好学习，天天笔记</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="机器翻译,自然语言处理,深度学习">
-    <meta name="description" content="在机器翻译、语音识别、文本摘要等领域中，Sequence-to-sequence 模型都取得了了非常好的效果。神经机器翻译(Neural Machine Translation, NMT)  使用seq2seq模型取得了巨大的成功。  本文参考谷歌NMT教程。 Basic 背景知识传统翻译是以词为核心一词一词翻译的，这样会切断句子本身的意思，翻译出来也很死板，不像我们人类说的话。 Encoder">
-<meta name="keywords" content="机器翻译,自然语言处理,深度学习">
+    <meta name="keywords" content="深度学习,机器翻译,自然语言处理">
+    <meta name="description" content="只是一个Seq2seq的在机器翻译中的简略笔记">
+<meta name="keywords" content="深度学习,机器翻译,自然语言处理">
 <meta property="og:type" content="article">
-<meta property="og:title" content="神经网络机器翻译">
+<meta property="og:title" content="最初RNN神经翻译简略笔记">
 <meta property="og:url" content="http://plmsmile.github.io/2017/10/02/NMT/index.html">
 <meta property="og:site_name" content="PLM&#39;s Notes">
-<meta property="og:description" content="在机器翻译、语音识别、文本摘要等领域中，Sequence-to-sequence 模型都取得了了非常好的效果。神经机器翻译(Neural Machine Translation, NMT)  使用seq2seq模型取得了巨大的成功。  本文参考谷歌NMT教程。 Basic 背景知识传统翻译是以词为核心一词一词翻译的，这样会切断句子本身的意思，翻译出来也很死板，不像我们人类说的话。 Encoder">
+<meta property="og:description" content="只是一个Seq2seq的在机器翻译中的简略笔记">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/nmt/01_encdec.jpg">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/nmt/02_seq2seq.jpg">
-<meta property="og:updated_time" content="2018-11-25T08:30:10.590Z">
+<meta property="og:updated_time" content="2018-12-13T09:07:00.077Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="神经网络机器翻译">
-<meta name="twitter:description" content="在机器翻译、语音识别、文本摘要等领域中，Sequence-to-sequence 模型都取得了了非常好的效果。神经机器翻译(Neural Machine Translation, NMT)  使用seq2seq模型取得了巨大的成功。  本文参考谷歌NMT教程。 Basic 背景知识传统翻译是以词为核心一词一词翻译的，这样会切断句子本身的意思，翻译出来也很死板，不像我们人类说的话。 Encoder">
+<meta name="twitter:title" content="最初RNN神经翻译简略笔记">
+<meta name="twitter:description" content="只是一个Seq2seq的在机器翻译中的简略笔记">
 <meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/nmt/01_encdec.jpg">
     
         <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
@@ -123,7 +123,7 @@
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
         </a>
-        <div class="flex-col header-title ellipsis">神经网络机器翻译</div>
+        <div class="flex-col header-title ellipsis">最初RNN神经翻译简略笔记</div>
         
         <div class="search-wrap" id="search-wrap">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
@@ -145,7 +145,7 @@
 <header class="content-header post-header">
 
     <div class="container fade-scale">
-        <h1 class="title">神经网络机器翻译</h1>
+        <h1 class="title">最初RNN神经翻译简略笔记</h1>
         <h5 class="subtitle">
             
                 <time datetime="2017-10-02T02:03:31.000Z" itemprop="datePublished" class="page-time">
@@ -170,7 +170,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Basic"><span class="post-toc-number">1.</span> <span class="post-toc-text">Basic</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#背景知识"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">背景知识</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#NMT模型选择"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">NMT模型选择</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#basic"><span class="post-toc-number">1.</span> <span class="post-toc-text">Basic</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#背景知识"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">背景知识</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#nmt模型选择"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">NMT模型选择</span></a></li></ol></li></ol>
         </nav>
     </aside>
 
@@ -178,7 +178,7 @@
 <article id="post-NMT" class="post-article article-type-post fade" itemprop="blogPost">
 
     <div class="post-card">
-        <h1 class="post-card-title">神经网络机器翻译</h1>
+        <h1 class="post-card-title">最初RNN神经翻译简略笔记</h1>
         <div class="post-meta">
             <time class="post-time" title="2017-10-02 10:03:31" datetime="2017-10-02T02:03:31.000Z" itemprop="datePublished">2017-10-02</time>
 
@@ -196,20 +196,27 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <blockquote>
-<p>在机器翻译、语音识别、文本摘要等领域中，<code>Sequence-to-sequence</code> 模型都取得了了非常好的效果。神经机器翻译(Neural Machine Translation, NMT)  使用seq2seq模型取得了巨大的成功。</p>
+<p>只是一个Seq2seq的在机器翻译中的简略笔记</p>
 </blockquote>
-<p>本文参考<a href="https://github.com/tensorflow/nmt" target="_blank" rel="noopener">谷歌NMT教程</a>。</p>
-<h1 id="Basic"><a href="#Basic" class="headerlink" title="Basic"></a>Basic</h1><p><img src="" style="display:block; margin:auto" width="60%"></p>
-<h2 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h2><p>传统翻译是以词为核心一词一词翻译的，这样会切断句子本身的意思，翻译出来也很死板，不像我们人类说的话。</p>
+<a id="more"></a>
+<h1 id="basic">Basic</h1>
+<p><img src="" style="display:block; margin:auto" width="60%"></p>
+<h2 id="背景知识">背景知识</h2>
+<p>传统翻译是以词为核心一词一词翻译的，这样会切断句子本身的意思，翻译出来也很死板，不像我们人类说的话。</p>
 <p><strong>Encoder-Decoder</strong></p>
 <p>现在采用<code>Encoder-Decoder</code>架构模型。如下图</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/nmt/01_encdec.jpg" style="display:block; margin:auto" width="60%"></p>
 <p>Encoder会利用整个原始句子生成一个<code>语义向量</code>，Decoder再利用这个向量翻译成其它语言的句子。这样可以把握整个句子的意思、句法结构、性别信息等等。具体框架可以参考<a href="https://mp.weixin.qq.com/s?__biz=MzI4MDYzNzg4Mw==&amp;mid=2247484196&amp;idx=1&amp;sn=efa6b79d24b138ff79f33ec3426c79e2&amp;chksm=ebb43bf0dcc3b2e6e69ff3b7d7cabf28744e276ee08ccfcfc1dc2c3f0bf52a122c9bd77ff319&amp;scene=21#wechat_redirect" target="_blank" rel="noopener">Encoder-Decoder框架</a>。</p>
-<p>举个翻译的例子，原始句子$X = (x_1, x_2, \cdots, x_m)$ ，翻译成目标句子$Y = (y_1, y_2, \cdots, y_m)$ 。</p>
-<p>Encoder对$X$ 进行<strong>非线性变换</strong>得到中间语义$C$<br>$$<br>C = \Gamma(x_1, x_2, \cdots, x_n)<br>$$<br>Decoder根据<strong>语义$C$ 和生成的历史信息</strong>$y_1, y_2, \cdots, y_{i-1}$ 来生成第$i$ 个单词 $y_i$<br>$$<br>y_i = \Psi(C, y_1, y_2, \cdots, y_{i-1})<br>$$<br>当然，在<code>Attention Model</code> 中，Decoder生成Y的时候每个单词对应的$C$不一样，记作$C_j, j \in [1, n]$ 。$C_j$ 就是体现了源语句子中不同的单词对目标句子中不同的单词的注意力概率分布。即各个单词的对齐的概率，也就是student对”学生”更重要，而对”我”不那么重要。这个在后续会用到。</p>
+<p>举个翻译的例子，原始句子<span class="math inline">\(X = (x_1, x_2, \cdots, x_m)\)</span> ，翻译成目标句子<span class="math inline">\(Y = (y_1, y_2, \cdots, y_m)\)</span> 。</p>
+<p>Encoder对<span class="math inline">\(X\)</span> 进行<strong>非线性变换</strong>得到中间语义<span class="math inline">\(C\)</span> <span class="math display">\[
+C = \Gamma(x_1, x_2, \cdots, x_n)
+\]</span> Decoder根据<strong>语义<span class="math inline">\(C\)</span> 和生成的历史信息</strong><span class="math inline">\(y_1, y_2, \cdots, y_{i-1}\)</span> 来生成第<span class="math inline">\(i\)</span> 个单词 <span class="math inline">\(y_i\)</span> <span class="math display">\[
+y_i = \Psi(C, y_1, y_2, \cdots, y_{i-1})
+\]</span> 当然，在<code>Attention Model</code> 中，Decoder生成Y的时候每个单词对应的<span class="math inline">\(C\)</span>不一样，记作<span class="math inline">\(C_j, j \in [1, n]\)</span> 。<span class="math inline">\(C_j\)</span> 就是体现了源语句子中不同的单词对目标句子中不同的单词的注意力概率分布。即各个单词的对齐的概率，也就是student对&quot;学生&quot;更重要，而对&quot;我&quot;不那么重要。这个在后续会用到。</p>
 <p>Encoder-Decoder是个<strong>创新大杀器</strong>，是个通用的计算框架。Encoder和Decoder具体使用什么模型，都可以自己选择。通常有CNN,RNN,BiRNN,GRU,LSTM, Deep LSTM。比如编码CNN-解码RNN, 编码BiRNN-解码Deep LSTM等等。</p>
 <p>上面的内容<strong>任意组合</strong>，只要得到的<strong>效果好</strong>，就是一个<strong>创新</strong>，就可以毕业了。（当然别人没有提出过）</p>
-<h2 id="NMT模型选择"><a href="#NMT模型选择" class="headerlink" title="NMT模型选择"></a>NMT模型选择</h2><p>有3个维度需要选择。</p>
+<h2 id="nmt模型选择">NMT模型选择</h2>
+<p>有3个维度需要选择。</p>
 <ul>
 <li>方向性。是单向还是双向</li>
 <li>深度：是一层还是多层</li>
@@ -225,7 +232,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-11-25T08:30:10.590Z" itemprop="dateUpdated">2018-11-25 16:30:10</time>
+    最后更新时间：<time datetime="2018-12-13T09:07:00.077Z" itemprop="dateUpdated">2018-12-13 17:07:00</time>
 </span><br>
 
 
@@ -261,7 +268,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/10/02/NMT/&title=《神经网络机器翻译》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/10/02/NMT/&title=《最初RNN神经翻译简略笔记》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -271,7 +278,9 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/10/02/NMT/&title=《神经网络机器翻译》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/10/02/NMT/&title=《最初RNN神经翻译简略笔记》 — PLM's Notes&source=
+只是一个Seq2seq的在机器翻译中的简略笔记
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -281,7 +290,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《神经网络机器翻译》 — PLM's Notes&url=http://plmsmile.github.io/2017/10/02/NMT/&via=http://plmsmile.github.io" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《最初RNN神经翻译简略笔记》 — PLM's Notes&url=http://plmsmile.github.io/2017/10/02/NMT/&via=http://plmsmile.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
@@ -309,7 +318,7 @@
 <nav class="post-nav flex-row flex-justify-between">
   
     <div class="waves-block waves-effect prev">
-      <a href="/2017/10/05/pytorch-start/" id="post-prev" class="post-nav-link">
+      <a href="/2017/10/05/23-pytorch-start/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
         <h4 class="title">PyTorch快速上手</h4>
       </a>
@@ -432,7 +441,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/10/02/NMT/&title=《神经网络机器翻译》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/10/02/NMT/&title=《最初RNN神经翻译简略笔记》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -442,7 +451,9 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/10/02/NMT/&title=《神经网络机器翻译》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/10/02/NMT/&title=《最初RNN神经翻译简略笔记》 — PLM's Notes&source=
+只是一个Seq2seq的在机器翻译中的简略笔记
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -452,7 +463,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《神经网络机器翻译》 — PLM's Notes&url=http://plmsmile.github.io/2017/10/02/NMT/&via=http://plmsmile.github.io" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《最初RNN神经翻译简略笔记》 — PLM's Notes&url=http://plmsmile.github.io/2017/10/02/NMT/&via=http://plmsmile.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>

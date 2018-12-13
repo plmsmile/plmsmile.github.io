@@ -169,7 +169,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#论文模型"><span class="post-toc-number">1.</span> <span class="post-toc-text">论文模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#概览"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">概览</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Input-Embedding"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">Input Embedding</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Embedding-Encoder"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">Embedding Encoder</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Attention-Layer"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">Attention Layer</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Model-Encoder"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">Model Encoder</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Output-Layer"><span class="post-toc-number">1.6.</span> <span class="post-toc-text">Output Layer</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#论文模型"><span class="post-toc-number">1.</span> <span class="post-toc-text">论文模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#概览"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">概览</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#input-embedding"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">Input Embedding</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#embedding-encoder"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">Embedding Encoder</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#attention-layer"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">Attention Layer</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#model-encoder"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">Model Encoder</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#output-layer"><span class="post-toc-number">1.6.</span> <span class="post-toc-text">Output Layer</span></a></li></ol></li></ol>
         </nav>
     </aside>
 
@@ -194,9 +194,11 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <p>常年<a href="https://rajpurkar.github.io/SQuAD-explorer/" target="_blank" rel="noopener">SQuAD榜单</a>排名第一的模型。<a href="https://arxiv.org/abs/1804.09541" target="_blank" rel="noopener">QANet: Combining Local Convolution with Global Self-Attention for Reading Comprehension</a><a id="more"></a> </p>
+            <p>常年<a href="https://rajpurkar.github.io/SQuAD-explorer/" target="_blank" rel="noopener">SQuAD榜单</a>排名第一的模型。<a href="https://arxiv.org/abs/1804.09541" target="_blank" rel="noopener">QANet: Combining Local Convolution with Global Self-Attention for Reading Comprehension</a><a id="more"></a></p>
 <p><img src="" style="display:block; margin:auto" width="60%"></p>
-<h1 id="论文模型"><a href="#论文模型" class="headerlink" title="论文模型"></a>论文模型</h1><h2 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h2><p>机器阅读任务就不说了。这个模型的主要创新点在于</p>
+<h1 id="论文模型">论文模型</h1>
+<h2 id="概览">概览</h2>
+<p>机器阅读任务就不说了。这个模型的主要创新点在于</p>
 <ul>
 <li>卷积（可分离卷积）捕捉局部信息 （并行计算，加速）</li>
 <li>Self-Attention捕捉全局信息</li>
@@ -210,7 +212,8 @@
 <li>前向神经网络</li>
 </ul>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/qanet/01-qanet.png" style="display:block; margin:auto" width="60%"></p>
-<h2 id="Input-Embedding"><a href="#Input-Embedding" class="headerlink" title="Input Embedding"></a>Input Embedding</h2><p><strong>词向量</strong></p>
+<h2 id="input-embedding">Input Embedding</h2>
+<p><strong>词向量</strong></p>
 <p>Glove 300维，Fix；UNK词向量可以训练</p>
 <p><strong>字向量</strong></p>
 <ul>
@@ -220,34 +223,56 @@
 <li>选择所有字符中<strong>最大的向量</strong>作为单词的最终字符向量</li>
 </ul>
 <p><strong>拼接</strong></p>
-<p>对词向量和字符向量拼接起来，$[x_w;x_c] \in \mathcal{R}^{d_w+d_c}$。再过两层的<code>HighwayNetwork</code>，得到最终的单词向量表示。</p>
-<h2 id="Embedding-Encoder"><a href="#Embedding-Encoder" class="headerlink" title="Embedding Encoder"></a>Embedding Encoder</h2><p>每一个Encoder块是由卷积、Self-Attention、全连接层组成，一共有4个Encoder块。输入向量维数是$d=500(200+300)$，输出是$d=128$</p>
+<p>对词向量和字符向量拼接起来，<span class="math inline">\([x_w;x_c] \in \mathcal{R}^{d_w+d_c}\)</span>。再过两层的<code>HighwayNetwork</code>，得到最终的单词向量表示。</p>
+<h2 id="embedding-encoder">Embedding Encoder</h2>
+<p>每一个Encoder块是由卷积、Self-Attention、全连接层组成，一共有4个Encoder块。输入向量维数是<span class="math inline">\(d=500(200+300)\)</span>，输出是<span class="math inline">\(d=128\)</span></p>
 <ul>
 <li>可分离卷积：<code>kernal size=7</code>，<code>d = 128</code>。变成128维向量</li>
 <li>Self-Attention：8头注意力，<a href="https://plmsmile.github.io/2018/03/25/33-attention-summary/#%E9%94%AE%E5%80%BC%E5%AF%B9%E6%B3%A8%E6%84%8F%E5%8A%9B">键值对注意力</a></li>
 <li>全连接：输出也是128</li>
-<li>QANet:层归一化+残差连接：$f(\rm{LayerNorm}(x)) + x$</li>
-<li>Transformer 是<code>Add&amp;Norm</code>，$\rm{LayerNorm(f(x) +x)}$</li>
+<li>QANet:层归一化+残差连接：<span class="math inline">\(f(\rm{LayerNorm}(x)) + x\)</span></li>
+<li>Transformer 是<code>Add&amp;Norm</code>，<span class="math inline">\(\rm{LayerNorm(f(x) +x)}\)</span></li>
 </ul>
-<h2 id="Attention-Layer"><a href="#Attention-Layer" class="headerlink" title="Attention Layer"></a>Attention Layer</h2><p>Context: $n$个单词，Question：m个单词。$C \in \mathcal{R}^{n\times d}$，$Q \in \mathcal{R}^{m \times d}$</p>
-<p><strong>关联性矩阵</strong> </p>
-<p>采用的是BiDAF的计算策略：<br>$$<br>S = f(q, c) = W_0 [q, c, q \odot c] \in \mathcal{R} ^{n \times m}<br>$$<br>DCN： $S = C \cdot Q^T \in \mathcal{R}^{n \times m}$</p>
+<h2 id="attention-layer">Attention Layer</h2>
+<p>Context: <span class="math inline">\(n\)</span>个单词，Question：m个单词。<span class="math inline">\(C \in \mathcal{R}^{n\times d}\)</span>，<span class="math inline">\(Q \in \mathcal{R}^{m \times d}\)</span></p>
+<p><strong>关联性矩阵</strong></p>
+<p>采用的是BiDAF的计算策略： <span class="math display">\[
+S = f(q, c) = W_0 [q, c, q \odot c] \in \mathcal{R} ^{n \times m}
+\]</span> DCN： <span class="math inline">\(S = C \cdot Q^T \in \mathcal{R}^{n \times m}\)</span></p>
 <p><strong>Context2Query Attention</strong></p>
-<p>C2Q的attention weights，对行做softmax<br>$$<br>A^Q = \rm{softmax}(S) \in \mathcal{R}^{n \times m}<br>$$<br>C2Q <strong>Attention</strong>（Context）<br>$$<br>S^C = A^Q \cdot Q \in \mathcal{R} ^{n \times d}<br>$$<br><strong>Query2Context Attention</strong></p>
-<p>Q2C Attention weights，对列做Softmax<br>$$<br>A^C = \rm{softmax}(S^T) \in \mathcal{R}^{m \times n}<br>$$<br>Q2C Attention（Query）<br>$$<br>S^Q = A^C \cdot C  \in \mathcal{R}^{m \times d}<br>$$<br>Context的<strong>Coattention</strong>，参考自<a href="https://plmsmile.github.io/2018/03/15/32-dynamic-coattention-network/#coattention%E6%B7%B1%E5%B1%82%E7%90%86%E8%A7%A3">DCN的Coattention</a><br>$$<br>C^C = A^Q \cdot S^Q \in \mathcal{R}^{n \times d}<br>$$<br>最终得到两个对Context的编码</p>
+<p>C2Q的attention weights，对行做softmax <span class="math display">\[
+A^Q = \rm{softmax}(S) \in \mathcal{R}^{n \times m}
+\]</span> C2Q <strong>Attention</strong>（Context） <span class="math display">\[
+S^C = A^Q \cdot Q \in \mathcal{R} ^{n \times d}
+\]</span> <strong>Query2Context Attention</strong></p>
+<p>Q2C Attention weights，对列做Softmax <span class="math display">\[
+A^C = \rm{softmax}(S^T) \in \mathcal{R}^{m \times n}
+\]</span> Q2C Attention（Query） <span class="math display">\[
+S^Q = A^C \cdot C  \in \mathcal{R}^{m \times d}
+\]</span> Context的<strong>Coattention</strong>，参考自<a href="https://plmsmile.github.io/2018/03/15/32-dynamic-coattention-network/#coattention%E6%B7%B1%E5%B1%82%E7%90%86%E8%A7%A3">DCN的Coattention</a> <span class="math display">\[
+C^C = A^Q \cdot S^Q \in \mathcal{R}^{n \times d}
+\]</span> 最终得到两个对Context的编码</p>
 <ul>
-<li>普通Attention：$A = S^C \in \mathcal{R}^{n \times d}$</li>
-<li>Coattention：$B = C^C \in \mathcal{R}^{n \times d}$</li>
+<li>普通Attention：<span class="math inline">\(A = S^C \in \mathcal{R}^{n \times d}\)</span></li>
+<li>Coattention：<span class="math inline">\(B = C^C \in \mathcal{R}^{n \times d}\)</span></li>
 </ul>
-<h2 id="Model-Encoder"><a href="#Model-Encoder" class="headerlink" title="Model Encoder"></a>Model Encoder</h2><p>输入是3个关于Context的矩阵信息：</p>
+<h2 id="model-encoder">Model Encoder</h2>
+<p>输入是3个关于Context的矩阵信息：</p>
 <ul>
-<li><strong>原始Context</strong>：$C \in \mathcal{R}^{n\times d}$</li>
-<li>Context的<strong>Attention</strong>： $A \in \mathcal{R}^{n\times d}$</li>
-<li>Context的<strong>Coattention</strong>：$B \in \mathcal{R}^{n \times d}$</li>
+<li><strong>原始Context</strong>：<span class="math inline">\(C \in \mathcal{R}^{n\times d}\)</span></li>
+<li>Context的<strong>Attention</strong>： <span class="math inline">\(A \in \mathcal{R}^{n\times d}\)</span></li>
+<li>Context的<strong>Coattention</strong>：<span class="math inline">\(B \in \mathcal{R}^{n \times d}\)</span></li>
 </ul>
-<p>每个单词的编码信息为上面三个矩阵的一个拼接：<br>$$<br>f(w) = [c, a, c \odot a, c \odot b]<br>$$<br>一个有7个Encoder-Block，每个Encoder-Block：2个卷积层、Self-Attention、FFN。其它参数和Embedding Encoder一样。</p>
-<p>一共有3个Model-Encoder，共享所有参数。输出依次为$M_0, M_1, M_2$</p>
-<h2 id="Output-Layer"><a href="#Output-Layer" class="headerlink" title="Output Layer"></a>Output Layer</h2><p>这一层是和特定任务相关的。输出各个位置作为开始和结束位置的概率：<br>$$<br>p^1 = \rm{softmax}(W_1[M_0; M_1]), \quad p^2 = \rm{softmax}(W_1[M_0; M_2])<br>$$<br>目标函数<br>$$<br>L(\theta) = -\frac{1}{N} \sum_{i}^N [\log(p^1_{y_i^1}) + \log(p^2_{y_i^2})]<br>$$</p>
+<p>每个单词的编码信息为上面三个矩阵的一个拼接： <span class="math display">\[
+f(w) = [c, a, c \odot a, c \odot b]
+\]</span> 一个有7个Encoder-Block，每个Encoder-Block：2个卷积层、Self-Attention、FFN。其它参数和Embedding Encoder一样。</p>
+<p>一共有3个Model-Encoder，共享所有参数。输出依次为<span class="math inline">\(M_0, M_1, M_2\)</span></p>
+<h2 id="output-layer">Output Layer</h2>
+<p>这一层是和特定任务相关的。输出各个位置作为开始和结束位置的概率： <span class="math display">\[
+p^1 = \rm{softmax}(W_1[M_0; M_1]), \quad p^2 = \rm{softmax}(W_1[M_0; M_2])
+\]</span> 目标函数 <span class="math display">\[
+L(\theta) = -\frac{1}{N} \sum_{i}^N [\log(p^1_{y_i^1}) + \log(p^2_{y_i^2})]
+\]</span></p>
 
         </div>
 
@@ -337,7 +362,14 @@
     </div>
 
     
-<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/12/11/50-elmo/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">ELMo Deep Contextualized Word Representations</h4>
+      </a>
+    </div>
   
 
   

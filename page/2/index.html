@@ -158,6 +158,52 @@
     <ul class="post-list">
     
         <li class="post-list-item fade">
+            <article id="post-35-nerual-network-optim" class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2018-03-30 13:54:34" datetime="2018-03-30T05:54:34.000Z" itemprop="datePublished">2018-03-30</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/深度学习/">深度学习</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2018/03/30/35-nerual-network-optim/">网络优化</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        参数初始化、数据预处理、逐层归一化、各种优化方法、超参数优化。
+    
+
+        <a href="/2018/03/30/35-nerual-network-optim/" class="post-more waves-effect waves-button">
+            点击阅读全文
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Adam/">Adam</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/优化方法/">优化方法</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/动量法/">动量法</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/学习率/">学习率</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/归一化/">归一化</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据预处理/">数据预处理</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/神经网络/">神经网络</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
             <article id="post-33-attention-summary" class="article-card article-type-post" itemprop="blogPost">
 
     <div class="post-meta">
@@ -191,13 +237,6 @@
 
 本文主要是总结：注意力机制、注意力机制的变体、论文中常见的注意力
 
-
-注意力机制系统介绍问题背景计算能力不足
-神经网络有很强的能力。但是对于复杂任务，需要大量的输入信息和复杂的计算流程。计算机的计算能力是神经网络的一个瓶颈。
-减少计算复杂度
-常见的：局部连接、权值共享、汇聚操作。
-但仍然需要：尽量少增加模型复杂度（参数），来提高模型的表达能力。
-...
     
 
         <a href="/2018/03/25/33-attention-summary/" class="post-more waves-effect waves-button">
@@ -243,13 +282,9 @@
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        Dynamic Coattention Networks For Question Answering
-DCN+: Mixed Objective and Deep Residual Coattention for Question Answering
-
+        
 先放四张图，分别是DCN的Encoder、Decoder，DCN+的Encoder和Objective。后面再详细总结
 
-
-DCNCoat...
     
 
         <a href="/2018/03/15/32-dynamic-coattention-network/" class="post-more waves-effect waves-button">
@@ -298,9 +333,6 @@ DCNCoat...
         
 只是记录一下Co-Attention，后续再补上本篇论文的全部笔记吧。
 
-论文：Hierarchical Question-Image Co-Attention  for Visual Question Answering 
-我的相关笔记：Attention-based NMT阅读笔记和NLP中的Attention笔记 
-Co-Attention这里以VQA里面的两个例子记录一下Co-At...
     
 
         <a href="/2018/03/14/31-co-attention-vqa/" class="post-more waves-effect waves-button">
@@ -346,14 +378,9 @@ Co-Attention这里以VQA里面的两个例子记录一下Co-At...
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        论文：Ask Me Anything: Dynamic Memory Networks for Natural Language Processing
-
+        
 本文概要：介绍DMN的基本原理，使用PyTorch进行实现一个简单QA
 
-
-模型简介概要说明许多NLP问题都可以看做一个Question-Answer问题。Dynamic Memory Network 由4部分组成。
-输入模块
-对输入的句子...
     
 
         <a href="/2018/03/13/30-dynamic-memory-network/" class="post-more waves-effect waves-button">
@@ -402,13 +429,6 @@ Co-Attention这里以VQA里面的两个例子记录一下Co-At...
         
 决策树的特征选择、生成、剪枝。熵、信息增益、基尼指数。ID3、C4.5、CART。
 
-决策树背景概览树的意义
-决策树是一棵if-then树。 内部节点代表一个属性或特征，叶节点代表一个类。
-决策树也是给定各个特征的情况下，某类别的概率。即条件概率$P(Y \mid X)$。
-树的生成
-构建根节点，选择最优特征。按照特征划分子集，继续选择新的最优特征，直到没有或者全部被正确分类。
-剪枝
-决策...
     
 
         <a href="/2018/03/05/29-desicion-tree/" class="post-more waves-effect waves-button">
@@ -455,13 +475,9 @@ Co-Attention这里以VQA里面的两个例子记录一下Co-At...
 
     
         
-Tensorflow1 Tensorflow的计算图
-Tensorflow通过计算图的形式来表示计算。是一个有向图。节点代表一个计算，边代表计算之间的依赖关系。
 
-构建计算图
-执行计算图，session.run
+一些机器学习的知识点总结
 
-12345678910x_data = np.float32(np.random.rand(2,100))y_data = np.dot([0.1 , 0.2] , x_data...
     
 
         <a href="/2018/03/03/28-ml-interview-notes/" class="post-more waves-effect waves-button">
@@ -497,7 +513,7 @@ Tensorflow通过计算图的形式来表示计算。是一个有向图。节点�
 
   
     <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2018/03/02/aim2offer4/">Aim2offer4(51-64)</a>
+      <a class="post-title-link" href="/2018/03/02/aim2offer4/">剑指offer4(51-64)</a>
     </h3>
   
 
@@ -507,12 +523,8 @@ Tensorflow通过计算图的形式来表示计算。是一个有向图。节点�
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        数组中的逆序对-51牛客网数组中的逆序对 
-
-逆序对，前面&gt;后面。给一个数组，求出所有逆序对的个数。如{7,5,6,4}， 有75-76-74-54-64这5对。
-
-使用冒泡排序思想，每一次交换，就说明有一个逆序对，统计交换次数。
-利用归并排序思想， 
+        
+剑指offer(51-64)
 
     
 
@@ -560,11 +572,8 @@ Tensorflow通过计算图的形式来表示计算。是一个有向图。节点�
 
     
         
-Support Vector Machine简单笔记。    特征空间上的间隔最大的线性分类器。学习策略是间隔最大化，转化为一个凸二次规划问题的求解。
+Support Vector Machine简单笔记。 特征空间上的间隔最大的线性分类器。学习策略是间隔最大化，转化为一个凸二次规划问题的求解。
 
-
-SVM概览线性分类器逻辑回归的图像和公式如下，预测的分类为1的概率。
-$$h_\theta(x) = g(\theta^Tx), \quad g(z) = \frac{1}{1+e^{-z}},\quadg(z) = \begin{ca...
     
 
         <a href="/2018/03/01/27-svm-notes/" class="post-more waves-effect waves-button">
@@ -583,7 +592,7 @@ $$h_\theta(x) = g(\theta^Tx), \quad g(z) = \frac{1}{1+e^{-z}},\quadg(z) = \begin
         </li>
     
         <li class="post-list-item fade">
-            <article id="post-ide-envs" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-12-ide-envs" class="article-card article-type-post" itemprop="blogPost">
 
     <div class="post-meta">
         <time class="post-time" title="2018-02-10 21:39:42" datetime="2018-02-10T13:39:42.000Z" itemprop="datePublished">2018-02-10</time>
@@ -600,7 +609,7 @@ $$h_\theta(x) = g(\theta^Tx), \quad g(z) = \frac{1}{1+e^{-z}},\quadg(z) = \begin
 
   
     <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2018/02/10/ide-envs/">ide-envs</a>
+      <a class="post-title-link" href="/2018/02/10/12-ide-envs/">IDE配置</a>
     </h3>
   
 
@@ -610,17 +619,12 @@ $$h_\theta(x) = g(\theta^Tx), \quad g(z) = \frac{1}{1+e^{-z}},\quadg(z) = \begin
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        vscode-cpp使用vscode写cpp程序。参考自vscode-cpp知乎 
-1 下载安装vscode
-2 下载安装MINGW
-3 VSCode安装cc++官方扩展 
-4 配置json文件
-c_cpp_properties.json， 编译环境
-ctrl+shift+p ，选择edit configurations， 更新windows的配置
-123456789101112131415...
+        
+VSCode-CPP
+
     
 
-        <a href="/2018/02/10/ide-envs/" class="post-more waves-effect waves-button">
+        <a href="/2018/02/10/12-ide-envs/" class="post-more waves-effect waves-button">
             点击阅读全文
         </a>
     </div>
@@ -636,7 +640,7 @@ ctrl+shift+p ，选择edit configurations， 更新windows的配置
         </li>
     
         <li class="post-list-item fade">
-            <article id="post-linux-notes" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-09-linux-notes" class="article-card article-type-post" itemprop="blogPost">
 
     <div class="post-meta">
         <time class="post-time" title="2018-01-25 16:07:07" datetime="2018-01-25T08:07:07.000Z" itemprop="datePublished">2018-01-25</time>
@@ -653,7 +657,7 @@ ctrl+shift+p ，选择edit configurations， 更新windows的配置
 
   
     <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2018/01/25/linux-notes/">linux-notes</a>
+      <a class="post-title-link" href="/2018/01/25/09-linux-notes/">Linux使用笔记</a>
     </h3>
   
 
@@ -663,13 +667,12 @@ ctrl+shift+p ，选择edit configurations， 更新windows的配置
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        Tmux使用tmux list-keys 可以看到所有的按键。
-使用tmux进行复制粘贴
-1234567891011121314# 1. 复制# 进入vim模式ctrl x + [ # 输入Space开始选择space# 输入enter选择完成enter# 2. 粘贴到另外一个窗口的vim文件里面# i进入vim的插入模式i# 粘贴到文件里ctrl x + ]
-即ctrl x + [ 是进入...
+        
+Linux环境配置，tmux+zsh+autojump
+
     
 
-        <a href="/2018/01/25/linux-notes/" class="post-more waves-effect waves-button">
+        <a href="/2018/01/25/09-linux-notes/" class="post-more waves-effect waves-button">
             点击阅读全文
         </a>
     </div>
@@ -702,7 +705,7 @@ ctrl+shift+p ，选择edit configurations， 更新windows的配置
 
   
     <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2018/01/07/aim2offer3/">Aim2offer3(21-40)</a>
+      <a class="post-title-link" href="/2018/01/07/aim2offer3/">剑指offer3(21-40)</a>
     </h3>
   
 
@@ -712,19 +715,9 @@ ctrl+shift+p ，选择edit configurations， 更新windows的配置
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        把奇数放在偶数的前面-21问题 
-输入：一个数组，乱序，有奇数和偶数
-输出：把所有的奇数放在前面，所有的偶数放在后面
-暴力思路
+        
+剑指offer算法题(21-40)
 
-从头到尾遍历数组
-遇到奇数，访问下一个
-遇到偶数，把它后面的数字都向前挪动以为，该偶数放到末尾
-
-冒泡思路
-
-for (int i = n-1; i &gt; 0; i--) 依次放置好后面n-1个数即可
-从for (int j = 0; j &lt; i; j+...
     
 
         <a href="/2018/01/07/aim2offer3/" class="post-more waves-effect waves-button">
@@ -760,7 +753,7 @@ for (int i = n-1; i &gt; 0; i--) 依次放置好后面n-1个数即可
 
   
     <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/31/algorithm-dfs/">dfs</a>
+      <a class="post-title-link" href="/2017/12/31/algorithm-dfs/">数据结构之搜索算法</a>
     </h3>
   
 
@@ -770,16 +763,9 @@ for (int i = n-1; i &gt; 0; i--) 依次放置好后面n-1个数即可
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        搜索算法解空间树子集树
-比如n种可选物品的01背包，对其进行选择。解空间为长度为n的01向量表示。解空间树是一颗完全二叉树。
-排列树
-比如旅行商问题，对n进行排列。
-解空间搜索方式DFS
-深度优先。回溯法。 
-BFS
-广度优先或最小耗费优先。分支限界法。 
-在扩展节点处，先生成所有的儿子节点，再从活节点列表中选择一个最有利的节点作为新的扩展节点。
-回溯法就是穷举，深度优先去找到解空间中满足约...
+        
+搜索算法、装载问题
+
     
 
         <a href="/2017/12/31/algorithm-dfs/" class="post-more waves-effect waves-button">
@@ -798,7 +784,7 @@ BFS
         </li>
     
         <li class="post-list-item fade">
-            <article id="post-trees" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-10-trees" class="article-card article-type-post" itemprop="blogPost">
 
     <div class="post-meta">
         <time class="post-time" title="2017-12-29 14:25:09" datetime="2017-12-29T06:25:09.000Z" itemprop="datePublished">2017-12-29</time>
@@ -815,7 +801,7 @@ BFS
 
   
     <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/29/trees/">树的总结</a>
+      <a class="post-title-link" href="/2017/12/29/10-trees/">树的总结</a>
     </h3>
   
 
@@ -826,24 +812,12 @@ BFS
 
     
         
-二叉树
-二叉树的性质
-第i层，节点最多$2^{i-1}$个 
-深度为k的二叉树，最多有$2^k-1$个 节点
-二叉树有n个节点，高度至少为$\log_2(n+1)$
-$n_0 =n_2 + 1$，叶子节点和度为2的节点的关系
 
-种类满二叉树
-高为h，有$2^h-1$个节点 
+二叉树的一些性质
 
-完全二叉树
-
-二叉查找树 
-$\rm{left &lt; root &lt; right}$ ， 没有相等的节点
-...
     
 
-        <a href="/2017/12/29/trees/" class="post-more waves-effect waves-button">
+        <a href="/2017/12/29/10-trees/" class="post-more waves-effect waves-button">
             点击阅读全文
         </a>
     </div>
@@ -886,16 +860,9 @@ $\rm{left &lt; root &lt; right}$ ， 没有相等的节点
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        有序列表转二叉查找树-109Convert Sorted List to Binary Search Tree
-二叉树的最小深度-111Minimum Depth of Binary Tree
-最小深度：根节点到某个叶子节点的最短路径。
+        
+leetcode题目
 
-为空，返回0
-左孩子为空，则结果在右孩子
-右孩子为空，则结果在左孩子
-左右均不为空，返回小的+1
-
-二叉树遍历先序遍历-144Binary Tree Pr...
     
 
         <a href="/2017/12/29/leetcode-01/" class="post-more waves-effect waves-button">
@@ -906,64 +873,6 @@ $\rm{left &lt; root &lt; right}$ ， 没有相等的节点
     <div class="post-footer">
         
 	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/leetcode/">leetcode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/树/">树</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
-            <article id="post-aim2offer2" class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2017-12-29 11:57:48" datetime="2017-12-29T03:57:48.000Z" itemprop="datePublished">2017-12-29</time>
-
-        
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/leetcode/">leetcode</a></li></ul>
-
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/12/29/aim2offer2/">剑指offer算法题(11-20)</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        剑指offer算法题(03-10)
-旋转数组中的最小值-11排序算法我的排序算法总结
-旋转数组最小值
-原有序数组：1,2,3,4,5,6,7，旋转一下，把一部分放到后面去：4,5,6,7, 1,2,3。
-
-
-求：在$O(logn)$内找到数组中最小的元素
-
-leetcode旋转数组
-思路 
-特点：左边序列全部大于等于右边序列。
-最小的值在中间，顺序查找肯定不行，那就只能二分查找了。
-设两个指...
-    
-
-        <a href="/2017/12/29/aim2offer2/" class="post-more waves-effect waves-button">
-            点击阅读全文
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/leetcode/">leetcode</a></li></ul>
 
     </div>
     

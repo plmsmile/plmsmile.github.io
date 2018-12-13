@@ -14,20 +14,20 @@
     
     
     
-    <title>word2vec中的数学模型 | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <title>Word2vec之数学模型 | PLM&#39;s Notes | 好好学习，天天笔记</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
     
     
     <meta name="keywords" content="自然语言处理,word2vec">
-    <meta name="description" content="word2vec有两种模型：CBOW和Skip-gram，有两种训练方法：Hierarchical Softmax和Negative Sampling   背景介绍符号 $C$ ：语料Corpus，所有的文本内容，包含重复的词。 D：词典，D是从C中取出来的，不重复。 $w$：一个词语 $m$：窗口大小，词语$w$的前后$m$个词语    $\rm{Context(w)} = C_w$： 词$w">
+    <meta name="description" content="Word2vec有两种模型：CBOW和Skip-gram，有两种训练方法：Hierarchical Softmax和Negative Sampling。偏数学公式推导">
 <meta name="keywords" content="自然语言处理,word2vec">
 <meta property="og:type" content="article">
-<meta property="og:title" content="word2vec中的数学模型">
+<meta property="og:title" content="Word2vec之数学模型">
 <meta property="og:url" content="http://plmsmile.github.io/2017/11/02/word2vec-math/index.html">
 <meta property="og:site_name" content="PLM&#39;s Notes">
-<meta property="og:description" content="word2vec有两种模型：CBOW和Skip-gram，有两种训练方法：Hierarchical Softmax和Negative Sampling   背景介绍符号 $C$ ：语料Corpus，所有的文本内容，包含重复的词。 D：词典，D是从C中取出来的，不重复。 $w$：一个词语 $m$：窗口大小，词语$w$的前后$m$个词语    $\rm{Context(w)} = C_w$： 词$w">
+<meta property="og:description" content="Word2vec有两种模型：CBOW和Skip-gram，有两种训练方法：Hierarchical Softmax和Negative Sampling。偏数学公式推导">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/05-nn-structure.png">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/12-simple-nn.png">
@@ -39,10 +39,10 @@
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/09-huffman-code.png">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/10-huffman-cbow.png">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/11-huffman-skipgram.png">
-<meta property="og:updated_time" content="2018-11-25T08:30:11.250Z">
+<meta property="og:updated_time" content="2018-12-13T08:18:10.963Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="word2vec中的数学模型">
-<meta name="twitter:description" content="word2vec有两种模型：CBOW和Skip-gram，有两种训练方法：Hierarchical Softmax和Negative Sampling   背景介绍符号 $C$ ：语料Corpus，所有的文本内容，包含重复的词。 D：词典，D是从C中取出来的，不重复。 $w$：一个词语 $m$：窗口大小，词语$w$的前后$m$个词语    $\rm{Context(w)} = C_w$： 词$w">
+<meta name="twitter:title" content="Word2vec之数学模型">
+<meta name="twitter:description" content="Word2vec有两种模型：CBOW和Skip-gram，有两种训练方法：Hierarchical Softmax和Negative Sampling。偏数学公式推导">
 <meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/05-nn-structure.png">
     
         <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
@@ -131,7 +131,7 @@
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
         </a>
-        <div class="flex-col header-title ellipsis">word2vec中的数学模型</div>
+        <div class="flex-col header-title ellipsis">Word2vec之数学模型</div>
         
         <div class="search-wrap" id="search-wrap">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
@@ -153,7 +153,7 @@
 <header class="content-header post-header">
 
     <div class="container fade-scale">
-        <h1 class="title">word2vec中的数学模型</h1>
+        <h1 class="title">Word2vec之数学模型</h1>
         <h5 class="subtitle">
             
                 <time datetime="2017-11-02T13:53:49.000Z" itemprop="datePublished" class="page-time">
@@ -178,7 +178,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#背景介绍"><span class="post-toc-number">1.</span> <span class="post-toc-text">背景介绍</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#符号"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">符号</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#目标函数"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">目标函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#神经概率语言模型"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">神经概率语言模型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#词向量的理解"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">词向量的理解</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Hierarchical-Softmax"><span class="post-toc-number">2.</span> <span class="post-toc-text">Hierarchical Softmax</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#CBOW模型"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">CBOW模型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#哈夫曼编码"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">哈夫曼编码</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#CBOW足球例子"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">CBOW足球例子</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#CBOW总结"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">CBOW总结</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Skip-Gram模型"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">Skip-Gram模型</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Negative-Sampling"><span class="post-toc-number">3.</span> <span class="post-toc-text">Negative Sampling</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#背景知识介绍"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">背景知识介绍</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#CBOW"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">CBOW</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Skip-gram"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">Skip-gram</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#背景介绍"><span class="post-toc-number">1.</span> <span class="post-toc-text">背景介绍</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#符号"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">符号</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#目标函数"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">目标函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#神经概率语言模型"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">神经概率语言模型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#词向量的理解"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">词向量的理解</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#hierarchical-softmax"><span class="post-toc-number">2.</span> <span class="post-toc-text">Hierarchical Softmax</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#cbow模型"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">CBOW模型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#哈夫曼编码"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">哈夫曼编码</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#cbow足球例子"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">CBOW足球例子</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#cbow总结"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">CBOW总结</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#skip-gram模型"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">Skip-Gram模型</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#negative-sampling"><span class="post-toc-number">3.</span> <span class="post-toc-text">Negative Sampling</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#背景知识介绍"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">背景知识介绍</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#cbow"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">CBOW</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#skip-gram"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">Skip-gram</span></a></li></ol></li></ol>
         </nav>
     </aside>
 
@@ -186,7 +186,7 @@
 <article id="post-word2vec-math" class="post-article article-type-post fade" itemprop="blogPost">
 
     <div class="post-card">
-        <h1 class="post-card-title">word2vec中的数学模型</h1>
+        <h1 class="post-card-title">Word2vec之数学模型</h1>
         <div class="post-meta">
             <time class="post-time" title="2017-11-02 21:53:49" datetime="2017-11-02T13:53:49.000Z" itemprop="datePublished">2017-11-02</time>
 
@@ -204,99 +204,313 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <blockquote>
-<p>word2vec有两种模型：CBOW和Skip-gram，有两种训练方法：Hierarchical Softmax和Negative Sampling</p>
+<p>Word2vec有两种模型：CBOW和Skip-gram，有两种训练方法：Hierarchical Softmax和Negative Sampling。偏数学公式推导</p>
 </blockquote>
+<a id="more"></a>
 <p><img src="" style="display:block; margin:auto" width="60%"></p>
-<h1 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h1><h2 id="符号"><a href="#符号" class="headerlink" title="符号"></a>符号</h2><ul>
-<li>$C$ ：语料Corpus，所有的文本内容，包含重复的词。</li>
+<h1 id="背景介绍">背景介绍</h1>
+<h2 id="符号">符号</h2>
+<ul>
+<li><span class="math inline">\(C\)</span> ：语料Corpus，所有的文本内容，包含重复的词。</li>
 <li>D：词典，D是从C中取出来的，不重复。</li>
-<li>$w$：一个词语</li>
-<li>$m$：窗口大小，词语$w$的前后$m$个词语   </li>
-<li>$\rm{Context(w)} = C_w$： 词$w$的上下文词汇，取决于$m$</li>
-<li>$v(w)$： 词典$D$中单词$w$的词向量</li>
-<li>$k$：词向量的长度  </li>
-<li>$i_w$：词语$w$在词典$D$中的下标 </li>
-<li>$NEG(w)$ ： 词$w$的负样本子集  </li>
+<li><span class="math inline">\(w\)</span>：一个词语</li>
+<li><span class="math inline">\(m\)</span>：窗口大小，词语<span class="math inline">\(w\)</span>的前后<span class="math inline">\(m\)</span>个词语<br>
+</li>
+<li><span class="math inline">\(\rm{Context(w)} = C_w\)</span>： 词<span class="math inline">\(w\)</span>的上下文词汇，取决于<span class="math inline">\(m\)</span></li>
+<li><span class="math inline">\(v(w)\)</span>： 词典<span class="math inline">\(D\)</span>中单词<span class="math inline">\(w\)</span>的词向量</li>
+<li><span class="math inline">\(k\)</span>：词向量的长度<br>
+</li>
+<li><span class="math inline">\(i_w\)</span>：词语<span class="math inline">\(w\)</span>在词典<span class="math inline">\(D\)</span>中的下标</li>
+<li><span class="math inline">\(NEG(w)\)</span> ： 词<span class="math inline">\(w\)</span>的负样本子集</li>
 </ul>
-<p>常用公式：<br>$$<br>\begin {align}<br>&amp; \log (a^n b^m) = \log a^n + \log b^m = n \log a + m \log b \<br>\end{align}<br>$$</p>
-<p>$$<br>\log \prod_{i=1}a^i b^{1-i} =  \sum_{i=1} \log a^i + \log b^{1-i} = \sum_{i=1} i \cdot \log  a + (i-1) \cdot \log b<br>$$</p>
-<h2 id="目标函数"><a href="#目标函数" class="headerlink" title="目标函数"></a>目标函数</h2><p><a href="https://plmsmile.github.io/2017/07/31/nlp-notes/">n-gram模型</a>。当然，我们使用<strong>神经概率语言模型</strong>。</p>
-<p>$P(w \mid C_w)$ 表示上下文词汇推出中心单词$w$的概率。 </p>
-<p> 对于统计语言模型来说，一般利用<strong>最大似然</strong>，把目标函数设为：<br>$$<br>\prod_{w \in C} p(w \mid C_w)<br>$$<br>一般使用<strong>最大对数似然</strong>，则目标函数为：<br>$$<br>L = \sum_{w \in C} \log p(w \mid C_w)<br>$$<br>其实概率$P(w \mid C_w)$是关于$w$和$C_w$的函数，其中$\theta$是待定参数集，就是要<strong>求最优</strong> $\theta^*$，来确定函数$F$：<br>$$<br>p(w \mid C_w) = F(w, C_w; \; \theta)<br>$$<br>有了函数$F$以后，就能够直接算出所需要的概率。 而F的构造，就是通过神经网络去实现的。  </p>
-<h2 id="神经概率语言模型"><a href="#神经概率语言模型" class="headerlink" title="神经概率语言模型"></a>神经概率语言模型</h2><p>一个二元对$(C_w, w)$就是一个训练样本。神经网络结构如下，$W, U$是权值矩阵，$p, q$是对应的偏置。 </p>
+<p>常用公式： <span class="math display">\[
+\begin {align}
+&amp; \log (a^n b^m) = \log a^n + \log b^m = n \log a + m \log b \\
+\end{align}
+\]</span></p>
+<p><span class="math display">\[
+\log \prod_{i=1}a^i b^{1-i} =  \sum_{i=1} \log a^i + \log b^{1-i} = \sum_{i=1} i \cdot \log  a + (i-1) \cdot \log b
+\]</span></p>
+<h2 id="目标函数">目标函数</h2>
+<p><a href="https://plmsmile.github.io/2017/07/31/nlp-notes/">n-gram模型</a>。当然，我们使用<strong>神经概率语言模型</strong>。</p>
+<p><span class="math inline">\(P(w \mid C_w)\)</span> 表示上下文词汇推出中心单词<span class="math inline">\(w\)</span>的概率。</p>
+<p>对于统计语言模型来说，一般利用<strong>最大似然</strong>，把目标函数设为： <span class="math display">\[
+\prod_{w \in C} p(w \mid C_w)
+\]</span> 一般使用<strong>最大对数似然</strong>，则目标函数为： <span class="math display">\[
+L = \sum_{w \in C} \log p(w \mid C_w)
+\]</span> 其实概率<span class="math inline">\(P(w \mid C_w)\)</span>是关于<span class="math inline">\(w\)</span>和<span class="math inline">\(C_w\)</span>的函数，其中<span class="math inline">\(\theta\)</span>是待定参数集，就是要<strong>求最优</strong> <span class="math inline">\(\theta^*\)</span>，来确定函数<span class="math inline">\(F\)</span>： <span class="math display">\[
+p(w \mid C_w) = F(w, C_w; \; \theta)
+\]</span> 有了函数<span class="math inline">\(F\)</span>以后，就能够直接算出所需要的概率。 而F的构造，就是通过神经网络去实现的。</p>
+<h2 id="神经概率语言模型">神经概率语言模型</h2>
+<p>一个二元对<span class="math inline">\((C_w, w)\)</span>就是一个训练样本。神经网络结构如下，<span class="math inline">\(W, U\)</span>是权值矩阵，<span class="math inline">\(p, q\)</span>是对应的偏置。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/05-nn-structure.png" style="display:block; margin:auto" width="60%"></p>
 <p>但是一般会减少一层，如下图：（其实是去掉了隐藏层，保留了投影层，是一样的）</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/12-simple-nn.png" style="display:block; margin:auto" width="50%"></p>
-<p>窗口大小是$m$，$\rm{Context}(w)$包含$2m$个词汇，<strong>词向量</strong>长度是$k$。可以做拼接或者求和（下文是）。拼接得到长向量$2mk$， 在投影层得到$\mathbf{x_w}$，然后给到隐藏层和输出层进行计算。<br>$$<br>\mathbf{z}_w = \rm{tanh}(W\mathbf{z}_w + \mathbf{p}) \;\to \;\mathbf{y}_w = U \mathbf{z}_w + \mathbf{q}<br>$$<br>再对$\mathbf{y}_w = (y_1, y_2, \cdots, y_K)$ 向量进行<strong>softmax</strong>即可得到所求得中心词汇的概率：<br>$$<br>p(w \mid C_w) = \frac{e^{y_{i_w}}}{\sum_{i=1}^K e^{y_i}}<br>$$<br><strong>优点</strong></p>
+<p>窗口大小是<span class="math inline">\(m\)</span>，<span class="math inline">\(\rm{Context}(w)\)</span>包含<span class="math inline">\(2m\)</span>个词汇，<strong>词向量</strong>长度是<span class="math inline">\(k\)</span>。可以做拼接或者求和（下文是）。拼接得到长向量<span class="math inline">\(2mk\)</span>， 在投影层得到<span class="math inline">\(\mathbf{x_w}\)</span>，然后给到隐藏层和输出层进行计算。 <span class="math display">\[
+\mathbf{z}_w = \rm{tanh}(W\mathbf{z}_w + \mathbf{p}) \;\to \;\mathbf{y}_w = U \mathbf{z}_w + \mathbf{q}
+\]</span> 再对<span class="math inline">\(\mathbf{y}_w = (y_1, y_2, \cdots, y_K)\)</span> 向量进行<strong>softmax</strong>即可得到所求得中心词汇的概率： <span class="math display">\[
+p(w \mid C_w) = \frac{e^{y_{i_w}}}{\sum_{i=1}^K e^{y_i}}
+\]</span> <strong>优点</strong></p>
 <ul>
 <li>词语的<strong>相似性</strong>可以通过<strong>词向量</strong>来体现</li>
 <li>自带平滑功能。N-Gram需要自己进行平滑。</li>
 </ul>
-<h2 id="词向量的理解"><a href="#词向量的理解" class="headerlink" title="词向量的理解"></a>词向量的理解</h2><p>有两种词向量，一种是one-hot representation，另一种是<strong>Distributed Representation</strong>。one-hot太长了，所以DR中把词映射成为<strong>相对短</strong>的向量。不再是只有1个1（<strong>孤注一掷</strong>），而是向量分布于每一维中（<strong>风险平摊</strong>）。再利用<strong>欧式距离</strong>就可以算出词向量之间的<strong>相似度</strong>。</p>
+<h2 id="词向量的理解">词向量的理解</h2>
+<p>有两种词向量，一种是one-hot representation，另一种是<strong>Distributed Representation</strong>。one-hot太长了，所以DR中把词映射成为<strong>相对短</strong>的向量。不再是只有1个1（<strong>孤注一掷</strong>），而是向量分布于每一维中（<strong>风险平摊</strong>）。再利用<strong>欧式距离</strong>就可以算出词向量之间的<strong>相似度</strong>。</p>
 <p>传统可以通过LSA（Latent Semantic Analysis）和LDA（Latent Dirichlet Allocation）来获得词向量，现在也可以用神经网络算法来获得。</p>
 <p>可以把一个词向量空间向另一个词向量空间进行映射，就可以实现翻译。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/13-vectorspace-trans.png" style="display:block; margin:auto" width="70%"></p>
-<h1 id="Hierarchical-Softmax"><a href="#Hierarchical-Softmax" class="headerlink" title="Hierarchical Softmax"></a>Hierarchical Softmax</h1><p>两种模型都是基于下面三层模式（<strong>无隐藏层</strong>），输入层、投影层和输出层。没有hidden的原因是据说是因为计算太多了。</p>
+<h1 id="hierarchical-softmax">Hierarchical Softmax</h1>
+<p>两种模型都是基于下面三层模式（<strong>无隐藏层</strong>），输入层、投影层和输出层。没有hidden的原因是据说是因为计算太多了。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/05-nn-structure.png" style="display:block; margin:auto" width="60%"></p>
 <p>CBOW和Skip-gram模型：</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/06-skipgram-cbow.png" style="display:block; margin:auto" width="70%"></p>
-<h2 id="CBOW模型"><a href="#CBOW模型" class="headerlink" title="CBOW模型"></a>CBOW模型</h2><p>一共有$\left| C \right|$个单词。CBOW是基于上下文$context(w) = c_w$去预测目标单词$w$，求条件概率$p(w \mid c_w)$，语言模型一般取目标函数为对数似然函数：<br>$$<br>L = \sum_{w \in C} \log p(w \mid c_w)<br>$$<br>窗口大小设为$m$，则$c_w$是$w$的前后m个单词。</p>
+<h2 id="cbow模型">CBOW模型</h2>
+<p>一共有<span class="math inline">\(\left| C \right|\)</span>个单词。CBOW是基于上下文<span class="math inline">\(context(w) = c_w\)</span>去预测目标单词<span class="math inline">\(w\)</span>，求条件概率<span class="math inline">\(p(w \mid c_w)\)</span>，语言模型一般取目标函数为对数似然函数： <span class="math display">\[
+L = \sum_{w \in C} \log p(w \mid c_w)
+\]</span> 窗口大小设为<span class="math inline">\(m\)</span>，则<span class="math inline">\(c_w\)</span>是<span class="math inline">\(w\)</span>的前后m个单词。</p>
 <p><strong>输入层</strong> 是上下文单词的词向量。（初始随机，训练过程中逐渐更新）</p>
-<p><strong>投影层</strong> 就是对上下文词向量进行求和，向量加法。得到单词$w$的所有上下文词$c_w$的词向量的和$\mathbf{x}_w$，待会儿参数更新的时候再依次更新回来。 </p>
-<p><strong>输出层</strong>  从$C$中选择一个词语，实际上是多分类。这里是<strong>哈夫曼树</strong>层次softmax。</p>
+<p><strong>投影层</strong> 就是对上下文词向量进行求和，向量加法。得到单词<span class="math inline">\(w\)</span>的所有上下文词<span class="math inline">\(c_w\)</span>的词向量的和<span class="math inline">\(\mathbf{x}_w\)</span>，待会儿参数更新的时候再依次更新回来。</p>
+<p><strong>输出层</strong> 从<span class="math inline">\(C\)</span>中选择一个词语，实际上是多分类。这里是<strong>哈夫曼树</strong>层次softmax。</p>
 <p>因为词语太多，用softmax太慢了。多分类实际上是多个二分类组成的，比如SVM二叉树分类：</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/08-svm-tree-classfier.gif" style="display:block; margin:auto" width="50%"></p>
 <p>这是一种二叉树结构，应用到word2vec中，被称为<strong>Hierarchical Softmax</strong>。CBOW完整结构如下：</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/07-cbow-info.png" style="display:block; margin:auto" width="50%"></p>
-<p> 每个叶子节点代表一个词语$w$，每个词语被01唯一编码。</p>
-<h2 id="哈夫曼编码"><a href="#哈夫曼编码" class="headerlink" title="哈夫曼编码"></a>哈夫曼编码</h2><p>哈夫曼树很简单。每次从许多节点中，选择权值最小的两个合并，根节点为合并值；依次循环，直到只剩一棵树。</p>
+<p>每个叶子节点代表一个词语<span class="math inline">\(w\)</span>，每个词语被01唯一编码。</p>
+<h2 id="哈夫曼编码">哈夫曼编码</h2>
+<p>哈夫曼树很简单。每次从许多节点中，选择权值最小的两个合并，根节点为合并值；依次循环，直到只剩一棵树。</p>
 <p>比如“我 喜欢 看 巴西 足球 世界杯”，这6个词语，出现的次数依次是15, 8, 6, 5, 3, 1。建立得到哈夫曼树，并且得到哈夫曼编码，如下：</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/09-huffman-code.png" style="display:block; margin:auto" width="60%"></p>
-<h2 id="CBOW足球例子"><a href="#CBOW足球例子" class="headerlink" title="CBOW足球例子"></a>CBOW足球例子</h2><p>引入一些符号：</p>
+<h2 id="cbow足球例子">CBOW足球例子</h2>
+<p>引入一些符号：</p>
 <ul>
-<li>$p^w$ ：从根节点到达$w$叶子节点的路径 </li>
-<li>$l^w$ ： 路径$p^w$中节点的个数 </li>
-<li>$p^w_1, \cdots, p^w_{l_w}$ ：依次代表路径中的节点，根节点-中间节点-叶子节点</li>
-<li>$d^w_2, \cdots, d^w_{l^w} \in {0, 1}$：词$w$的哈夫曼编码，由$l^w-1$位构成， 根节点无需编码</li>
-<li>$\theta_1^w, \cdots, \theta^w_{l^w -1}$：路径中<strong>非叶子节点对应的向量</strong>， 用于辅助计算。</li>
-<li>单词$w$是足球，对应的所有上下文词汇是$c_w$， 上下文词向量的和是$\mathbf{x}_w$</li>
+<li><span class="math inline">\(p^w\)</span> ：从根节点到达<span class="math inline">\(w\)</span>叶子节点的路径</li>
+<li><span class="math inline">\(l^w\)</span> ： 路径<span class="math inline">\(p^w\)</span>中节点的个数</li>
+<li><span class="math inline">\(p^w_1, \cdots, p^w_{l_w}\)</span> ：依次代表路径中的节点，根节点-中间节点-叶子节点</li>
+<li><span class="math inline">\(d^w_2, \cdots, d^w_{l^w} \in \{0, 1\}\)</span>：词<span class="math inline">\(w\)</span>的哈夫曼编码，由<span class="math inline">\(l^w-1\)</span>位构成， 根节点无需编码</li>
+<li><span class="math inline">\(\theta_1^w, \cdots, \theta^w_{l^w -1}\)</span>：路径中<strong>非叶子节点对应的向量</strong>， 用于辅助计算。</li>
+<li>单词<span class="math inline">\(w\)</span>是足球，对应的所有上下文词汇是<span class="math inline">\(c_w\)</span>， 上下文词向量的和是<span class="math inline">\(\mathbf{x}_w\)</span></li>
 </ul>
 <p>看一个例子：</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/10-huffman-cbow.png" style="display:block; margin:auto" width="70%"></p>
 <p>约定编码为1是负类，为0是正类。<strong>即左边是负类，右边是正类</strong>。</p>
-<p><strong>每一个节点就是一个二分类器，是逻辑回归</strong>(sigmoid)。其中$\theta$是对应的非叶子节点的向量，一个节点被分为正类和负类的概率分别如下：<br>$$<br>\sigma(\mathbf{x}_w^T \theta) = \frac {1}{ 1 + e^{-\mathbf{x}_w^T \theta}},<br>\quad<br>1 - \sigma(\mathbf{x}<em>w^T \theta)<br>$$<br>那么从根节点到达足球的概率是：<br>$$<br>p (足球 \mid c</em>{足球}) = \prod_{j=2}^5 p(d_j^w \mid \mathbf{x}<em>w, \theta</em>{j-1}^w)<br>$$</p>
-<h2 id="CBOW总结"><a href="#CBOW总结" class="headerlink" title="CBOW总结"></a>CBOW总结</h2><p><strong>目标函数</strong> </p>
-<p>从根节点到每一个单词$w$都存在一条路径$p^w$，路径上有$l^w-1$个分支节点，每个节点就是一个二分类，每次产生一个概率  $p(d_j^w \mid \mathbf{x}<em>w, \theta^w</em>{j-1})$， 把这些概率乘起来就得到了$p(w \mid c_w)$。</p>
-<p>其中每个节点的概率是，与各个节点的参数和传入的上下文向量和$\mathbf{x}_w$相关。<br>$$<br>p(d_j^w \mid \mathbf{x}<em>w, \theta^w</em>{j-1}) =<br>\begin{cases}<br>&amp; \sigma(\mathbf{x}^T_w \theta^w_{j-1}), &amp; d_j^w = 0 \<br>&amp; 1 - \sigma(\mathbf{x}^T_w \theta^w_{j-1}), &amp; d_j^w = 1\<br>\end{cases}<br>$$<br>写成指数形式是<br>$$<br>p(d_j^w \mid \mathbf{x}<em>w, \theta^w</em>{j-1}) =<br> [\sigma(\mathbf{x}^T_w \theta^w_{j-1})]^{1-d_j^w}<br> \cdot<br> [1 - \sigma(\mathbf{x}^T_w \theta^w_{j-1})]^{d_j^w}<br>$$<br>则上下文推中间单词的概率，即<strong>目标函数</strong>：<br>$$<br>p(w \mid c_w) = \prod_{j=2}^{l^w} p(d_j^w \mid \mathbf{x}<em>w, \theta^w</em>{j-1})<br>$$<br> <strong>对数似然函数</strong></p>
-<p>对目标函数取对数似然函数是：<br>$$<br>\begin{align}<br>L<br>&amp; = \sum_{w \in C} \log p(w  \mid c_w)<br>= \sum_{w \in C} \log  \prod_{j=2}^{l^w}<br>[\sigma(\mathbf{x}^T_w \theta^w_{j-1})]^{1-d_j^w} \cdot[1 - \sigma(\mathbf{x}^T_w \theta^w_{j-1})]^{d_j^w} \<br>&amp; = \sum_{w \in C} \sum_{j=2}^{l^w}<br>\left( (1-d_j^w) \cdot \log \sigma(\mathbf{x}^T_w \theta^w_{j-1})</p>
-<ul>
-<li>d_j^w \cdot \log (1 - \sigma(\mathbf{x}^T_w \theta^w_{j-1}))<br>\right) \<br>&amp; = \sum_{w \in C} \sum_{j=2}^{l^w}<br>\left( (1-d_j^w) \cdot \log A</li>
-<li>d_j^w \cdot \log (1 -A))<br>\right)<br>\end{align}<br>$$<br>简写：<br>$$<br>\begin{align}<br>&amp; L(w, j) =  (1-d_j^w) \cdot \log \sigma(\mathbf{x}^T_w \theta^w_{j-1})</li>
-<li>d_j^w \cdot \log (1 - \sigma(\mathbf{x}^T_w \theta^w_{j-1})) \<br>&amp; L = \sum_{w,j} L(w, j)<br>\end{align}<br>$$<br>怎样最大化对数似然函数呢，可以最大化每一项，或者使整体最大化。尽管最大化每一项不一定使整体最大化，但是这里还是使用最大化每一项$L(w, j)$。</li>
-</ul>
-<p>sigmoid函数的求导：<br>$$<br>\sigma ^{\prime}(x) = \sigma(x)(1 - \sigma(x))<br>$$<br>$L(w, j)$有两个参数：输入层的$\mathbf{x}<em>w$ 和 每个节点的参数向量$\theta</em>{j-1}^w$ 。 分别求偏导并且进行更新参数：<br>$$<br>\begin{align}<br>&amp; \frac{\partial}{\theta_{j-1}^w} L(w, j) = [1 - d_j^w - \sigma(\mathbf{x}^T_w \theta^w_{j-1})] \cdot \mathbf{x}<em>w<br>\quad \to \quad  \theta</em>{j-1}^w = \theta_{j-1}^w + \alpha \cdot  \frac{\partial}{\theta_{j-1}^w} L(w, j)<br>\<br>&amp;  \frac{\partial}{\mathbf{x}_w} L(w, j) = [1 - d_j^w - \sigma(\mathbf{x}^T_w \theta^w_{j-1})] \cdot \theta_{j-1}^w<br>\quad \to \quad v(\hat w)+=  v(\hat w) + \alpha \cdot \sum_{j=2}^{l^w} \frac{\partial}{\mathbf{x}_w} L(w, j), \hat w \in c_w<br>\<br>\end{align}<br>$$<br>注意：$\mathbf{x}_w$是所有上下文词向量的和，应该把它的更新平均更新到每个上下文词汇中去。$\hat w$ 代表$c_w$中的一个词汇。</p>
-<h2 id="Skip-Gram模型"><a href="#Skip-Gram模型" class="headerlink" title="Skip-Gram模型"></a>Skip-Gram模型</h2><p>Skip-gram模型是根据当前词语，预测上下文。网络结构依然是输入层、投影层(其实无用)、输出层。如下：</p>
-<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/11-huffman-skipgram.png" style="display:block; margin:auto" width="60%"></p>
-<p>输入一个中心单词的词向量$v(w)$，简记为$v_w$，输出是一个哈夫曼树。单词$u$是$w$的上下文单词$c_w$中的一个。这是一个词袋模型，每个$u$是互相独立的。 </p>
+<p><strong>每一个节点就是一个二分类器，是逻辑回归</strong>(sigmoid)。其中<span class="math inline">\(\theta\)</span>是对应的非叶子节点的向量，一个节点被分为正类和负类的概率分别如下： <span class="math display">\[
+\sigma(\mathbf{x}_w^T \theta) = \frac {1}{ 1 + e^{-\mathbf{x}_w^T \theta}},
+\quad 
+1 - \sigma(\mathbf{x}_w^T \theta)
+\]</span> 那么从根节点到达足球的概率是： <span class="math display">\[
+p (足球 \mid c_{足球}) = \prod_{j=2}^5 p(d_j^w \mid \mathbf{x}_w, \theta_{j-1}^w)
+\]</span></p>
+<h2 id="cbow总结">CBOW总结</h2>
 <p><strong>目标函数</strong></p>
-<p>所以$c_w$是$w$的上下文词汇的概率是：<br>$$<br>p(c_w \mid w) = \prod_{u \in c_w} p(u \mid w)<br>$$<br>与上面同理，$p(u \mid w)$ 与传入的中心单词向量$v(w)$和路径上的各个节点相关：<br>$$<br>\begin{align}<br>&amp; p(u \mid w) =  \prod_{j=2}^{l^w} p(d_j^u \mid v_w,\; \theta^u_{j-1}) \<br>&amp;<br>p(d_j^u \mid v_w ,\; \theta^u_{j-1} ) =<br> [\sigma(v_w^T \theta^u_{j-1})]^{1-d_j^u}<br> \cdot<br> [1 - \sigma(v_w^T \theta^u_{j-1})]^{d_j^u}<br>\<br>\end{align}<br>$$<br>下文$v_w^T \theta^w_{j-1}$简记为$v_w \theta_{j-1}^w$，要记得转置向量相乘就可以了。  </p>
-<p>  <strong>对数似然函数</strong><br>$$<br>\begin{align}<br>L<br>&amp;  = \sum_{w \in C} \log p(c_w \mid w) \<br>&amp; = \sum_{w \in C} \log \prod_{u \in c_w} \prod _{j=2}^{l^w}<br>  [\sigma(v_w^T \theta^u_{j-1})]^{1-d_j^u}<br> \cdot<br> [1 - \sigma(v_w^T \theta^u_{j-1})]^{d_j^u}<br> \<br> &amp; = \sum_{w \in C} \sum_{u \in c_w} \sum_{j=2}^{l^w}<br> \left( (1-d_j^u) \cdot \log \sigma(v_w^T \theta^u_{j-1})</p>
-<ul>
-<li>d_j^u \cdot \log (1 - \sigma(v_w^T  \theta^u_{j-1}))<br>\right)<br>\<br>\end{align}<br>$$<br>同样，简写每一项为$L(w, u, j)$<br>$$<br>L(w, u, j) = (1-d_j^u) \cdot \log \sigma(v_w^T \theta^u_{j-1})</li>
-<li>d_j^u \cdot \log (1 - \sigma(v_w^T  \theta^u_{j-1}))<br>$$<br>然后就是，分别对$v_w$和$\theta_{j-1}^u$求梯度更新即可，同上面的类似。得到下面的更新公式<br>$$<br>\begin{align}<br>&amp; \theta_{j-1}^u = \theta_{j-1}^u + \alpha \cdot [1 - d_j^u - \sigma(v_w^t \cdot \theta_{j-1}^u)] \cdot v(w) \<br>&amp; v_w = v_w + \alpha \cdot \sum_{u \in c_w} \sum_{j=2}^{l^w} \frac{\partial L(w, u, j)}{\partial v_w} \<br>\end{align}<br>$$</li>
-</ul>
-<h1 id="Negative-Sampling"><a href="#Negative-Sampling" class="headerlink" title="Negative Sampling"></a>Negative Sampling</h1><h2 id="背景知识介绍"><a href="#背景知识介绍" class="headerlink" title="背景知识介绍"></a>背景知识介绍</h2><p>Negative Sampling简称NEG，是Noise Contrastive Estimation(NCE)的一个简化版本，目的是用来提高训练速度和改善所得词向量的质量。</p>
+<p>从根节点到每一个单词<span class="math inline">\(w\)</span>都存在一条路径<span class="math inline">\(p^w\)</span>，路径上有<span class="math inline">\(l^w-1\)</span>个分支节点，每个节点就是一个二分类，每次产生一个概率 <span class="math inline">\(p(d_j^w \mid \mathbf{x}_w, \theta^w_{j-1})\)</span>， 把这些概率乘起来就得到了<span class="math inline">\(p(w \mid c_w)\)</span>。</p>
+<p>其中每个节点的概率是，与各个节点的参数和传入的上下文向量和<span class="math inline">\(\mathbf{x}_w\)</span>相关。 <span class="math display">\[
+p(d_j^w \mid \mathbf{x}_w, \theta^w_{j-1}) = 
+\begin{cases}
+&amp; \sigma(\mathbf{x}^T_w \theta^w_{j-1}), &amp; d_j^w = 0 \\
+&amp; 1 - \sigma(\mathbf{x}^T_w \theta^w_{j-1}), &amp; d_j^w = 1\\
+\end{cases}
+\]</span> 写成指数形式是 <span class="math display">\[
+p(d_j^w \mid \mathbf{x}_w, \theta^w_{j-1}) =
+ [\sigma(\mathbf{x}^T_w \theta^w_{j-1})]^{1-d_j^w} 
+ \cdot
+ [1 - \sigma(\mathbf{x}^T_w \theta^w_{j-1})]^{d_j^w}
+\]</span> 则上下文推中间单词的概率，即<strong>目标函数</strong>： <span class="math display">\[
+p(w \mid c_w) = \prod_{j=2}^{l^w} p(d_j^w \mid \mathbf{x}_w, \theta^w_{j-1})
+\]</span> <strong>对数似然函数</strong></p>
+<p>对目标函数取对数似然函数是： <span class="math display">\[
+\begin{align}
+L 
+&amp; = \sum_{w \in C} \log p(w  \mid c_w) 
+= \sum_{w \in C} \log  \prod_{j=2}^{l^w} 
+[\sigma(\mathbf{x}^T_w \theta^w_{j-1})]^{1-d_j^w} \cdot[1 - \sigma(\mathbf{x}^T_w \theta^w_{j-1})]^{d_j^w} \\
+&amp; = \sum_{w \in C} \sum_{j=2}^{l^w} 
+\left( (1-d_j^w) \cdot \log \sigma(\mathbf{x}^T_w \theta^w_{j-1})
++ d_j^w \cdot \log (1 - \sigma(\mathbf{x}^T_w \theta^w_{j-1}))
+\right) \\
+&amp; = \sum_{w \in C} \sum_{j=2}^{l^w} 
+\left( (1-d_j^w) \cdot \log A
++ d_j^w \cdot \log (1 -A))
+\right)
+\end{align}
+\]</span> 简写： <span class="math display">\[
+\begin{align}
+&amp; L(w, j) =  (1-d_j^w) \cdot \log \sigma(\mathbf{x}^T_w \theta^w_{j-1})
++ d_j^w \cdot \log (1 - \sigma(\mathbf{x}^T_w \theta^w_{j-1})) \\
+&amp; L = \sum_{w,j} L(w, j)
+\end{align}
+\]</span> 怎样最大化对数似然函数呢，可以最大化每一项，或者使整体最大化。尽管最大化每一项不一定使整体最大化，但是这里还是使用最大化每一项<span class="math inline">\(L(w, j)\)</span>。</p>
+<p>sigmoid函数的求导： <span class="math display">\[
+\sigma ^{\prime}(x) = \sigma(x)(1 - \sigma(x))
+\]</span> <span class="math inline">\(L(w, j)\)</span>有两个参数：输入层的<span class="math inline">\(\mathbf{x}_w\)</span> 和 每个节点的参数向量<span class="math inline">\(\theta_{j-1}^w\)</span> 。 分别求偏导并且进行更新参数： <span class="math display">\[
+\begin{align}
+&amp; \frac{\partial}{\theta_{j-1}^w} L(w, j) = [1 - d_j^w - \sigma(\mathbf{x}^T_w \theta^w_{j-1})] \cdot \mathbf{x}_w   
+\quad \to \quad  \theta_{j-1}^w = \theta_{j-1}^w + \alpha \cdot  \frac{\partial}{\theta_{j-1}^w} L(w, j)
+\\
+&amp;  \frac{\partial}{\mathbf{x}_w} L(w, j) = [1 - d_j^w - \sigma(\mathbf{x}^T_w \theta^w_{j-1})] \cdot \theta_{j-1}^w  
+\quad \to \quad v(\hat w)+=  v(\hat w) + \alpha \cdot \sum_{j=2}^{l^w} \frac{\partial}{\mathbf{x}_w} L(w, j), \hat w \in c_w
+\\
+\end{align}
+\]</span> 注意：<span class="math inline">\(\mathbf{x}_w\)</span>是所有上下文词向量的和，应该把它的更新平均更新到每个上下文词汇中去。<span class="math inline">\(\hat w\)</span> 代表<span class="math inline">\(c_w\)</span>中的一个词汇。</p>
+<h2 id="skip-gram模型">Skip-Gram模型</h2>
+<p>Skip-gram模型是根据当前词语，预测上下文。网络结构依然是输入层、投影层(其实无用)、输出层。如下：</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/11-huffman-skipgram.png" style="display:block; margin:auto" width="60%"></p>
+<p>输入一个中心单词的词向量<span class="math inline">\(v(w)\)</span>，简记为<span class="math inline">\(v_w\)</span>，输出是一个哈夫曼树。单词<span class="math inline">\(u\)</span>是<span class="math inline">\(w\)</span>的上下文单词<span class="math inline">\(c_w\)</span>中的一个。这是一个词袋模型，每个<span class="math inline">\(u\)</span>是互相独立的。</p>
+<p><strong>目标函数</strong></p>
+<p>所以<span class="math inline">\(c_w\)</span>是<span class="math inline">\(w\)</span>的上下文词汇的概率是： <span class="math display">\[
+p(c_w \mid w) = \prod_{u \in c_w} p(u \mid w)
+\]</span> 与上面同理，<span class="math inline">\(p(u \mid w)\)</span> 与传入的中心单词向量<span class="math inline">\(v(w)\)</span>和路径上的各个节点相关： <span class="math display">\[
+\begin{align}
+&amp; p(u \mid w) =  \prod_{j=2}^{l^w} p(d_j^u \mid v_w,\; \theta^u_{j-1}) \\
+&amp; 
+p(d_j^u \mid v_w ,\; \theta^u_{j-1} ) =
+ [\sigma(v_w^T \theta^u_{j-1})]^{1-d_j^u} 
+ \cdot
+ [1 - \sigma(v_w^T \theta^u_{j-1})]^{d_j^u}
+\\
+\end{align}
+\]</span> 下文<span class="math inline">\(v_w^T \theta^w_{j-1}\)</span>简记为<span class="math inline">\(v_w \theta_{j-1}^w\)</span>，要记得转置向量相乘就可以了。</p>
+<p><strong>对数似然函数</strong> <span class="math display">\[
+\begin{align}
+L
+&amp;  = \sum_{w \in C} \log p(c_w \mid w) \\
+&amp; = \sum_{w \in C} \log \prod_{u \in c_w} \prod _{j=2}^{l^w}  
+  [\sigma(v_w^T \theta^u_{j-1})]^{1-d_j^u} 
+ \cdot
+ [1 - \sigma(v_w^T \theta^u_{j-1})]^{d_j^u}
+ \\
+ &amp; = \sum_{w \in C} \sum_{u \in c_w} \sum_{j=2}^{l^w} 
+ \left( (1-d_j^u) \cdot \log \sigma(v_w^T \theta^u_{j-1})
++ d_j^u \cdot \log (1 - \sigma(v_w^T  \theta^u_{j-1}))
+\right)
+ \\
+\end{align}
+\]</span> 同样，简写每一项为<span class="math inline">\(L(w, u, j)\)</span> <span class="math display">\[
+L(w, u, j) = (1-d_j^u) \cdot \log \sigma(v_w^T \theta^u_{j-1})
++ d_j^u \cdot \log (1 - \sigma(v_w^T  \theta^u_{j-1}))
+\]</span> 然后就是，分别对<span class="math inline">\(v_w\)</span>和<span class="math inline">\(\theta_{j-1}^u\)</span>求梯度更新即可，同上面的类似。得到下面的更新公式 <span class="math display">\[
+\begin{align}
+&amp; \theta_{j-1}^u = \theta_{j-1}^u + \alpha \cdot [1 - d_j^u - \sigma(v_w^t \cdot \theta_{j-1}^u)] \cdot v(w) \\
+&amp; v_w = v_w + \alpha \cdot \sum_{u \in c_w} \sum_{j=2}^{l^w} \frac{\partial L(w, u, j)}{\partial v_w} \\
+\end{align}
+\]</span></p>
+<h1 id="negative-sampling">Negative Sampling</h1>
+<h2 id="背景知识介绍">背景知识介绍</h2>
+<p>Negative Sampling简称NEG，是Noise Contrastive Estimation(NCE)的一个简化版本，目的是用来提高训练速度和改善所得词向量的质量。</p>
 <p>NEG不使用复杂的哈夫曼树，而是使用<strong>随机负采样</strong>，大幅度提高性能，是Hierarchical Softmax的一个替代。</p>
 <p>NCE 细节有点复杂，本质上是利用已知的概率密度函数来估计未知的概率密度函数。简单来说，如果已知概率密度X，未知Y，如果知道X和Y的关系，Y也就求出来了。</p>
 <p>在训练的时候，需要给正例和负例。Hierarchical Softmax是把负例放在二叉树的根节点上，而NEG，是随机挑选一些负例。</p>
-<h2 id="CBOW"><a href="#CBOW" class="headerlink" title="CBOW"></a>CBOW</h2><p>对于一个单词$w$，<strong>输入上下文$\rm{Context}(w) = C_w$，输出单词$w$</strong>。那么词$w$是正样本<strong>，</strong>其他词都是负样本。   负样本很多，该怎么选择呢？后面再说。</p>
-<p>定义$\rm{Context}(w)$的负样本子集$\rm{NEG}(w)$。对于样本$(C_w, w)$，$\mathbf{x}_w$依然是$C_w$的词向量之和。$\theta_u$为词$u$的一个（辅助）向量，待训练参数。</p>
-<p>设集合$S_w = w \bigcup NEG(w)$ ，对所有的单词$u \in S_w$，有<strong>标签函数</strong>：<br>$$<br>b^w(u) =<br>\begin{cases}<br>&amp; 1, &amp; u = w \<br>&amp; 0, &amp; u \neq w \<br>\end{cases}<br>$$<br><strong>单词$u$是$C_w$ 的中心词的概率</strong>是：<br>$$<br>p(u \mid C_w) =<br>\begin{cases}<br>&amp; \sigma(\mathbf x_w^T \theta^u), &amp; u=w \; \text{正样本} \<br>&amp; 1 -  \sigma(\mathbf x_w^T \theta^u), &amp; u \neq w \; \text{负样本} \<br>\end{cases}<br>$$<br>简写为：<br>$$<br>\color{blue} {p(u \mid C_w)} =<br>[ \sigma(\mathbf x_w^T \theta^u)]^{b^w(u)} \cdot [1 -  \sigma(\mathbf x_w^T \theta^u)]^{1 - b^w(u)}<br>$$<br><strong>要最大化目标函数</strong>$g(w) = \sum_{u \in S_w} p(u \mid C_w)$：<br>$$<br>\begin{align}<br>\color{blue}{g(w) }<br>&amp; =<br>\prod_{u \in S_w}<br>[ \sigma(\mathbf x_w^T \theta^u)]^{b^w(u)}<br>\cdot<br>[1 -  \sigma(\mathbf x_w^T \theta^u)]^{1 - b^w(u)} \<br>&amp;=<br> \color{blue} {\sigma(\mathbf x_w^T \theta^u)<br>\prod_{u \in NEG(w)} (1 -  \sigma(\mathbf x_w^T \theta^u)) } \<br>\end{align}<br>$$<br>观察$g(w)$可知，最大化就是要：<strong>增大正样本概率和减小化负样本概率</strong>。</p>
-<p>每个词都是这样，对于整个<strong>语料库</strong>的所有词汇，将$g$累计得到优化目标，目标函数如下：<br>$$<br>\begin {align}<br>L<br>&amp; =  \log \prod_{w \in C}g(w) = \sum_{w \in C} \log g(w) \<br>&amp; = \sum_{w \in C} \log<br> \left(<br> \prod_{u \in S_w}<br>[ \sigma(\mathbf x_w^T \theta^u)]^{b^w(u)}<br>\cdot<br>[1 -  \sigma(\mathbf x_w^T \theta^u)]^{1 - b^w(u)}<br> \right) \<br> &amp;=<br> \sum_{w \in C} \sum_{u \in S_w}<br> \left[<br> b^w_u \cdot \sigma(\mathbf x_w^T \theta^u) + (1-b^w_u) \cdot (1 - \sigma(\mathbf x_w^T \theta^u))<br> \right]<br>\end {align}<br>$$<br>简写每一步$L(w, u)$：<br>$$<br>L(w, u) = b^w_u \cdot \sigma(\mathbf x_w^T \theta^u) + (1-b^w_u) \cdot (1 - \sigma(\mathbf x_w^T \theta^u))<br>$$<br>计算$L(w, u)$对$\theta^u$和$\mathbf{x}_w$的<strong>梯度</strong>进行更新，得到梯度(<strong>对称性</strong>)：<br>$$<br>\frac{\partial L(w, u) }{ \partial \theta^u} = [b^w(u) - \sigma(\mathbf x_w^T \theta^u)] \cdot \mathbf{x}_w, \quad<br>\frac{\partial L(w, u) }{ \partial \mathbf{x}_w} = [b^w(u) - \sigma(\mathbf x_w^T \theta^u)] \cdot \theta^u<br>$$<br><strong>更新</strong>每个单词的<strong>训练参数$\theta^u$</strong> ：<br>$$<br>\theta^u = \theta^u + \alpha \cdot \frac{\partial L(w, u) }{ \partial \theta^u}<br>$$<br>对每个单词<strong>更新词向量$v(u)$</strong> ：<br>$$<br>v(u) = v(u) + \alpha \cdot \sum_{u \in S_w} \frac{\partial L(w, u) }{ \partial \mathbf{x}_w}<br>$$</p>
-<h2 id="Skip-gram"><a href="#Skip-gram" class="headerlink" title="Skip-gram"></a>Skip-gram</h2><p>H给单词$w$，预测上下文向量$\rm{Context}(w) = C_w$。 输入样本$(w, C_w)$。</p>
-<p>中心单词是$w$，遍历样本中的上下文单词$w_o \in C_w$，为每个上下文单词$w_o$生成一个包含负采样的集合$S_o = w \bigcup \rm{NEG}(o)$ 。即$S_o$里面只有$w$才是$o$的中心单词。</p>
-<p>下面$w_o$简写为$o$，要注意实际上是当前中心单词$w$的上下文单词。   </p>
-<p>$S_o$中的$u$是实际的w就为1，否则为0。标签函数如下：<br>$$<br>b^w(u) =<br>\begin{cases}<br>&amp; 1, &amp; u = w \<br>&amp; 0, &amp; u \neq w \<br>\end{cases}<br>$$<br>$S_o​$中的$u​$是$o​$的中心词的概率是<br>$$<br>p(u \mid o)   =<br>\begin{cases}<br>&amp; \sigma (v_o^T \theta^u ), &amp; u=w \; \leftrightarrow \; b^w(u) = 1  \<br>&amp; 1 - \sigma (v_o^T \theta^u ), &amp;u \neq w \; \leftrightarrow \; b^w(u) = 0 \<br>\end{cases}<br>$$<br>简写为<br>$$<br>\color{blue} {p(u \mid o)} =<br>[ \sigma(v_o^T \theta^u)]^{b^w(u)}<br>\cdot<br>[1 -  \sigma(v_o^T \theta^u)]^{1 - b^w(u)}<br>$$<br> 对于$w$的一个上下文单词$o$来说，要最大化这个概率：<br>$$<br>\prod_{u \in S_o} p(u \mid o )<br>$$<br> 对于$w$的所有上下文单词$C_w$来说，要最大化：<br>$$<br>g(w) = \prod_{o \in C_w} \prod_{u \in S_o} p(u \mid o )<br>$$<br>那么，对于整个预料，要最大化：<br>$$<br>G = \prod_{w \in C} g(w) =\prod_{w \in C}   \prod_{o \in C_w} \prod_{u \in S_o} p(u \mid o )<br>$$<br>对G取对数，<strong>最终的目标函数</strong>就是：<br>$$<br>\begin {align}<br>L<br>&amp; = \log G = \sum_{w \in C}   \sum_{o \in C_w} \log \prod_{u \in S_o}  p(u \mid o ) \<br>&amp;=<br>\sum_{w \in C}   \sum_{o \in C_w}  \log  \prod_{u \in S_o}<br>[ \sigma(v_o^T \theta^u)]^{b^w(u)}  \cdot [1 -  \sigma(v_o^T \theta^u)]^{1 - b^w(u)} \<br>&amp; =  \sum_{w \in C}   \sum_{o \in C_w} \sum_{u \in S_o}<br>\left (<br>b^w_u \cdot \sigma(v_o^T \theta^u) + (1 - b^w_u) \cdot (1-\sigma(v_o^T \theta^u))<br>\right)<br>\end{align}<br>$$<br>取$w, o, u$<strong>简写</strong>L(w, o, u)：<br>$$<br>L(w, o, u) = b^w_u \cdot \sigma(v_o^T \theta^u) + (1 - b^w_u) \cdot (1-\sigma(v_o^T \theta^u))<br>$$<br><strong>分别对$\theta^u、v_o$求梯度</strong><br>$$<br>\frac{\partial L(w, o, u) }{ \partial \theta^u}<br>= [b^w_u - \sigma(v_o^T \theta^u)] \cdot v_o,<br>\quad<br>\frac{\partial L(w,o, u) }{ \partial v_o}<br>= [b^w_u - \sigma(v_o^T \theta^u)] \cdot \theta^u<br>$$<br><strong>更新</strong>每个单词的<strong>训练参数$\theta^u$</strong> ：<br>$$<br>\theta^u = \theta^u + \alpha \cdot \frac{\partial L(w, o,u) }{ \partial \theta^u}<br>$$<br>对每个单词<strong>更新词向量$v(o)$</strong> ：<br>$$<br>v(o) = v(o) + \alpha \cdot \sum_{u \in S_o} \frac{\partial L(w, u) }{ \partial v_o}<br>$$</p>
+<h2 id="cbow">CBOW</h2>
+<p>对于一个单词<span class="math inline">\(w\)</span>，<strong>输入上下文<span class="math inline">\(\rm{Context}(w) = C_w\)</span>，输出单词<span class="math inline">\(w\)</span></strong>。那么词<span class="math inline">\(w\)</span>是正样本<strong>，</strong>其他词都是负样本。 负样本很多，该怎么选择呢？后面再说。</p>
+<p>定义<span class="math inline">\(\rm{Context}(w)\)</span>的负样本子集<span class="math inline">\(\rm{NEG}(w)\)</span>。对于样本<span class="math inline">\((C_w, w)\)</span>，<span class="math inline">\(\mathbf{x}_w\)</span>依然是<span class="math inline">\(C_w\)</span>的词向量之和。<span class="math inline">\(\theta_u\)</span>为词<span class="math inline">\(u\)</span>的一个（辅助）向量，待训练参数。</p>
+<p>设集合<span class="math inline">\(S_w = w \bigcup NEG(w)\)</span> ，对所有的单词<span class="math inline">\(u \in S_w\)</span>，有<strong>标签函数</strong>： <span class="math display">\[
+b^w(u) = 
+\begin{cases}
+&amp; 1, &amp; u = w \\
+&amp; 0, &amp; u \neq w \\
+\end{cases}
+\]</span> <strong>单词<span class="math inline">\(u\)</span>是<span class="math inline">\(C_w\)</span> 的中心词的概率</strong>是： <span class="math display">\[
+p(u \mid C_w) = 
+\begin{cases}
+&amp; \sigma(\mathbf x_w^T \theta^u), &amp; u=w \; \text{正样本} \\
+&amp; 1 -  \sigma(\mathbf x_w^T \theta^u), &amp; u \neq w \; \text{负样本} \\
+\end{cases}
+\]</span> 简写为： <span class="math display">\[
+\color{blue} {p(u \mid C_w)} = 
+[ \sigma(\mathbf x_w^T \theta^u)]^{b^w(u)} \cdot [1 -  \sigma(\mathbf x_w^T \theta^u)]^{1 - b^w(u)}
+\]</span> <strong>要最大化目标函数</strong><span class="math inline">\(g(w) = \sum_{u \in S_w} p(u \mid C_w)\)</span>： <span class="math display">\[
+\begin{align}
+\color{blue}{g(w) }
+&amp; = 
+\prod_{u \in S_w} 
+[ \sigma(\mathbf x_w^T \theta^u)]^{b^w(u)} 
+\cdot 
+[1 -  \sigma(\mathbf x_w^T \theta^u)]^{1 - b^w(u)} \\
+&amp;=
+ \color{blue} {\sigma(\mathbf x_w^T \theta^u)
+\prod_{u \in NEG(w)} (1 -  \sigma(\mathbf x_w^T \theta^u)) } \\
+\end{align}
+\]</span> 观察<span class="math inline">\(g(w)\)</span>可知，最大化就是要：<strong>增大正样本概率和减小化负样本概率</strong>。</p>
+<p>每个词都是这样，对于整个<strong>语料库</strong>的所有词汇，将<span class="math inline">\(g\)</span>累计得到优化目标，目标函数如下： <span class="math display">\[
+\begin {align}
+L 
+&amp; =  \log \prod_{w \in C}g(w) = \sum_{w \in C} \log g(w) \\
+&amp; = \sum_{w \in C} \log
+ \left( 
+ \prod_{u \in S_w} 
+[ \sigma(\mathbf x_w^T \theta^u)]^{b^w(u)} 
+\cdot 
+[1 -  \sigma(\mathbf x_w^T \theta^u)]^{1 - b^w(u)}
+ \right) \\
+ &amp;= 
+ \sum_{w \in C} \sum_{u \in S_w} 
+ \left[
+ b^w_u \cdot \sigma(\mathbf x_w^T \theta^u) + (1-b^w_u) \cdot (1 - \sigma(\mathbf x_w^T \theta^u))
+ \right]
+\end {align}
+\]</span> 简写每一步<span class="math inline">\(L(w, u)\)</span>： <span class="math display">\[
+L(w, u) = b^w_u \cdot \sigma(\mathbf x_w^T \theta^u) + (1-b^w_u) \cdot (1 - \sigma(\mathbf x_w^T \theta^u))
+\]</span> 计算<span class="math inline">\(L(w, u)\)</span>对<span class="math inline">\(\theta^u\)</span>和<span class="math inline">\(\mathbf{x}_w\)</span>的<strong>梯度</strong>进行更新，得到梯度(<strong>对称性</strong>)： <span class="math display">\[
+\frac{\partial L(w, u) }{ \partial \theta^u} = [b^w(u) - \sigma(\mathbf x_w^T \theta^u)] \cdot \mathbf{x}_w, \quad 
+\frac{\partial L(w, u) }{ \partial \mathbf{x}_w} = [b^w(u) - \sigma(\mathbf x_w^T \theta^u)] \cdot \theta^u
+\]</span> <strong>更新</strong>每个单词的<strong>训练参数<span class="math inline">\(\theta^u\)</span></strong> ： <span class="math display">\[
+\theta^u = \theta^u + \alpha \cdot \frac{\partial L(w, u) }{ \partial \theta^u}
+\]</span> 对每个单词<strong>更新词向量<span class="math inline">\(v(u)\)</span></strong> ： <span class="math display">\[
+v(u) = v(u) + \alpha \cdot \sum_{u \in S_w} \frac{\partial L(w, u) }{ \partial \mathbf{x}_w}
+\]</span></p>
+<h2 id="skip-gram">Skip-gram</h2>
+<p>H给单词<span class="math inline">\(w\)</span>，预测上下文向量<span class="math inline">\(\rm{Context}(w) = C_w\)</span>。 输入样本<span class="math inline">\((w, C_w)\)</span>。</p>
+<p>中心单词是<span class="math inline">\(w\)</span>，遍历样本中的上下文单词<span class="math inline">\(w_o \in C_w\)</span>，为每个上下文单词<span class="math inline">\(w_o\)</span>生成一个包含负采样的集合<span class="math inline">\(S_o = w \bigcup \rm{NEG}(o)\)</span> 。即<span class="math inline">\(S_o\)</span>里面只有<span class="math inline">\(w\)</span>才是<span class="math inline">\(o\)</span>的中心单词。</p>
+<p>下面<span class="math inline">\(w_o\)</span>简写为<span class="math inline">\(o\)</span>，要注意实际上是当前中心单词<span class="math inline">\(w\)</span>的上下文单词。</p>
+<p><span class="math inline">\(S_o\)</span>中的<span class="math inline">\(u\)</span>是实际的w就为1，否则为0。标签函数如下：<br>
+<span class="math display">\[
+b^w(u) = 
+\begin{cases}
+&amp; 1, &amp; u = w \\
+&amp; 0, &amp; u \neq w \\
+\end{cases}
+\]</span> <span class="math inline">\(S_o​\)</span>中的<span class="math inline">\(u​\)</span>是<span class="math inline">\(o​\)</span>的中心词的概率是 <span class="math display">\[
+p(u \mid o)   = 
+\begin{cases}
+&amp; \sigma (v_o^T \theta^u ), &amp; u=w \; \leftrightarrow \; b^w(u) = 1  \\
+&amp; 1 - \sigma (v_o^T \theta^u ), &amp;u \neq w \; \leftrightarrow \; b^w(u) = 0 \\
+\end{cases}
+\]</span> 简写为 <span class="math display">\[
+\color{blue} {p(u \mid o)} = 
+[ \sigma(v_o^T \theta^u)]^{b^w(u)} 
+\cdot
+[1 -  \sigma(v_o^T \theta^u)]^{1 - b^w(u)}
+\]</span> 对于<span class="math inline">\(w\)</span>的一个上下文单词<span class="math inline">\(o\)</span>来说，要最大化这个概率： <span class="math display">\[
+\prod_{u \in S_o} p(u \mid o )
+\]</span> 对于<span class="math inline">\(w\)</span>的所有上下文单词<span class="math inline">\(C_w\)</span>来说，要最大化： <span class="math display">\[
+g(w) = \prod_{o \in C_w} \prod_{u \in S_o} p(u \mid o )
+\]</span> 那么，对于整个预料，要最大化： <span class="math display">\[
+G = \prod_{w \in C} g(w) =\prod_{w \in C}   \prod_{o \in C_w} \prod_{u \in S_o} p(u \mid o )
+\]</span> 对G取对数，<strong>最终的目标函数</strong>就是： <span class="math display">\[
+\begin {align}
+L 
+&amp; = \log G = \sum_{w \in C}   \sum_{o \in C_w} \log \prod_{u \in S_o}  p(u \mid o ) \\
+&amp;=
+\sum_{w \in C}   \sum_{o \in C_w}  \log  \prod_{u \in S_o}
+[ \sigma(v_o^T \theta^u)]^{b^w(u)}  \cdot [1 -  \sigma(v_o^T \theta^u)]^{1 - b^w(u)} \\
+&amp; =  \sum_{w \in C}   \sum_{o \in C_w} \sum_{u \in S_o} 
+\left (
+b^w_u \cdot \sigma(v_o^T \theta^u) + (1 - b^w_u) \cdot (1-\sigma(v_o^T \theta^u))
+\right)
+\end{align}
+\]</span> 取<span class="math inline">\(w, o, u\)</span><strong>简写</strong>L(w, o, u)： <span class="math display">\[
+L(w, o, u) = b^w_u \cdot \sigma(v_o^T \theta^u) + (1 - b^w_u) \cdot (1-\sigma(v_o^T \theta^u))
+\]</span> <strong>分别对<span class="math inline">\(\theta^u、v_o\)</span>求梯度</strong> <span class="math display">\[
+\frac{\partial L(w, o, u) }{ \partial \theta^u} 
+= [b^w_u - \sigma(v_o^T \theta^u)] \cdot v_o, 
+\quad 
+\frac{\partial L(w,o, u) }{ \partial v_o}
+= [b^w_u - \sigma(v_o^T \theta^u)] \cdot \theta^u
+\]</span> <strong>更新</strong>每个单词的<strong>训练参数<span class="math inline">\(\theta^u\)</span></strong> ： <span class="math display">\[
+\theta^u = \theta^u + \alpha \cdot \frac{\partial L(w, o,u) }{ \partial \theta^u}
+\]</span> 对每个单词<strong>更新词向量<span class="math inline">\(v(o)\)</span></strong> ： <span class="math display">\[
+v(o) = v(o) + \alpha \cdot \sum_{u \in S_o} \frac{\partial L(w, u) }{ \partial v_o}
+\]</span></p>
 
         </div>
 
@@ -305,7 +519,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-11-25T08:30:11.250Z" itemprop="dateUpdated">2018-11-25 16:30:11</time>
+    最后更新时间：<time datetime="2018-12-13T08:18:10.963Z" itemprop="dateUpdated">2018-12-13 16:18:10</time>
 </span><br>
 
 
@@ -341,7 +555,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/11/02/word2vec-math/&title=《word2vec中的数学模型》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/11/02/word2vec-math/&title=《Word2vec之数学模型》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -351,7 +565,8 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/11/02/word2vec-math/&title=《word2vec中的数学模型》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/11/02/word2vec-math/&title=《Word2vec之数学模型》 — PLM's Notes&source=
+Word2vec有两种模型：CBOW和Skip-gram，有两种训练方法：Hierarchical Softmax和Negative Sampling..." data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -361,7 +576,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《word2vec中的数学模型》 — PLM's Notes&url=http://plmsmile.github.io/2017/11/02/word2vec-math/&via=http://plmsmile.github.io" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Word2vec之数学模型》 — PLM's Notes&url=http://plmsmile.github.io/2017/11/02/word2vec-math/&via=http://plmsmile.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
@@ -391,7 +606,7 @@
     <div class="waves-block waves-effect prev">
       <a href="/2017/11/12/cs224n-notes1-word2vec/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">Word2vec详细介绍</h4>
+        <h4 class="title">Word2vec之总体介绍</h4>
       </a>
     </div>
   
@@ -400,7 +615,7 @@
     <div class="waves-block waves-effect next">
       <a href="/2017/11/02/cs224n-lecture2-word2vec/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">Word2vec推导图文笔记</h4>
+        <h4 class="title">Word2vec之公式推导笔记</h4>
       </a>
     </div>
   
@@ -512,7 +727,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/11/02/word2vec-math/&title=《word2vec中的数学模型》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/11/02/word2vec-math/&title=《Word2vec之数学模型》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -522,7 +737,8 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/11/02/word2vec-math/&title=《word2vec中的数学模型》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/11/02/word2vec-math/&title=《Word2vec之数学模型》 — PLM's Notes&source=
+Word2vec有两种模型：CBOW和Skip-gram，有两种训练方法：Hierarchical Softmax和Negative Sampling..." data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -532,7 +748,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《word2vec中的数学模型》 — PLM's Notes&url=http://plmsmile.github.io/2017/11/02/word2vec-math/&via=http://plmsmile.github.io" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Word2vec之数学模型》 — PLM's Notes&url=http://plmsmile.github.io/2017/11/02/word2vec-math/&via=http://plmsmile.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>

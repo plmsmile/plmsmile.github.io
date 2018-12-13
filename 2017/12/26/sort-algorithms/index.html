@@ -21,13 +21,13 @@
     
     
     <meta name="keywords" content="排序,插入,快排，快速排序,堆排序,归并排序,基数排序,冒泡排序">
-    <meta name="description" content="插入排序直接插入 前面的已经有序，把后面的插入到前面有序的元素中。  步骤  找到待插入位置 给插入元素腾出空间，边比较边移动  如对4  5  1  2  6  3   12345678910# 5插入44 5   1 2 6 3# 1插入 4 51 4 5   2 6 3# 2插入 1 4 51 2 4 5   6 3# 6插入 1 2 4 51 2 4 5 6   3# 3插入到前面1 2">
+    <meta name="description" content="所有排序算法的介绍、实现和比较，值得一看">
 <meta name="keywords" content="排序,插入,快排，快速排序,堆排序,归并排序,基数排序,冒泡排序">
 <meta property="og:type" content="article">
 <meta property="og:title" content="排序算法总结">
 <meta property="og:url" content="http://plmsmile.github.io/2017/12/26/sort-algorithms/index.html">
 <meta property="og:site_name" content="PLM&#39;s Notes">
-<meta property="og:description" content="插入排序直接插入 前面的已经有序，把后面的插入到前面有序的元素中。  步骤  找到待插入位置 给插入元素腾出空间，边比较边移动  如对4  5  1  2  6  3   12345678910# 5插入44 5   1 2 6 3# 1插入 4 51 4 5   2 6 3# 2插入 1 4 51 2 4 5   6 3# 6插入 1 2 4 51 2 4 5 6   3# 3插入到前面1 2">
+<meta property="og:description" content="所有排序算法的介绍、实现和比较，值得一看">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/heap_02.jpg">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/max-heap.jpg">
@@ -48,10 +48,10 @@
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/radix_01.jpg">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/radix_02.jpg">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/radix_03.jpg">
-<meta property="og:updated_time" content="2018-11-25T08:30:10.840Z">
+<meta property="og:updated_time" content="2018-12-13T08:10:30.515Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="排序算法总结">
-<meta name="twitter:description" content="插入排序直接插入 前面的已经有序，把后面的插入到前面有序的元素中。  步骤  找到待插入位置 给插入元素腾出空间，边比较边移动  如对4  5  1  2  6  3   12345678910# 5插入44 5   1 2 6 3# 1插入 4 51 4 5   2 6 3# 2插入 1 4 51 2 4 5   6 3# 6插入 1 2 4 51 2 4 5 6   3# 3插入到前面1 2">
+<meta name="twitter:description" content="所有排序算法的介绍、实现和比较，值得一看">
 <meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/heap_02.jpg">
     
         <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
@@ -212,8 +212,14 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <p><img src="" style="display:block; margin:auto" width="80%"></p>
-<h1 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h1><h2 id="直接插入"><a href="#直接插入" class="headerlink" title="直接插入"></a>直接插入</h2><blockquote>
+            <blockquote>
+<p>所有排序算法的介绍、实现和比较，值得一看</p>
+</blockquote>
+<a id="more"></a>
+<p><img src="" style="display:block; margin:auto" width="80%"></p>
+<h1 id="插入排序">插入排序</h1>
+<h2 id="直接插入">直接插入</h2>
+<blockquote>
 <p>前面的已经有序，把后面的插入到前面有序的元素中。</p>
 </blockquote>
 <p><strong>步骤</strong></p>
@@ -221,76 +227,80 @@
 <li>找到待插入位置</li>
 <li>给插入元素腾出空间，<strong>边比较边移动</strong></li>
 </ul>
-<p>如对<code>4  5  1  2  6  3</code>  </p>
+<p>如对<code>4  5  1  2  6  3</code></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 5插入4</span></span><br><span class="line"><span class="number">4</span> <span class="number">5</span>   <span class="number">1</span> <span class="number">2</span> <span class="number">6</span> <span class="number">3</span></span><br><span class="line"><span class="comment"># 1插入 4 5</span></span><br><span class="line"><span class="number">1</span> <span class="number">4</span> <span class="number">5</span>   <span class="number">2</span> <span class="number">6</span> <span class="number">3</span></span><br><span class="line"><span class="comment"># 2插入 1 4 5</span></span><br><span class="line"><span class="number">1</span> <span class="number">2</span> <span class="number">4</span> <span class="number">5</span>   <span class="number">6</span> <span class="number">3</span></span><br><span class="line"><span class="comment"># 6插入 1 2 4 5</span></span><br><span class="line"><span class="number">1</span> <span class="number">2</span> <span class="number">4</span> <span class="number">5</span> <span class="number">6</span>   <span class="number">3</span></span><br><span class="line"><span class="comment"># 3插入到前面</span></span><br><span class="line"><span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">5</span> <span class="number">6</span></span><br></pre></td></tr></table></figure>
 <p><a href="https://github.com/plmsmile/aim2offer/blob/master/11_sort/01_insert_shell_sort.cpp" target="_blank" rel="noopener">关键代码</a></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 直接插入排序，先比较找位置，再移动</span></span><br><span class="line"><span class="comment"> **/</span> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert_sort</span><span class="params">(<span class="keyword">int</span> a[], <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="comment">// 最大，追加在末尾即可</span></span><br><span class="line">        <span class="keyword">if</span> (a[i] &gt; a[i<span class="number">-1</span>]) &#123;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 找到待插入的位置</span></span><br><span class="line">        <span class="keyword">int</span> k = <span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; i; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (a[i] &lt; a[j]) &#123;</span><br><span class="line">                k = j;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> t = a[i];</span><br><span class="line">        <span class="comment">// 先挪动元素，向后移动</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = i; j &gt; k; j--) &#123;</span><br><span class="line">            a[j] = a[j<span class="number">-1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        a[k] = t;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 直接插入排序，边比较边移动</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert_sort2</span><span class="params">(<span class="keyword">int</span> a[], <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (a[i] &lt; a[i<span class="number">-1</span>]) &#123;</span><br><span class="line">            <span class="keyword">int</span> t = a[i];</span><br><span class="line">            <span class="keyword">int</span> j = i - <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">while</span> (a[j] &gt; t &amp;&amp; j &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">                a[j+<span class="number">1</span>] = a[j];</span><br><span class="line">                j--;</span><br><span class="line">            &#125;</span><br><span class="line">            a[j+<span class="number">1</span>] = t;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>总结分析</strong> </p>
+<p><strong>总结分析</strong></p>
 <table>
 <thead>
-<tr>
-<th style="text-align:center">名称</th>
-<th style="text-align:center">时间</th>
-<th style="text-align:center">最好</th>
-<th style="text-align:center">最差</th>
-<th style="text-align:center">空间</th>
-<th style="text-align:center">稳定</th>
-<th style="text-align:center">适用性</th>
+<tr class="header">
+<th align="center">名称</th>
+<th align="center">时间</th>
+<th align="center">最好</th>
+<th align="center">最差</th>
+<th align="center">空间</th>
+<th align="center">稳定</th>
+<th align="center">适用性</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:center">直接插入</td>
-<td style="text-align:center">${O}(n^2)$</td>
-<td style="text-align:center">${O}(n)$</td>
-<td style="text-align:center">${O}(n^2)$</td>
-<td style="text-align:center">${O}(1)$</td>
-<td style="text-align:center">是</td>
-<td style="text-align:center">顺序存储和链式存储的<strong>线性表</strong></td>
+<tr class="odd">
+<td align="center">直接插入</td>
+<td align="center"><span class="math inline">\({O}(n^2)\)</span></td>
+<td align="center"><span class="math inline">\({O}(n)\)</span></td>
+<td align="center"><span class="math inline">\({O}(n^2)\)</span></td>
+<td align="center"><span class="math inline">\({O}(1)\)</span></td>
+<td align="center">是</td>
+<td align="center">顺序存储和链式存储的<strong>线性表</strong></td>
 </tr>
 </tbody>
 </table>
-<h2 id="折半插入"><a href="#折半插入" class="headerlink" title="折半插入"></a>折半插入</h2><blockquote>
-<p>先<code>折半查找</code>出位置，再统一的移动。 若m为1个数字，则$a[i]&gt;a[m]$，该插入位置为$l=m+1$。</p>
+<h2 id="折半插入">折半插入</h2>
+<blockquote>
+<p>先<code>折半查找</code>出位置，再统一的移动。 若m为1个数字，则<span class="math inline">\(a[i]&gt;a[m]\)</span>，该插入位置为<span class="math inline">\(l=m+1\)</span>。</p>
 </blockquote>
-<p>仅仅减少了元素的比较次数，元素的移动次数依然没有改变。时间复杂度仍然为$\mathrm{O}(n)$。 </p>
+<p>仅仅减少了元素的比较次数，元素的移动次数依然没有改变。时间复杂度仍然为<span class="math inline">\(\mathrm{O}(n)\)</span>。</p>
 <p><a href="https://github.com/plmsmile/aim2offer/blob/master/11_sort/01_insert_shell_sort.cpp" target="_blank" rel="noopener">关键代码</a></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 插入排序，折半查找出位置，再统一移动</span></span><br><span class="line"><span class="comment"> **/</span> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert_sort_bisearch</span><span class="params">(<span class="keyword">int</span> a[], <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (a[i] &gt; a[i<span class="number">-1</span>]) &#123;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 折半查找，a[i]要插入的位置为l</span></span><br><span class="line">        <span class="keyword">int</span> l = <span class="number">0</span>, r = i - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (l &lt;= r) &#123;</span><br><span class="line">            <span class="keyword">int</span> m = (l + r) / <span class="number">2</span>;</span><br><span class="line">            <span class="keyword">if</span> (a[i] &gt; a[m]) &#123;</span><br><span class="line">                <span class="comment">// 查找右边</span></span><br><span class="line">                l = m + <span class="number">1</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (a[i] &lt; a[m])&#123;</span><br><span class="line">                <span class="comment">// 查找左边</span></span><br><span class="line">                r = m - <span class="number">1</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                l = m + <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> t = a[i];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = i; j &gt; l; j--) &#123;</span><br><span class="line">            a[j] = a[j<span class="number">-1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        a[l] = t;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="希尔排序"><a href="#希尔排序" class="headerlink" title="希尔排序"></a>希尔排序</h2><blockquote>
-<p> 希尔排序又称为<code>缩小增量排序</code>， 把整个列表，分成多个$\rm{L[i, i+d,i+2d,\cdots, i+kd]}$这样的列表，每个进行直接插入排序。每一轮不断缩小d的值，直到全部有序。</p>
+<h2 id="希尔排序">希尔排序</h2>
+<blockquote>
+<p>希尔排序又称为<code>缩小增量排序</code>， 把整个列表，分成多个<span class="math inline">\(\rm{L[i, i+d,i+2d,\cdots, i+kd]}\)</span>这样的列表，每个进行直接插入排序。每一轮不断缩小d的值，直到全部有序。</p>
 </blockquote>
-<p>实际例子 <code>4 5 1 2 6 3</code> </p>
+<p>实际例子 <code>4 5 1 2 6 3</code></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># d = 3</span></span><br><span class="line"><span class="number">4</span> _ _ <span class="number">2</span> _ _</span><br><span class="line">_ <span class="number">5</span> _ _ <span class="number">6</span> _</span><br><span class="line">_ _ <span class="number">1</span> _ _ <span class="number">3</span></span><br><span class="line"><span class="comment"># 化为3个列表，分别进行直接插入排序，得到</span></span><br><span class="line"><span class="number">2</span> <span class="number">5</span> <span class="number">1</span> <span class="number">4</span> <span class="number">6</span> <span class="number">3</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># d = 2</span></span><br><span class="line"><span class="number">2</span> _ <span class="number">1</span> _ <span class="number">6</span> _</span><br><span class="line">_ <span class="number">5</span> _ <span class="number">4</span> _ <span class="number">3</span></span><br><span class="line"><span class="comment"># 排序，得到</span></span><br><span class="line"><span class="number">1</span> <span class="number">3</span> <span class="number">2</span> <span class="number">4</span> <span class="number">6</span> <span class="number">5</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># d = 1</span></span><br><span class="line"><span class="number">1</span> <span class="number">3</span> <span class="number">2</span> <span class="number">4</span> <span class="number">6</span> <span class="number">5</span></span><br><span class="line"><span class="comment"># 直接插入排序，得到</span></span><br><span class="line"><span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">5</span> <span class="number">6</span></span><br></pre></td></tr></table></figure>
 <p><a href="https://github.com/plmsmile/aim2offer/blob/master/11_sort/01_insert_shell_sort.cpp" target="_blank" rel="noopener">关键代码</a></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 希尔排序，按照步长，去划分为多个组。对这些组分别进行插入排序</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">shell_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; a)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 步长gap==组的个数</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> gap = a.size() / <span class="number">2</span>; gap &gt; <span class="number">0</span>; gap = gap / <span class="number">2</span>) &#123;</span><br><span class="line">        <span class="comment">// 对各个组进行排序</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; gap; i++) &#123;</span><br><span class="line">            group_sort(a, i, gap);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 对希尔排序中的单个组进行排序，直接插入</span></span><br><span class="line"><span class="comment"> * Args:</span></span><br><span class="line"><span class="comment"> *      a -- 数组</span></span><br><span class="line"><span class="comment"> *      start -- 该组的起始地址</span></span><br><span class="line"><span class="comment"> *      gap -- 组的步长，也是组的个数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">group_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;a, <span class="keyword">int</span> start, <span class="keyword">int</span> gap)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = start + gap; i &lt; a.size(); i += gap) &#123;</span><br><span class="line">        <span class="keyword">if</span> (a[i] &lt; a[i - gap]) &#123;</span><br><span class="line">            <span class="keyword">int</span> t = a[i];</span><br><span class="line">            <span class="keyword">int</span> j = i - gap;</span><br><span class="line">            <span class="comment">// 从后向前比较，边比较，边移动</span></span><br><span class="line">            <span class="keyword">while</span> (a[j] &gt; t &amp;&amp; j &gt;= start) &#123;</span><br><span class="line">                a[j + gap] = a[j];</span><br><span class="line">                j -= gap;</span><br><span class="line">            &#125;</span><br><span class="line">            a[j + gap] = t;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>总结分析</strong>  </p>
-<p>最好的增量$d_1 = \frac{n}{2}, d_{i+1} = \lfloor \frac{d_i}{2}\rfloor$ </p>
+<p><strong>总结分析</strong></p>
+<p>最好的增量<span class="math inline">\(d_1 = \frac{n}{2}, d_{i+1} = \lfloor \frac{d_i}{2}\rfloor\)</span></p>
 <table>
 <thead>
-<tr>
-<th style="text-align:center">名称</th>
-<th style="text-align:center">时间</th>
-<th style="text-align:center">最好</th>
-<th style="text-align:center">最差</th>
-<th style="text-align:center">空间</th>
-<th style="text-align:center">稳定</th>
-<th style="text-align:center">适用性</th>
+<tr class="header">
+<th align="center">名称</th>
+<th align="center">时间</th>
+<th align="center">最好</th>
+<th align="center">最差</th>
+<th align="center">空间</th>
+<th align="center">稳定</th>
+<th align="center">适用性</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:center">希尔排序</td>
-<td style="text-align:center"></td>
-<td style="text-align:center"></td>
-<td style="text-align:center"></td>
-<td style="text-align:center">${O}(1)$</td>
-<td style="text-align:center">不稳定</td>
-<td style="text-align:center">线性存储的线性表</td>
+<tr class="odd">
+<td align="center">希尔排序</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"><span class="math inline">\({O}(1)\)</span></td>
+<td align="center">不稳定</td>
+<td align="center">线性存储的线性表</td>
 </tr>
 </tbody>
 </table>
-<h1 id="交换排序"><a href="#交换排序" class="headerlink" title="交换排序"></a>交换排序</h1><h2 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h2><blockquote>
-<p> 执行n-1轮，每一轮把$a[0, \ldots, i]$的最大的向下沉。</p>
+<h1 id="交换排序">交换排序</h1>
+<h2 id="冒泡排序">冒泡排序</h2>
+<blockquote>
+<p>执行n-1轮，每一轮把<span class="math inline">\(a[0, \ldots, i]\)</span>的最大的向下沉。</p>
 </blockquote>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2</span> <span class="number">4</span> <span class="number">3</span> <span class="number">1</span> <span class="number">6</span> <span class="number">5</span></span><br><span class="line"><span class="comment"># 第一趟</span></span><br><span class="line"><span class="number">2</span> <span class="number">4</span> _ _ _ _</span><br><span class="line"><span class="number">2</span> <span class="number">3</span> <span class="number">4</span> _ _ _		<span class="comment"># 4-3 to 3-4</span></span><br><span class="line"><span class="number">2</span> <span class="number">3</span> <span class="number">1</span> <span class="number">4</span> _ _		<span class="comment"># 4-1 to 1-4 </span></span><br><span class="line"><span class="number">2</span> <span class="number">3</span> <span class="number">1</span> <span class="number">4</span> <span class="number">6</span> _		</span><br><span class="line"><span class="number">2</span> <span class="number">3</span> <span class="number">1</span> <span class="number">4</span> <span class="number">5</span> <span class="number">6</span>		<span class="comment"># 6-5 to 5-6</span></span><br><span class="line"><span class="comment"># 第二趟</span></span><br><span class="line"><span class="number">2</span> <span class="number">3</span> _ _ _  <span class="number">6</span>	</span><br><span class="line"><span class="number">2</span> <span class="number">1</span> <span class="number">3</span> _ _  <span class="number">6</span>	<span class="comment"># 3-1 to 1-3</span></span><br><span class="line"><span class="number">2</span> <span class="number">1</span> <span class="number">3</span> <span class="number">4</span> _  <span class="number">6</span>	</span><br><span class="line"><span class="number">2</span> <span class="number">1</span> <span class="number">3</span> <span class="number">4</span> <span class="number">5</span>  <span class="number">6</span></span><br><span class="line"><span class="comment"># 第三趟</span></span><br><span class="line"><span class="number">1</span> <span class="number">2</span> _ _  <span class="number">5</span> <span class="number">6</span>	<span class="comment"># 2-1 to 1-2</span></span><br><span class="line"><span class="number">1</span> <span class="number">2</span> <span class="number">3</span> _  <span class="number">5</span> <span class="number">6</span></span><br><span class="line"><span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span>  <span class="number">5</span> <span class="number">6</span></span><br></pre></td></tr></table></figure>
 <p><a href="https://github.com/plmsmile/aim2offer/blob/master/11_sort/02_bubble_quick_sort.cpp" target="_blank" rel="noopener">关键代码</a></p>
@@ -298,31 +308,32 @@
 <p><strong>总结分析</strong></p>
 <table>
 <thead>
-<tr>
-<th style="text-align:center">名称</th>
-<th style="text-align:center">时间</th>
-<th style="text-align:center">最好</th>
-<th style="text-align:center">最差</th>
-<th style="text-align:center">空间</th>
-<th style="text-align:center">稳定</th>
-<th style="text-align:center">备注</th>
+<tr class="header">
+<th align="center">名称</th>
+<th align="center">时间</th>
+<th align="center">最好</th>
+<th align="center">最差</th>
+<th align="center">空间</th>
+<th align="center">稳定</th>
+<th align="center">备注</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:center">冒泡排序</td>
-<td style="text-align:center">${O}(n^2)$</td>
-<td style="text-align:center">${O}(n)$</td>
-<td style="text-align:center">${O}(n^2)$</td>
-<td style="text-align:center">${O}(1)$</td>
-<td style="text-align:center">是</td>
-<td style="text-align:center">每一轮都有一个元素到最终位置上</td>
+<tr class="odd">
+<td align="center">冒泡排序</td>
+<td align="center"><span class="math inline">\({O}(n^2)\)</span></td>
+<td align="center"><span class="math inline">\({O}(n)\)</span></td>
+<td align="center"><span class="math inline">\({O}(n^2)\)</span></td>
+<td align="center"><span class="math inline">\({O}(1)\)</span></td>
+<td align="center">是</td>
+<td align="center">每一轮都有一个元素到最终位置上</td>
 </tr>
 </tbody>
 </table>
-<h2 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h2><p><strong>思想</strong></p>
+<h2 id="快速排序">快速排序</h2>
+<p><strong>思想</strong></p>
 <blockquote>
-<p> 把一个序列，选一个数（第一个数），进行划分。左边小于x，中间x，右边大于x。再依次递归划分左右两边。</p>
+<p>把一个序列，选一个数（第一个数），进行划分。左边小于x，中间x，右边大于x。再依次递归划分左右两边。</p>
 </blockquote>
 <p><a href="https://github.com/plmsmile/aim2offer/blob/master/11_sort/02_bubble_quick_sort.cpp" target="_blank" rel="noopener">关键代码</a></p>
 <p><strong>划分</strong></p>
@@ -335,71 +346,75 @@
 <p>第i趟完成后，最少有i个元素在最终位置。</p>
 <table>
 <thead>
-<tr>
-<th style="text-align:center">名称</th>
-<th style="text-align:center">时间</th>
-<th style="text-align:center">最好</th>
-<th style="text-align:center">最差</th>
-<th style="text-align:center">空间</th>
-<th style="text-align:center">稳定</th>
-<th style="text-align:center">备注</th>
+<tr class="header">
+<th align="center">名称</th>
+<th align="center">时间</th>
+<th align="center">最好</th>
+<th align="center">最差</th>
+<th align="center">空间</th>
+<th align="center">稳定</th>
+<th align="center">备注</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:center">快排</td>
-<td style="text-align:center">${O}(n\log n)$</td>
-<td style="text-align:center">$O(n\log n)$</td>
-<td style="text-align:center">${O}(n^2)$</td>
-<td style="text-align:center">${O}(\log_2n)$栈的深度</td>
-<td style="text-align:center">不稳定</td>
-<td style="text-align:center">基本有序或者逆序，效果最差</td>
+<tr class="odd">
+<td align="center">快排</td>
+<td align="center"><span class="math inline">\({O}(n\log n)\)</span></td>
+<td align="center"><span class="math inline">\(O(n\log n)\)</span></td>
+<td align="center"><span class="math inline">\({O}(n^2)\)</span></td>
+<td align="center"><span class="math inline">\({O}(\log_2n)\)</span>栈的深度</td>
+<td align="center">不稳定</td>
+<td align="center">基本有序或者逆序，效果最差</td>
 </tr>
 </tbody>
 </table>
-<h1 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h1><h2 id="简单选择"><a href="#简单选择" class="headerlink" title="简单选择"></a>简单选择</h2><blockquote>
-<p> 前面已经有序，<strong>从后面选择最小的</strong>与前面末尾最大的进行交换。</p>
+<h1 id="选择排序">选择排序</h1>
+<h2 id="简单选择">简单选择</h2>
+<blockquote>
+<p>前面已经有序，<strong>从后面选择最小的</strong>与前面末尾最大的进行交换。</p>
 </blockquote>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">4</span>  <span class="number">5</span> <span class="number">1</span> <span class="number">2</span> <span class="number">6</span> <span class="number">3</span></span><br><span class="line"><span class="comment"># 选择1与4交换</span></span><br><span class="line"><span class="number">1</span>  <span class="number">5</span> <span class="number">4</span> <span class="number">2</span> <span class="number">6</span> <span class="number">3</span></span><br><span class="line"><span class="comment"># 选择2与5交换</span></span><br><span class="line"><span class="number">1</span> <span class="number">2</span>  <span class="number">4</span> <span class="number">5</span> <span class="number">6</span> <span class="number">3</span></span><br><span class="line"><span class="comment"># 选择3与4交换</span></span><br><span class="line"><span class="number">1</span> <span class="number">2</span> <span class="number">3</span>  <span class="number">5</span> <span class="number">6</span> <span class="number">4</span></span><br><span class="line"><span class="comment"># 选择4与5交换</span></span><br><span class="line"><span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span>  <span class="number">6</span> <span class="number">5</span></span><br><span class="line"><span class="comment"># 选择5与6交换</span></span><br><span class="line"><span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">5</span>  <span class="number">6</span></span><br></pre></td></tr></table></figure>
 <p><strong>总结分析</strong></p>
 <table>
 <thead>
-<tr>
-<th style="text-align:center">名称</th>
-<th style="text-align:center">时间</th>
-<th style="text-align:center">最好</th>
-<th style="text-align:center">最差</th>
-<th style="text-align:center">空间</th>
-<th style="text-align:center">稳定</th>
-<th style="text-align:center">备注</th>
+<tr class="header">
+<th align="center">名称</th>
+<th align="center">时间</th>
+<th align="center">最好</th>
+<th align="center">最差</th>
+<th align="center">空间</th>
+<th align="center">稳定</th>
+<th align="center">备注</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:center">简单选择</td>
-<td style="text-align:center">${O}(n^2)$</td>
-<td style="text-align:center">${O}(n^2)$</td>
-<td style="text-align:center">${O}(n^2)$</td>
-<td style="text-align:center">$O(1)$</td>
-<td style="text-align:center">不稳定</td>
+<tr class="odd">
+<td align="center">简单选择</td>
+<td align="center"><span class="math inline">\({O}(n^2)\)</span></td>
+<td align="center"><span class="math inline">\({O}(n^2)\)</span></td>
+<td align="center"><span class="math inline">\({O}(n^2)\)</span></td>
+<td align="center"><span class="math inline">\(O(1)\)</span></td>
+<td align="center">不稳定</td>
+<td align="center"></td>
 </tr>
 </tbody>
 </table>
 <p><a href="https://github.com/plmsmile/aim2offer/blob/master/11_sort/03_select_heap_sort.cpp" target="_blank" rel="noopener">关键代码</a></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 简单选择排序，选择后面最小的来与当前有序的最后一个（最大的）交换</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">select_sort</span><span class="params">(<span class="keyword">int</span> *a, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> k = min_index(a, i, n<span class="number">-1</span>);</span><br><span class="line">        <span class="keyword">if</span> (a[i<span class="number">-1</span>] &gt; a[k]) &#123;</span><br><span class="line">            swap(a, i<span class="number">-1</span>, k);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h2><p><strong>堆</strong></p>
+<h2 id="堆">堆</h2>
+<p><strong>堆</strong></p>
 <p>堆是一颗完全二叉树。</p>
 <p>有n个节点，堆的索引从0开始，<strong>节点i的</strong></p>
 <ul>
-<li>左孩子：$2\cdot i+1$</li>
-<li>右孩子：$2\cdot i +2$</li>
-<li>父亲：$\lceil \frac{i-1}{2}\rceil$</li>
-<li>最后一个节点是：下标为$\lfloor n/2\rfloor-1$ 的节点的孩子，即第$\lfloor n/2\rfloor$个节点的孩子。</li>
+<li>左孩子：<span class="math inline">\(2\cdot i+1\)</span></li>
+<li>右孩子：<span class="math inline">\(2\cdot i +2\)</span></li>
+<li>父亲：<span class="math inline">\(\lceil \frac{i-1}{2}\rceil\)</span></li>
+<li>最后一个节点是：下标为<span class="math inline">\(\lfloor n/2\rfloor-1\)</span> 的节点的孩子，即第<span class="math inline">\(\lfloor n/2\rfloor\)</span>个节点的孩子。</li>
 </ul>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/heap_02.jpg" style="display:block; margin:auto" width="100%"></p>
 <p><strong>大根堆</strong></p>
 <blockquote>
-<p> 大根堆：最大元素在根节点。小根堆：最小元素在根节点。</p>
+<p>大根堆：最大元素在根节点。小根堆：最小元素在根节点。</p>
 </blockquote>
 <p><code>90 70 80 60 10 40 50 30 20</code> 是一个大根堆，<code>10 20 70 30 50 90 80 60 40</code> 是一个小根堆，如下</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/max-heap.jpg" style="display:block; margin:auto" width="40%"></p>
@@ -412,15 +427,16 @@
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/heap_05.jpg" style="display:block; margin:auto" width="100%"></p>
 <p><strong>删除堆中元素</strong>：把末尾元素，放入空白处，再调整堆即可。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/heap_06.jpg" style="display:block; margin:auto" width="100%"></p>
-<h2 id="堆排序"><a href="#堆排序" class="headerlink" title="堆排序"></a>堆排序</h2><p><strong>思路</strong></p>
-<ol>
-<li>初始化堆。把$a_1, \cdots, a_n$构造成为最大堆 </li>
-<li>取出最大值。每次出堆根最大元素。出$a_1$，把$a_n$放到$a_1$上，再把$a_1, \cdots. a_{n-1}$调整为最大堆。再出元素</li>
+<h2 id="堆排序">堆排序</h2>
+<p><strong>思路</strong></p>
+<ol style="list-style-type: decimal">
+<li>初始化堆。把<span class="math inline">\(a_1, \cdots, a_n\)</span>构造成为最大堆</li>
+<li>取出最大值。每次出堆根最大元素。出<span class="math inline">\(a_1\)</span>，把<span class="math inline">\(a_n\)</span>放到<span class="math inline">\(a_1\)</span>上，再把<span class="math inline">\(a_1, \cdots. a_{n-1}\)</span>调整为最大堆。再出元素</li>
 <li>重复2</li>
 </ol>
 <p><strong>建立堆</strong></p>
-<p>n个元素，<strong>最后一个父亲节点</strong>$\lfloor n/2\rfloor$， 下标为$k=\lfloor n/2\rfloor-1$。  </p>
-<p>对这些节点$a_k, \cdots, a_0$， <strong>依次调整它们的子树，使子树成堆</strong>。即，若<strong>根节点小于左右节点的较大值，则交换</strong>。</p>
+<p>n个元素，<strong>最后一个父亲节点</strong><span class="math inline">\(\lfloor n/2\rfloor\)</span>， 下标为<span class="math inline">\(k=\lfloor n/2\rfloor-1\)</span>。</p>
+<p>对这些节点<span class="math inline">\(a_k, \cdots, a_0\)</span>， <strong>依次调整它们的子树，使子树成堆</strong>。即，若<strong>根节点小于左右节点的较大值，则交换</strong>。</p>
 <p><strong>建立堆实例</strong></p>
 <p>对于数据{20,30,90,40,70,110,60,10,100,50,80}，建立为最大堆{110,100,90,40,80,20,60,10,30,50,70}</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/heap/heap_p1_01.jpg" style="display:block; margin:auto" width="100%"></p>
@@ -431,46 +447,50 @@
 <p><strong>取出最大值</strong></p>
 <p>把根节点（最大值）和当前堆的末尾值进行交换，最大值放到最后。再对剩余的数据进行成堆，再依次取最大值交换。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/heap/heap_p2.jpg" style="display:block; margin:auto" width="100%"></p>
-<p>每一次取出最大值重新恢复堆，要$O(\log n)$，有n个数，一共是$O(n \log n)$。  </p>
+<p>每一次取出最大值重新恢复堆，要<span class="math inline">\(O(\log n)\)</span>，有n个数，一共是<span class="math inline">\(O(n \log n)\)</span>。</p>
 <p><a href="https://github.com/plmsmile/aim2offer/blob/master/11_sort/03_select_heap_sort.cpp" target="_blank" rel="noopener">关键代码</a></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 保证以start为根节点的子树是一个最大堆，末尾元素为end</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * Args:</span></span><br><span class="line"><span class="comment"> *      a: 存放堆的数组</span></span><br><span class="line"><span class="comment"> *      start: 根节点</span></span><br><span class="line"><span class="comment"> *      end: 子树的末尾元素</span></span><br><span class="line"><span class="comment"> * Returns:</span></span><br><span class="line"><span class="comment"> *      None</span></span><br><span class="line"><span class="comment"> **/</span> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">max_heap_down</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; a, <span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 当前节点</span></span><br><span class="line">    <span class="keyword">int</span> c = start;</span><br><span class="line">    <span class="comment">// 左孩子</span></span><br><span class="line">    <span class="keyword">int</span> l = <span class="number">2</span> * c + <span class="number">1</span>;</span><br><span class="line">    <span class="comment">// 当前父亲节点</span></span><br><span class="line">    <span class="keyword">int</span> t = a[c];</span><br><span class="line">    <span class="keyword">for</span> (; l &lt;= end; c = l, l = <span class="number">2</span>*c + <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="comment">// 选择较大的孩子与父亲交换</span></span><br><span class="line">        <span class="keyword">if</span> (l + <span class="number">1</span> &lt;= end &amp;&amp; a[l] &lt; a[l + <span class="number">1</span>]) &#123;</span><br><span class="line">            <span class="comment">// 有右孩子，并且右孩子比左孩子大，则选择右孩子</span></span><br><span class="line">            l++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (t &gt;= a[l]) &#123;</span><br><span class="line">            <span class="comment">// 父亲大于孩子</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 交换</span></span><br><span class="line">            a[c] = a[l];</span><br><span class="line">            a[l] = t;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 堆排序，升序</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">heap_sort_asc</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; a)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n = a.size();</span><br><span class="line">    <span class="comment">// 初始化一个最大堆</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = n / <span class="number">2</span> - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">        max_heap_down(a, i, n - <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 依次取堆顶元素放到末尾</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">        <span class="comment">// max放到a[i]</span></span><br><span class="line">        <span class="keyword">int</span> t = a[i];</span><br><span class="line">        a[i] = a[<span class="number">0</span>];</span><br><span class="line">        a[<span class="number">0</span>] = t;</span><br><span class="line">        <span class="comment">// 保证a[0...i-1]依然是个最大堆</span></span><br><span class="line">        max_heap_down(a, <span class="number">0</span>, i<span class="number">-1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>总结分析</strong></p>
 <table>
 <thead>
-<tr>
-<th style="text-align:center">名称</th>
-<th style="text-align:center">时间</th>
-<th style="text-align:center">最好</th>
-<th style="text-align:center">最差</th>
-<th style="text-align:center">空间</th>
-<th style="text-align:center">稳定</th>
-<th style="text-align:center">备注</th>
+<tr class="header">
+<th align="center">名称</th>
+<th align="center">时间</th>
+<th align="center">最好</th>
+<th align="center">最差</th>
+<th align="center">空间</th>
+<th align="center">稳定</th>
+<th align="center">备注</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:center">堆排序</td>
-<td style="text-align:center">${O}(n \log n)$</td>
-<td style="text-align:center">${O}(n\log n)$</td>
-<td style="text-align:center">${O}( \log n)$</td>
-<td style="text-align:center">$O(n)$</td>
-<td style="text-align:center">不稳定</td>
+<tr class="odd">
+<td align="center">堆排序</td>
+<td align="center"><span class="math inline">\({O}(n \log n)\)</span></td>
+<td align="center"><span class="math inline">\({O}(n\log n)\)</span></td>
+<td align="center"><span class="math inline">\({O}( \log n)\)</span></td>
+<td align="center"><span class="math inline">\(O(n)\)</span></td>
+<td align="center">不稳定</td>
+<td align="center"></td>
 </tr>
 </tbody>
 </table>
-<h1 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h1><h2 id="从上往下-递归"><a href="#从上往下-递归" class="headerlink" title="从上往下-递归"></a>从上往下-递归</h2><p><strong>思路</strong></p>
+<h1 id="归并排序">归并排序</h1>
+<h2 id="从上往下-递归">从上往下-递归</h2>
+<p><strong>思路</strong></p>
 <ul>
-<li>分解  –  将区间一分为二，求分裂点$\rm{mid} = \frac{\rm{start +end}}{2}$</li>
-<li>递归求解，<code>sort</code>， <code>sort</code>  –  <strong>递归对两个无序子区间</strong> $a_s,\cdots , a_m$和$a_{m+1}, \cdots, a_{e}$进行<strong>归并排序</strong>。<strong>终结条件是子区间长度为1</strong></li>
-<li>合并，<code>merge</code>  –  <strong>把两个有序的子区间</strong> $a_s,\cdots , a_m$和$a_{m+1}, \cdots, a_{e}$ <strong>合并</strong>为一个完整的有序区间$a_s, \cdots, a_e$</li>
+<li>分解 -- 将区间一分为二，求分裂点<span class="math inline">\(\rm{mid} = \frac{\rm{start +end}}{2}\)</span></li>
+<li>递归求解，<code>sort</code>， <code>sort</code> -- <strong>递归对两个无序子区间</strong> <span class="math inline">\(a_s,\cdots , a_m\)</span>和<span class="math inline">\(a_{m+1}, \cdots, a_{e}\)</span>进行<strong>归并排序</strong>。<strong>终结条件是子区间长度为1</strong></li>
+<li>合并，<code>merge</code> -- <strong>把两个有序的子区间</strong> <span class="math inline">\(a_s,\cdots , a_m\)</span>和<span class="math inline">\(a_{m+1}, \cdots, a_{e}\)</span> <strong>合并</strong>为一个完整的有序区间<span class="math inline">\(a_s, \cdots, a_e\)</span></li>
 </ul>
 <p><strong>分解</strong></p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/merge/merge_02.jpg" style="display:block; margin:auto" width="80%"></p>
-<p><strong>分解&amp;递归&amp;合并</strong> </p>
+<p><strong>分解&amp;递归&amp;合并</strong></p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/merge/merge_01.jpg" style="display:block; margin:auto" width="80%"></p>
 <p><a href="https://github.com/plmsmile/aim2offer/blob/master/11_sort/04_merge_sort.cpp" target="_blank" rel="noopener">关键代码</a></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 归并排序，从上到下</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge_sort_up2down</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;a, <span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (start &gt;= end) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> mid = (start + end) / <span class="number">2</span>;</span><br><span class="line">    <span class="comment">// 递归排序a[start...mid]</span></span><br><span class="line">    merge_sort_up2down(a, start, mid);</span><br><span class="line">    <span class="comment">// 递归排序a[mid+1...end]</span></span><br><span class="line">    merge_sort_up2down(a, mid + <span class="number">1</span>, end);</span><br><span class="line">    <span class="comment">// 两个有序序列merge在一起</span></span><br><span class="line">    merge(a, start, mid, end);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 将a中前后两个有序序列合并在一起</span></span><br><span class="line"><span class="comment"> **/</span> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;a, <span class="keyword">int</span> start, <span class="keyword">int</span> mid, <span class="keyword">int</span> end)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 把有序序列临时存放到t中</span></span><br><span class="line">    <span class="keyword">int</span> * t = <span class="keyword">new</span> <span class="keyword">int</span> [end - start + <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">int</span> i = start;</span><br><span class="line">    <span class="keyword">int</span> j = mid + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> k = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// 依次合并</span></span><br><span class="line">    <span class="keyword">while</span> (i &lt;= mid &amp;&amp; j &lt;= end) &#123;</span><br><span class="line">        <span class="keyword">if</span> (a[i] &lt; a[j]) &#123;</span><br><span class="line">            t[k++] = a[i++];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            t[k++] = a[j++];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (i &lt;= mid) &#123;</span><br><span class="line">        t[k++] = a[i++];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (j &lt;= end) &#123;</span><br><span class="line">        t[k++] = a[j++];</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    <span class="comment">// 把新的有序列表复制回a中</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; k; i++) &#123;</span><br><span class="line">        a[start + i] = t[i];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">delete</span> [] t;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="从下往上-非递归"><a href="#从下往上-非递归" class="headerlink" title="从下往上-非递归"></a>从下往上-非递归</h2><p><strong>思想</strong></p>
+<h2 id="从下往上-非递归">从下往上-非递归</h2>
+<p><strong>思想</strong></p>
 <p>把数组分成若干个长度为1的子数组，再两两合并；得到长度为2的数组，再两两合并；依次反复，直到形成一个数组。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/merge/merge_03.jpg" style="display:block; margin:auto" width="80%"></p>
 <p><a href="https://github.com/plmsmile/aim2offer/blob/master/11_sort/04_merge_sort.cpp" target="_blank" rel="noopener">关键代码</a></p>
@@ -478,32 +498,35 @@
 <p><strong>总结分析</strong></p>
 <table>
 <thead>
-<tr>
-<th style="text-align:center">名称</th>
-<th style="text-align:center">时间</th>
-<th style="text-align:center">最好</th>
-<th style="text-align:center">最差</th>
-<th style="text-align:center">空间</th>
-<th style="text-align:center">稳定</th>
-<th style="text-align:center">备注</th>
+<tr class="header">
+<th align="center">名称</th>
+<th align="center">时间</th>
+<th align="center">最好</th>
+<th align="center">最差</th>
+<th align="center">空间</th>
+<th align="center">稳定</th>
+<th align="center">备注</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:center">归并排序</td>
-<td style="text-align:center">${O}(n \log n)$</td>
-<td style="text-align:center">${O}(n\log n)$</td>
-<td style="text-align:center">${O}(n \log n)$</td>
-<td style="text-align:center">$O(n)$， merge占用</td>
-<td style="text-align:center">稳定</td>
+<tr class="odd">
+<td align="center">归并排序</td>
+<td align="center"><span class="math inline">\({O}(n \log n)\)</span></td>
+<td align="center"><span class="math inline">\({O}(n\log n)\)</span></td>
+<td align="center"><span class="math inline">\({O}(n \log n)\)</span></td>
+<td align="center"><span class="math inline">\(O(n)\)</span>， merge占用</td>
+<td align="center">稳定</td>
+<td align="center"></td>
 </tr>
 </tbody>
 </table>
-<p>归并排序的形式是一颗二叉树，遍历的次数就是二叉树的深度$O(\log n)$， 而一共n个数。</p>
-<h1 id="桶排序"><a href="#桶排序" class="headerlink" title="桶排序"></a>桶排序</h1><p>桶排序很简单。数组a有n个数，最大值为max。则，建立一个长度为max的数组b，初始化为0。</p>
-<p>遍历a，遇到$a_i = k$， 则$b_k += 1$ 。即在对应的桶里计数加1。</p>
+<p>归并排序的形式是一颗二叉树，遍历的次数就是二叉树的深度<span class="math inline">\(O(\log n)\)</span>， 而一共n个数。</p>
+<h1 id="桶排序">桶排序</h1>
+<p>桶排序很简单。数组a有n个数，最大值为max。则，建立一个长度为max的数组b，初始化为0。</p>
+<p>遍历a，遇到<span class="math inline">\(a_i = k\)</span>， 则<span class="math inline">\(b_k += 1\)</span> 。即在对应的桶里计数加1。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/bucket_01.jpg" style="display:block; margin:auto" width="80%"></p>
-<h1 id="基数排序"><a href="#基数排序" class="headerlink" title="基数排序"></a>基数排序</h1><p>基数排序分为最高位优先和最低位优先。</p>
+<h1 id="基数排序">基数排序</h1>
+<p>基数排序分为最高位优先和最低位优先。</p>
 <p>基数排序是桶排序的扩展。把所有的数，统一位数。然后，按照每一位进行，从低位到高位跑排序。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/radix_01.jpg" style="display:block; margin:auto" width="80%"></p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/radix_02.jpg" style="display:block; margin:auto" width="80%"></p>
@@ -517,150 +540,153 @@
 <p><strong>总结分析</strong></p>
 <table>
 <thead>
-<tr>
-<th style="text-align:center">名称</th>
-<th style="text-align:center">时间</th>
-<th style="text-align:center">最好</th>
-<th style="text-align:center">最差</th>
-<th style="text-align:center">空间</th>
-<th style="text-align:center">稳定</th>
-<th style="text-align:center">备注</th>
+<tr class="header">
+<th align="center">名称</th>
+<th align="center">时间</th>
+<th align="center">最好</th>
+<th align="center">最差</th>
+<th align="center">空间</th>
+<th align="center">稳定</th>
+<th align="center">备注</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:center">基数排序</td>
-<td style="text-align:center">${O(d(n+r))}$</td>
-<td style="text-align:center">${O(d(n+r))}$</td>
-<td style="text-align:center">${O(d(n+r))}$</td>
-<td style="text-align:center">$O(r)$， r个队列</td>
-<td style="text-align:center">稳定</td>
+<tr class="odd">
+<td align="center">基数排序</td>
+<td align="center"><span class="math inline">\({O(d(n+r))}\)</span></td>
+<td align="center"><span class="math inline">\({O(d(n+r))}\)</span></td>
+<td align="center"><span class="math inline">\({O(d(n+r))}\)</span></td>
+<td align="center"><span class="math inline">\(O(r)\)</span>， r个队列</td>
+<td align="center">稳定</td>
+<td align="center"></td>
 </tr>
 </tbody>
 </table>
-<h1 id="总结比较"><a href="#总结比较" class="headerlink" title="总结比较"></a>总结比较</h1><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><strong>思想总结</strong> </p>
+<h1 id="总结比较">总结比较</h1>
+<h2 id="总结">总结</h2>
+<p><strong>思想总结</strong></p>
 <table>
 <thead>
-<tr>
-<th style="text-align:center">名称</th>
-<th style="text-align:center">一句话描述</th>
+<tr class="header">
+<th align="center">名称</th>
+<th align="center">一句话描述</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:center">直接插入</td>
-<td style="text-align:center">前面有序，为新来的，在前面找到合适的位置，进行插入</td>
+<tr class="odd">
+<td align="center">直接插入</td>
+<td align="center">前面有序，为新来的，在前面找到合适的位置，进行插入</td>
 </tr>
-<tr>
-<td style="text-align:center">折半插入</td>
-<td style="text-align:center">前面有序，为新来的，使用<strong>折半查找</strong>到插入位置，进行插入</td>
+<tr class="even">
+<td align="center">折半插入</td>
+<td align="center">前面有序，为新来的，使用<strong>折半查找</strong>到插入位置，进行插入</td>
 </tr>
-<tr>
-<td style="text-align:center">希尔排序</td>
-<td style="text-align:center"><strong>gap个间隔为gap的子序列</strong>，<strong>每个进行直接插入排序</strong>；减小gap，依次排序，直至为1</td>
+<tr class="odd">
+<td align="center">希尔排序</td>
+<td align="center"><strong>gap个间隔为gap的子序列</strong>，<strong>每个进行直接插入排序</strong>；减小gap，依次排序，直至为1</td>
 </tr>
-<tr>
-<td style="text-align:center">冒泡排序</td>
-<td style="text-align:center">交换n-1趟，$a_{i-1}&gt;a_i$，则进行交换，每一趟都有个最大的沉到末尾</td>
+<tr class="even">
+<td align="center">冒泡排序</td>
+<td align="center">交换n-1趟，<span class="math inline">\(a_{i-1}&gt;a_i\)</span>，则进行交换，每一趟都有个最大的沉到末尾</td>
 </tr>
-<tr>
-<td style="text-align:center">快排</td>
-<td style="text-align:center">第一个数x，先<strong>划分</strong>，左边小于x，中间x，右边大于x。再依次<strong>递归排序左右两边</strong></td>
+<tr class="odd">
+<td align="center">快排</td>
+<td align="center">第一个数x，先<strong>划分</strong>，左边小于x，中间x，右边大于x。再依次<strong>递归排序左右两边</strong></td>
 </tr>
-<tr>
-<td style="text-align:center">简单选择</td>
-<td style="text-align:center">前面有序，从后面选择最小的与前面末尾的（最大的）进行交换</td>
+<tr class="even">
+<td align="center">简单选择</td>
+<td align="center">前面有序，从后面选择最小的与前面末尾的（最大的）进行交换</td>
 </tr>
-<tr>
-<td style="text-align:center">堆排序</td>
-<td style="text-align:center">初始化<strong>大根堆</strong>，<strong>堆顶和末尾元素交换</strong>，再调整<strong>使剩下的元素成堆</strong>， 重复</td>
+<tr class="odd">
+<td align="center">堆排序</td>
+<td align="center">初始化<strong>大根堆</strong>，<strong>堆顶和末尾元素交换</strong>，再调整<strong>使剩下的元素成堆</strong>， 重复</td>
 </tr>
-<tr>
-<td style="text-align:center">归并排序</td>
-<td style="text-align:center"><strong>分解</strong>为左右两个序列，对左右两个序列进行<strong>递归归并排序</strong>，<strong>再合并</strong>。即sort,sort,merge</td>
+<tr class="even">
+<td align="center">归并排序</td>
+<td align="center"><strong>分解</strong>为左右两个序列，对左右两个序列进行<strong>递归归并排序</strong>，<strong>再合并</strong>。即sort,sort,merge</td>
 </tr>
-<tr>
-<td style="text-align:center">基数排序</td>
-<td style="text-align:center">位数一样，从低位到高位，分别按照每一位进行排序</td>
+<tr class="odd">
+<td align="center">基数排序</td>
+<td align="center">位数一样，从低位到高位，分别按照每一位进行排序</td>
 </tr>
 </tbody>
 </table>
 <p><strong>时空复杂度总结</strong></p>
 <table>
 <thead>
-<tr>
-<th style="text-align:center">名称</th>
-<th style="text-align:center">时间</th>
-<th style="text-align:center">最好</th>
-<th style="text-align:center">最差</th>
-<th style="text-align:center">空间</th>
-<th style="text-align:center">稳定</th>
+<tr class="header">
+<th align="center">名称</th>
+<th align="center">时间</th>
+<th align="center">最好</th>
+<th align="center">最差</th>
+<th align="center">空间</th>
+<th align="center">稳定</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:center">直插</td>
-<td style="text-align:center">${O}(n^2)$</td>
-<td style="text-align:center">${O}(n)$</td>
-<td style="text-align:center">${O}(n^2)$</td>
-<td style="text-align:center">${O}(1)$</td>
-<td style="text-align:center">是</td>
+<tr class="odd">
+<td align="center">直插</td>
+<td align="center"><span class="math inline">\({O}(n^2)\)</span></td>
+<td align="center"><span class="math inline">\({O}(n)\)</span></td>
+<td align="center"><span class="math inline">\({O}(n^2)\)</span></td>
+<td align="center"><span class="math inline">\({O}(1)\)</span></td>
+<td align="center">是</td>
 </tr>
-<tr>
-<td style="text-align:center">希尔</td>
-<td style="text-align:center"></td>
-<td style="text-align:center"></td>
-<td style="text-align:center"></td>
-<td style="text-align:center">${O}(1)$</td>
-<td style="text-align:center">不稳定</td>
+<tr class="even">
+<td align="center">希尔</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"><span class="math inline">\({O}(1)\)</span></td>
+<td align="center">不稳定</td>
 </tr>
-<tr>
-<td style="text-align:center">冒泡</td>
-<td style="text-align:center">${O}(n^2)$</td>
-<td style="text-align:center">${O}(n)$</td>
-<td style="text-align:center">${O}(n^2)$</td>
-<td style="text-align:center">${O}(1)$</td>
-<td style="text-align:center">是</td>
+<tr class="odd">
+<td align="center">冒泡</td>
+<td align="center"><span class="math inline">\({O}(n^2)\)</span></td>
+<td align="center"><span class="math inline">\({O}(n)\)</span></td>
+<td align="center"><span class="math inline">\({O}(n^2)\)</span></td>
+<td align="center"><span class="math inline">\({O}(1)\)</span></td>
+<td align="center">是</td>
 </tr>
-<tr>
-<td style="text-align:center">快排</td>
-<td style="text-align:center">${O}(n\log n)$</td>
-<td style="text-align:center">$O(n\log n)$</td>
-<td style="text-align:center">${O}(n^2)$</td>
-<td style="text-align:center">${O}(\log_2n)$，栈的深度</td>
-<td style="text-align:center">不稳定</td>
+<tr class="even">
+<td align="center">快排</td>
+<td align="center"><span class="math inline">\({O}(n\log n)\)</span></td>
+<td align="center"><span class="math inline">\(O(n\log n)\)</span></td>
+<td align="center"><span class="math inline">\({O}(n^2)\)</span></td>
+<td align="center"><span class="math inline">\({O}(\log_2n)\)</span>，栈的深度</td>
+<td align="center">不稳定</td>
 </tr>
-<tr>
-<td style="text-align:center">简选</td>
-<td style="text-align:center">${O}(n^2)$</td>
-<td style="text-align:center">${O}(n^2)$</td>
-<td style="text-align:center">${O}(n^2)$</td>
-<td style="text-align:center">$O(1)$</td>
-<td style="text-align:center">不稳定</td>
+<tr class="odd">
+<td align="center">简选</td>
+<td align="center"><span class="math inline">\({O}(n^2)\)</span></td>
+<td align="center"><span class="math inline">\({O}(n^2)\)</span></td>
+<td align="center"><span class="math inline">\({O}(n^2)\)</span></td>
+<td align="center"><span class="math inline">\(O(1)\)</span></td>
+<td align="center">不稳定</td>
 </tr>
-<tr>
-<td style="text-align:center">堆排序</td>
-<td style="text-align:center">${O}(n \log n)$</td>
-<td style="text-align:center">${O}(n\log n)$</td>
-<td style="text-align:center">${O}( \log n)$</td>
-<td style="text-align:center">$O(n)$</td>
-<td style="text-align:center">不稳定</td>
+<tr class="even">
+<td align="center">堆排序</td>
+<td align="center"><span class="math inline">\({O}(n \log n)\)</span></td>
+<td align="center"><span class="math inline">\({O}(n\log n)\)</span></td>
+<td align="center"><span class="math inline">\({O}( \log n)\)</span></td>
+<td align="center"><span class="math inline">\(O(n)\)</span></td>
+<td align="center">不稳定</td>
 </tr>
-<tr>
-<td style="text-align:center">归并排序</td>
-<td style="text-align:center">${O}(n \log n)$</td>
-<td style="text-align:center">${O}(n\log n)$</td>
-<td style="text-align:center">${O}(n \log n)$</td>
-<td style="text-align:center">$O(n)$， merge占用</td>
-<td style="text-align:center">稳定</td>
+<tr class="odd">
+<td align="center">归并排序</td>
+<td align="center"><span class="math inline">\({O}(n \log n)\)</span></td>
+<td align="center"><span class="math inline">\({O}(n\log n)\)</span></td>
+<td align="center"><span class="math inline">\({O}(n \log n)\)</span></td>
+<td align="center"><span class="math inline">\(O(n)\)</span>， merge占用</td>
+<td align="center">稳定</td>
 </tr>
-<tr>
-<td style="text-align:center">基数排序</td>
-<td style="text-align:center">${O(d(n+r))}$</td>
-<td style="text-align:center">${O(d(n+r))}$</td>
-<td style="text-align:center">${O(d(n+r))}$</td>
-<td style="text-align:center">$O(r)$， r个队列</td>
-<td style="text-align:center">稳定</td>
+<tr class="even">
+<td align="center">基数排序</td>
+<td align="center"><span class="math inline">\({O(d(n+r))}\)</span></td>
+<td align="center"><span class="math inline">\({O(d(n+r))}\)</span></td>
+<td align="center"><span class="math inline">\({O(d(n+r))}\)</span></td>
+<td align="center"><span class="math inline">\(O(r)\)</span>， r个队列</td>
+<td align="center">稳定</td>
 </tr>
 </tbody>
 </table>
@@ -669,41 +695,42 @@
 <p>比较次数与初始状态无关：选择、归并</p>
 <p>排序趟数与初始状态无关：选择、插入、基数</p>
 <p>冒、选、堆：每趟都有1个在最终的位置，最大or最小</p>
-<p>直接插入：第$i$趟，前$i+1$个有序，但不是最终序列</p>
-<p>快排：  $i$趟后， 至少有$i$个在最终位置</p>
-<p><strong>时间复杂度</strong>：快些归堆${O(n\log n)}$，基数排序$O(d(n+r))$ ， 其余$O(n^2)$ ，</p>
-<p><strong>空间复杂度</strong>：归$O(n)$， 快$O(\log n)$， 基$O(r)$， 其余$O(1)$  </p>
-<h2 id="算法选择"><a href="#算法选择" class="headerlink" title="算法选择"></a>算法选择</h2><table>
+<p>直接插入：第<span class="math inline">\(i\)</span>趟，前<span class="math inline">\(i+1\)</span>个有序，但不是最终序列</p>
+<p>快排： <span class="math inline">\(i\)</span>趟后， 至少有<span class="math inline">\(i\)</span>个在最终位置</p>
+<p><strong>时间复杂度</strong>：快些归堆<span class="math inline">\({O(n\log n)}\)</span>，基数排序<span class="math inline">\(O(d(n+r))\)</span> ， 其余<span class="math inline">\(O(n^2)\)</span> ，</p>
+<p><strong>空间复杂度</strong>：归<span class="math inline">\(O(n)\)</span>， 快<span class="math inline">\(O(\log n)\)</span>， 基<span class="math inline">\(O(r)\)</span>， 其余<span class="math inline">\(O(1)\)</span></p>
+<h2 id="算法选择">算法选择</h2>
+<table>
 <thead>
-<tr>
-<th style="text-align:center">条件</th>
-<th style="text-align:center">可选算法</th>
+<tr class="header">
+<th align="center">条件</th>
+<th align="center">可选算法</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:center">n较小， $n \le 50$</td>
-<td style="text-align:center">直接插入、简单选择</td>
+<tr class="odd">
+<td align="center">n较小， <span class="math inline">\(n \le 50\)</span></td>
+<td align="center">直接插入、简单选择</td>
 </tr>
-<tr>
-<td style="text-align:center">基本有序</td>
-<td style="text-align:center">直接插入、冒泡</td>
+<tr class="even">
+<td align="center">基本有序</td>
+<td align="center">直接插入、冒泡</td>
 </tr>
-<tr>
-<td style="text-align:center">n较大，要$O(n \log n)$</td>
-<td style="text-align:center">快排、堆排（不稳定），归并排序（稳定）</td>
+<tr class="odd">
+<td align="center">n较大，要<span class="math inline">\(O(n \log n)\)</span></td>
+<td align="center">快排、堆排（不稳定），归并排序（稳定）</td>
 </tr>
-<tr>
-<td style="text-align:center">n较大，要快，要稳定</td>
-<td style="text-align:center">归并排序，与直插结合的改进的归并排序</td>
+<tr class="even">
+<td align="center">n较大，要快，要稳定</td>
+<td align="center">归并排序，与直插结合的改进的归并排序</td>
 </tr>
-<tr>
-<td style="text-align:center">n很大，位数很少，可以分解</td>
-<td style="text-align:center">基数排序</td>
+<tr class="odd">
+<td align="center">n很大，位数很少，可以分解</td>
+<td align="center">基数排序</td>
 </tr>
-<tr>
-<td style="text-align:center">记录本身信息量太大</td>
-<td style="text-align:center">为了避免移动，可以使用链表作为存储结构</td>
+<tr class="even">
+<td align="center">记录本身信息量太大</td>
+<td align="center">为了避免移动，可以使用链表作为存储结构</td>
 </tr>
 </tbody>
 </table>
@@ -715,7 +742,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-11-25T08:30:10.840Z" itemprop="dateUpdated">2018-11-25 16:30:10</time>
+    最后更新时间：<time datetime="2018-12-13T08:10:30.515Z" itemprop="dateUpdated">2018-12-13 16:10:30</time>
 </span><br>
 
 
@@ -761,7 +788,9 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/12/26/sort-algorithms/&title=《排序算法总结》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/12/26/sort-algorithms/&title=《排序算法总结》 — PLM's Notes&source=
+所有排序算法的介绍、实现和比较，值得一看
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -801,16 +830,16 @@
     <div class="waves-block waves-effect prev">
       <a href="/2017/12/29/aim2offer2/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">剑指offer算法题(11-20)</h4>
+        <h4 class="title">剑指offer(11-20)</h4>
       </a>
     </div>
   
 
   
     <div class="waves-block waves-effect next">
-      <a href="/2017/12/25/cpp-pointer-object-reference/" id="post-next" class="post-nav-link">
+      <a href="/2017/12/25/15-cpp-pointer-object-reference/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">cpp-pointer-object-reference</h4>
+        <h4 class="title">C++类对象和指针的区别</h4>
       </a>
     </div>
   
@@ -932,7 +961,9 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/12/26/sort-algorithms/&title=《排序算法总结》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/12/26/sort-algorithms/&title=《排序算法总结》 — PLM's Notes&source=
+所有排序算法的介绍、实现和比较，值得一看
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>

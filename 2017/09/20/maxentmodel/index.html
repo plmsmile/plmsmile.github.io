@@ -21,18 +21,18 @@
     
     
     <meta name="keywords" content="机器学习,自然语言处理,各种熵,最大熵模型,IIS,期望">
-    <meta name="description" content="最大熵原理预备知识离散型变量$X$的概率分布是$\color{blue}{P(X)}$。它的熵$\color{blue}{H(X) \; or \; H(P)}$越大，代表越均匀、越混乱、越不确定。各种熵点这里$$\color{blue}{H(P)} =  \color{red} {- \sum_{x \in X}P(x) \log P(x)}$$熵满足下面不等式$$0 \le H(P) \le">
+    <meta name="description" content="机器学习中最大熵模型的介绍，包括模型思想、学习问题、学习算法等">
 <meta name="keywords" content="机器学习,自然语言处理,各种熵,最大熵模型,IIS,期望">
 <meta property="og:type" content="article">
 <meta property="og:title" content="最大熵模型">
 <meta property="og:url" content="http://plmsmile.github.io/2017/09/20/maxentmodel/index.html">
 <meta property="og:site_name" content="PLM&#39;s Notes">
-<meta property="og:description" content="最大熵原理预备知识离散型变量$X$的概率分布是$\color{blue}{P(X)}$。它的熵$\color{blue}{H(X) \; or \; H(P)}$越大，代表越均匀、越混乱、越不确定。各种熵点这里$$\color{blue}{H(P)} =  \color{red} {- \sum_{x \in X}P(x) \log P(x)}$$熵满足下面不等式$$0 \le H(P) \le">
+<meta property="og:description" content="机器学习中最大熵模型的介绍，包括模型思想、学习问题、学习算法等">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-11-25T08:30:10.311Z">
+<meta property="og:updated_time" content="2018-12-13T09:11:06.906Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="最大熵模型">
-<meta name="twitter:description" content="最大熵原理预备知识离散型变量$X$的概率分布是$\color{blue}{P(X)}$。它的熵$\color{blue}{H(X) \; or \; H(P)}$越大，代表越均匀、越混乱、越不确定。各种熵点这里$$\color{blue}{H(P)} =  \color{red} {- \sum_{x \in X}P(x) \log P(x)}$$熵满足下面不等式$$0 \le H(P) \le">
+<meta name="twitter:description" content="机器学习中最大熵模型的介绍，包括模型思想、学习问题、学习算法等">
     
         <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
     
@@ -192,57 +192,170 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <h1 id="最大熵原理"><a href="#最大熵原理" class="headerlink" title="最大熵原理"></a>最大熵原理</h1><h2 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h2><p>离散型变量$X$的概率分布是$\color{blue}{P(X)}$。它的<strong>熵</strong>$\color{blue}{H(X) \; or \; H(P)}$越大，代表<strong>越均匀、越混乱、越不确定</strong>。<a href="https://plmsmile.github.io/2017/07/31/nlp-notes/#信息量和信息熵">各种熵点这里</a><br>$$<br>\color{blue}{H(P)} =  \color{red} {- \sum_{x \in X}P(x) \log P(x)}<br>$$<br>熵满足下面不等式<br>$$<br>0 \le H(P) \le \log |X|, \quad 其中|X|是X的取值个数<br>$$<br>当前仅当$X$的分布是均匀分布的时候等号成立。当$X$服从均匀分布时，熵最大。</p>
-<h2 id="最大熵的思想"><a href="#最大熵的思想" class="headerlink" title="最大熵的思想"></a>最大熵的思想</h2><p>最大熵原理认为，学习概率模型时，在所有可能的概率模型中，<strong>熵最大的模型是最好的模型</strong>。</p>
+            <blockquote>
+<p>机器学习中最大熵模型的介绍，包括模型思想、学习问题、学习算法等</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="最大熵原理">最大熵原理</h1>
+<h2 id="预备知识">预备知识</h2>
+<p>离散型变量<span class="math inline">\(X\)</span>的概率分布是<span class="math inline">\(\color{blue}{P(X)}\)</span>。它的<strong>熵</strong><span class="math inline">\(\color{blue}{H(X) \; or \; H(P)}\)</span>越大，代表<strong>越均匀、越混乱、越不确定</strong>。<a href="https://plmsmile.github.io/2017/07/31/nlp-notes/#信息量和信息熵">各种熵点这里</a> <span class="math display">\[
+\color{blue}{H(P)} =  \color{red} {- \sum_{x \in X}P(x) \log P(x)}
+\]</span> 熵满足下面不等式 <span class="math display">\[
+0 \le H(P) \le \log |X|, \quad 其中|X|是X的取值个数
+\]</span> 当前仅当<span class="math inline">\(X\)</span>的分布是均匀分布的时候等号成立。当<span class="math inline">\(X\)</span>服从均匀分布时，熵最大。</p>
+<h2 id="最大熵的思想">最大熵的思想</h2>
+<p>最大熵原理认为，学习概率模型时，在所有可能的概率模型中，<strong>熵最大的模型是最好的模型</strong>。</p>
 <p>事情分为两个部分：确定的部分（约束条件）和不确定的部分。选择模型时要</p>
 <ul>
 <li>要满足所有的<strong>约束条件</strong>，即满足已有的确定的事实</li>
 <li>要<strong>均分</strong>不确定的部分</li>
 </ul>
-<p>$X$有5个取值${A, B,C,D,E}$，取值概率分别为$P(A), P(B), P(C), P(D), P(E)$。满足以下约束条件<br>$$<br>P(A)+ P(B)+ P(C)+ P(D)+ P(E) = 1<br>$$<br>满足这个条件的模型有很多。再加一个约束条件<br>$$<br>P(A) + P(B) = \frac{3}{10}<br>$$<br>则，<strong>满足约束条件</strong>，<strong>不确定的平分（熵最大）</strong>：这样的模型是最好的模型<br>$$<br>P(A) = P(B) = \frac{3}{20}, \quad P(C)=P(D)=P(E) = \frac{7}{30}<br>$$<br>即：<strong>约束条件，熵最大</strong></p>
-<h1 id="最大熵模型"><a href="#最大熵模型" class="headerlink" title="最大熵模型"></a>最大熵模型</h1><p>假设分类模型是一个条件概率分布$\color{blue}{P(Y \mid X)}$。(有的不是选择条件模型，如论文里面)。训练数据集$N$个样本 $T = {(x_1, y_1), (x_2, y_2), \cdots, (x_N, y_N)}$</p>
-<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><ul>
-<li>联合分布：$\color{blue}{P(X, Y)}$</li>
-<li>边缘分布：$\color{blue}{P(X)}$</li>
-<li>联合经验分布：$\color{blue}{\widetilde{P}(X, Y)} = \color{red}{\frac {v(X=x, Y=y)}{N}}$，其中$v(x, y)$为频数</li>
-<li>联合边缘分布：$\color{blue}{\widetilde P(X) = \color{red} {\frac{v(X=x)}{N}}}$</li>
-</ul>
-<p><strong>特征函数</strong>$\color{blue}{f(x, y)}$用来描述$x$和$y$满足的一个事实<strong>约束条件</strong>：<br>$$<br>f(x, y) =<br>\begin{cases}<br>1, \quad &amp; x与y满足一个事实，即约束条件 \<br>0, \quad &amp; 否则<br>\end{cases}<br>$$<br>如果有$n$个特征函数$\color{blue}{f_i(x, y), i = 1, 2, \cdots, n}$, 就有$n$个约束条件。</p>
-<h2 id="概率期望的计算"><a href="#概率期望的计算" class="headerlink" title="概率期望的计算"></a>概率期望的计算</h2><p><strong>$X$的期望</strong></p>
-<p>$X$ 是随机变量，概率分布是$P(X)$ ，或概率密度函数是$f(x)$<br>$$<br>E(X) =<br>\begin{cases}<br>&amp;\sum_{i} x_i P(x_i), \quad &amp; \text{离散} \<br>&amp; \int_{-\infty}^{+\infty} {x \cdot f(x)} \, {\rm d}x  , \quad &amp; \text{连续} \<br>\end{cases}<br>$$<br>下面只考虑离散型的期望，连续型同理，求积分即可。</p>
-<p><strong>一元函数的期望</strong></p>
-<p>$Y = g(X)$，期望是<br>$$<br>E[Y] = E[g(X)] = \sum_{i}^{\infty} g(x_i) \cdot P(x_i)<br>$$<br><strong>二元函数的期望</strong></p>
-<p>$Z = g(X, Y)$ ，期望是<br>$$<br>E(Z) = \sum_{x, y} g(x, y) \cdot p(x, y) = \sum_{i=1} \sum_{j=1} g(x_i, y_j) p(x_i, y_j)<br>$$<br>期望其实就是$E 狗 = \sum 狗 \cdot 老概率$ 。可离散，可连续。</p>
-<h2 id="约束条件等式"><a href="#约束条件等式" class="headerlink" title="约束条件等式"></a>约束条件等式</h2><p><strong>实际分布期望</strong></p>
-<p>特征函数$f(x, y)$关于经验分布$\color{blue}{\widetilde P(x, y)}$的期望$\color{blue}{E_{\widetilde P}(f)}$，即<strong>实际应该有的特征</strong> ，也就是一个给模型加的<strong>约束条件</strong> ：<br>$$<br>\color{blue}{E_{\widetilde P}(f)} = \sum_{x, y} \color{red} {\widetilde P(x,y)} f(x, y)<br>$$<br><strong>理论模型期望</strong></p>
-<p>特征函数$f(x, y)$ 关于模型$\color{blue}{P(Y\mid X)}$和经验分布$\color{blue}{\widetilde P(X)}$的期望$\color{blue}{E_{P}(f)}$ ，即理论上模型学得后的期望：<br>$$<br>\color{blue}{E_{ P}(f)}  =\sum_{x, y}  \color{red} { \widetilde{P}(x) P(y \mid x)}  f(x, y)<br>$$<br>要从训练数据中获取信息，特征函数关于实际经验分布和理论模型的两个期望就得相等，即<strong>理论模型要满足实际约束条件</strong><br>$$<br>E_{\widetilde P}(f) = E_{ P}(f)<br>$$</p>
-<h2 id="最大熵模型思想"><a href="#最大熵模型思想" class="headerlink" title="最大熵模型思想"></a>最大熵模型思想</h2><p>条件概率分布$P(Y \mid X)$的<strong>条件熵</strong>为$\color{blue}{H(P)}$如下，<a href="https://plmsmile.github.io/2017/07/31/nlp-notes/#联合熵和条件熵">条件熵</a>：<br>$$<br>\color{blue}{H(P)} =<br>\color{red} {- \sum_{x, y} \widetilde P(x) P(y \mid x) \log P(y \mid x)}<br>$$<br>则满足约束条件$\color{blue}{E_{\widetilde P}(f) = E_{ P}(f)}$的模型中，<strong>条件熵</strong>$\color{blue}{H(P)}$<strong>最大的模型</strong>就是<code>最大熵模型</code>。</p>
-<h1 id="最大熵模型的学习"><a href="#最大熵模型的学习" class="headerlink" title="最大熵模型的学习"></a>最大熵模型的学习</h1><h2 id="学习问题"><a href="#学习问题" class="headerlink" title="学习问题"></a>学习问题</h2><p>最大熵模型的学习等价于<strong>约束最优化问题</strong>，这类问题可以用<code>拉格朗日对偶性</code>去求解。</p>
-<p>给定数据集$T = {(x_1, y_1), (x_2, y_2), \cdots, (x_N, y_N)}$和<strong>特征函数</strong>$\color{blue}{f_i(x, y), i = 1, 2, \cdots, n}$。</p>
-<p>要满足2个<strong>约束条件</strong><br>$$<br>\color{red} {E_{\widetilde P}(f) = E_{ P}(f), \quad \sum_{x, y}P(y \mid x) = 1 }<br>$$<br>要得到<strong>最大化熵</strong><br>$$<br>\max \limits_{P \in C} \; \color{blue}{H(P)} = \color{red} {- \sum_{x, y} \widetilde P(x) P(y \mid x) \log P(y \mid x)}<br>$$<br>按照最优化问题的习惯，<strong>将求最大值问题改写为等价的求最小值问题</strong> ，如下<br>$$<br>\min \limits_{P \in C} \; \color{blue}{ - H(P)} = \color{red} { \sum_{x, y} \widetilde P(x) P(y \mid x) \log P(y \mid x)}<br>$$</p>
-<h2 id="推导最大熵模型"><a href="#推导最大熵模型" class="headerlink" title="推导最大熵模型"></a>推导最大熵模型</h2><p>一般使用<code>拉格朗日对偶性</code>去求解，可以见李航书附录。<br>引入拉格朗日乘子$\color{blue}{w = (w_0, w_1, \cdots, w_n)}$，即参数向量，构造拉格朗日函数$\color{blue}{L(P, w)}$ ：<br>$$<br>\color{blue}{L(P, w)} = \color{red}{<br>-H(P) +<br>w_0 \cdot \left( 1 - \sum_{x, y} P(y \mid x)\right) </p>
+<p><span class="math inline">\(X\)</span>有5个取值<span class="math inline">\(\{A, B,C,D,E\}\)</span>，取值概率分别为<span class="math inline">\(P(A), P(B), P(C), P(D), P(E)\)</span>。满足以下约束条件 <span class="math display">\[
+P(A)+ P(B)+ P(C)+ P(D)+ P(E) = 1
+\]</span> 满足这个条件的模型有很多。再加一个约束条件 <span class="math display">\[
+P(A) + P(B) = \frac{3}{10}
+\]</span> 则，<strong>满足约束条件</strong>，<strong>不确定的平分（熵最大）</strong>：这样的模型是最好的模型 <span class="math display">\[
+P(A) = P(B) = \frac{3}{20}, \quad P(C)=P(D)=P(E) = \frac{7}{30}
+\]</span> 即：<strong>约束条件，熵最大</strong></p>
+<h1 id="最大熵模型">最大熵模型</h1>
+<p>假设分类模型是一个条件概率分布<span class="math inline">\(\color{blue}{P(Y \mid X)}\)</span>。(有的不是选择条件模型，如论文里面)。训练数据集<span class="math inline">\(N\)</span>个样本 <span class="math inline">\(T = \{(x_1, y_1), (x_2, y_2), \cdots, (x_N, y_N)\}\)</span></p>
+<h2 id="基本概念">基本概念</h2>
 <ul>
-<li>\sum_{i=1}^n w_i \cdot \left(E_{\widetilde P}(f) - E_{ P}(f) \right)<br>}<br>$$<br>由于是凸函数，根据相关性质，所以原始问题和对偶问题同解，<code>原始问题</code>如下：<br>$$<br>\min \limits_{P \in C} \max \limits_{w} L(P, w)<br>$$<br>对应的<code>对偶问题</code>如下：<br>$$<br>\max \limits_{w} \min \limits_{P \in C} L(P, w)<br>$$<br>主要思路是：先固定$\color{blue}{w}$，去计算$\color{blue} {\min \limits_{P \in C} L(P, w)}$，即去找到一个合适的$\color{blue}{P(Y \mid X)}$。再去找到一个合适的$\color{blue}{w}$。</li>
+<li>联合分布：<span class="math inline">\(\color{blue}{P(X, Y)}\)</span></li>
+<li>边缘分布：<span class="math inline">\(\color{blue}{P(X)}\)</span></li>
+<li>联合经验分布：<span class="math inline">\(\color{blue}{\widetilde{P}(X, Y)} = \color{red}{\frac {v(X=x, Y=y)}{N}}\)</span>，其中<span class="math inline">\(v(x, y)\)</span>为频数</li>
+<li>联合边缘分布：<span class="math inline">\(\color{blue}{\widetilde P(X) = \color{red} {\frac{v(X=x)}{N}}}\)</span></li>
 </ul>
-<p>第一步：求解$\color{blue}{P}$ 。设<code>对偶函数</code>$\color{blue} { \Psi (w)}$如下：<br>$$<br>\color{blue} { \Psi (w)} = \color{red} {\min \limits_{P \in C} L(P, w) = L(P_w, w)}<br>$$<br>对偶函数的解，即我们找到的$P(Y \mid X)$，记作$\color{blue}{P_w}$，如下：<br>$$<br>\color{blue}{P_w} = \arg \min \limits_{P \in C} L(P, w) =\color{red} {P_w(y \mid x)}<br>$$<br>用${L(P, w)}$对$P$进行求偏导，令偏导为0，可以解得${P_w}$，即<code>最大熵模型</code> 如下：<br>$$<br>\color{blue}{P_w(y \mid x)} = \color{red} {\frac{1}{Z_w(x)} \cdot \exp \left({\sum_{i=1}^nw_if_i(x, y)}\right) },<br>\;<br>\color{blue}{Z_w(x)} = \color{red} {\sum_{y} \exp \left( \sum_{i=1}^{n} w_i f_i(x, y)\right) }<br>$$<br>其中$\color{blue}{Z_w(x)}$是<code>归一化因子</code>，$\color{blue} {f_i(x, y)}$是<code>特征函数</code>，$\color{blue}{w_i}$是<code>特征的权值</code>，$\color{blue}{P_w(y \mid x)}$ 就是<code>最大熵模型</code>， $\color{blue}{w}$是最大熵模型中的<code>参数向量</code>。</p>
-<p>第二步：求解$\color{blue}{w}$。即求$w$去最大化对偶函数，设解为$\color{blue} {w^<em>}$ 。可以使用最优化算法去求极大化。<br>$$<br>\color{blue}{w^</em>} = \color{red} {\arg \max \limits_{w} \Psi(w)}<br>$$<br>最终，求到的$\color{blue} {P^<em> = P_{w^</em>} = P_{w^*}(y \mid x)}$就是学习得到的<strong>最大熵模型</strong>。</p>
-<h2 id="最大熵模型-1"><a href="#最大熵模型-1" class="headerlink" title="最大熵模型"></a>最大熵模型</h2><p>最大熵模型如下，其中$\color{blue}{Z_w(x)}$是<code>归一化因子</code>，$\color{blue} {f_i(x, y)}$是<code>特征函数</code>，$\color{blue}{w_i}$是<code>特征的权值</code> 。<br>$$<br>\color{blue}{P_w(y \mid x)} = \color{red} {\frac{1}{Z_w(x)} \cdot \exp \left({\sum_{i=1}^nw_if_i(x, y)}\right) },<br>\;<br>\color{blue}{Z_w(x)} = \color{red} {\sum_{y} \exp \left( \sum_{i=1}^{n} w_i f_i(x, y)\right) }<br>$$</p>
-<h2 id="极大似然估计"><a href="#极大似然估计" class="headerlink" title="极大似然估计"></a>极大似然估计</h2><p>其实对偶函数$\color{blue}{\Psi(w)}$的极大化等价于最大熵模型的极大似然估计。</p>
-<p>已知训练数据的经验分布$\widetilde{P}(X, Y)$，条件概率分布的$P(Y \mid X)$的<code>对数似然函数</code>是：<br>$$<br>\begin{align<em>}<br>\color{blue} {L_{\widetilde P}(P_w)}<br>&amp; = \log \prod_{x, y} P(y \mid x) ^ {\widetilde{P}(X, Y)} = \sum_{x, y} \widetilde P(x, y) \log P(y \mid x)  \<br>&amp; = \color{red}{\sum_{x, y}\widetilde{P}(X, Y)  \sum_{i=1}^{n} w_i f_i(x, y) - \sum_{x} \widetilde{P}(X)\log Z_w(x) }<br>\end{align</em>}<br>$$<br>可以证明得到，$L_{\widetilde P}(P_w) = \Psi (w) $，极大似然函数等于对偶函数。</p>
-<h1 id="模型学习的最优化算法"><a href="#模型学习的最优化算法" class="headerlink" title="模型学习的最优化算法"></a>模型学习的最优化算法</h1><p><code>逻辑回归</code>、<code>最大熵模型</code>的学习都是<strong>以似然函数为目标函数的最优化问题</strong>，可以通过迭代算法求解。这个目标函数是个<strong>光滑的凸函数</strong>。通过很多方法都可以保证找到全局最优解，常用的有<code>改进的迭代尺度法</code>、<code>梯度下降法</code>、<code>牛顿法</code>或<code>拟牛顿法</code>，其中牛顿法和拟牛顿法一般收敛速度更快。</p>
-<h2 id="改进的迭代尺度法"><a href="#改进的迭代尺度法" class="headerlink" title="改进的迭代尺度法"></a>改进的迭代尺度法</h2><p>改进的迭代尺度法(improved iterative scaling, IIS)是一种最大熵模型学习的最优化算法。</p>
-<p>已知最大熵模型如下：<br>$$<br>\color{blue}{P_w(y \mid x)} = \color{red} {\frac{1}{Z_w(x)} \cdot \exp \left({\sum_{i=1}^nw_if_i(x, y)}\right) },<br>\;<br>\color{blue}{Z_w(x)} = \color{red} {\sum_{y} \exp \left( \sum_{i=1}^{n} w_i f_i(x, y)\right) }<br>$$<br>对数似然函数如下：<br>$$<br>\color{blue} {L_{\widetilde P}(P_w)} =  \color{red}{\sum_{x, y}\widetilde{P}(X, Y)  \sum_{i=1}^{n} w_i f_i(x, y) - \sum_{x} \widetilde{P}(X)\log Z_w(x) }<br>$$<br>目标是：通过极大似然估计学习模型参数，即求对数似然函数的<strong>极大值</strong>$\color{blue} {\hat w}$。</p>
+<p><strong>特征函数</strong><span class="math inline">\(\color{blue}{f(x, y)}\)</span>用来描述<span class="math inline">\(x\)</span>和<span class="math inline">\(y\)</span>满足的一个事实<strong>约束条件</strong>： <span class="math display">\[
+f(x, y) = 
+\begin{cases}
+1, \quad &amp; x与y满足一个事实，即约束条件 \\
+0, \quad &amp; 否则
+\end{cases}
+\]</span> 如果有<span class="math inline">\(n\)</span>个特征函数<span class="math inline">\(\color{blue}{f_i(x, y), i = 1, 2, \cdots, n}\)</span>, 就有<span class="math inline">\(n\)</span>个约束条件。</p>
+<h2 id="概率期望的计算">概率期望的计算</h2>
+<p><strong><span class="math inline">\(X\)</span>的期望</strong></p>
+<p><span class="math inline">\(X\)</span> 是随机变量，概率分布是<span class="math inline">\(P(X)\)</span> ，或概率密度函数是<span class="math inline">\(f(x)\)</span> <span class="math display">\[
+E(X) = 
+\begin{cases}
+&amp;\sum_{i} x_i P(x_i), \quad &amp; \text{离散} \\
+&amp; \int_{-\infty}^{+\infty} {x \cdot f(x)} \, {\rm d}x  , \quad &amp; \text{连续} \\
+\end{cases}
+\]</span> 下面只考虑离散型的期望，连续型同理，求积分即可。</p>
+<p><strong>一元函数的期望</strong></p>
+<p><span class="math inline">\(Y = g(X)\)</span>，期望是 <span class="math display">\[
+E[Y] = E[g(X)] = \sum_{i}^{\infty} g(x_i) \cdot P(x_i)
+\]</span> <strong>二元函数的期望</strong></p>
+<p><span class="math inline">\(Z = g(X, Y)\)</span> ，期望是 <span class="math display">\[
+E(Z) = \sum_{x, y} g(x, y) \cdot p(x, y) = \sum_{i=1} \sum_{j=1} g(x_i, y_j) p(x_i, y_j)
+\]</span> 期望其实就是<span class="math inline">\(E 狗 = \sum 狗 \cdot 老概率\)</span> 。可离散，可连续。</p>
+<h2 id="约束条件等式">约束条件等式</h2>
+<p><strong>实际分布期望</strong></p>
+<p>特征函数<span class="math inline">\(f(x, y)\)</span>关于经验分布<span class="math inline">\(\color{blue}{\widetilde P(x, y)}\)</span>的期望<span class="math inline">\(\color{blue}{E_{\widetilde P}(f)}\)</span>，即<strong>实际应该有的特征</strong> ，也就是一个给模型加的<strong>约束条件</strong> ： <span class="math display">\[
+\color{blue}{E_{\widetilde P}(f)} = \sum_{x, y} \color{red} {\widetilde P(x,y)} f(x, y)
+\]</span> <strong>理论模型期望</strong></p>
+<p>特征函数<span class="math inline">\(f(x, y)\)</span> 关于模型<span class="math inline">\(\color{blue}{P(Y\mid X)}\)</span>和经验分布<span class="math inline">\(\color{blue}{\widetilde P(X)}\)</span>的期望<span class="math inline">\(\color{blue}{E_{P}(f)}\)</span> ，即理论上模型学得后的期望： <span class="math display">\[
+\color{blue}{E_{ P}(f)}  =\sum_{x, y}  \color{red} { \widetilde{P}(x) P(y \mid x)}  f(x, y)
+\]</span> 要从训练数据中获取信息，特征函数关于实际经验分布和理论模型的两个期望就得相等，即<strong>理论模型要满足实际约束条件</strong> <span class="math display">\[
+E_{\widetilde P}(f) = E_{ P}(f)
+\]</span></p>
+<h2 id="最大熵模型思想">最大熵模型思想</h2>
+<p>条件概率分布<span class="math inline">\(P(Y \mid X)\)</span>的<strong>条件熵</strong>为<span class="math inline">\(\color{blue}{H(P)}\)</span>如下，<a href="https://plmsmile.github.io/2017/07/31/nlp-notes/#联合熵和条件熵">条件熵</a>： <span class="math display">\[
+\color{blue}{H(P)} = 
+\color{red} {- \sum_{x, y} \widetilde P(x) P(y \mid x) \log P(y \mid x)}
+\]</span> 则满足约束条件<span class="math inline">\(\color{blue}{E_{\widetilde P}(f) = E_{ P}(f)}\)</span>的模型中，<strong>条件熵</strong><span class="math inline">\(\color{blue}{H(P)}\)</span><strong>最大的模型</strong>就是<code>最大熵模型</code>。</p>
+<h1 id="最大熵模型的学习">最大熵模型的学习</h1>
+<h2 id="学习问题">学习问题</h2>
+<p>最大熵模型的学习等价于<strong>约束最优化问题</strong>，这类问题可以用<code>拉格朗日对偶性</code>去求解。</p>
+<p>给定数据集<span class="math inline">\(T = \{(x_1, y_1), (x_2, y_2), \cdots, (x_N, y_N)\}\)</span>和<strong>特征函数</strong><span class="math inline">\(\color{blue}{f_i(x, y), i = 1, 2, \cdots, n}\)</span>。</p>
+<p>要满足2个<strong>约束条件</strong> <span class="math display">\[
+\color{red} {E_{\widetilde P}(f) = E_{ P}(f), \quad \sum_{x, y}P(y \mid x) = 1 }
+\]</span> 要得到<strong>最大化熵</strong> <span class="math display">\[
+\max \limits_{P \in C} \; \color{blue}{H(P)} = \color{red} {- \sum_{x, y} \widetilde P(x) P(y \mid x) \log P(y \mid x)}
+\]</span> 按照最优化问题的习惯，<strong>将求最大值问题改写为等价的求最小值问题</strong> ，如下 <span class="math display">\[
+\min \limits_{P \in C} \; \color{blue}{ - H(P)} = \color{red} { \sum_{x, y} \widetilde P(x) P(y \mid x) \log P(y \mid x)}
+\]</span></p>
+<h2 id="推导最大熵模型">推导最大熵模型</h2>
+<p>一般使用<code>拉格朗日对偶性</code>去求解，可以见李航书附录。 引入拉格朗日乘子<span class="math inline">\(\color{blue}{w = (w_0, w_1, \cdots, w_n)}\)</span>，即参数向量，构造拉格朗日函数<span class="math inline">\(\color{blue}{L(P, w)}\)</span> ： <span class="math display">\[
+\color{blue}{L(P, w)} = \color{red}{
+-H(P) +
+w_0 \cdot \left( 1 - \sum_{x, y} P(y \mid x)\right) 
++ \sum_{i=1}^n w_i \cdot \left(E_{\widetilde P}(f) - E_{ P}(f) \right)
+}
+\]</span> 由于是凸函数，根据相关性质，所以原始问题和对偶问题同解，<code>原始问题</code>如下： <span class="math display">\[
+\min \limits_{P \in C} \max \limits_{w} L(P, w)
+\]</span> 对应的<code>对偶问题</code>如下： <span class="math display">\[
+\max \limits_{w} \min \limits_{P \in C} L(P, w)
+\]</span> 主要思路是：先固定<span class="math inline">\(\color{blue}{w}\)</span>，去计算<span class="math inline">\(\color{blue} {\min \limits_{P \in C} L(P, w)}\)</span>，即去找到一个合适的<span class="math inline">\(\color{blue}{P(Y \mid X)}\)</span>。再去找到一个合适的<span class="math inline">\(\color{blue}{w}\)</span>。</p>
+<p>第一步：求解<span class="math inline">\(\color{blue}{P}\)</span> 。设<code>对偶函数</code><span class="math inline">\(\color{blue} { \Psi (w)}\)</span>如下： <span class="math display">\[
+\color{blue} { \Psi (w)} = \color{red} {\min \limits_{P \in C} L(P, w) = L(P_w, w)}
+\]</span> 对偶函数的解，即我们找到的<span class="math inline">\(P(Y \mid X)\)</span>，记作<span class="math inline">\(\color{blue}{P_w}\)</span>，如下： <span class="math display">\[
+\color{blue}{P_w} = \arg \min \limits_{P \in C} L(P, w) =\color{red} {P_w(y \mid x)}
+\]</span> 用<span class="math inline">\({L(P, w)}\)</span>对<span class="math inline">\(P\)</span>进行求偏导，令偏导为0，可以解得<span class="math inline">\({P_w}\)</span>，即<code>最大熵模型</code> 如下： <span class="math display">\[
+\color{blue}{P_w(y \mid x)} = \color{red} {\frac{1}{Z_w(x)} \cdot \exp \left({\sum_{i=1}^nw_if_i(x, y)}\right) }, 
+\;
+\color{blue}{Z_w(x)} = \color{red} {\sum_{y} \exp \left( \sum_{i=1}^{n} w_i f_i(x, y)\right) }
+\]</span> 其中<span class="math inline">\(\color{blue}{Z_w(x)}\)</span>是<code>归一化因子</code>，<span class="math inline">\(\color{blue} {f_i(x, y)}\)</span>是<code>特征函数</code>，<span class="math inline">\(\color{blue}{w_i}\)</span>是<code>特征的权值</code>，<span class="math inline">\(\color{blue}{P_w(y \mid x)}\)</span> 就是<code>最大熵模型</code>， <span class="math inline">\(\color{blue}{w}\)</span>是最大熵模型中的<code>参数向量</code>。</p>
+<p>第二步：求解<span class="math inline">\(\color{blue}{w}\)</span>。即求<span class="math inline">\(w\)</span>去最大化对偶函数，设解为<span class="math inline">\(\color{blue} {w^*}\)</span> 。可以使用最优化算法去求极大化。 <span class="math display">\[
+\color{blue}{w^*} = \color{red} {\arg \max \limits_{w} \Psi(w)}
+\]</span> 最终，求到的<span class="math inline">\(\color{blue} {P^* = P_{w^*} = P_{w^*}(y \mid x)}\)</span>就是学习得到的<strong>最大熵模型</strong>。</p>
+<h2 id="最大熵模型-1">最大熵模型</h2>
+<p>最大熵模型如下，其中<span class="math inline">\(\color{blue}{Z_w(x)}\)</span>是<code>归一化因子</code>，<span class="math inline">\(\color{blue} {f_i(x, y)}\)</span>是<code>特征函数</code>，<span class="math inline">\(\color{blue}{w_i}\)</span>是<code>特征的权值</code> 。 <span class="math display">\[
+\color{blue}{P_w(y \mid x)} = \color{red} {\frac{1}{Z_w(x)} \cdot \exp \left({\sum_{i=1}^nw_if_i(x, y)}\right) }, 
+\;
+\color{blue}{Z_w(x)} = \color{red} {\sum_{y} \exp \left( \sum_{i=1}^{n} w_i f_i(x, y)\right) }
+\]</span></p>
+<h2 id="极大似然估计">极大似然估计</h2>
+<p>其实对偶函数<span class="math inline">\(\color{blue}{\Psi(w)}\)</span>的极大化等价于最大熵模型的极大似然估计。</p>
+<p>已知训练数据的经验分布<span class="math inline">\(\widetilde{P}(X, Y)\)</span>，条件概率分布的<span class="math inline">\(P(Y \mid X)\)</span>的<code>对数似然函数</code>是： <span class="math display">\[
+\begin{align*}
+\color{blue} {L_{\widetilde P}(P_w)} 
+&amp; = \log \prod_{x, y} P(y \mid x) ^ {\widetilde{P}(X, Y)} = \sum_{x, y} \widetilde P(x, y) \log P(y \mid x)  \\
+&amp; = \color{red}{\sum_{x, y}\widetilde{P}(X, Y)  \sum_{i=1}^{n} w_i f_i(x, y) - \sum_{x} \widetilde{P}(X)\log Z_w(x) }
+\end{align*}
+\]</span> 可以证明得到，$L_{P}(P_w) = (w) $，极大似然函数等于对偶函数。</p>
+<h1 id="模型学习的最优化算法">模型学习的最优化算法</h1>
+<p><code>逻辑回归</code>、<code>最大熵模型</code>的学习都是<strong>以似然函数为目标函数的最优化问题</strong>，可以通过迭代算法求解。这个目标函数是个<strong>光滑的凸函数</strong>。通过很多方法都可以保证找到全局最优解，常用的有<code>改进的迭代尺度法</code>、<code>梯度下降法</code>、<code>牛顿法</code>或<code>拟牛顿法</code>，其中牛顿法和拟牛顿法一般收敛速度更快。</p>
+<h2 id="改进的迭代尺度法">改进的迭代尺度法</h2>
+<p>改进的迭代尺度法(improved iterative scaling, IIS)是一种最大熵模型学习的最优化算法。</p>
+<p>已知最大熵模型如下： <span class="math display">\[
+\color{blue}{P_w(y \mid x)} = \color{red} {\frac{1}{Z_w(x)} \cdot \exp \left({\sum_{i=1}^nw_if_i(x, y)}\right) }, 
+\;
+\color{blue}{Z_w(x)} = \color{red} {\sum_{y} \exp \left( \sum_{i=1}^{n} w_i f_i(x, y)\right) }
+\]</span> 对数似然函数如下： <span class="math display">\[
+\color{blue} {L_{\widetilde P}(P_w)} =  \color{red}{\sum_{x, y}\widetilde{P}(X, Y)  \sum_{i=1}^{n} w_i f_i(x, y) - \sum_{x} \widetilde{P}(X)\log Z_w(x) }
+\]</span> 目标是：通过极大似然估计学习模型参数，即求对数似然函数的<strong>极大值</strong><span class="math inline">\(\color{blue} {\hat w}\)</span>。</p>
 <p><strong>基本思想</strong></p>
-<p>当前参数向量$w = (w_1, w_2, \cdots, w_n)^T$，找到一个新的参数向量$w+\delta = (w_1 + \delta_1, w_2 + \delta_2, \cdots, w_n + \delta_n)$，使得每次更新都使似然函数值增大。</p>
-<p>由于$\delta$是一个向量，含有多个变量，不易同时优化。所以<code>IIS</code> <strong>每次只优化其中一个变量</strong>$\delta_i$，而固定其他变量$\delta_j$。</p>
-<p>设所有特征在$(x, y)$中的出现次数$f^#(x, y) = M$ ：<br>$$<br>\color{blue}{f^# (x, y)} = \sum_i f_i(x, y)<br>$$<br>计算每次的改变量：<br>$$<br>L(w+\delta) - L(w) \ge \color{blue}{B(\delta \mid w)}, \; 改变量的下界限<br>$$<br>如果找到适当的$\delta$使得改变量的下界$B(\delta \mid w)$提高，则对数似然函数也能提高。</p>
-<p>计算$B(\delta \mid w)$对$\delta_i$求偏导，<strong>令偏导等于0，得如下方程</strong>：<br>$$<br>\color{red} {<br>\sum_{x, y} \widetilde P(x) P_w(y \mid x) f_i(x, y) \exp \left(\delta_i f^#(x, y)\right)<br>= E_{\widetilde p}(f_i)<br>},<br>\quad 其中\, E_{\widetilde p}(f_i) = \sum_{x, y} \widetilde P(x, y)f_i(x, y)<br>$$<br>然后，<strong>依次对$\delta_i​$求解该方程</strong>，就可以求得$\delta​$，也就能够更新$w​$，即$w \to w+\delta​$</p>
+<p>当前参数向量<span class="math inline">\(w = (w_1, w_2, \cdots, w_n)^T\)</span>，找到一个新的参数向量<span class="math inline">\(w+\delta = (w_1 + \delta_1, w_2 + \delta_2, \cdots, w_n + \delta_n)\)</span>，使得每次更新都使似然函数值增大。</p>
+<p>由于<span class="math inline">\(\delta\)</span>是一个向量，含有多个变量，不易同时优化。所以<code>IIS</code> <strong>每次只优化其中一个变量</strong><span class="math inline">\(\delta_i\)</span>，而固定其他变量<span class="math inline">\(\delta_j\)</span>。</p>
+<p>设所有特征在<span class="math inline">\((x, y)\)</span>中的出现次数<span class="math inline">\(f^\#(x, y) = M\)</span> ： <span class="math display">\[
+\color{blue}{f^\# (x, y)} = \sum_i f_i(x, y)
+\]</span> 计算每次的改变量： <span class="math display">\[
+L(w+\delta) - L(w) \ge \color{blue}{B(\delta \mid w)}, \; 改变量的下界限
+\]</span> 如果找到适当的<span class="math inline">\(\delta\)</span>使得改变量的下界<span class="math inline">\(B(\delta \mid w)\)</span>提高，则对数似然函数也能提高。</p>
+<p>计算<span class="math inline">\(B(\delta \mid w)\)</span>对<span class="math inline">\(\delta_i\)</span>求偏导，<strong>令偏导等于0，得如下方程</strong>： <span class="math display">\[
+\color{red} {
+\sum_{x, y} \widetilde P(x) P_w(y \mid x) f_i(x, y) \exp \left(\delta_i f^\#(x, y)\right) 
+= E_{\widetilde p}(f_i) 
+}, 
+\quad 其中\, E_{\widetilde p}(f_i) = \sum_{x, y} \widetilde P(x, y)f_i(x, y)
+\]</span> 然后，<strong>依次对<span class="math inline">\(\delta_i​\)</span>求解该方程</strong>，就可以求得<span class="math inline">\(\delta​\)</span>，也就能够更新<span class="math inline">\(w​\)</span>，即<span class="math inline">\(w \to w+\delta​\)</span></p>
 <p><strong>算法步骤</strong></p>
-<p>输入：特征函数$f_1, \cdots, f_n$；经验分布$\widetilde P(x, y)$，模型$P_w(y \mid x)$</p>
-<p>输出：最优参数值$w_i^<em>$；最优模型$P_{w^</em>}$</p>
-<p>(1) 初始化参数，取初值 $w_i = 0$</p>
-<p>(2) 求解方程 $\delta_i$<br>$$<br>\sum_{x, y} \widetilde P(x) P_w(y \mid x) f_i(x, y) \exp \left(\delta_i f^#(x, y)\right)<br>= E_{\widetilde p}(f_i),<br>$$<br>(3) 更新参数 $w_i + \delta_i \to w_i$</p>
-<p>其中解方程的时候，如果特征出现次数$f^#(x, y)$ 是常数$M$，则可以<strong>直接计算</strong>$\delta_i$ ：<br>$$<br>\color{blue}{\delta_i } = \color{red} {\frac{1}{M} \log \frac{E_{\widetilde p}(f_i)}{E_{p}(f_i)} }<br>$$<br>如果$f^#(x, y)$不是常数，则必须通过数值计算$\delta_i$。最简单就是通过<code>牛顿迭代法</code>去<strong>迭代求解</strong>$\delta_i^*$。以$g(\delta_i) = 0$ 表示该方程，进行如下迭代：<br>$$<br>\color{blue} {\delta_i^{(k+1)}} = \color{red} {\delta_i^{(k)} - \frac{g(\delta_i^{(k)})}{g^\prime (\delta_i^{(k)})} }<br>$$</p>
+<p>输入：特征函数<span class="math inline">\(f_1, \cdots, f_n\)</span>；经验分布<span class="math inline">\(\widetilde P(x, y)\)</span>，模型<span class="math inline">\(P_w(y \mid x)\)</span></p>
+<p>输出：最优参数值<span class="math inline">\(w_i^*\)</span>；最优模型<span class="math inline">\(P_{w^*}\)</span></p>
+<ol style="list-style-type: decimal">
+<li><p>初始化参数，取初值 <span class="math inline">\(w_i = 0\)</span></p></li>
+<li>求解方程 <span class="math inline">\(\delta_i\)</span> <span class="math display">\[
+\sum_{x, y} \widetilde P(x) P_w(y \mid x) f_i(x, y) \exp \left(\delta_i f^\#(x, y)\right) 
+= E_{\widetilde p}(f_i),
+\]</span></li>
+<li><p>更新参数 <span class="math inline">\(w_i + \delta_i \to w_i\)</span></p></li>
+</ol>
+<p>其中解方程的时候，如果特征出现次数<span class="math inline">\(f^\#(x, y)\)</span> 是常数<span class="math inline">\(M\)</span>，则可以<strong>直接计算</strong><span class="math inline">\(\delta_i\)</span> ： <span class="math display">\[
+\color{blue}{\delta_i } = \color{red} {\frac{1}{M} \log \frac{E_{\widetilde p}(f_i)}{E_{p}(f_i)} }
+\]</span> 如果<span class="math inline">\(f^\#(x, y)\)</span>不是常数，则必须通过数值计算<span class="math inline">\(\delta_i\)</span>。最简单就是通过<code>牛顿迭代法</code>去<strong>迭代求解</strong><span class="math inline">\(\delta_i^*\)</span>。以<span class="math inline">\(g(\delta_i) = 0\)</span> 表示该方程，进行如下迭代： <span class="math display">\[
+\color{blue} {\delta_i^{(k+1)}} = \color{red} {\delta_i^{(k)} - \frac{g(\delta_i^{(k)})}{g^\prime (\delta_i^{(k)})} }
+\]</span></p>
 
         </div>
 
@@ -251,7 +364,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-11-25T08:30:10.311Z" itemprop="dateUpdated">2018-11-25 16:30:10</time>
+    最后更新时间：<time datetime="2018-12-13T09:11:06.906Z" itemprop="dateUpdated">2018-12-13 17:11:06</time>
 </span><br>
 
 
@@ -297,7 +410,9 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/09/20/maxentmodel/&title=《最大熵模型》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/09/20/maxentmodel/&title=《最大熵模型》 — PLM's Notes&source=
+机器学习中最大熵模型的介绍，包括模型思想、学习问题、学习算法等
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -344,9 +459,9 @@
 
   
     <div class="waves-block waves-effect next">
-      <a href="/2017/08/20/ml-ng-notes/" id="post-next" class="post-nav-link">
+      <a href="/2017/08/20/21-lr/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">机器学习笔记</h4>
+        <h4 class="title">线性回归和逻辑回归</h4>
       </a>
     </div>
   
@@ -468,7 +583,9 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/09/20/maxentmodel/&title=《最大熵模型》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/09/20/maxentmodel/&title=《最大熵模型》 — PLM's Notes&source=
+机器学习中最大熵模型的介绍，包括模型思想、学习问题、学习算法等
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>

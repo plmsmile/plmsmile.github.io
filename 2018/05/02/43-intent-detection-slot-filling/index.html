@@ -170,7 +170,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#背景"><span class="post-toc-number">1.</span> <span class="post-toc-text">背景</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#语义理解的两个方面"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">语义理解的两个方面</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#槽填充"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">槽填充</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#两种方法"><span class="post-toc-number">2.</span> <span class="post-toc-text">两种方法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Seq2Seq方法"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">Seq2Seq方法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#基于注意力的RNN"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">基于注意力的RNN</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#背景"><span class="post-toc-number">1.</span> <span class="post-toc-text">背景</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#语义理解的两个方面"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">语义理解的两个方面</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#槽填充"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">槽填充</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#两种方法"><span class="post-toc-number">2.</span> <span class="post-toc-text">两种方法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#seq2seq方法"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">Seq2Seq方法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#基于注意力的rnn"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">基于注意力的RNN</span></a></li></ol></li></ol>
         </nav>
     </aside>
 
@@ -195,16 +195,18 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <p><a href="https://arxiv.org/abs/1609.01454" target="_blank" rel="noopener">Attention-Based Recurrent Neural Network Models for Joint Intent Detection and Slot Filling</a> <a id="more"></a> </p>
+            <p><a href="https://arxiv.org/abs/1609.01454" target="_blank" rel="noopener">Attention-Based Recurrent Neural Network Models for Joint Intent Detection and Slot Filling</a> <a id="more"></a></p>
 <p><img src="" style="display:block; margin:auto" width="60%"></p>
-<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><h2 id="语义理解的两个方面"><a href="#语义理解的两个方面" class="headerlink" title="语义理解的两个方面"></a>语义理解的两个方面</h2><p><strong>1. 语义理解的两个主要方面</strong></p>
+<h1 id="背景">背景</h1>
+<h2 id="语义理解的两个方面">语义理解的两个方面</h2>
+<p><strong>1. 语义理解的两个主要方面</strong></p>
 <p>在对话系统中，<code>Spoken language understanding</code>（语言理解）很重要。主要是下面两个关键点：</p>
 <ul>
-<li>理解说话人的意图 – <strong>意图检测</strong>（Intent Detection）</li>
-<li>从句子中提取语义成分 – <strong>槽填充</strong>（Slot Filling）</li>
+<li>理解说话人的意图 -- <strong>意图检测</strong>（Intent Detection）</li>
+<li>从句子中提取语义成分 -- <strong>槽填充</strong>（Slot Filling）</li>
 </ul>
 <p><strong>2. 意图检测</strong></p>
-<p>意图检测是一个语义句子的<code>分类问题</code>。可以用SVM、DNN来进行分类。 </p>
+<p>意图检测是一个语义句子的<code>分类问题</code>。可以用SVM、DNN来进行分类。</p>
 <p><strong>3. 槽填充</strong></p>
 <p>槽填充是要读取句子中的一些语义成分，是一个<code>序列标注问题</code>。可以用MEMMs来做。</p>
 <p><strong>4. 处理</strong></p>
@@ -213,62 +215,84 @@
 <p>序列标注具有明确的对齐信息。</p>
 <p>输入n，输出n，相同长度。输入和输出每一个位置严格<strong>对齐</strong>。Alignment-based RNN。</p>
 <p>输入n，输出m，不同长度，本身不具有对齐信息。需要<a href="https://plmsmile.github.io/2017/10/10/attention-model/#attention-model">注意力机制</a>来进行对齐。Attention-based Encoder-Decoder。</p>
-<h2 id="槽填充"><a href="#槽填充" class="headerlink" title="槽填充"></a>槽填充</h2><p><strong>1. 问题</strong></p>
+<h2 id="槽填充">槽填充</h2>
+<p><strong>1. 问题</strong></p>
 <p><strong>槽填充</strong>是一个序列标注问题，具有明确的对齐信息。</p>
 <table>
 <thead>
-<tr>
-<th style="text-align:center">句子</th>
-<th style="text-align:center">first</th>
-<th style="text-align:center">class</th>
-<th style="text-align:center">fares</th>
-<th style="text-align:center">from</th>
-<th style="text-align:center">Boston</th>
-<th style="text-align:center">to</th>
-<th style="text-align:center">Denver</th>
+<tr class="header">
+<th align="center">句子</th>
+<th align="center">first</th>
+<th align="center">class</th>
+<th align="center">fares</th>
+<th align="center">from</th>
+<th align="center">Boston</th>
+<th align="center">to</th>
+<th align="center">Denver</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:center"><strong>Slots</strong></td>
-<td style="text-align:center">B-机舱类别</td>
-<td style="text-align:center">I-机舱类别</td>
-<td style="text-align:center">O</td>
-<td style="text-align:center">O</td>
-<td style="text-align:center">B-出发地</td>
-<td style="text-align:center">O</td>
-<td style="text-align:center">B-目的地</td>
+<tr class="odd">
+<td align="center"><strong>Slots</strong></td>
+<td align="center">B-机舱类别</td>
+<td align="center">I-机舱类别</td>
+<td align="center">O</td>
+<td align="center">O</td>
+<td align="center">B-出发地</td>
+<td align="center">O</td>
+<td align="center">B-目的地</td>
 </tr>
 </tbody>
 </table>
 <p><strong>意图</strong>：订机票。</p>
-<p>本质上是学得一个<strong>映射函数</strong>$\cal {X \to Y}$。训练样本：${ (\mathbf x^{(n)}, \mathbf y^{(n)}), n=1,\cdots, N }$。</p>
+<p>本质上是学得一个<strong>映射函数</strong><span class="math inline">\(\cal {X \to Y}\)</span>。训练样本：<span class="math inline">\(\{ (\mathbf x^{(n)}, \mathbf y^{(n)}), n=1,\cdots, N \}\)</span>。</p>
 <p><strong>2. RNN 槽填充</strong></p>
 <p>符号定义</p>
 <ul>
-<li>$\mathbf x$ ：输入序列</li>
-<li>$\mathbf y$ ：输出序列</li>
-<li>$y_t$ ：第t个单词的slot lable</li>
+<li><span class="math inline">\(\mathbf x\)</span> ：输入序列</li>
+<li><span class="math inline">\(\mathbf y\)</span> ：输出序列</li>
+<li><span class="math inline">\(y_t\)</span> ：第t个单词的slot lable</li>
 </ul>
-<p>预测$y_t$，需要$\mathbf x$和$y_{t-1}$。</p>
-<p><strong>训练</strong>是找到一个最大的使概率似然最大的参数$\theta$ ：<br>$$<br>\arg \max_{\theta} \prod P(y_t \mid y_{t-1}, \mathbf x; \theta)<br>$$<br><strong>预测</strong>是找到最大概率的标记序列$\mathbf y$<br>$$<br>\mathbf {\hat y} = \arg \max_{\mathbf y} P(\mathbf y \mid \mathbf x)<br>$$<br><strong>3. RNN Encoder-Decoder 槽填充</strong></p>
-<p>序列标注有明确的对齐信息，所以先没有使用注意力机制。把$\mathbf x$编码为语义向量$\mathbf c$：<br>$$<br>P(\mathbf y) = \prod_{t=1}^T P(y_t \mid y_{t-1}, \mathbf c)<br>$$<br>Seq2Seq可以处理不同长度的映射信息，这时没有明确的对齐信息。但是可以使用注意力机制来进行<code>软对齐Soft Alignment</code>。</p>
-<h1 id="两种方法"><a href="#两种方法" class="headerlink" title="两种方法"></a>两种方法</h1><h2 id="Seq2Seq方法"><a href="#Seq2Seq方法" class="headerlink" title="Seq2Seq方法"></a>Seq2Seq方法</h2><p>Encoder-Decoder with Aligned Inputs</p>
+<p>预测<span class="math inline">\(y_t\)</span>，需要<span class="math inline">\(\mathbf x\)</span>和<span class="math inline">\(y_{t-1}\)</span>。</p>
+<p><strong>训练</strong>是找到一个最大的使概率似然最大的参数<span class="math inline">\(\theta\)</span> ： <span class="math display">\[
+\arg \max_{\theta} \prod P(y_t \mid y_{t-1}, \mathbf x; \theta)
+\]</span> <strong>预测</strong>是找到最大概率的标记序列<span class="math inline">\(\mathbf y\)</span> <span class="math display">\[
+\mathbf {\hat y} = \arg \max_{\mathbf y} P(\mathbf y \mid \mathbf x)
+\]</span> <strong>3. RNN Encoder-Decoder 槽填充</strong></p>
+<p>序列标注有明确的对齐信息，所以先没有使用注意力机制。把<span class="math inline">\(\mathbf x\)</span>编码为语义向量<span class="math inline">\(\mathbf c\)</span>： <span class="math display">\[
+P(\mathbf y) = \prod_{t=1}^T P(y_t \mid y_{t-1}, \mathbf c)
+\]</span> Seq2Seq可以处理不同长度的映射信息，这时没有明确的对齐信息。但是可以使用注意力机制来进行<code>软对齐Soft Alignment</code>。</p>
+<h1 id="两种方法">两种方法</h1>
+<h2 id="seq2seq方法">Seq2Seq方法</h2>
+<p>Encoder-Decoder with Aligned Inputs</p>
 <p><strong>1. 编码</strong></p>
-<p>使用双向RNN对输入序列进行编码，$\mathbf {h_i} = [fh_i, bh_i]$。</p>
+<p>使用双向RNN对输入序列进行编码，<span class="math inline">\(\mathbf {h_i} = [fh_i, bh_i]\)</span>。</p>
 <p><strong>2. 意图识别</strong></p>
-<p>最后时刻的隐状态$\mathbf {h_T}$携带了整个句子的信息，使用它进行意图分类。</p>
-<p><strong>3.  槽填充</strong></p>
-<p>用单向RNN作为Decoder。初始$\mathbf s_0= \mathbf h_T$。有3种方式：</p>
-<p>a. 只有注意力输入</p>
-<p>b. 只有对齐输入</p>
-<p>c. 有注意力和对齐两个输入</p>
+<p>最后时刻的隐状态<span class="math inline">\(\mathbf {h_T}\)</span>携带了整个句子的信息，使用它进行意图分类。</p>
+<p><strong>3. 槽填充</strong></p>
+<p>用单向RNN作为Decoder。初始<span class="math inline">\(\mathbf s_0= \mathbf h_T\)</span>。有3种方式：</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>只有注意力输入</p></li>
+<li><p>只有对齐输入</p></li>
+<li><p>有注意力和对齐两个输入</p></li>
+</ol>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/dl/papers/en-decoder-slot-filling.png" style="display:block; margin:auto" width="60%"></p>
-<p><strong>4. 带注意力和对齐输入的RNN槽填充计算方式</strong><br>$$<br>s_0 = h_T<br>$$<br>计算注意力的上下文$\mathbf c_i$<br>$$<br>\alpha_{ij} = \rm{softmax}(e_{ij})<br>$$</p>
-<p>$$<br>e_{ij} = g(\mathbf s_{i-1}, \mathbf h_k)<br>$$</p>
-<p>$$<br>\mathbf c_i = \sum_{j=1}^T\alpha_{ij} \mathbf h_j<br>$$</p>
-<p>计算新的状态<br>$$<br>s_i = f(\mathbf s_{i-1}, y_{i-1}, \mathbf h_i, \mathbf c_i)<br>$$</p>
-<h2 id="基于注意力的RNN"><a href="#基于注意力的RNN" class="headerlink" title="基于注意力的RNN"></a>基于注意力的RNN</h2><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/dl/papers/atten-rnn-slot-filling.png" style="display:block; margin:auto" width="60%"></p>
+<p><strong>4. 带注意力和对齐输入的RNN槽填充计算方式</strong> <span class="math display">\[
+s_0 = h_T
+\]</span> 计算注意力的上下文<span class="math inline">\(\mathbf c_i\)</span> <span class="math display">\[
+\alpha_{ij} = \rm{softmax}(e_{ij})
+\]</span></p>
+<p><span class="math display">\[
+e_{ij} = g(\mathbf s_{i-1}, \mathbf h_k)
+\]</span></p>
+<p><span class="math display">\[
+\mathbf c_i = \sum_{j=1}^T\alpha_{ij} \mathbf h_j
+\]</span></p>
+<p>计算新的状态 <span class="math display">\[
+s_i = f(\mathbf s_{i-1}, y_{i-1}, \mathbf h_i, \mathbf c_i)
+\]</span></p>
+<h2 id="基于注意力的rnn">基于注意力的RNN</h2>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/dl/papers/atten-rnn-slot-filling.png" style="display:block; margin:auto" width="60%"></p>
 
         </div>
 

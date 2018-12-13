@@ -21,13 +21,13 @@
     
     
     <meta name="keywords" content="DCN,coattention,QA">
-    <meta name="description" content="Dynamic Coattention Networks For Question Answering DCN+: Mixed Objective and Deep Residual Coattention for Question Answering  先放四张图，分别是DCN的Encoder、Decoder，DCN+的Encoder和Objective。后面再详细总结   DCNCoatten">
+    <meta name="description" content="先放四张图，分别是DCN的Encoder、Decoder，DCN+的Encoder和Objective。后面再详细总结">
 <meta name="keywords" content="DCN,coattention,QA">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Dynamic Coattention Network (Plus)">
 <meta property="og:url" content="http://plmsmile.github.io/2018/03/15/32-dynamic-coattention-network/index.html">
 <meta property="og:site_name" content="PLM&#39;s Notes">
-<meta property="og:description" content="Dynamic Coattention Networks For Question Answering DCN+: Mixed Objective and Deep Residual Coattention for Question Answering  先放四张图，分别是DCN的Encoder、Decoder，DCN+的Encoder和Objective。后面再详细总结   DCNCoatten">
+<meta property="og:description" content="先放四张图，分别是DCN的Encoder、Decoder，DCN+的Encoder和Objective。后面再详细总结">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/dcn.png">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/dcn-decoder.png">
@@ -35,10 +35,10 @@
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/deep-residual-coattention-encoder.png">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/deep-residual-coattention-encoder.png">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/dcnplus-loss.png">
-<meta property="og:updated_time" content="2018-11-25T08:30:08.535Z">
+<meta property="og:updated_time" content="2018-12-13T08:08:07.295Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Dynamic Coattention Network (Plus)">
-<meta name="twitter:description" content="Dynamic Coattention Networks For Question Answering DCN+: Mixed Objective and Deep Residual Coattention for Question Answering  先放四张图，分别是DCN的Encoder、Decoder，DCN+的Encoder和Objective。后面再详细总结   DCNCoatten">
+<meta name="twitter:description" content="先放四张图，分别是DCN的Encoder、Decoder，DCN+的Encoder和Objective。后面再详细总结">
 <meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/dcn.png">
     
         <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
@@ -174,7 +174,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#DCN"><span class="post-toc-number">1.</span> <span class="post-toc-text">DCN</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Coattention-Encoder"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">Coattention Encoder</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Dynamic-Pointing-Decoder"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">Dynamic Pointing Decoder</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#HMN"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">HMN</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#DCN-1"><span class="post-toc-number">2.</span> <span class="post-toc-text">DCN+</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#DCN的问题"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">DCN的问题</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#DCN-的优化点"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">DCN+的优化点</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Deep-Residual-Encoder"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">Deep Residual  Encoder</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Coattention深层理解"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">Coattention深层理解</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Coattention-Encoder总结"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">Coattention Encoder总结</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Mixed-Objective"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">Mixed Objective</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#dcn"><span class="post-toc-number">1.</span> <span class="post-toc-text">DCN</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#coattention-encoder"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">Coattention Encoder</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#dynamic-pointing-decoder"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">Dynamic Pointing Decoder</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#hmn"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">HMN</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#dcn-1"><span class="post-toc-number">2.</span> <span class="post-toc-text">DCN+</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#dcn的问题"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">DCN的问题</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#dcn的优化点"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">DCN+的优化点</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#deep-residual-encoder"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">Deep Residual Encoder</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#coattention深层理解"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">Coattention深层理解</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#coattention-encoder总结"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">Coattention Encoder总结</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#mixed-objective"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">Mixed Objective</span></a></li></ol></li></ol>
         </nav>
     </aside>
 
@@ -199,36 +199,45 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <p><a href="https://arxiv.org/abs/1611.01604" target="_blank" rel="noopener">Dynamic Coattention Networks For Question Answering</a></p>
-<p><a href="https://arxiv.org/pdf/1711.00106" target="_blank" rel="noopener">DCN+: Mixed Objective and Deep Residual Coattention for Question Answering</a></p>
-<blockquote>
+            <blockquote>
 <p>先放四张图，分别是DCN的Encoder、Decoder，DCN+的Encoder和Objective。后面再详细总结</p>
 </blockquote>
+<a id="more"></a>
+<p><a href="https://arxiv.org/abs/1611.01604" target="_blank" rel="noopener">Dynamic Coattention Networks For Question Answering</a></p>
+<p><a href="https://arxiv.org/pdf/1711.00106" target="_blank" rel="noopener">DCN+: Mixed Objective and Deep Residual Coattention for Question Answering</a></p>
 <p><img src="" style="display:block; margin:auto" width="80%"></p>
-<h1 id="DCN"><a href="#DCN" class="headerlink" title="DCN"></a>DCN</h1><h2 id="Coattention-Encoder"><a href="#Coattention-Encoder" class="headerlink" title="Coattention Encoder"></a>Coattention Encoder</h2><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/dcn.png" style="display:block; margin:auto" width="100%"></p>
-<h2 id="Dynamic-Pointing-Decoder"><a href="#Dynamic-Pointing-Decoder" class="headerlink" title="Dynamic Pointing Decoder"></a>Dynamic Pointing Decoder</h2><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/dcn-decoder.png" style="display:block; margin:auto" width="100%"></p>
-<h2 id="HMN"><a href="#HMN" class="headerlink" title="HMN"></a>HMN</h2><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/hmn.png" style="display:block; margin:auto" width="60%"></p>
-<h1 id="DCN-1"><a href="#DCN-1" class="headerlink" title="DCN+"></a>DCN+</h1><h2 id="DCN的问题"><a href="#DCN的问题" class="headerlink" title="DCN的问题"></a>DCN的问题</h2><p><strong>loss没有判断真正的意义</strong></p>
+<h1 id="dcn">DCN</h1>
+<h2 id="coattention-encoder">Coattention Encoder</h2>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/dcn.png" style="display:block; margin:auto" width="100%"></p>
+<h2 id="dynamic-pointing-decoder">Dynamic Pointing Decoder</h2>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/dcn-decoder.png" style="display:block; margin:auto" width="100%"></p>
+<h2 id="hmn">HMN</h2>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/hmn.png" style="display:block; margin:auto" width="60%"></p>
+<h1 id="dcn-1">DCN+</h1>
+<h2 id="dcn的问题">DCN的问题</h2>
+<p><strong>loss没有判断真正的意义</strong></p>
 <p>DCN使用传统交叉熵去优化<code>optimization</code>，只考虑答案字符串的匹配程度。但是实际上人的评判<code>evaluation</code>却是看回答的意义。如果只考虑span，则有下面两个问题：</p>
 <ul>
 <li>精确答案：没影响</li>
 <li>但是对正确答案周围重叠的单词，却可能认为是错误的。</li>
 </ul>
-<p>句子：<code>Some believe that the Golden State Warriors team of 2017 is one of the greatest teams in NBA history</code> </p>
+<p>句子：<code>Some believe that the Golden State Warriors team of 2017 is one of the greatest teams in NBA history</code></p>
 <p>问题：<code>which team is considered to be one of the greatest teams in NBA history</code></p>
 <p>正确答案：<code>the Golden State Warriors team of 2017</code></p>
-<p>其实<code>Warriors</code>也是正确答案， 但是传统交叉熵却认为它还不如<code>history</code>。 </p>
+<p>其实<code>Warriors</code>也是正确答案， 但是传统交叉熵却认为它还不如<code>history</code>。</p>
 <p>DCN没有建立起<code>Optimization</code>和 <code>evaluation</code>的联系。 这也是Word Overlap。</p>
 <p><strong>单层coattention表达力不强</strong></p>
-<h2 id="DCN-的优化点"><a href="#DCN-的优化点" class="headerlink" title="DCN+的优化点"></a>DCN+的优化点</h2><p><strong>Mixed  Loss</strong></p>
-<p>交叉熵+自我批评学习（强化学习）。Word真正<strong>意义相似</strong>才会给一个好的<code>reward</code>。 </p>
+<h2 id="dcn的优化点">DCN+的优化点</h2>
+<p><strong>Mixed Loss</strong></p>
+<p>交叉熵+自我批评学习（强化学习）。Word真正<strong>意义相似</strong>才会给一个好的<code>reward</code>。</p>
 <ul>
 <li>强化学习会鼓励意义相近的词语，而dis不相近的词语</li>
 <li>交叉熵让强化学习朝着正确的轨迹发展</li>
 </ul>
 <p><strong>Deep Residual Coattention Encoder</strong></p>
 <p>多层表达能力更强，详细看下面的优点。</p>
-<h2 id="Deep-Residual-Encoder"><a href="#Deep-Residual-Encoder" class="headerlink" title="Deep Residual  Encoder"></a>Deep Residual  Encoder</h2><p><strong>优点</strong> </p>
+<h2 id="deep-residual-encoder">Deep Residual Encoder</h2>
+<p><strong>优点</strong></p>
 <p>两个别人得出的重要结论：</p>
 <ul>
 <li><code>stacked self-attention</code> 可以加速信号传递</li>
@@ -236,10 +245,11 @@
 </ul>
 <p>比DCN的两个优化点：</p>
 <ul>
-<li><code>coattention with self-attention</code>和多层<code>coattention</code>  。可以对输入有<code>richer representations</code></li>
+<li><code>coattention with self-attention</code>和多层<code>coattention</code> 。可以对输入有<code>richer representations</code></li>
 <li>对每层的<code>coattention outputs</code>进行残差连接。缩短了信息传递路径。</li>
 </ul>
-<h2 id="Coattention深层理解"><a href="#Coattention深层理解" class="headerlink" title="Coattention深层理解"></a>Coattention深层理解</h2><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/deep-residual-coattention-encoder.png" style="display:block; margin:auto" width="90%"></p>
+<h2 id="coattention深层理解">Coattention深层理解</h2>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/deep-residual-coattention-encoder.png" style="display:block; margin:auto" width="90%"></p>
 <blockquote>
 <p>当时理解了很久都不懂，后来一个下午，一直看，结合机器翻译实现和实际例子矩阵计算，终于理解了Attention、Coattention。</p>
 </blockquote>
@@ -249,36 +259,92 @@
 <li><a href="https://plmsmile.github.io/2017/10/10/attention-model/">图文介绍Attention</a></li>
 <li><a href="https://plmsmile.github.io/2018/03/14/31-co-attention-vqa/#co-attention">Coattention的两种形式</a></li>
 </ul>
-<p><strong>单个Coattention层计算</strong> </p>
-<p>经过双向RNN后，得到两个语义编码：文档$E_0^D \in \mathbb R^{m\times e}$， 问题编码$E^Q_0 \in \mathbb R ^{n \times h}$ 。<br>$$<br>E_1^D = \rm{biGRU_1}(E_0^D) \quad\in \mathbb R^{m \times h}<br>$$</p>
-<p>$$<br>E_1^Q = \tanh(\rm{W \; \rm{biGRU_1(Q_E)+b)}} \quad \in \mathbb R^{n \times h}<br>$$</p>
-<p>计算<code>关联得分矩阵</code>A<br>$$<br>A = E_1^D (E_1^Q)^T \in \mathbb R^{m \times n}<br>$$</p>
-<p>$$<br>\begin{bmatrix}<br>0 &amp; 0 \<br>2 &amp; 3 \<br>0 &amp; 2 \<br>1 &amp; 1 \<br>3 &amp; 3 \<br>\end{bmatrix}<em>{5 \times 2}<br>\cdot<br>\begin{bmatrix}<br>1&amp; 3 \<br>1 &amp; 1 \<br>1&amp; 3 \<br>\end{bmatrix}</em>{3 \times 2}^T<br>=<br>\begin{bmatrix}<br>0&amp; 0 &amp;0 \<br>11&amp; 5 &amp;11 \<br>6&amp; 2 &amp;6 \<br>4&amp; 2 &amp;4 \<br>12&amp; 6 &amp;12 \<br>\end{bmatrix}_{5\times 3}<br>$$</p>
-<p>做<code>行Softmax</code>，得到Q对D的权值分配概率$A^Q$， <code>attention_weights</code></p>
+<p><strong>单个Coattention层计算</strong></p>
+<p>经过双向RNN后，得到两个语义编码：文档<span class="math inline">\(E_0^D \in \mathbb R^{m\times e}\)</span>， 问题编码<span class="math inline">\(E^Q_0 \in \mathbb R ^{n \times h}\)</span> 。 <span class="math display">\[
+E_1^D = \rm{biGRU_1}(E_0^D) \quad\in \mathbb R^{m \times h}
+\]</span></p>
+<p><span class="math display">\[
+E_1^Q = \tanh(\rm{W \; \rm{biGRU_1(Q_E)+b)}} \quad \in \mathbb R^{n \times h}
+\]</span></p>
+<p>计算<code>关联得分矩阵</code>A <span class="math display">\[
+A = E_1^D (E_1^Q)^T \in \mathbb R^{m \times n}
+\]</span></p>
+<p><span class="math display">\[
+\begin{bmatrix} 
+0 &amp; 0 \\ 
+2 &amp; 3 \\
+0 &amp; 2 \\ 
+1 &amp; 1 \\
+3 &amp; 3 \\
+\end{bmatrix}_{5 \times 2}
+\cdot 
+\begin{bmatrix} 
+1&amp; 3 \\ 
+1 &amp; 1 \\
+1&amp; 3 \\ 
+\end{bmatrix}_{3 \times 2}^T
+=
+\begin{bmatrix} 
+0&amp; 0 &amp;0 \\ 
+11&amp; 5 &amp;11 \\ 
+6&amp; 2 &amp;6 \\ 
+4&amp; 2 &amp;4 \\ 
+12&amp; 6 &amp;12 \\ 
+\end{bmatrix}_{5\times 3}
+\]</span></p>
+<p>做<code>行Softmax</code>，得到Q对D的权值分配概率<span class="math inline">\(A^Q\)</span>， <code>attention_weights</code></p>
 <ul>
 <li>每一行是一个文档单词w</li>
 <li>元素值是所有问句单词对当前文档单词w的注意力分配权值</li>
 <li>元素值是每个问句单词的权值概率</li>
 </ul>
-<p>$$<br>\begin{bmatrix}<br>0.3333 &amp; 0.3333 &amp; 0.3333 \<br>0.4994  &amp;0.0012 &amp; 0.4994 \<br>0.4955  &amp;0.0091  &amp;0.4955 \<br>0.4683  &amp;0.0634  &amp;0.4683\<br>0.4994  &amp;0.0012  &amp;0.4994 \<br>\end{bmatrix}_{5\times 3}<br>$$</p>
-<p>计算D的summary， $S^D = A^Q \cdot Q$<br>$$<br>S^D = A^Q \cdot Q<br>$$</p>
+<p><span class="math display">\[
+\begin{bmatrix} 
+0.3333 &amp; 0.3333 &amp; 0.3333 \\ 
+0.4994  &amp;0.0012 &amp; 0.4994 \\ 
+0.4955  &amp;0.0091  &amp;0.4955 \\ 
+0.4683  &amp;0.0634  &amp;0.4683\\ 
+0.4994  &amp;0.0012  &amp;0.4994 \\ 
+\end{bmatrix}_{5\times 3}
+\]</span></p>
+<p>计算D的summary， <span class="math inline">\(S^D = A^Q \cdot Q\)</span> <span class="math display">\[
+S^D = A^Q \cdot Q
+\]</span></p>
 <ul>
-<li>D所需要的新的语义，参考机器翻译的<a href="https://plmsmile.github.io/2017/10/12/Attention-based-NMT/#%E8%AE%A1%E7%AE%97%E6%96%B0%E7%9A%84%E8%AF%AD%E4%B9%89">新语义理解</a> </li>
-<li>$A^Q$的每一行去乘以Q的每一列去表达单词w </li>
-<li>用Q去表达D，每个$D_w$都是<strong>Q的所有单词对w的线性表达</strong>，权值就是$A^Q$  </li>
-<li><p>所以$S^D$也是D的<code>summary</code>， 也称作D需要<code>context</code></p>
-<p>同理，对<code>列做softmax</code>， 得到D对Q的权值分配概率$A^D$， 得到Q的<code>summary</code>， $S^Q = A^D \cdot D$</p>
+<li>D所需要的新的语义，参考机器翻译的<a href="https://plmsmile.github.io/2017/10/12/Attention-based-NMT/#%E8%AE%A1%E7%AE%97%E6%96%B0%E7%9A%84%E8%AF%AD%E4%B9%89">新语义理解</a></li>
+<li><span class="math inline">\(A^Q\)</span>的每一行去乘以Q的每一列去表达单词w</li>
+<li>用Q去表达D，每个<span class="math inline">\(D_w\)</span>都是<strong>Q的所有单词对w的线性表达</strong>，权值就是<span class="math inline">\(A^Q\)</span><br>
 </li>
+<li>所以<span class="math inline">\(S^D\)</span>也是D的<code>summary</code>， 也称作D需要<code>context</code></li>
 </ul>
-<p>这时，借鉴<a href="https://plmsmile.github.io/2018/03/14/31-co-attention-vqa/#alternating-co-attention">alternation-coattention思想</a> 去计算对D的<code>Coattention context</code>$C^D$ ：<br>$$<br>C^D = S^Q \cdot A^Q<br>$$<br>实际上，$C^D$与$S^D$类似，都是<code>Summary</code>， 都是<code>context</code>。 只是$C^D$使用的是新的$S^Q$， 而不是$E^Q_1$。 </p>
-<h2 id="Coattention-Encoder总结"><a href="#Coattention-Encoder总结" class="headerlink" title="Coattention Encoder总结"></a>Coattention Encoder总结</h2><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/deep-residual-coattention-encoder.png" style="display:block; margin:auto" width="90%"></p>
+<p>同理，对<code>列做softmax</code>， 得到D对Q的权值分配概率<span class="math inline">\(A^D\)</span>， 得到Q的<code>summary</code>， <span class="math inline">\(S^Q = A^D \cdot D\)</span></p>
+<p>这时，借鉴<a href="https://plmsmile.github.io/2018/03/14/31-co-attention-vqa/#alternating-co-attention">alternation-coattention思想</a> 去计算对D的<code>Coattention context</code><span class="math inline">\(C^D\)</span> ： <span class="math display">\[
+C^D = S^Q \cdot A^Q
+\]</span> 实际上，<span class="math inline">\(C^D\)</span>与<span class="math inline">\(S^D\)</span>类似，都是<code>Summary</code>， 都是<code>context</code>。 只是<span class="math inline">\(C^D\)</span>使用的是新的<span class="math inline">\(S^Q\)</span>， 而不是<span class="math inline">\(E^Q_1\)</span>。</p>
+<h2 id="coattention-encoder总结">Coattention Encoder总结</h2>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/deep-residual-coattention-encoder.png" style="display:block; margin:auto" width="90%"></p>
 <p>使用两层<code>coattention</code>， 最后再残差连接，经过LSTM输出。</p>
-<p><strong>第一层</strong><br>$$<br>E_1^D = \rm{biGRU_1}(E_0^D) \quad\in \mathbb R^{m \times h} \<br>E_1^Q = \tanh(\rm{W \cdot \rm{biGRU_1(E_0^Q)+b)}} \quad \in \mathbb R^{n \times h}<br>$$</p>
-<p>$$<br>\rm{coattn_1} (E_1^D, E_1^Q) =  S_1^D, S_1^Q, C_1^Q \<br>$$</p>
-<p><strong>第二层</strong><br>$$<br>E_2^D = \rm{biGRU_2}(E_1^D) \quad\in \mathbb R^{m \times h} \<br>E_2^Q = \tanh (W \cdot \rm{biGRU_2}(E_1^Q) + b) \quad\in \mathbb R^{m \times h}<br>$$</p>
-<p>$$<br>\rm{coattn_2} (E_2^D, E_2^Q) =  S_2^D, S_2^Q, C_2^Q \<br>$$</p>
-<p><strong>残差连接所有的D</strong><br>$$<br>c = \rm {concat}((E_1^D, E_2^D, S_1^D, S_2^D, C_1^D, C_2^D)<br>$$<br><strong>LSTM编码输出，得到Encoder的输出</strong><br>$$<br>U = \rm{biGRU}(c) \quad \in \mathbb R^{m \times 2h}<br>$$</p>
-<h2 id="Mixed-Objective"><a href="#Mixed-Objective" class="headerlink" title="Mixed Objective"></a>Mixed Objective</h2><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/dcnplus-loss.png" style="display:block; margin:auto" width="100%"></p>
+<p><strong>第一层</strong> <span class="math display">\[
+E_1^D = \rm{biGRU_1}(E_0^D) \quad\in \mathbb R^{m \times h} \\
+E_1^Q = \tanh(\rm{W \cdot \rm{biGRU_1(E_0^Q)+b)}} \quad \in \mathbb R^{n \times h}
+\]</span></p>
+<p><span class="math display">\[
+\rm{coattn_1} (E_1^D, E_1^Q) =  S_1^D, S_1^Q, C_1^Q \\
+\]</span></p>
+<p><strong>第二层</strong> <span class="math display">\[
+E_2^D = \rm{biGRU_2}(E_1^D) \quad\in \mathbb R^{m \times h} \\
+E_2^Q = \tanh (W \cdot \rm{biGRU_2}(E_1^Q) + b) \quad\in \mathbb R^{m \times h}
+\]</span></p>
+<p><span class="math display">\[
+\rm{coattn_2} (E_2^D, E_2^Q) =  S_2^D, S_2^Q, C_2^Q \\
+\]</span></p>
+<p><strong>残差连接所有的D</strong> <span class="math display">\[
+c = \rm {concat}((E_1^D, E_2^D, S_1^D, S_2^D, C_1^D, C_2^D)
+\]</span> <strong>LSTM编码输出，得到Encoder的输出</strong> <span class="math display">\[
+U = \rm{biGRU}(c) \quad \in \mathbb R^{m \times 2h}
+\]</span></p>
+<h2 id="mixed-objective">Mixed Objective</h2>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/dcnplus-loss.png" style="display:block; margin:auto" width="100%"></p>
 
         </div>
 
@@ -287,7 +353,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-11-25T08:30:08.535Z" itemprop="dateUpdated">2018-11-25 16:30:08</time>
+    最后更新时间：<time datetime="2018-12-13T08:08:07.295Z" itemprop="dateUpdated">2018-12-13 16:08:07</time>
 </span><br>
 
 
@@ -333,7 +399,9 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/03/15/32-dynamic-coattention-network/&title=《Dynamic Coattention Network (Plus)》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/03/15/32-dynamic-coattention-network/&title=《Dynamic Coattention Network (Plus)》 — PLM's Notes&source=
+先放四张图，分别是DCN的Encoder、Decoder，DCN+的Encoder和Objective。后面再详细总结
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -504,7 +572,9 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/03/15/32-dynamic-coattention-network/&title=《Dynamic Coattention Network (Plus)》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/03/15/32-dynamic-coattention-network/&title=《Dynamic Coattention Network (Plus)》 — PLM's Notes&source=
+先放四张图，分别是DCN的Encoder、Decoder，DCN+的Encoder和Objective。后面再详细总结
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>

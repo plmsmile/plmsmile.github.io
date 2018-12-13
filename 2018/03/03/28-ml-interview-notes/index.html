@@ -21,20 +21,20 @@
     
     
     <meta name="keywords" content="机器学习">
-    <meta name="description" content="Tensorflow1 Tensorflow的计算图 Tensorflow通过计算图的形式来表示计算。是一个有向图。节点代表一个计算，边代表计算之间的依赖关系。  构建计算图 执行计算图，session.run  12345678910x_data = np.float32(np.random.rand(2,100))y_data = np.dot([0.1 , 0.2] , x_data) +">
+    <meta name="description" content="一些机器学习的知识点总结">
 <meta name="keywords" content="机器学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="机器学习知识点汇总整理">
 <meta property="og:url" content="http://plmsmile.github.io/2018/03/03/28-ml-interview-notes/index.html">
 <meta property="og:site_name" content="PLM&#39;s Notes">
-<meta property="og:description" content="Tensorflow1 Tensorflow的计算图 Tensorflow通过计算图的形式来表示计算。是一个有向图。节点代表一个计算，边代表计算之间的依赖关系。  构建计算图 执行计算图，session.run  12345678910x_data = np.float32(np.random.rand(2,100))y_data = np.dot([0.1 , 0.2] , x_data) +">
+<meta property="og:description" content="一些机器学习的知识点总结">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/itv/tf/flow-graph.jpg">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/it/knn/knn.png">
-<meta property="og:updated_time" content="2018-11-25T08:30:08.360Z">
+<meta property="og:updated_time" content="2018-12-13T07:54:40.998Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器学习知识点汇总整理">
-<meta name="twitter:description" content="Tensorflow1 Tensorflow的计算图 Tensorflow通过计算图的形式来表示计算。是一个有向图。节点代表一个计算，边代表计算之间的依赖关系。  构建计算图 执行计算图，session.run  12345678910x_data = np.float32(np.random.rand(2,100))y_data = np.dot([0.1 , 0.2] , x_data) +">
+<meta name="twitter:description" content="一些机器学习的知识点总结">
 <meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/itv/tf/flow-graph.jpg">
     
         <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
@@ -170,7 +170,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Tensorflow"><span class="post-toc-number">1.</span> <span class="post-toc-text">Tensorflow</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#KNN"><span class="post-toc-number">2.</span> <span class="post-toc-text">KNN</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Logistic-Regression"><span class="post-toc-number">3.</span> <span class="post-toc-text">Logistic Regression</span></a></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#tensorflow"><span class="post-toc-number">1.</span> <span class="post-toc-text">Tensorflow</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#knn"><span class="post-toc-number">2.</span> <span class="post-toc-text">KNN</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#logistic-regression"><span class="post-toc-number">3.</span> <span class="post-toc-text">Logistic Regression</span></a></li></ol>
         </nav>
     </aside>
 
@@ -196,7 +196,12 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <p><img src="" style="display:block; margin:auto" width="60%"></p>
-<h1 id="Tensorflow"><a href="#Tensorflow" class="headerlink" title="Tensorflow"></a>Tensorflow</h1><p><strong>1 Tensorflow的计算图</strong></p>
+<blockquote>
+<p>一些机器学习的知识点总结</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="tensorflow">Tensorflow</h1>
+<p><strong>1 Tensorflow的计算图</strong></p>
 <p>Tensorflow通过<code>计算图</code>的形式来表示计算。是一个有向图。<strong>节点</strong>代表一个<code>计算</code>，<strong>边</strong>代表计算之间的<code>依赖关系</code>。</p>
 <ul>
 <li>构建计算图</li>
@@ -204,45 +209,70 @@
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">x_data = np.float32(np.random.rand(<span class="number">2</span>,<span class="number">100</span>))</span><br><span class="line">y_data = np.dot([<span class="number">0.1</span> , <span class="number">0.2</span>] , x_data) + <span class="number">0.3</span></span><br><span class="line">b = tf.Variable(tf.zeros([<span class="number">1</span>]))</span><br><span class="line">W = tf.Variable(tf.random_uniform([<span class="number">1</span>,<span class="number">2</span>],<span class="number">-1.0</span>,<span class="number">1.0</span>))</span><br><span class="line"></span><br><span class="line">y = tf.matmul(W,x_data) + b</span><br><span class="line"></span><br><span class="line">loss = tf.reduce_mean(tf.square(y - y_data))</span><br><span class="line">optimizer = tf.train.GradientDescentOptimizer(<span class="number">0.5</span>)</span><br><span class="line">train = optimizer.minimize(loss)</span><br></pre></td></tr></table></figure>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/itv/tf/flow-graph.jpg" style="display:block; margin:auto" width="30%"></p>
-<h1 id="KNN"><a href="#KNN" class="headerlink" title="KNN"></a>KNN</h1><p>看中间的绿色属于哪一类？</p>
+<h1 id="knn">KNN</h1>
+<p>看中间的绿色属于哪一类？</p>
 <ul>
 <li>和谁近就属于谁</li>
 <li>看k个</li>
 </ul>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/it/knn/knn.png" style="display:block; margin:auto" width="30%"></p>
 <p><strong>1 欧式距离和曼哈顿距离</strong></p>
-<p><code>欧式距离</code>是两点之间的距离<br>$$<br>d = \sqrt {(x_1-x_2)^2 +(y_1-y_2)^2  }<br>$$<br><code>曼哈顿距离</code>也称作<code>城市街区距离</code>，两个十字路口的实际要走的距离<br>$$<br>d = \vert x_1 - x_2\vert +  \vert y_1 -y_2 \vert<br>$$<br><strong>2 K值的选择</strong></p>
+<p><code>欧式距离</code>是两点之间的距离 <span class="math display">\[
+d = \sqrt {(x_1-x_2)^2 +(y_1-y_2)^2  }
+\]</span> <code>曼哈顿距离</code>也称作<code>城市街区距离</code>，两个十字路口的实际要走的距离 <span class="math display">\[
+d = \vert x_1 - x_2\vert +  \vert y_1 -y_2 \vert
+\]</span> <strong>2 K值的选择</strong></p>
 <ul>
 <li>k较小：用较小范围进行预测。容易过拟合，模型复杂。</li>
 <li>k较大：用较大范围进行预测。较远不相似的也会起作用，会发生错误。模型简单。</li>
 <li>k=N：完全不可取。每个都是属于最多样本的类别</li>
 <li>一般选择比较小的数值。如采用<code>交叉验证法</code>来选择最优的k值。 （一部分训练，一部分测试）</li>
 </ul>
-<h1 id="Logistic-Regression"><a href="#Logistic-Regression" class="headerlink" title="Logistic Regression"></a>Logistic Regression</h1><p><a href="https://plmsmile.github.io/2017/08/20/ml-ng-notes/#逻辑回归">我的LR笔记</a> </p>
+<h1 id="logistic-regression">Logistic Regression</h1>
+<p><a href="https://plmsmile.github.io/2017/08/20/ml-ng-notes/#逻辑回归">我的LR笔记</a></p>
 <table>
 <thead>
-<tr>
-<th style="text-align:left">问题列表</th>
+<tr class="header">
+<th align="left">问题列表</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left">1 简介LR</td>
+<tr class="odd">
+<td align="left">1 简介LR</td>
 </tr>
-<tr>
-<td style="text-align:left">2 LR与SVM的区别和联系</td>
+<tr class="even">
+<td align="left">2 LR与SVM的区别和联系</td>
 </tr>
-<tr>
-<td style="text-align:left">3 LR与线性回归的区别和联系</td>
+<tr class="odd">
+<td align="left">3 LR与线性回归的区别和联系</td>
 </tr>
 </tbody>
 </table>
 <p><strong>1 简介LR</strong></p>
 <p>问一个女生喜欢你吗，SVM会告诉你喜欢或者不喜欢。很粗暴。</p>
-<p>LR则会告诉你，有多喜欢你，多不喜欢你。就是告诉你一个<code>可能性</code>。多喜欢你是取决于她的看重点权值和你身上有的东西x。<br>$$<br>p(y=1\mid x;\theta)= \sigma(\theta^Tx)=\frac{1}{1+e^{-\theta^Tx}} \quad\quad  = h_\theta(x)<br>$$</p>
-<p>$$<br>p(y=1) = h(x), \quad p(y=0) = 1-h(x)<br>$$</p>
+<p>LR则会告诉你，有多喜欢你，多不喜欢你。就是告诉你一个<code>可能性</code>。多喜欢你是取决于她的看重点权值和你身上有的东西x。 <span class="math display">\[
+p(y=1\mid x;\theta)= \sigma(\theta^Tx)=\frac{1}{1+e^{-\theta^Tx}} \quad\quad  = h_\theta(x)
+\]</span></p>
+<p><span class="math display">\[
+p(y=1) = h(x), \quad p(y=0) = 1-h(x)
+\]</span></p>
 <p>使用<code>极大似然法</code>进行参数估计：<strong>样本恰好使联合概率密度（似然函数）取得最大值</strong>。<strong>概率密度相乘</strong>。</p>
-<p><code>对数似然函数</code>：<br>$$<br>\begin{align}<br>L(\theta)<br>&amp; = \log \prod_{i=1}^N [h(x)^{y_i} ][1-h(x)]^{1-y_i} \<br>&amp; = \sum_{i=1}^N \left( y_i \log h(x) + (1-y_i)\log(1-h(x)) \right) \<br>&amp; = \sum_{i=1}^N (y_i \theta^Tx_i - \log(1+e^{\theta^Tx}))<br>\end{align}<br>$$<br>使$L(\theta)$最大，取负数就是其<code>损失函数</code> ：<br>$$<br>J(\theta) = -\frac{1}{m} L(\theta) = -\frac{1}{m} \sum_{i=1}^N \left( y_i \log h(x) + (1-y_i)\log(1-h(x)) \right)<br>$$<br>令导数为0，发现无法解析求解。<br>$$<br>\begin{align}<br>\frac{\partial L(\theta)}{\partial \theta}<br>&amp; =\sum_{i=1}^N y_i x_i  - \sum_{i=1}^N \frac{e^{\theta^Tx}}{1 + e^{\theta^Tx}} x_i \<br>&amp; = \sum_{i=1}^N x_i (y_i - \sigma(\theta^Tx) )<br>\end{align}<br>$$<br>只能借助迭代法，如<strong>梯度下降法和拟牛顿法来进行求解</strong>。</p>
+<p><code>对数似然函数</code>： <span class="math display">\[
+\begin{align}
+L(\theta) 
+&amp; = \log \prod_{i=1}^N [h(x)^{y_i} ][1-h(x)]^{1-y_i} \\
+&amp; = \sum_{i=1}^N \left( y_i \log h(x) + (1-y_i)\log(1-h(x)) \right) \\
+&amp; = \sum_{i=1}^N (y_i \theta^Tx_i - \log(1+e^{\theta^Tx}))
+\end{align}
+\]</span> 使<span class="math inline">\(L(\theta)\)</span>最大，取负数就是其<code>损失函数</code> ： <span class="math display">\[
+J(\theta) = -\frac{1}{m} L(\theta) = -\frac{1}{m} \sum_{i=1}^N \left( y_i \log h(x) + (1-y_i)\log(1-h(x)) \right)
+\]</span> 令导数为0，发现无法解析求解。 <span class="math display">\[
+\begin{align}
+\frac{\partial L(\theta)}{\partial \theta} 
+&amp; =\sum_{i=1}^N y_i x_i  - \sum_{i=1}^N \frac{e^{\theta^Tx}}{1 + e^{\theta^Tx}} x_i \\
+&amp; = \sum_{i=1}^N x_i (y_i - \sigma(\theta^Tx) )
+\end{align}
+\]</span> 只能借助迭代法，如<strong>梯度下降法和拟牛顿法来进行求解</strong>。</p>
 <p><strong>2 LR和SVM的比较</strong></p>
 <p><strong>相同点</strong></p>
 <ul>
@@ -253,15 +283,18 @@
 <p>判别模型： <code>KNN</code>、 <code>LR</code> 、<code>SVM</code> 。 生成式模型：<code>朴素贝叶斯</code>、 <code>HMM</code> 。</p>
 <p><strong>不同点</strong></p>
 <ul>
-<li><p>损失函数不同<br>$$<br>J(\theta)  = -\frac{1}{m} \sum_{i=1}^N \left( y_i \log h(x) + (1-y_i)\log(1-h(x)) \right)<br>$$</p>
-<p>$$<br>L(w, b, \lambda) =\frac{1}{2} |w|^2 - \sum_{i=1}^n \alpha_i \left(y_i(w^Tx_i+b) - 1\right)<br>$$</p>
-</li>
+<li>损失函数不同 <span class="math display">\[
+  J(\theta)  = -\frac{1}{m} \sum_{i=1}^N \left( y_i \log h(x) + (1-y_i)\log(1-h(x)) \right)
+  \]</span></li>
 </ul>
+<p><span class="math display">\[
+  L(w, b, \lambda) =\frac{1}{2} \|w\|^2 - \sum_{i=1}^n \alpha_i \left(y_i(w^Tx_i+b) - 1\right)
+  \]</span></p>
 <p>LR基于<code>概率理论</code>，用<code>sigmoid</code>函数表示，通过<code>极大似然法</code>估计出参数的值。</p>
 <p>SVM基于<code>间隔最大化原理</code>，认为最大几何间隔的分类面为最优分类面。</p>
 <ul>
 <li>SVM只在乎边界线附近的点(SV)，LR在乎所有的点。</li>
-<li>SVM不直接依赖于数据分布；LR受所有点影响，如果不同类别不平衡，要对数据做<code>balancing</code> </li>
+<li>SVM不直接依赖于数据分布；LR受所有点影响，如果不同类别不平衡，要对数据做<code>balancing</code></li>
 <li>处理非线性问题时，SVM使用核函数，LR不使用核函数</li>
 <li>SVM只有少数SV进行核计算，LR如果用核函数，则所有的点都会进行计算，代价太高</li>
 <li>线性SVM依赖数据的距离测度，要对数据做归一化，而LR不用</li>
@@ -283,7 +316,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-11-25T08:30:08.360Z" itemprop="dateUpdated">2018-11-25 16:30:08</time>
+    最后更新时间：<time datetime="2018-12-13T07:54:40.998Z" itemprop="dateUpdated">2018-12-13 15:54:40</time>
 </span><br>
 
 
@@ -329,7 +362,10 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/03/03/28-ml-interview-notes/&title=《机器学习知识点汇总整理》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/03/03/28-ml-interview-notes/&title=《机器学习知识点汇总整理》 — PLM's Notes&source=
+
+一些机器学习的知识点总结
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -378,7 +414,7 @@
     <div class="waves-block waves-effect next">
       <a href="/2018/03/02/aim2offer4/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">Aim2offer4(51-64)</h4>
+        <h4 class="title">剑指offer4(51-64)</h4>
       </a>
     </div>
   
@@ -500,7 +536,10 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/03/03/28-ml-interview-notes/&title=《机器学习知识点汇总整理》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/03/03/28-ml-interview-notes/&title=《机器学习知识点汇总整理》 — PLM's Notes&source=
+
+一些机器学习的知识点总结
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>

@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Spark-SQL的简略笔记 | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Spark,Spark SQL">
+    <meta name="description" content="几个基本的Spark-SQL概念。没多少东西">
+<meta name="keywords" content="Spark,Spark SQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spark-SQL的简略笔记">
+<meta property="og:url" content="http://plmsmile.github.io/2017/03/19/18-spark-sql/index.html">
+<meta property="og:site_name" content="PLM&#39;s Notes">
+<meta property="og:description" content="几个基本的Spark-SQL概念。没多少东西">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-12-13T09:30:39.798Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spark-SQL的简略笔记">
+<meta name="twitter:description" content="几个基本的Spark-SQL概念。没多少东西">
+    
+        <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">PLM</h5>
+          <a href="mailto:plmsmile@126.com" title="plmsmile@126.com" class="mail">plmsmile@126.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                类别
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/plmsmile" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Spark-SQL的简略笔记</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Spark-SQL的简略笔记</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-03-19T14:34:44.000Z" itemprop="datePublished" class="page-time">
+  2017-03-19
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/大数据/">大数据</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#基础"><span class="post-toc-number">1.</span> <span class="post-toc-text">基础</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#概念"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">概念</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#开始"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">开始</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-18-spark-sql" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Spark-SQL的简略笔记</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-03-19 22:34:44" datetime="2017-03-19T14:34:44.000Z" itemprop="datePublished">2017-03-19</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/大数据/">大数据</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>几个基本的Spark-SQL概念。没多少东西</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="基础">基础</h2>
+<h3 id="概念">概念</h3>
+<p>Spark SQL是用来处理结构化数据的模块。与基本RDD相比，Spark SQL提供了更多关于数据结构和计算方面的信息(在内部有优化效果)。通常通过SQL和Dataset API来和Spark SQL进行交互。</p>
+<ul>
+<li>SQL: 进行SQL查询，从各种结构化数据源(Json, Hive, Parquet)读取数据。返回Dataset/DataFrame。</li>
+<li>Dataset: 分布式的数据集合。</li>
+<li>DataFrame</li>
+<li>是一个组织有列名的Dataset。类似于关系型数据库中的表。</li>
+<li>可以使用结构化数据文件、Hive表、外部数据库、RDD等创建。</li>
+<li>在Scala和Java中，DataFrame由Rows和Dataset组成。在Scala中，DataFrame只是Dataset[Row]的类型别名。在Java中，用Dataset<row>表示DataFrame</row></li>
+</ul>
+<h3 id="开始">开始</h3>
+<p><strong>SparkSession</strong></p>
+<p><code>SparkSession</code>是Spark所有功能的入口点，用<code>SparkSession.builder()</code>就可以。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> SparkSession</span><br><span class="line"></span><br><span class="line">spark = SparkSession \</span><br><span class="line">    .builder \</span><br><span class="line">    .appName(<span class="string">"Python Spark SQL basic example"</span>) \</span><br><span class="line">    .config(<span class="string">"spark.some.config.option"</span>, <span class="string">"some-value"</span>) \</span><br><span class="line">    .getOrCreate()</span><br></pre></td></tr></table></figure>
+<p><strong>DataFrameReader</strong></p>
+<p>从外部系统加载数据，返回DataFrame。例如文件系统、键值对等等。通过<code>spark.read</code>来获取Reader。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. json 键值对</span></span><br><span class="line">df1 = spark.read.json(<span class="string">"python/test_support/sql/people.json"</span>)</span><br><span class="line">df1.dtypes</span><br><span class="line"><span class="comment"># [('age', 'bigint'), ('name', 'string')]</span></span><br><span class="line">df2 = sc.textFile(<span class="string">"python/test_support/sql/people.json"</span>)</span><br><span class="line"><span class="comment"># df1.dtypes 和 df2.dtypes是一样的</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. text 文本文件 </span></span><br><span class="line"><span class="comment"># 每一行就是一个Row，默认的列名是Value</span></span><br><span class="line">df = spark.read.text(<span class="string">"python/test_support/sql/text-test.txt"</span>)</span><br><span class="line">df.collect()</span><br><span class="line"><span class="comment"># [Row(value=u'hello'), Row(value=u'this')]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. load</span></span><br><span class="line"><span class="comment"># 从数据源中读取数据</span></span><br></pre></td></tr></table></figure>
+<p><strong>创建DataFrames</strong></p>
+<p>从RDD、Hive Table、Spark data source、外部文件中都可以创建DataFrames。</p>
+<p>通过<code>DataFrameReader</code>，读取外部文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># spark.read返回一个DataFrameReader</span></span><br><span class="line">df = spark.read.json(<span class="string">"examples/src/main/resources/people.json"</span>)</span><br><span class="line">df.show()</span><br><span class="line">df.dtypes</span><br></pre></td></tr></table></figure>
+<p>通过<code>spark.createDataFrame()</code>，读取RDD、List或<code>pandas.DataFrame</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">person_list = [(<span class="string">'AA'</span>, <span class="number">18</span>), (<span class="string">'PLM'</span>, <span class="number">23</span>)]</span><br><span class="line">rdd = sc.parallelize(person_list)	</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. list</span></span><br><span class="line">df = spark.createDataFrame(person_list) <span class="comment"># 没有指定列名，默认为_1 _2</span></span><br><span class="line">df = spark.createDataFrame(person_list, [<span class="string">'name'</span>, <span class="string">'age'</span>]) <span class="comment"># 指定了列名</span></span><br><span class="line">df.collect() <span class="comment"># df.show()</span></span><br><span class="line"><span class="comment">#[Row(name='AA', age=18), Row(name='PLM', age=23)]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. RDD</span></span><br><span class="line">rdd = sc.parallelize(person_list)</span><br><span class="line">df = spark.createDataFrame(rdd, [<span class="string">'name'</span>, <span class="string">'age'</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. Row</span></span><br><span class="line"><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> Row</span><br><span class="line">Person = Row(<span class="string">'name'</span>, <span class="string">'age'</span>)					<span class="comment"># 指定模板属性</span></span><br><span class="line">persons = rdd.map(<span class="keyword">lambda</span> r: Person(*r))		<span class="comment"># 把每一行变成Person</span></span><br><span class="line">df = spark.createDataFrame(persons)</span><br><span class="line">df.collect()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 指定类型StructType</span></span><br><span class="line"><span class="keyword">from</span> pyspark.sql.types <span class="keyword">import</span> *</span><br><span class="line">field_name = StructField(<span class="string">'name'</span>, StringType(), <span class="keyword">True</span>) <span class="comment"># 名，类型，非空</span></span><br><span class="line">field_age = StructField(<span class="string">'age'</span>, IntegerType, <span class="keyword">True</span>)</span><br><span class="line">person_type = StructType([field_name, field_age])</span><br><span class="line"><span class="comment"># 通过链式add也可以</span></span><br><span class="line"><span class="comment"># person_type = StructType.add("name", StringType(), True).add(...)</span></span><br><span class="line">df = spark.createDataFrame(rdd, person_type)</span><br></pre></td></tr></table></figure>
+<p><strong>Row</strong></p>
+<p><code>Row</code>是<code>DataFrame</code>中的，它可以定义一些属性，这些属性在DataFrame里面可以被访问。比如：<code>row.key</code>(像属性)和<code>row['key']</code>(像dict)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark <span class="keyword">import</span> Row</span><br><span class="line"><span class="comment"># 1. 创建一个模板</span></span><br><span class="line">Person = Row(<span class="string">'name'</span>, <span class="string">'age'</span>)		<span class="comment"># &lt;Row(name, age)&gt;</span></span><br><span class="line"><span class="string">'name'</span> <span class="keyword">in</span> Person 	<span class="comment"># True，有这个属性</span></span><br><span class="line"><span class="string">'sex'</span> <span class="keyword">in</span> Person 	<span class="comment"># False</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 以Person为模板，创建alice, plm</span></span><br><span class="line">alice = Person(<span class="string">'Alice'</span>, <span class="number">22</span>) 	<span class="comment"># Row(name='Alice', age=22)</span></span><br><span class="line">plm = Person(<span class="string">'PLM'</span>, <span class="number">23</span>)</span><br><span class="line"><span class="comment"># 访问属性</span></span><br><span class="line">name, age = alice[<span class="string">'name'</span>], alice[<span class="string">'age'</span>]</span><br><span class="line"><span class="comment"># 返回dict</span></span><br><span class="line">plm.asDict()</span><br><span class="line"><span class="comment"># &#123;'age': 23, 'name': 'PLM'&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 多个person创建一个DataFrame</span></span><br><span class="line">p_list = [alice, plm]</span><br><span class="line">p_df = spark.createDataFrame(p_list)</span><br><span class="line">p_df.collect()</span><br><span class="line"><span class="comment"># [Row(name=u'Alice', age=22), Row(name=u'PLM', age=23)]</span></span><br></pre></td></tr></table></figure>
+<p><strong>DataFrame的操作</strong></p>
+<p>在2.0中，DataFrames只是Scala和Java API中的Rows数据集。它的操作称为非类型转换，与带有强类型Scala和Java数据集的类型转换相反。</p>
+<p>Python tips: <code>df.age</code>和<code>df['age']</code>都可以使用，前者在命令行里面方便，但是建议使用后者。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">df.printSchema()</span><br><span class="line">df.select(<span class="string">"name"</span>).show()</span><br><span class="line">df.select(df[<span class="string">'name'</span>], df[<span class="string">'age'</span>] + <span class="number">1</span>).show()</span><br><span class="line">df.filter(df[<span class="string">'age'</span>] &gt; <span class="number">21</span>).show()</span><br><span class="line">df.groupBy(<span class="string">"age"</span>).count().show()</span><br></pre></td></tr></table></figure>
+<p><a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.DataFrame" target="_blank" rel="noopener">DataFrame的Python Api</a>，<a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#module-pyspark.sql.functions" target="_blank" rel="noopener">DataFrame的函数API</a></p>
+<p><strong>编程方式运行SQL</strong></p>
+<p>通过<code>spark.sql()</code>执行，返回一个DataFrame</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通过df创建一个本地临时视图，与创建这个df的SparkSession同生命周期</span></span><br><span class="line">df.createOrReplaceTempview(<span class="string">"people"</span>)</span><br><span class="line">sqlDF = spark.sql(<span class="string">"SELECT * FROM people"</span>)</span><br><span class="line">sqlDF.show()</span><br><span class="line"><span class="comment"># 展示为Table</span></span><br><span class="line">sqlDf.collect()</span><br><span class="line"><span class="comment"># [Row(age=None, name=u'Michael'), Row(age=30, name=u'Andy'), Row(age=19, name=u'Justin')]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 全局临时视图</span></span><br><span class="line"><span class="comment"># 在所有session中共享，直到spark application停止</span></span><br><span class="line">df.createGlobalTempView(<span class="string">"people"</span>)</span><br><span class="line">spark.sql(<span class="string">"SELECT * FROM global_temp.people"</span>).show()</span><br><span class="line">spark.newSession().sql(<span class="string">"SELECT * FROM global_temp.people"</span>).show()</span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-12-13T09:30:39.798Z" itemprop="dateUpdated">2018-12-13 17:30:39</time>
+</span><br>
+
+
+        
+        <br>原始链接：<a href="/2017/03/19/18-spark-sql/" target="_blank" rel="external">http://plmsmile.github.io/2017/03/19/18-spark-sql/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://plmsmile.github.io">
+            <img src="/img/avatar.jpg" alt="PLM">
+            PLM
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spark/">Spark</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spark-SQL/">Spark SQL</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/03/19/18-spark-sql/&title=《Spark-SQL的简略笔记》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/03/19/18-spark-sql/&title=《Spark-SQL的简略笔记》 — PLM's Notes&source=
+几个基本的Spark-SQL概念。没多少东西
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2017/03/19/18-spark-sql/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Spark-SQL的简略笔记》 — PLM's Notes&url=http://plmsmile.github.io/2017/03/19/18-spark-sql/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2017/03/19/18-spark-sql/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/03/25/19-spark-programming/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Spark基础编程核心思想介绍</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/03/13/13-old-blog-problems/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">旧版博客搭建过程及其问题</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "kR8nND4dcsWgqDWIjpiH4YFj-gzGzoHsz",
+            appKey: "il7PLkcJCfDBXMR6XirLdO2K",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="bottom">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <span>
+            PLM's Notes &nbsp; &copy; &nbsp
+            </span>
+            2016 - 2018
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/03/19/18-spark-sql/&title=《Spark-SQL的简略笔记》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/03/19/18-spark-sql/&title=《Spark-SQL的简略笔记》 — PLM's Notes&source=
+几个基本的Spark-SQL概念。没多少东西
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2017/03/19/18-spark-sql/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Spark-SQL的简略笔记》 — PLM's Notes&url=http://plmsmile.github.io/2017/03/19/18-spark-sql/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2017/03/19/18-spark-sql/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJ0lEQVR42u3aS27EIBAFwLn/pSfbSImd94CJZChWIwXHlBct+vN6xev9ba3a/3NP+5Z6YWBgPJbxvl1Xe9oXJ/9zbA8GBsY5jKsXX/1un5p51/1+DAwMjGRPAsuDNQYGBsZaRnvQ/CKIgYGBMZbErirDjV1Dl+XiGBgYD2S0r//P3x/pb2BgYDyK8S5XchFsm5T3T0WnwsDA2JqRB7gWuSpwF8McGBgYmzKSonzbsMwTzrGQ/ctODAyMAxhtGWu+0J9cB4uBDwwMjAMYbTKZj3zlIXiqAYCBgbE1Iz90y87D69gZ6n4sBgbGwxl54X5xnS/eE70LAwNjU0ZbSmvxOXus8fBLLo6BgXEAI3ksvxS24bj9KBgYGKcx2vJZe1nM2wn3+Mv0FQMD42BGknbmobkNtVHIxsDAOIAxdilcNZYx1or4Y9gCAwNjU0Z+3PnmZTs18cdfMTAwtmbch8jPjUfkH6ueGcHAwNiUkVy/xuY42m+Zf8TLkQsMDIytGWNJbHsdbNucebEPAwPjBManY1cbTOsBDgwMjMMYbWmsDo5Do2NFEouBgbER412utaF2Jty/8noeBgbGwxltMM0T1zywziS9NQwDA+OxjLbF2LYekzbngoCLgYFxAKMNlPOtypkkFgMDA6O90iWHmG9eTk20YWBgHMaYGVFtA3FBwsDAOIDRNgPa8DqTvi4ut2FgYDyQMZY6JiX7fBSsbU4MNjUxMDCex/gCj47bGXcalnsAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>旧版博客搭建过程及其问题 | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="hexo搭建,配置Git">
+    <meta name="description" content="一直都想搭建一个博客，今天终于把博客给初步搭建好了。搭建的过程其实不那么顺利，所以简答记录一下。">
+<meta name="keywords" content="hexo搭建,配置Git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="旧版博客搭建过程及其问题">
+<meta property="og:url" content="http://plmsmile.github.io/2017/03/13/13-old-blog-problems/index.html">
+<meta property="og:site_name" content="PLM&#39;s Notes">
+<meta property="og:description" content="一直都想搭建一个博客，今天终于把博客给初步搭建好了。搭建的过程其实不那么顺利，所以简答记录一下。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-12-13T09:36:59.367Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="旧版博客搭建过程及其问题">
+<meta name="twitter:description" content="一直都想搭建一个博客，今天终于把博客给初步搭建好了。搭建的过程其实不那么顺利，所以简答记录一下。">
+    
+        <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">PLM</h5>
+          <a href="mailto:plmsmile@126.com" title="plmsmile@126.com" class="mail">plmsmile@126.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                类别
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/plmsmile" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">旧版博客搭建过程及其问题</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">旧版博客搭建过程及其问题</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-03-13T14:52:41.000Z" itemprop="datePublished" class="page-time">
+  2017-03-13
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/心得/">心得</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#搭建过程"><span class="post-toc-number">1.</span> <span class="post-toc-text">搭建过程</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#遇到的坑"><span class="post-toc-number">2.</span> <span class="post-toc-text">遇到的坑</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#博客重新搭建"><span class="post-toc-number">3.</span> <span class="post-toc-text">博客重新搭建</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#配置及源文件"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">配置及源文件</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#数学公式渲染"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">数学公式渲染</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#配置git"><span class="post-toc-number">4.</span> <span class="post-toc-text">配置git</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#潜在问题"><span class="post-toc-number">5.</span> <span class="post-toc-text">潜在问题</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#期望"><span class="post-toc-number">6.</span> <span class="post-toc-text">期望</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-13-old-blog-problems" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">旧版博客搭建过程及其问题</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-03-13 22:52:41" datetime="2017-03-13T14:52:41.000Z" itemprop="datePublished">2017-03-13</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/心得/">心得</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>一直都想搭建一个博客，今天终于把博客给初步搭建好了。搭建的过程其实不那么顺利，所以简答记录一下。</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="搭建过程">搭建过程</h2>
+<ul>
+<li>根据<a href="http://www.jianshu.com/p/f4cc5866946b" target="_blank" rel="noopener">手把手搭建博客教程</a>这篇文章来进行搭建，其中目前只看了它的第一页</li>
+<li>后期在<a href="https://hexo.io/themes/" target="_blank" rel="noopener">hexo主题</a>里面选择了<a href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">even</a>主题</li>
+<li>依照<a href="https://github.com/ahonn/hexo-theme-even/wiki" target="_blank" rel="noopener">even-wiki</a>来添加标签、分类和about页面</li>
+<li>修改主题目录下的<code>_config.yml</code>的menu，把home、tags等手动改成中文了</li>
+</ul>
+<h2 id="遇到的坑">遇到的坑</h2>
+<ul>
+<li>没有看wiki，自己去谷歌建立tags、categories等页面</li>
+<li>建立好tags，却在tags页面没有看到相应的标签。是因为没有为<code>tags/index.md</code>设置<code>layout</code>为tags</li>
+<li>中文语言，在站点目录下的<code>_config.yml</code>中设置<code>language: zh-cn</code>。</li>
+</ul>
+<h2 id="博客重新搭建">博客重新搭建</h2>
+<h3 id="配置及源文件">配置及源文件</h3>
+<p>因为经常重装系统，所以博客也需要重新恢复。先配置git相关信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name "plmsmile"</span><br><span class="line">git config --global user.email "pulimingspark@163.com"</span><br><span class="line">ssh-keygen -t rsa -C "pulimingspark@163.com"</span><br><span class="line"><span class="meta">#</span><span class="bash"> 去GitHub上添加sshkey</span></span><br><span class="line">cat ~/.ssh/id_rsa.pub</span><br><span class="line"><span class="meta">#</span><span class="bash"> 完成后，进行测试</span></span><br><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+<p>然后把之前的<code>PLMBlogs</code>拷贝到D盘，一般目录是<code>d/PLMBlogs</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cd PLMBlogs</span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装hexo</span></span><br><span class="line">npm install hexo-cli -g</span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装插件</span></span><br><span class="line">npm install hexo-deployer-git --save</span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装依赖</span></span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
+<h3 id="数学公式渲染">数学公式渲染</h3>
+<p>执行完上面的操作后，执行如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo generate	# 这一步会报错	</span><br><span class="line">hexo server</span><br><span class="line">hexo deploy</span><br></pre></td></tr></table></figure>
+<p>错误信息如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">FATAL Something's wrong. Maybe you can find the solution here: http://hexo.io/docs/troubleshooting.html</span><br><span class="line">Error: write EPIPE</span><br><span class="line">    at exports._errnoException (util.js:1020:11)</span><br><span class="line">    at Socket._writeGeneric (net.js:711:26)</span><br><span class="line">    at Socket._write (net.js:730:8)</span><br><span class="line">    at doWrite (_stream_writable.js:331:12)</span><br><span class="line">    at writeOrBuffer (_stream_writable.js:317:5)</span><br><span class="line">    at Socket.Writable.write (_stream_writable.js:243:11)</span><br><span class="line">    at Socket.write (net.js:657:40)</span><br><span class="line">    at Hexo.pandocRenderer (D:\PLMBlogs\node_modules\hexo-renderer-pandoc\index.js:64:15)</span><br><span class="line">    at Hexo.tryCatcher (D:\PLMBlogs\node_modules\bluebird\js\release\util.js:16:23)</span><br><span class="line">    at Hexo.ret (eval at makeNodePromisifiedEval (C:\Users\PLM\AppData\Roaming\npm\node_modules\hexo-cli\node_modules\bluebird\js\release\promisify.js:184:12), &lt;anonymous&gt;:13:39)</span><br><span class="line">    at D:\PLMBlogs\node_modules\hexo\lib\hexo\render.js:61:21</span><br><span class="line">    at tryCatcher (D:\PLMBlogs\node_modules\bluebird\js\release\util.js:16:23)</span><br><span class="line">    at Promise._settlePromiseFromHandler (D:\PLMBlogs\node_modules\bluebird\js\release\promise.js:512:31)</span><br><span class="line">    at Promise._settlePromise (D:\PLMBlogs\node_modules\bluebird\js\release\promise.js:569:18)</span><br><span class="line">    at Promise._settlePromiseCtx (D:\PLMBlogs\node_modules\bluebird\js\release\promise.js:606:10)</span><br><span class="line">    at Async._drainQueue (D:\PLMBlogs\node_modules\bluebird\js\release\async.js:138:12)</span><br><span class="line">    at Async._drainQueues (D:\PLMBlogs\node_modules\bluebird\js\release\async.js:143:10)</span><br><span class="line">    at Immediate.Async.drainQueues (D:\PLMBlogs\node_modules\bluebird\js\release\async.js:17:14)</span><br><span class="line">    at runCallback (timers.js:672:20)</span><br><span class="line">    at tryOnImmediate (timers.js:645:5)</span><br><span class="line">    at processImmediate [as _immediateCallback] (timers.js:617:5)</span><br><span class="line">events.js:160</span><br><span class="line">      throw er; // Unhandled 'error' event</span><br><span class="line">      ^</span><br><span class="line"></span><br><span class="line">Error: spawn pandoc ENOENT</span><br><span class="line">    at exports._errnoException (util.js:1020:11)</span><br><span class="line">    at Process.ChildProcess._handle.onexit (internal/child_process.js:193:32)</span><br><span class="line">    at onErrorNT (internal/child_process.js:367:16)</span><br><span class="line">    at _combinedTickCallback (internal/process/next_tick.js:80:11)</span><br><span class="line">    at process._tickCallback (internal/process/next_tick.js:104:9)</span><br></pre></td></tr></table></figure>
+<p>原因是有大量的数学公式，所以需要对网页进行渲染。</p>
+<p>一般是使用<code>pandoc</code>进行渲染，先去官网下载，然后下一步安装即可。最后，执行下面的命令，安装就好了。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-renderer-pandoc --save</span><br><span class="line"><span class="meta">#</span><span class="bash"> 再次应该就不会报错了</span></span><br><span class="line">hexo generate</span><br></pre></td></tr></table></figure>
+<h2 id="配置git">配置git</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name plmsmile</span><br><span class="line">git config --global user.email plmspark@163.com</span><br><span class="line"><span class="meta">#</span><span class="bash"> 生成Key，一路回车</span></span><br><span class="line">ssh-keygen -t rsa -C "plmspark@163.com" </span><br><span class="line">cat ~/.ssh/id_rsa.pub</span><br><span class="line"><span class="meta">#</span><span class="bash"> 到github上添加该sshkey</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 测试</span></span><br><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+<h2 id="潜在问题">潜在问题</h2>
+<ul>
+<li>本站没有搜索功能，安装插件失败了</li>
+<li>tags页面，标签数量错误</li>
+</ul>
+<h2 id="期望">期望</h2>
+<ul>
+<li>认真学习</li>
+<li>好好做笔记</li>
+<li>要更新博客</li>
+<li>自己常来看看之前的知识点</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-12-13T09:36:59.367Z" itemprop="dateUpdated">2018-12-13 17:36:59</time>
+</span><br>
+
+
+        
+        <br>原始链接：<a href="/2017/03/13/13-old-blog-problems/" target="_blank" rel="external">http://plmsmile.github.io/2017/03/13/13-old-blog-problems/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://plmsmile.github.io">
+            <img src="/img/avatar.jpg" alt="PLM">
+            PLM
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo搭建/">hexo搭建</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/配置Git/">配置Git</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/03/13/13-old-blog-problems/&title=《旧版博客搭建过程及其问题》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/03/13/13-old-blog-problems/&title=《旧版博客搭建过程及其问题》 — PLM's Notes&source=
+一直都想搭建一个博客，今天终于把博客给初步搭建好了。搭建的过程其实不那么顺利，所以简答记录一下。
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2017/03/13/13-old-blog-problems/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《旧版博客搭建过程及其问题》 — PLM's Notes&url=http://plmsmile.github.io/2017/03/13/13-old-blog-problems/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2017/03/13/13-old-blog-problems/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/03/19/18-spark-sql/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Spark-SQL的简略笔记</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/03/13/17-spark-pairrdd/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Spark键值对RDD的常用API</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "kR8nND4dcsWgqDWIjpiH4YFj-gzGzoHsz",
+            appKey: "il7PLkcJCfDBXMR6XirLdO2K",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="bottom">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <span>
+            PLM's Notes &nbsp; &copy; &nbsp
+            </span>
+            2016 - 2018
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/03/13/13-old-blog-problems/&title=《旧版博客搭建过程及其问题》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/03/13/13-old-blog-problems/&title=《旧版博客搭建过程及其问题》 — PLM's Notes&source=
+一直都想搭建一个博客，今天终于把博客给初步搭建好了。搭建的过程其实不那么顺利，所以简答记录一下。
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2017/03/13/13-old-blog-problems/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《旧版博客搭建过程及其问题》 — PLM's Notes&url=http://plmsmile.github.io/2017/03/13/13-old-blog-problems/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2017/03/13/13-old-blog-problems/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACM0lEQVR42u3awW7EIAxF0fz/T6dSV5WqkPsMGU3MZTVqGcqhkmWwjwOP83f8/zye/3fwlcn6xSFDhozXMs7hGP+xq5npfAK7ORoZMmRswOChsLbRdLt8bzJkyJBB5vAUkMyXIUOGjFUBN72OkkRThgwZMsaMmfSOX2X5dx+8i8uQIeOFjJnCwNOfP1TfkCFDxhczznBcfTctAPCV0a5kyJDRmkGKiOOt8we1tDzAU0wZMmTswJhpuag9/dcuuuSgZciQ0Y+RPmDVkr8F5ckxTIYMGa0ZtbcsnibWEr40fZQhQ0ZvRu1xjV9x03Bce4yTIUNGbwYPtTy94+G1NngSKUOGjB4MXp5MQ+FMd0R8lZUhQ0ZrRq1tglN5iTQtf8qQIWM3xkyPaNq6seq3MmTI2I2x9jwWPJDh1Y7n/q0yZMj4Gka6lZlyY5r8BYcoQ4aMDRhpmwVpwkiDLwnHl/uRIUPGBoy05smD7Mz1mBQJij0jMmTIeBWDB9baJTYtQ84UG2TIkNGVUWtx4JfVtBUjbTiTIUPGPgyeuqUheFVDxk1pQYYMGa0Z6aK8zaKYpYaXXhkyZOzAOMNBEkESKNP1bw5LhgwZrRkz7Vn8cZ9fXGuppwwZMnZgpEXEteGVN1XcnL0MGTI2YJBL6Xgmf8qvxf7xOjJkyJBR2+LMmnG6KUOGDBm43FgrhaYB+rI8IEOGjNYM/ljPE8daKbSWbsqQIaM3Y6YwwH+eljz5E54MGTJaM34AWpU39SD7qLIAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

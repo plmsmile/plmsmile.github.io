@@ -21,13 +21,13 @@
     
     
     <meta name="keywords" content="QANet,机器阅读理解">
-    <meta name="description" content="QANet BiDAF AoA DCN">
+    <meta name="description" content="QANet  BiDAF  AoA  DCN">
 <meta name="keywords" content="QANet,机器阅读理解">
 <meta property="og:type" content="article">
 <meta property="og:title" content="阅读理解模型总结">
 <meta property="og:url" content="http://plmsmile.github.io/2018/04/12/39-squard-models/index.html">
 <meta property="og:site_name" content="PLM&#39;s Notes">
-<meta property="og:description" content="QANet BiDAF AoA DCN">
+<meta property="og:description" content="QANet  BiDAF  AoA  DCN">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/dl/cnn/cnn_self_attention.png">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/dl/papers/bidaf.png">
@@ -38,7 +38,7 @@
 <meta property="og:updated_time" content="2018-11-25T08:30:08.812Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="阅读理解模型总结">
-<meta name="twitter:description" content="QANet BiDAF AoA DCN">
+<meta name="twitter:description" content="QANet  BiDAF  AoA  DCN">
 <meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/dl/cnn/cnn_self_attention.png">
     
         <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
@@ -174,7 +174,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#QANet"><span class="post-toc-number">1.</span> <span class="post-toc-text">QANet</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#BiDAF"><span class="post-toc-number">2.</span> <span class="post-toc-text">BiDAF</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#AoA"><span class="post-toc-number">3.</span> <span class="post-toc-text">AoA</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#DCN"><span class="post-toc-number">4.</span> <span class="post-toc-text">DCN</span></a></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#qanet"><span class="post-toc-number">1.</span> <span class="post-toc-text">QANet</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#bidaf"><span class="post-toc-number">2.</span> <span class="post-toc-text">BiDAF</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#aoa"><span class="post-toc-number">3.</span> <span class="post-toc-text">AoA</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#dcn"><span class="post-toc-number">4.</span> <span class="post-toc-text">DCN</span></a></li></ol>
         </nav>
     </aside>
 
@@ -200,10 +200,14 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <p><img src="" style="display:block; margin:auto" width="70%"></p>
-<h1 id="QANet"><a href="#QANet" class="headerlink" title="QANet"></a>QANet</h1><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/dl/cnn/cnn_self_attention.png" style="display:block; margin:auto" width="100%"></p>
-<h1 id="BiDAF"><a href="#BiDAF" class="headerlink" title="BiDAF"></a>BiDAF</h1><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/dl/papers/bidaf.png" style="display:block; margin:auto" width="100%"></p>
-<h1 id="AoA"><a href="#AoA" class="headerlink" title="AoA"></a>AoA</h1><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/dl/papers/aoa.png" style="display:block; margin:auto" width="100%"></p>
-<h1 id="DCN"><a href="#DCN" class="headerlink" title="DCN"></a>DCN</h1><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/deep-residual-coattention-encoder.png" style="display:block; margin:auto" width="90%"></p>
+<h1 id="qanet">QANet</h1>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/dl/cnn/cnn_self_attention.png" style="display:block; margin:auto" width="100%"></p>
+<h1 id="bidaf">BiDAF</h1>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/dl/papers/bidaf.png" style="display:block; margin:auto" width="100%"></p>
+<h1 id="aoa">AoA</h1>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/dl/papers/aoa.png" style="display:block; margin:auto" width="100%"></p>
+<h1 id="dcn">DCN</h1>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/deep-residual-coattention-encoder.png" style="display:block; margin:auto" width="90%"></p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/dcn-decoder.png" style="display:block; margin:auto" width="100%"></p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/hmn.png" style="display:block; margin:auto" width="60%"></p>
 

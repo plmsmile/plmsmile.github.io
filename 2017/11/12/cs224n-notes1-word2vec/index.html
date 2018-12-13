@@ -14,27 +14,27 @@
     
     
     
-    <title>Word2vec详细介绍 | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <title>Word2vec之总体介绍 | PLM&#39;s Notes | 好好学习，天天笔记</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
     
     
     <meta name="keywords" content="word2vec,cbow,skip-gram,负采样">
-    <meta name="description" content="Word2vec简介把词汇变成词向量。     类别1 类别2     算法 CBOW，上下文预测中心词汇 Skip-gram，中心词汇预测上下文   训练方法 负采样 哈夫曼树    语言模型两种句子：  正常的句子：The cat jumped over the puddle。 概率高，有意义。 没意义的句子：stock boil fish is toy 。概率低，没意义。  二元模型 一个">
+    <meta name="description" content="cs224n笔记，word2vec总体介绍，包括CBOW和Skip-gram，负采样训练">
 <meta name="keywords" content="word2vec,cbow,skip-gram,负采样">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Word2vec详细介绍">
+<meta property="og:title" content="Word2vec之总体介绍">
 <meta property="og:url" content="http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/index.html">
 <meta property="og:site_name" content="PLM&#39;s Notes">
-<meta property="og:description" content="Word2vec简介把词汇变成词向量。     类别1 类别2     算法 CBOW，上下文预测中心词汇 Skip-gram，中心词汇预测上下文   训练方法 负采样 哈夫曼树    语言模型两种句子：  正常的句子：The cat jumped over the puddle。 概率高，有意义。 没意义的句子：stock boil fish is toy 。概率低，没意义。  二元模型 一个">
+<meta property="og:description" content="cs224n笔记，word2vec总体介绍，包括CBOW和Skip-gram，负采样训练">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/14-cbow.png">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/15-skipgram.png">
-<meta property="og:updated_time" content="2018-11-25T08:30:09.898Z">
+<meta property="og:updated_time" content="2018-12-13T08:16:19.375Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Word2vec详细介绍">
-<meta name="twitter:description" content="Word2vec简介把词汇变成词向量。     类别1 类别2     算法 CBOW，上下文预测中心词汇 Skip-gram，中心词汇预测上下文   训练方法 负采样 哈夫曼树    语言模型两种句子：  正常的句子：The cat jumped over the puddle。 概率高，有意义。 没意义的句子：stock boil fish is toy 。概率低，没意义。  二元模型 一个">
+<meta name="twitter:title" content="Word2vec之总体介绍">
+<meta name="twitter:description" content="cs224n笔记，word2vec总体介绍，包括CBOW和Skip-gram，负采样训练">
 <meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/14-cbow.png">
     
         <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
@@ -123,7 +123,7 @@
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
         </a>
-        <div class="flex-col header-title ellipsis">Word2vec详细介绍</div>
+        <div class="flex-col header-title ellipsis">Word2vec之总体介绍</div>
         
         <div class="search-wrap" id="search-wrap">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
@@ -145,7 +145,7 @@
 <header class="content-header post-header">
 
     <div class="container fade-scale">
-        <h1 class="title">Word2vec详细介绍</h1>
+        <h1 class="title">Word2vec之总体介绍</h1>
         <h5 class="subtitle">
             
                 <time datetime="2017-11-12T12:54:37.000Z" itemprop="datePublished" class="page-time">
@@ -170,7 +170,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Word2vec"><span class="post-toc-number">1.</span> <span class="post-toc-text">Word2vec</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#简介"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">简介</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#语言模型"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">语言模型</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#CBOW"><span class="post-toc-number">2.</span> <span class="post-toc-text">CBOW</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#符号说明"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">符号说明</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#步骤"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">步骤</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#目标函数"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">目标函数</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Skip-gram"><span class="post-toc-number">3.</span> <span class="post-toc-text">Skip-gram</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#步骤-1"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">步骤</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#目标函数-1"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">目标函数</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#负采样训练"><span class="post-toc-number">4.</span> <span class="post-toc-text">负采样训练</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#标签函数"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">标签函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#目标函数-2"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">目标函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#负采样集合选择"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">负采样集合选择</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#CBOW-1"><span class="post-toc-number">4.4.</span> <span class="post-toc-text">CBOW</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Skip-gram-1"><span class="post-toc-number">4.5.</span> <span class="post-toc-text">Skip-gram</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#word2vec"><span class="post-toc-number">1.</span> <span class="post-toc-text">Word2vec</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#简介"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">简介</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#语言模型"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">语言模型</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#cbow"><span class="post-toc-number">2.</span> <span class="post-toc-text">CBOW</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#符号说明"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">符号说明</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#步骤"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">步骤</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#目标函数"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">目标函数</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#skip-gram"><span class="post-toc-number">3.</span> <span class="post-toc-text">Skip-gram</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#步骤-1"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">步骤</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#目标函数-1"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">目标函数</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#负采样训练"><span class="post-toc-number">4.</span> <span class="post-toc-text">负采样训练</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#标签函数"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">标签函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#目标函数-2"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">目标函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#负采样集合选择"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">负采样集合选择</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#cbow-1"><span class="post-toc-number">4.4.</span> <span class="post-toc-text">CBOW</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#skip-gram-1"><span class="post-toc-number">4.5.</span> <span class="post-toc-text">Skip-gram</span></a></li></ol></li></ol>
         </nav>
     </aside>
 
@@ -178,7 +178,7 @@
 <article id="post-cs224n-notes1-word2vec" class="post-article article-type-post fade" itemprop="blogPost">
 
     <div class="post-card">
-        <h1 class="post-card-title">Word2vec详细介绍</h1>
+        <h1 class="post-card-title">Word2vec之总体介绍</h1>
         <div class="post-meta">
             <time class="post-time" title="2017-11-12 20:54:37" datetime="2017-11-12T12:54:37.000Z" itemprop="datePublished">2017-11-12</time>
 
@@ -195,108 +195,184 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <p><img src="" style="display:block; margin:auto" width="60%"></p>
-<h1 id="Word2vec"><a href="#Word2vec" class="headerlink" title="Word2vec"></a>Word2vec</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>把词汇变成词向量。</p>
+            <blockquote>
+<p>cs224n笔记，word2vec总体介绍，包括CBOW和Skip-gram，负采样训练</p>
+</blockquote>
+<a id="more"></a>
+<p><img src="" style="display:block; margin:auto" width="60%"></p>
+<h1 id="word2vec">Word2vec</h1>
+<h2 id="简介">简介</h2>
+<p>把词汇变成词向量。</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th></th>
 <th>类别1</th>
 <th>类别2</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>算法</td>
 <td>CBOW，上下文预测中心词汇</td>
 <td>Skip-gram，中心词汇预测上下文</td>
 </tr>
-<tr>
+<tr class="even">
 <td>训练方法</td>
 <td>负采样</td>
 <td>哈夫曼树</td>
 </tr>
 </tbody>
 </table>
-<h2 id="语言模型"><a href="#语言模型" class="headerlink" title="语言模型"></a>语言模型</h2><p>两种句子：</p>
+<h2 id="语言模型">语言模型</h2>
+<p>两种句子：</p>
 <ul>
 <li>正常的句子：<code>The cat jumped over the puddle</code>。 概率高，有意义。</li>
 <li>没意义的句子：<code>stock boil fish is toy</code> 。概率低，没意义。</li>
 </ul>
 <p><strong>二元模型</strong></p>
-<p>一个句子，有$n$个单词。每个词出现的概率由上一个词语来决定。则整体句子的概率如下表示：<br>$$<br>P(w_1, w_2, \cdots, w_n) = \prod_{i=2}^n P(w_i \mid w_{i-1})<br>$$<br> <strong>缺点</strong></p>
+<p>一个句子，有<span class="math inline">\(n\)</span>个单词。每个词出现的概率由上一个词语来决定。则整体句子的概率如下表示： <span class="math display">\[
+P(w_1, w_2, \cdots, w_n) = \prod_{i=2}^n P(w_i \mid w_{i-1})
+\]</span> <strong>缺点</strong></p>
 <ul>
 <li>只考虑单词相邻传递概率，而<strong>忽略句子整体的可能性</strong>。</li>
 <li>context size=1，只学了相邻单词对的概率</li>
 <li>会计算整个大数据集的全局信息</li>
 </ul>
-<h1 id="CBOW"><a href="#CBOW" class="headerlink" title="CBOW"></a>CBOW</h1><p>给上下文<code>The cat _ over the puddle</code>，预测<code>jump</code> 。对于每个单词，学习两个向量：</p>
+<h1 id="cbow">CBOW</h1>
+<p>给上下文<code>The cat _ over the puddle</code>，预测<code>jump</code> 。对于每个单词，学习两个向量：</p>
 <ul>
-<li>$v$ ：<code>输入向量</code> ，（上下文单词）</li>
-<li>$u$： <code>输出向量</code> ， （中心单词）</li>
+<li><span class="math inline">\(v\)</span> ：<code>输入向量</code> ，（上下文单词）</li>
+<li><span class="math inline">\(u\)</span>： <code>输出向量</code> ， （中心单词）</li>
 </ul>
-<h2 id="符号说明"><a href="#符号说明" class="headerlink" title="符号说明"></a>符号说明</h2><ul>
-<li>$V$ ：词汇表，后面用$V$代替词汇表单词个数 </li>
-<li>$w_i$ ：词汇表中第$i$个单词 </li>
-<li>$d$ ：向量的维数</li>
-<li>$\mathcal V_{d \times |V|}$：输入矩阵，也可以用$W$来表达 </li>
-<li>$v_i$ ：$\mathcal{V}$的第$i$列，$w_i$的输入向量表达 </li>
-<li>$\mathcal {U}_{|V| \times d}$ ：输出矩阵，可以用$W ^ \prime$来表达 </li>
-<li>$u_i$ ：$\mathcal U$的第i行， $w_i$的输出向量表达</li>
+<h2 id="符号说明">符号说明</h2>
+<ul>
+<li><span class="math inline">\(V\)</span> ：词汇表，后面用<span class="math inline">\(V\)</span>代替词汇表单词个数</li>
+<li><span class="math inline">\(w_i\)</span> ：词汇表中第<span class="math inline">\(i\)</span>个单词</li>
+<li><span class="math inline">\(d\)</span> ：向量的维数</li>
+<li><span class="math inline">\(\mathcal V_{d \times |V|}\)</span>：输入矩阵，也可以用<span class="math inline">\(W\)</span>来表达</li>
+<li><span class="math inline">\(v_i\)</span> ：<span class="math inline">\(\mathcal{V}\)</span>的第<span class="math inline">\(i\)</span>列，<span class="math inline">\(w_i\)</span>的输入向量表达</li>
+<li><span class="math inline">\(\mathcal {U}_{|V| \times d}\)</span> ：输出矩阵，可以用<span class="math inline">\(W ^ \prime\)</span>来表达</li>
+<li><span class="math inline">\(u_i\)</span> ：<span class="math inline">\(\mathcal U\)</span>的第i行， <span class="math inline">\(w_i\)</span>的输出向量表达</li>
 </ul>
 <p>输入与输出</p>
 <ul>
-<li>$x^{(c)}$， 输入$2m$个上下文单词，上下文词汇的one-hot向量</li>
-<li>$y_c$： 真实标签</li>
-<li>$\hat y^{(c)}$， 输出一个中心单词，中心词汇的one-hot向量</li>
+<li><span class="math inline">\(x^{(c)}\)</span>， 输入<span class="math inline">\(2m\)</span>个上下文单词，上下文词汇的one-hot向量</li>
+<li><span class="math inline">\(y_c\)</span>： 真实标签</li>
+<li><span class="math inline">\(\hat y^{(c)}\)</span>， 输出一个中心单词，中心词汇的one-hot向量</li>
 </ul>
-<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><p><strong>1 上下文单词onehot向量</strong></p>
-<p>one-hot向量的表达：$(x^{(c-m)}, \cdots, x^{(c-1)}, x^{(c+1)}, x^{(c+m)}  \in \mathbb R^V)$</p>
+<h2 id="步骤">步骤</h2>
+<p><strong>1 上下文单词onehot向量</strong></p>
+<p>one-hot向量的表达：<span class="math inline">\((x^{(c-m)}, \cdots, x^{(c-1)}, x^{(c+1)}, x^{(c+m)} \in \mathbb R^V)\)</span></p>
 <p><strong>2 上下文单词向量</strong></p>
-<p>$(v_{c-m}, v_{c-m+1}, \cdots. v_{c+m} \in \mathbb{R}^d)$， 其中，$v_{c-m}=\mathcal V x^{(c-m)}$， 即输入矩阵乘以one-hot向量就找到所在的列</p>
+<p><span class="math inline">\((v_{c-m}, v_{c-m+1}, \cdots. v_{c+m} \in \mathbb{R}^d)\)</span>， 其中，<span class="math inline">\(v_{c-m}=\mathcal V x^{(c-m)}\)</span>， 即输入矩阵乘以one-hot向量就找到所在的列</p>
 <p><strong>3 平均上下文词向量</strong></p>
-<p>$\hat v = \frac {v_{c-m} + \cdots + v_{c+m}}{2m} \in \mathbb R^d$</p>
+<p><span class="math inline">\(\hat v = \frac {v_{c-m} + \cdots + v_{c+m}}{2m} \in \mathbb R^d\)</span></p>
 <p><strong>4 输出单词与上下文计算得分向量</strong></p>
-<p>$z = \mathcal U \hat v \in \mathbb R ^V$ 。点积，单词越相似，得分越高</p>
+<p><span class="math inline">\(z = \mathcal U \hat v \in \mathbb R ^V\)</span> 。点积，单词越相似，得分越高</p>
 <p><strong>5 得分向量转为概率</strong></p>
-<p>$\hat y = \mathrm{softmax}(z) \in  \mathbb R^V $</p>
+<p>$y = (z) R^V $</p>
 <p><strong>6 真实预测概率对比</strong></p>
-<p>预测的概率向量$\hat y$与唯一真实中心单词one-hot向量$y$，进行<code>交叉熵</code>比较算出loss。   </p>
+<p>预测的概率向量<span class="math inline">\(\hat y\)</span>与唯一真实中心单词one-hot向量<span class="math inline">\(y\)</span>，进行<code>交叉熵</code>比较算出loss。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/14-cbow.png" style="display:block; margin:auto" width="50%"></p>
-<h2 id="目标函数"><a href="#目标函数" class="headerlink" title="目标函数"></a>目标函数</h2><p>使用<code>交叉熵</code>计算loss，损失函数如下：<br>$$<br>H(\hat y, y) = - \sum_{j=1}^{|V|} y_j \log (\hat y_j)<br>$$<br>由于中心单词$y$是one-hot编码，<strong>只有正确位置才为1，其余均为0</strong>，所以<strong>只需计算中心单词对应的位置概率的loss</strong>即可：<br>$$<br>H(\hat y, y) = - y_c \log (\hat y_c) = -  \log (\hat y_c)<br>$$<br><strong>交叉熵很好</strong>是因为</p>
+<h2 id="目标函数">目标函数</h2>
+<p>使用<code>交叉熵</code>计算loss，损失函数如下： <span class="math display">\[
+H(\hat y, y) = - \sum_{j=1}^{|V|} y_j \log (\hat y_j)
+\]</span> 由于中心单词<span class="math inline">\(y\)</span>是one-hot编码，<strong>只有正确位置才为1，其余均为0</strong>，所以<strong>只需计算中心单词对应的位置概率的loss</strong>即可： <span class="math display">\[
+H(\hat y, y) = - y_c \log (\hat y_c) = -  \log (\hat y_c) 
+\]</span> <strong>交叉熵很好</strong>是因为</p>
 <ul>
-<li>$-1 \cdot \log (1) = 0$，预测得好 </li>
-<li>$-1 \cdot \log (0.01) = 4.605$， 预测得不好</li>
+<li><span class="math inline">\(-1 \cdot \log (1) = 0\)</span>，预测得好</li>
+<li><span class="math inline">\(-1 \cdot \log (0.01) = 4.605​\)</span>， 预测得不好</li>
 </ul>
-<p>最终<code>损失函数</code>：<br>$$<br>\begin{align}<br>\rm{minimize} \;  J<br>&amp; = - \log P(w_c \mid w_{c-m}, \ldots, w_{c-1}, w_{c+1}, \ldots, w_{c+m}) \<br>&amp; = - \log P(u_c \mid \hat v) \<br>&amp; = - \log \frac {\exp(u_c^T \hat v)}{\sum_{j=1}^{|V|} \exp(u_j^T \hat v)}   \<br>&amp; = -u_c^T \hat v + \log \sum_{j=1}^{|V|} \exp(u_j^T \hat v)<br>\end{align}<br>$$<br>再使用<code>SGD</code>方法<strong>去更新相关的两种向量$u_c, v_j$</strong> 。</p>
-<h1 id="Skip-gram"><a href="#Skip-gram" class="headerlink" title="Skip-gram"></a>Skip-gram</h1><p>给中心单词<code>jump</code>，预测上下文<code>The cat _ over the puddle</code> 。</p>
-<p>输入中心单词$x$， 输出上下文单词$y$ 。与CBOW正好输入输出相反，但同样有两个矩阵$\mathcal {U, V}$ 。符号说明同CBOW。</p>
+<p>最终<code>损失函数</code>： <span class="math display">\[
+\begin{align}
+\rm{minimize} \;  J 
+&amp; = - \log P(w_c \mid w_{c-m}, \ldots, w_{c-1}, w_{c+1}, \ldots, w_{c+m}) \\
+&amp; = - \log P(u_c \mid \hat v) \\
+&amp; = - \log \frac {\exp(u_c^T \hat v)}{\sum_{j=1}^{|V|} \exp(u_j^T \hat v)}   \\
+&amp; = -u_c^T \hat v + \log \sum_{j=1}^{|V|} \exp(u_j^T \hat v)
+\end{align}
+\]</span> 再使用<code>SGD</code>方法<strong>去更新相关的两种向量<span class="math inline">\(u_c, v_j\)</span></strong> 。</p>
+<h1 id="skip-gram">Skip-gram</h1>
+<p>给中心单词<code>jump</code>，预测上下文<code>The cat _ over the puddle</code> 。</p>
+<p>输入中心单词<span class="math inline">\(x\)</span>， 输出上下文单词<span class="math inline">\(y\)</span> 。与CBOW正好输入输出相反，但同样有两个矩阵<span class="math inline">\(\mathcal {U, V}\)</span> 。符号说明同CBOW。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/stanf/02word2vec/15-skipgram.png" style="display:block; margin:auto" width="50%"></p>
-<h2 id="步骤-1"><a href="#步骤-1" class="headerlink" title="步骤"></a>步骤</h2><p><strong>1 中心单词onehot向量</strong></p>
-<p>$x \in \mathbb {R}^{|V|}$</p>
+<h2 id="步骤-1">步骤</h2>
+<p><strong>1 中心单词onehot向量</strong></p>
+<p><span class="math inline">\(x \in \mathbb {R}^{|V|}\)</span></p>
 <p><strong>2 中心单词词向量</strong></p>
-<p>$v_c =  \mathcal V x \in \mathbb R^d$</p>
+<p><span class="math inline">\(v_c = \mathcal V x \in \mathbb R^d\)</span></p>
 <p><strong>3 中心词与其他词的得分向量</strong></p>
-<p>$z = \mathcal U v_c \in \mathbb R ^{|V|}$</p>
+<p><span class="math inline">\(z = \mathcal U v_c \in \mathbb R ^{|V|}\)</span></p>
 <p><strong>4 得分向量转为概率</strong></p>
-<p>概率 $\hat y = \rm {softmax} (z)$， <strong>$\hat y_{c-m}, \ldots, \hat y_{c+m}$ 是目标上下文单词是中心单词的上下文的预测概率</strong>。</p>
+<p>概率 <span class="math inline">\(\hat y = \rm {softmax} (z)\)</span>， <strong><span class="math inline">\(\hat y_{c-m}, \ldots, \hat y_{c+m}\)</span> 是目标上下文单词是中心单词的上下文的预测概率</strong>。</p>
 <p><strong>5 预测真实概率对比</strong></p>
-<p>预测概率$\hat y$ 与$2m$ 个真实上下文onehot向量$y_{c-m}, \ldots, y_{c+m}$进行交叉熵对比，算出loss </p>
-<h2 id="目标函数-1"><a href="#目标函数-1" class="headerlink" title="目标函数"></a>目标函数</h2><p>与CBOW不同的是，Skip-gram做了一个朴素贝叶斯条件假设，<strong>所有的输出上下文单词都是独立的</strong>。<br>$$<br>\begin {align}<br>\rm{minimize} \;  J<br>&amp; = - \log P(w_{c-m}, \ldots, w_{c-1}, w_{c+1}, \ldots, w_{c+m} \mid w_c) \<br>&amp; = - \log \prod_{j=0, j \neq m}^{2m} P(w_{c-m+j} \mid  w_c) \<br>&amp; = -\log \prod_{j=0, j \neq m}^{2m} \frac {\exp (u_{c-m+j}^T \cdot v_c)} {\sum_{k=1}^{|V|} \exp (u_k^T \cdot v_c)} \<br>&amp; = - \sum_{j=0, j \neq m}^{2m} \left ( \log \exp (u_{c-m+j}^T \cdot v_c) -  \log \sum_{k=1}^{|V|} \exp (u_k^T \cdot v_c) \right) \<br>&amp; = - \sum_{j=0, j \neq m}^{2m} u_{c-m+j}^T v_c + 2m  \cdot \log \sum_{k=1}^{|V|} \exp (u_k^T \cdot v_c)<br>\end {align}<br>$$<br>一样，使用SGD去优化U和V。</p>
-<p><strong>损失函数实际上是$2m$个交叉熵求和</strong>，求出的向量$\hat y$与$2m$个onehot向量$y_{c-m+j}$  计算<code>交叉熵</code>：<br>$$<br>\begin {align}<br>J<br>&amp; = - \sum_{j=0, j \neq m}^{2m} \log P(u_{c-m+j} \mid v_c) \<br>&amp; =  \sum_{j=0, j \neq m}^{2m} H(\hat y, y_{c-m+j}) \<br>\end{align}<br>$$</p>
-<h1 id="负采样训练"><a href="#负采样训练" class="headerlink" title="负采样训练"></a>负采样训练</h1><p>每次计算都会算整个$|V|$词表，太耗时了。  可以从噪声分布$P_n(w)$中进行<strong>负采样</strong>，来代替整个词表。当然单词采样概率与其<code>词频</code>相关。只需关心：<code>目标函数</code>、<code>梯度</code>、<code>更新规则</code>。</p>
-<h2 id="标签函数"><a href="#标签函数" class="headerlink" title="标签函数"></a>标签函数</h2><p>对于一对中心词和上下文单词$(w, c)$ ，设<code>标签</code>如下：</p>
+<p>预测概率<span class="math inline">\(\hat y\)</span> 与<span class="math inline">\(2m\)</span> 个真实上下文onehot向量<span class="math inline">\(y_{c-m}, \ldots, y_{c+m}\)</span>进行交叉熵对比，算出loss</p>
+<h2 id="目标函数-1">目标函数</h2>
+<p>与CBOW不同的是，Skip-gram做了一个朴素贝叶斯条件假设，<strong>所有的输出上下文单词都是独立的</strong>。 <span class="math display">\[
+\begin {align}
+\rm{minimize} \;  J 
+&amp; = - \log P(w_{c-m}, \ldots, w_{c-1}, w_{c+1}, \ldots, w_{c+m} \mid w_c) \\
+&amp; = - \log \prod_{j=0, j \neq m}^{2m} P(w_{c-m+j} \mid  w_c) \\
+&amp; = -\log \prod_{j=0, j \neq m}^{2m} \frac {\exp (u_{c-m+j}^T \cdot v_c)} {\sum_{k=1}^{|V|} \exp (u_k^T \cdot v_c)} \\
+&amp; = - \sum_{j=0, j \neq m}^{2m} \left ( \log \exp (u_{c-m+j}^T \cdot v_c) -  \log \sum_{k=1}^{|V|} \exp (u_k^T \cdot v_c) \right) \\
+&amp; = - \sum_{j=0, j \neq m}^{2m} u_{c-m+j}^T v_c + 2m  \cdot \log \sum_{k=1}^{|V|} \exp (u_k^T \cdot v_c)
+\end {align}
+\]</span> 一样，使用SGD去优化U和V。</p>
+<p><strong>损失函数实际上是<span class="math inline">\(2m\)</span>个交叉熵求和</strong>，求出的向量<span class="math inline">\(\hat y\)</span>与<span class="math inline">\(2m\)</span>个onehot向量<span class="math inline">\(y_{c-m+j}\)</span> 计算<code>交叉熵</code>： <span class="math display">\[
+\begin {align}
+J 
+&amp; = - \sum_{j=0, j \neq m}^{2m} \log P(u_{c-m+j} \mid v_c) \\
+&amp; =  \sum_{j=0, j \neq m}^{2m} H(\hat y, y_{c-m+j}) \\ 
+\end{align}
+\]</span></p>
+<h1 id="负采样训练">负采样训练</h1>
+<p>每次计算都会算整个<span class="math inline">\(|V|\)</span>词表，太耗时了。 可以从噪声分布<span class="math inline">\(P_n(w)\)</span>中进行<strong>负采样</strong>，来代替整个词表。当然单词采样概率与其<code>词频</code>相关。只需关心：<code>目标函数</code>、<code>梯度</code>、<code>更新规则</code>。</p>
+<h2 id="标签函数">标签函数</h2>
+<p>对于一对中心词和上下文单词<span class="math inline">\((w, c)\)</span> ，设<code>标签</code>如下：</p>
 <ul>
-<li>$P(l = 1 \mid w, c)$， $(w, c)$ 来自于<strong>真实语料</strong></li>
-<li>$P(l = 0 \mid w, c)$ ，$(w, c)$来自于<strong>负样本</strong>，即不在语料中  </li>
+<li><span class="math inline">\(P(l = 1 \mid w, c)\)</span>， <span class="math inline">\((w, c)\)</span> 来自于<strong>真实语料</strong></li>
+<li><span class="math inline">\(P(l = 0 \mid w, c)\)</span> ，<span class="math inline">\((w, c)\)</span>来自于<strong>负样本</strong>，即不在语料中</li>
 </ul>
-<p>用<code>sigmoid</code>表示标签函数：<br>$$<br>\begin {align}<br>&amp; P(l = 1 \mid w, c; \theta) = \sigma (u^T_w v_c) = \frac {1}{ 1 + e^{-u^T_w v_c}} \<br>&amp;  P(l = 0 \mid w, c; \theta) = 1 -  \sigma (u^T_w v_c) = \frac {1}{ 1 + e^{u^T_w v_c} } \<br>\end {align}<br>$$</p>
-<h2 id="目标函数-2"><a href="#目标函数-2" class="headerlink" title="目标函数"></a>目标函数</h2><p>选取合适的$\theta= \mathcal {U, V}$ ，<strong>去增大正样本的概率，减小负样本的概率</strong>。设$D$为正样本集合，$\bar D$为负样本集合。<br>$$<br>\begin {align}<br>\theta<br>&amp; = \mathop{\rm{argmax}}<em>\limits{\theta} \prod</em>{(w, c) \in D} P(l=1 \mid w, c, \theta) \prod_{(w, c) \in \bar D} P(l=0 \mid w, c, \theta) \<br>&amp; = \mathop{\rm{argmax}}<em>\limits{\theta}  \prod</em>{(w, c) \in D} P(l=1 \mid w, c, \theta) \prod_{(w, c) \in \bar D} (1 - P(l=1 \mid w, c, \theta) )\<br>&amp; = \mathop{\rm{argmax}}<em>\limits{\theta}  \sum</em>{(w, c) \in D} \log P(l=1 \mid w, c, \theta) +<br>\sum_{(w, c) \in \bar D} \log (1 - P(l=1 \mid w, c, \theta) )\<br>&amp; = \mathop{\rm{argmax}}<em>\limits{\theta}  \sum</em>{(w, c) \in D} \log  \frac {1}{ 1 + \exp (-u^T_w v_c)}+<br>\sum_{(w, c) \in \bar D} \log \frac {1}{ 1 + \exp (u^T_w v_c) } \<br>&amp; =  \mathop{\rm{argmax}}<em>\limits{\theta}  \sum</em>{(w, c) \in D} \log \sigma(u^T_w v_c) +<br>\sum_{(w, c) \in \bar D} \log \sigma (-u^T_w v_c)<br>\end {align}<br>$$<br> 最大化概率也就是最小化负对数似然<br>$$<br>J = - \sum_{(w, c) \in D} \log \sigma(u^T_w v_c) - \sum_{(w, c) \in \bar D} \log \sigma (-u^T_w v_c)<br>$$</p>
-<h2 id="负采样集合选择"><a href="#负采样集合选择" class="headerlink" title="负采样集合选择"></a>负采样集合选择</h2><p>为中心单词$w_c$ 从$P_n(w)$ 采样$K$个假的上下文单词。表示为${ \bar u_k \mid k=1\ldots K}$</p>
-<h2 id="CBOW-1"><a href="#CBOW-1" class="headerlink" title="CBOW"></a>CBOW</h2><p>给上下文向量$\hat{v}=\frac {v_{c-m} + \cdots + v_{c+m}}{2m}$  和真实中心词$u_c$ </p>
-<p><strong>原始loss</strong><br>$$<br>J  = -u_c^T \hat v + \log \sum_{j=1}^{|V|} \exp(u_j^T \hat v)<br>$$<br><strong>负采样loss</strong><br>$$<br>J = - \log \sigma (u_c^T \cdot \hat v) - \sum_{k=1}^K \log \sigma (- \bar u_k^T \cdot \hat v)<br>$$</p>
-<h2 id="Skip-gram-1"><a href="#Skip-gram-1" class="headerlink" title="Skip-gram"></a>Skip-gram</h2><p>给中心单词$v_c$， 和$2m$个真实上下文单词$u_{c-m+j}$</p>
-<p><strong>原始loss</strong><br>$$<br>J  = - \sum_{j=0, j \neq m}^{2m} u_{c-m+j}^T v_c + 2m  \cdot \log \sum_{k=1}^{|V|} \exp (u_k^T \cdot v_c)<br>$$<br><strong>负采样loss</strong><br>$$<br>J = - \sum_{j=0, j \neq m}^{2m} \log \sigma (u_{c-m+j}^T \cdot v_c) - \sum_{k=1}^K  \log \sigma (-\bar u_{k}^T \cdot v_c)<br>$$</p>
+<p>用<code>sigmoid</code>表示标签函数： <span class="math display">\[
+\begin {align}
+&amp; P(l = 1 \mid w, c; \theta) = \sigma (u^T_w v_c) = \frac {1}{ 1 + e^{-u^T_w v_c}} \\
+&amp;  P(l = 0 \mid w, c; \theta) = 1 -  \sigma (u^T_w v_c) = \frac {1}{ 1 + e^{u^T_w v_c} } \\
+\end {align}
+\]</span></p>
+<h2 id="目标函数-2">目标函数</h2>
+<p>选取合适的<span class="math inline">\(\theta= \mathcal {U, V}\)</span> ，<strong>去增大正样本的概率，减小负样本的概率</strong>。设<span class="math inline">\(D\)</span>为正样本集合，<span class="math inline">\(\bar D\)</span>为负样本集合。 <span class="math display">\[
+\begin {align}
+\theta 
+&amp; = \mathop{\rm{argmax}}_\limits{\theta} \prod_{(w, c) \in D} P(l=1 \mid w, c, \theta) \prod_{(w, c) \in \bar D} P(l=0 \mid w, c, \theta) \\
+&amp; = \mathop{\rm{argmax}}_\limits{\theta}  \prod_{(w, c) \in D} P(l=1 \mid w, c, \theta) \prod_{(w, c) \in \bar D} (1 - P(l=1 \mid w, c, \theta) )\\
+&amp; = \mathop{\rm{argmax}}_\limits{\theta}  \sum_{(w, c) \in D} \log P(l=1 \mid w, c, \theta) + 
+\sum_{(w, c) \in \bar D} \log (1 - P(l=1 \mid w, c, \theta) )\\
+&amp; = \mathop{\rm{argmax}}_\limits{\theta}  \sum_{(w, c) \in D} \log  \frac {1}{ 1 + \exp (-u^T_w v_c)}+
+\sum_{(w, c) \in \bar D} \log \frac {1}{ 1 + \exp (u^T_w v_c) } \\
+&amp; =  \mathop{\rm{argmax}}_\limits{\theta}  \sum_{(w, c) \in D} \log \sigma(u^T_w v_c) + 
+\sum_{(w, c) \in \bar D} \log \sigma (-u^T_w v_c)  
+\end {align}
+\]</span> 最大化概率也就是最小化负对数似然 <span class="math display">\[
+J = - \sum_{(w, c) \in D} \log \sigma(u^T_w v_c) - \sum_{(w, c) \in \bar D} \log \sigma (-u^T_w v_c)
+\]</span></p>
+<h2 id="负采样集合选择">负采样集合选择</h2>
+<p>为中心单词<span class="math inline">\(w_c\)</span> 从<span class="math inline">\(P_n(w)\)</span> 采样<span class="math inline">\(K\)</span>个假的上下文单词。表示为<span class="math inline">\(\{ \bar u_k \mid k=1\ldots K\}\)</span></p>
+<h2 id="cbow-1">CBOW</h2>
+<p>给上下文向量<span class="math inline">\(\hat{v}=\frac {v_{c-m} + \cdots + v_{c+m}}{2m}\)</span> 和真实中心词<span class="math inline">\(u_c\)</span></p>
+<p><strong>原始loss</strong> <span class="math display">\[
+J  = -u_c^T \hat v + \log \sum_{j=1}^{|V|} \exp(u_j^T \hat v)
+\]</span> <strong>负采样loss</strong> <span class="math display">\[
+J = - \log \sigma (u_c^T \cdot \hat v) - \sum_{k=1}^K \log \sigma (- \bar u_k^T \cdot \hat v)
+\]</span></p>
+<h2 id="skip-gram-1">Skip-gram</h2>
+<p>给中心单词<span class="math inline">\(v_c\)</span>， 和<span class="math inline">\(2m\)</span>个真实上下文单词<span class="math inline">\(u_{c-m+j}\)</span></p>
+<p><strong>原始loss</strong> <span class="math display">\[
+J  = - \sum_{j=0, j \neq m}^{2m} u_{c-m+j}^T v_c + 2m  \cdot \log \sum_{k=1}^{|V|} \exp (u_k^T \cdot v_c)
+\]</span> <strong>负采样loss</strong> <span class="math display">\[
+J = - \sum_{j=0, j \neq m}^{2m} \log \sigma (u_{c-m+j}^T \cdot v_c) - \sum_{k=1}^K  \log \sigma (-\bar u_{k}^T \cdot v_c)
+\]</span></p>
 
         </div>
 
@@ -305,7 +381,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-11-25T08:30:09.898Z" itemprop="dateUpdated">2018-11-25 16:30:09</time>
+    最后更新时间：<time datetime="2018-12-13T08:16:19.375Z" itemprop="dateUpdated">2018-12-13 16:16:19</time>
 </span><br>
 
 
@@ -341,7 +417,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/&title=《Word2vec详细介绍》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/&title=《Word2vec之总体介绍》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -351,7 +427,9 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/&title=《Word2vec详细介绍》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/&title=《Word2vec之总体介绍》 — PLM's Notes&source=
+cs224n笔记，word2vec总体介绍，包括CBOW和Skip-gram，负采样训练
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -361,7 +439,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Word2vec详细介绍》 — PLM's Notes&url=http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/&via=http://plmsmile.github.io" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Word2vec之总体介绍》 — PLM's Notes&url=http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/&via=http://plmsmile.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
@@ -400,7 +478,7 @@
     <div class="waves-block waves-effect next">
       <a href="/2017/11/02/word2vec-math/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">word2vec中的数学模型</h4>
+        <h4 class="title">Word2vec之数学模型</h4>
       </a>
     </div>
   
@@ -512,7 +590,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/&title=《Word2vec详细介绍》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/&title=《Word2vec之总体介绍》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -522,7 +600,9 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/&title=《Word2vec详细介绍》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/&title=《Word2vec之总体介绍》 — PLM's Notes&source=
+cs224n笔记，word2vec总体介绍，包括CBOW和Skip-gram，负采样训练
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -532,7 +612,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Word2vec详细介绍》 — PLM's Notes&url=http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/&via=http://plmsmile.github.io" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Word2vec之总体介绍》 — PLM's Notes&url=http://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/&via=http://plmsmile.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>

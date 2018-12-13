@@ -21,23 +21,23 @@
     
     
     <meta name="keywords" content="自然语言处理,概率图模型,马尔可夫链,隐马尔科夫模型,维特比算法,前向算法,后向算法，BW算法">
-    <meta name="description" content="概述产生式和判别式 判别方法 由数据直接去学习决策函数$Y=f(X)$ 或者$P(Y \mid X)$作为预测模型 ，即判别模型   生成方法 先求出联合概率密度$P(X, Y)$，然后求出条件概率密度$P(Y \mid X)$。即生成模型$P(Y \mid X) = \frac {P(X, Y)} {P(X)}$      判别式 生成式     原理 直接求$Y=f(X)$ 或$P(Y \mi">
+    <meta name="description" content="本文包括概率图模型、马尔科夫模型和隐马尔可夫模型。重点是HMM的前后向算法、维特比算法和BW算法">
 <meta name="keywords" content="自然语言处理,概率图模型,马尔可夫链,隐马尔科夫模型,维特比算法,前向算法,后向算法，BW算法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="马尔可夫模型">
 <meta property="og:url" content="http://plmsmile.github.io/2017/08/04/pgm-01/index.html">
 <meta property="og:site_name" content="PLM&#39;s Notes">
-<meta property="og:description" content="概述产生式和判别式 判别方法 由数据直接去学习决策函数$Y=f(X)$ 或者$P(Y \mid X)$作为预测模型 ，即判别模型   生成方法 先求出联合概率密度$P(X, Y)$，然后求出条件概率密度$P(Y \mid X)$。即生成模型$P(Y \mid X) = \frac {P(X, Y)} {P(X)}$      判别式 生成式     原理 直接求$Y=f(X)$ 或$P(Y \mi">
+<meta property="og:description" content="本文包括概率图模型、马尔科夫模型和隐马尔可夫模型。重点是HMM的前后向算法、维特比算法和BW算法">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/pgm/pgm1.png">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/pgm/markov01.gif">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/pgm/pagerank-graf2.PNG">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/pgm/pagerank-rezultate_1.gif">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/pgm/HMM.PNG">
-<meta property="og:updated_time" content="2018-11-25T08:30:10.685Z">
+<meta property="og:updated_time" content="2018-12-13T09:16:16.890Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="马尔可夫模型">
-<meta name="twitter:description" content="概述产生式和判别式 判别方法 由数据直接去学习决策函数$Y=f(X)$ 或者$P(Y \mid X)$作为预测模型 ，即判别模型   生成方法 先求出联合概率密度$P(X, Y)$，然后求出条件概率密度$P(Y \mid X)$。即生成模型$P(Y \mid X) = \frac {P(X, Y)} {P(X)}$      判别式 生成式     原理 直接求$Y=f(X)$ 或$P(Y \mi">
+<meta name="twitter:description" content="本文包括概率图模型、马尔科夫模型和隐马尔可夫模型。重点是HMM的前后向算法、维特比算法和BW算法">
 <meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/pgm/pgm1.png">
     
         <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
@@ -173,7 +173,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#概述"><span class="post-toc-number">1.</span> <span class="post-toc-text">概述</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#产生式和判别式"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">产生式和判别式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#概率图模型"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">概率图模型</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#贝叶斯网络"><span class="post-toc-number">2.</span> <span class="post-toc-text">贝叶斯网络</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#马尔可夫模型"><span class="post-toc-number">3.</span> <span class="post-toc-text">马尔可夫模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#简介"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">简介</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#一阶马尔可夫"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">一阶马尔可夫</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#多步转移概率"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">多步转移概率</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#遍历性"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">遍历性</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#PageRank应用"><span class="post-toc-number">3.5.</span> <span class="post-toc-text">PageRank应用</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#隐马尔可夫模型"><span class="post-toc-number">4.</span> <span class="post-toc-text">隐马尔可夫模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#定义"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">定义</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前后向算法"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">前后向算法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#维特比算法"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">维特比算法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Baum-Welch算法"><span class="post-toc-number">4.4.</span> <span class="post-toc-text">Baum-Welch算法</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#概述"><span class="post-toc-number">1.</span> <span class="post-toc-text">概述</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#产生式和判别式"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">产生式和判别式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#概率图模型"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">概率图模型</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#贝叶斯网络"><span class="post-toc-number">2.</span> <span class="post-toc-text">贝叶斯网络</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#马尔可夫模型"><span class="post-toc-number">3.</span> <span class="post-toc-text">马尔可夫模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#简介"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">简介</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#一阶马尔可夫"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">一阶马尔可夫</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#多步转移概率"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">多步转移概率</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#遍历性"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">遍历性</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#pagerank应用"><span class="post-toc-number">3.5.</span> <span class="post-toc-text">PageRank应用</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#隐马尔可夫模型"><span class="post-toc-number">4.</span> <span class="post-toc-text">隐马尔可夫模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#定义"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">定义</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前后向算法"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">前后向算法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#维特比算法"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">维特比算法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#baum-welch算法"><span class="post-toc-number">4.4.</span> <span class="post-toc-text">Baum-Welch算法</span></a></li></ol></li></ol>
         </nav>
     </aside>
 
@@ -198,92 +198,170 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><h2 id="产生式和判别式"><a href="#产生式和判别式" class="headerlink" title="产生式和判别式"></a>产生式和判别式</h2><blockquote>
-<p><strong>判别方法</strong> 由数据直接去学习决策函数$Y=f(X)$ 或者$P(Y \mid X)$作为预测模型 ，即<code>判别模型</code></p>
+            <blockquote>
+<p>本文包括概率图模型、马尔科夫模型和隐马尔可夫模型。重点是HMM的前后向算法、维特比算法和BW算法</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="概述">概述</h1>
+<h2 id="产生式和判别式">产生式和判别式</h2>
+<blockquote>
+<p><strong>判别方法</strong> 由数据直接去学习决策函数<span class="math inline">\(Y=f(X)\)</span> 或者<span class="math inline">\(P(Y \mid X)\)</span>作为预测模型 ，即<code>判别模型</code></p>
 </blockquote>
 <blockquote>
-<p><strong>生成方法</strong> 先求出联合概率密度$P(X, Y)$，然后求出条件概率密度$P(Y \mid X)$。即<code>生成模型</code>$P(Y \mid X) = \frac {P(X, Y)} {P(X)}$</p>
+<p><strong>生成方法</strong> 先求出联合概率密度<span class="math inline">\(P(X, Y)\)</span>，然后求出条件概率密度<span class="math inline">\(P(Y \mid X)\)</span>。即<code>生成模型</code><span class="math inline">\(P(Y \mid X) = \frac {P(X, Y)} {P(X)}\)</span></p>
 </blockquote>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th></th>
 <th>判别式</th>
 <th>生成式</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>原理</td>
-<td>直接求$Y=f(X)$ 或$P(Y \mid X)$</td>
-<td>先求$P(X,Y)$，然后 $P(Y \mid X) = \frac {P(X, Y)} {P(X)}$</td>
+<td>直接求<span class="math inline">\(Y=f(X)\)</span> 或<span class="math inline">\(P(Y \mid X)\)</span></td>
+<td>先求<span class="math inline">\(P(X,Y)\)</span>，然后 <span class="math inline">\(P(Y \mid X) = \frac {P(X, Y)} {P(X)}\)</span></td>
 </tr>
-<tr>
+<tr class="even">
 <td>差别</td>
 <td>只关心差别，根据差别分类</td>
 <td>关心数据怎么生成的，然后进行分类</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>应用</td>
 <td>k近邻、感知机、决策树、LR、SVM</td>
 <td>朴素贝叶斯、隐马尔可夫模型</td>
 </tr>
 </tbody>
 </table>
-<h2 id="概率图模型"><a href="#概率图模型" class="headerlink" title="概率图模型"></a>概率图模型</h2><blockquote>
+<h2 id="概率图模型">概率图模型</h2>
+<blockquote>
 <p><strong>概率图模型(probabilistic graphical models)</strong> 在概率模型的基础上，使用了基于图的方法来表示概率分布。节点表示变量，边表示变量之间的概率关系</p>
 </blockquote>
 <p>概率图模型便于理解、降低参数、简化计算，在下文的贝叶斯网络中会进行说明。</p>
-<h1 id="贝叶斯网络"><a href="#贝叶斯网络" class="headerlink" title="贝叶斯网络"></a>贝叶斯网络</h1><blockquote>
+<h1 id="贝叶斯网络">贝叶斯网络</h1>
+<blockquote>
 <p><strong>贝叶斯网络</strong> 又称为信度网络或者信念网络（belief networks），实际上就是一个有向无环图。</p>
 </blockquote>
 <p>节点表示随机变量；边表示条件依存关系。没有边说明两个变量在某些情况下条件独立或者说是计算独立，有边说明任何条件下都不条件独立。</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/pgm/pgm1.png" style="display:block; margin:auto" width="60%"></p>
-<p>如上图所示，要表示上述情况的概率只需要求出$4<em>2</em>2<em>2</em>2-1=63$个参数的联合概率密度就行了，实际上这个太难以求得。我们可以考虑一下独立关系$(F \perp H \mid S)  \,\,\, 表示在S确定的情况下，F和H独立$，所以有以下独立关系：<br>$$<br>(F \perp H \mid S)、\, (C \perp S \mid F,H)、\, (M \perp H, C \mid F)、 \, (M \perp C | F)<br>$$<br>所以我们得到如下的<strong>计算独立假设</strong>：<br>$$<br>P(C \mid FHS) = P(C \mid FH)，即假设C只与FH有关，而与S无关<br>$$<br>又由$P(AB)=P(A|B)P(B)$，所以得到联合概率分布：<br>$$<br>\begin{align<em>}<br>P(SFHMC) &amp;= P(M \mid SHFC) \cdot P(SHFC) = \underbrace {P(M \mid F)}<em>{\color {red}{计算独立性}} \cdot \underbrace {P(C \mid SHF) \cdot P(SHF)}</em>{\color{red}{继续分解}} \<br>&amp;=  P(M \mid F) \cdot P(C \mid FH) \cdot P(F \mid S) \cdot P(H \mid S) \cdot  P(S)<br>\end{align</em>}<br>$$<br>$P(S)$ 4个季节，需要3个参数；$P(H \mid S)$时，$P(Y \mid Spring)$ 和 $P(N \mid Spring)$只需要一个参数，所以$P(H \mid S)$只需要4个参数即可，其他同理。</p>
+<p>如上图所示，要表示上述情况的概率只需要求出<span class="math inline">\(4*2*2*2*2-1=63\)</span>个参数的联合概率密度就行了，实际上这个太难以求得。我们可以考虑一下独立关系<span class="math inline">\((F \perp H \mid S) \,\,\, 表示在S确定的情况下，F和H独立\)</span>，所以有以下独立关系： <span class="math display">\[
+(F \perp H \mid S)、\, (C \perp S \mid F,H)、\, (M \perp H, C \mid F)、 \, (M \perp C | F)
+\]</span> 所以我们得到如下的<strong>计算独立假设</strong>： <span class="math display">\[
+P(C \mid FHS) = P(C \mid FH)，即假设C只与FH有关，而与S无关
+\]</span> 又由<span class="math inline">\(P(AB)=P(A|B)P(B)\)</span>，所以得到联合概率分布： <span class="math display">\[
+\begin{align*}
+P(SFHMC) &amp;= P(M \mid SHFC) \cdot P(SHFC) = \underbrace {P(M \mid F)}_{\color {red}{计算独立性}} \cdot \underbrace {P(C \mid SHF) \cdot P(SHF)}_{\color{red}{继续分解}} \\
+&amp;=  P(M \mid F) \cdot P(C \mid FH) \cdot P(F \mid S) \cdot P(H \mid S) \cdot  P(S)
+\end{align*}
+\]</span> <span class="math inline">\(P(S)\)</span> 4个季节，需要3个参数；<span class="math inline">\(P(H \mid S)\)</span>时，<span class="math inline">\(P(Y \mid Spring)\)</span> 和 <span class="math inline">\(P(N \mid Spring)\)</span>只需要一个参数，所以<span class="math inline">\(P(H \mid S)\)</span>只需要4个参数即可，其他同理。</p>
 <p>所以联合概率密度就转化成了上述公式中的5个乘积项，其中每一项需要的参数个数分别是2、4、4、4、3，所以一共只需要17个参数，这就大大降低了参数的个数。</p>
-<h1 id="马尔可夫模型"><a href="#马尔可夫模型" class="headerlink" title="马尔可夫模型"></a>马尔可夫模型</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>马尔可夫模型(Markov Model) 描述了一类重要的随机过程，未来只依赖于现在，不依赖于过去。这样的特性的称为<code>马尔可夫性</code>，具有这样特性的过程称为<code>马尔可夫过程</code>。</p>
+<h1 id="马尔可夫模型">马尔可夫模型</h1>
+<h2 id="简介">简介</h2>
+<p>马尔可夫模型(Markov Model) 描述了一类重要的随机过程，未来只依赖于现在，不依赖于过去。这样的特性的称为<code>马尔可夫性</code>，具有这样特性的过程称为<code>马尔可夫过程</code>。</p>
 <p>时间和状态都是<strong>离散的</strong>马尔可夫过程称为<code>马尔可夫链</code>，简称马氏链，关键定义如下</p>
 <ul>
-<li>系统有$N$个状态$S = { s_1, s_2, \cdots, s_N}$，随着时间的推移，系统将从某一状态转移到另一状态</li>
-<li>设$q_t \in S$是系统在$t$时刻的状态，$Q = {q_q, q_2, \cdots, q_T }$系统时间的随机变量序列</li>
+<li>系统有<span class="math inline">\(N\)</span>个状态<span class="math inline">\(S = \{ s_1, s_2, \cdots, s_N\}\)</span>，随着时间的推移，系统将从某一状态转移到另一状态</li>
+<li>设<span class="math inline">\(q_t \in S\)</span>是系统在<span class="math inline">\(t\)</span>时刻的状态，<span class="math inline">\(Q = \{q_q, q_2, \cdots, q_T \}\)</span>系统时间的随机变量序列</li>
 </ul>
-<p>一般地，系统在时间$t$时的状态$s_j$取决于$[1, t-1]$的所有状态${q_1, q_2, \cdots, q_{t-1}}$，则当前时间的概率是<br>$$<br>P(q_t = s_j \mid q_{t-1} = s_i, q_{t-2} = s_k, \cdots)<br>$$</p>
-<p>在时刻$m$处于$s_i$状态，那么在时刻$m+n$转移到状态$s_j$的概率称为<code>转移概率</code>，即从时刻$m \to m+n$：<br>$$<br>\color{blue} {P_{ij}(m, m+n)} = P(q_{m+n} = s_j \mid q_m = s_i)<br>$$</p>
-<p>如果$P_{ij}(m, m+n)$只与状态$i, j$和步长$n$有关，而与起始时间$m$无关，则记为$\color {blue} {P_{ij}(n)}$,称为<code>n步转移概率</code>。 并且称此转移概率具有<code>平稳性</code>，且称此链是<code>齐次</code>的，称为齐次马氏链，我们重点研究齐次马氏链。$P(n) = [P_{ij}(n)]$称为<code>n步转移矩阵</code>。<br>$$<br>P_{ij}(m, m+n) =\color {blue} {P_{ij}(n)} = P(q_{m+n} = s_j \mid q_m = s_i)<br>$$<br>特别地，$n = 1$时，有<code>一步转移概率</code>如下<br>$$<br>p_{ij}  = P_{ij}(1)  = P(q_{m+1} \mid q_{m}) = a_{ij}<br>$$</p>
-<h2 id="一阶马尔可夫"><a href="#一阶马尔可夫" class="headerlink" title="一阶马尔可夫"></a>一阶马尔可夫</h2><p>特别地，如果<strong>$t$时刻状态只与$t-1$时刻状态有关</strong>，那么下有<code>离散的一阶马尔可夫链</code>如下：<br>$$<br>P(q_t = s_j \mid q_{t-1} = s_i, q_{t-2} = s_k, \cdots) = P(q_t = s_j\mid q_{t-1} = s_i)<br>$$<br>其中$t-1​$的状态$s_i​$转移到$t​$的状态$s_j​$的概率定义如下：<br>$$<br>P(q_t = s_j\mid q_{t-1} = s_i) = \color{blue} {a_{ij}}，其中i, j \in [1, N]，a_{ij} \ge 0，\sum_{j=1}^Na_{ij} = 1<br>$$<br>显然，$N​$个状态的一阶马尔可夫链有$N^2​$次状态转移，这些概率$a_{ij}​$构成了<code>状态转移矩阵</code>。<br>$$<br>A = [a_{ij}] =<br>\begin{bmatrix}<br>a_{11} &amp; a_{12} &amp; \cdots &amp; a_{1n} \<br>a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \<br>\vdots &amp; \vdots &amp; \ddots &amp; \vdots \<br>a_{n1} &amp; a_{n2} &amp; \cdots &amp; a_{nn} \<br>\end{bmatrix}<br>$$<br>设系统在<strong>初始状态的概率向量</strong>是 $\color{blue} {\pi_i} \ge  0$ ，其中，$\sum_{i=1}^{N}\pi_i = 1$</p>
-<p>那么<strong>时间序列</strong>$Q = {q_1, q_2, \cdots, q_T }$出现的概率是<br>$$<br>\color{blue} {P(q_1, q_2, \cdots, q_T) }<br>= P(q_1) P(q2 \mid q_1) P(q_3 \mid q_2) \cdots P(q_T \mid q_{T-1})<br>= \color{red} {\underbrace {\pi_{q_1}}<em>{初态概率} \prod</em>{t=1}^{T-1} a_{q_tq_{t+1}}}<br>$$<br>下图是一个例子 </p>
+<p>一般地，系统在时间<span class="math inline">\(t\)</span>时的状态<span class="math inline">\(s_j\)</span>取决于<span class="math inline">\([1, t-1]\)</span>的所有状态<span class="math inline">\(\{q_1, q_2, \cdots, q_{t-1}\}\)</span>，则当前时间的概率是 <span class="math display">\[
+P(q_t = s_j \mid q_{t-1} = s_i, q_{t-2} = s_k, \cdots)
+\]</span></p>
+<p>在时刻<span class="math inline">\(m\)</span>处于<span class="math inline">\(s_i\)</span>状态，那么在时刻<span class="math inline">\(m+n\)</span>转移到状态<span class="math inline">\(s_j\)</span>的概率称为<code>转移概率</code>，即从时刻<span class="math inline">\(m \to m+n\)</span>： <span class="math display">\[
+\color{blue} {P_{ij}(m, m+n)} = P(q_{m+n} = s_j \mid q_m = s_i)
+\]</span></p>
+<p>如果<span class="math inline">\(P_{ij}(m, m+n)\)</span>只与状态<span class="math inline">\(i, j\)</span>和步长<span class="math inline">\(n\)</span>有关，而与起始时间<span class="math inline">\(m\)</span>无关，则记为<span class="math inline">\(\color {blue} {P_{ij}(n)}\)</span>,称为<code>n步转移概率</code>。 并且称此转移概率具有<code>平稳性</code>，且称此链是<code>齐次</code>的，称为齐次马氏链，我们重点研究齐次马氏链。<span class="math inline">\(P(n) = [P_{ij}(n)]\)</span>称为<code>n步转移矩阵</code>。 <span class="math display">\[
+P_{ij}(m, m+n) =\color {blue} {P_{ij}(n)} = P(q_{m+n} = s_j \mid q_m = s_i)
+\]</span> 特别地，<span class="math inline">\(n = 1\)</span>时，有<code>一步转移概率</code>如下 <span class="math display">\[
+p_{ij}  = P_{ij}(1)  = P(q_{m+1} \mid q_{m}) = a_{ij}
+\]</span></p>
+<h2 id="一阶马尔可夫">一阶马尔可夫</h2>
+<p>特别地，如果<strong><span class="math inline">\(t\)</span>时刻状态只与<span class="math inline">\(t-1\)</span>时刻状态有关</strong>，那么下有<code>离散的一阶马尔可夫链</code>如下： <span class="math display">\[
+P(q_t = s_j \mid q_{t-1} = s_i, q_{t-2} = s_k, \cdots) = P(q_t = s_j\mid q_{t-1} = s_i)
+\]</span> 其中<span class="math inline">\(t-1​\)</span>的状态<span class="math inline">\(s_i​\)</span>转移到<span class="math inline">\(t​\)</span>的状态<span class="math inline">\(s_j​\)</span>的概率定义如下： <span class="math display">\[
+P(q_t = s_j\mid q_{t-1} = s_i) = \color{blue} {a_{ij}}，其中i, j \in [1, N]，a_{ij} \ge 0，\sum_{j=1}^Na_{ij} = 1
+\]</span> 显然，<span class="math inline">\(N​\)</span>个状态的一阶马尔可夫链有<span class="math inline">\(N^2​\)</span>次状态转移，这些概率<span class="math inline">\(a_{ij}​\)</span>构成了<code>状态转移矩阵</code>。 <span class="math display">\[
+A = [a_{ij}] = 
+\begin{bmatrix} 
+a_{11} &amp; a_{12} &amp; \cdots &amp; a_{1n} \\
+a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+a_{n1} &amp; a_{n2} &amp; \cdots &amp; a_{nn} \\
+\end{bmatrix}
+\]</span> 设系统在<strong>初始状态的概率向量</strong>是 <span class="math inline">\(\color{blue} {\pi_i} \ge 0\)</span> ，其中，<span class="math inline">\(\sum_{i=1}^{N}\pi_i = 1\)</span></p>
+<p>那么<strong>时间序列</strong><span class="math inline">\(Q = \{q_1, q_2, \cdots, q_T \}\)</span>出现的概率是 <span class="math display">\[
+\color{blue} {P(q_1, q_2, \cdots, q_T) }
+= P(q_1) P(q2 \mid q_1) P(q_3 \mid q_2) \cdots P(q_T \mid q_{T-1})
+= \color{red} {\underbrace {\pi_{q_1}}_{初态概率} \prod_{t=1}^{T-1} a_{q_tq_{t+1}}}
+\]</span> 下图是一个例子</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/pgm/markov01.gif" style="display:block; margin:auto" width="50%"></p>
-<h2 id="多步转移概率"><a href="#多步转移概率" class="headerlink" title="多步转移概率"></a>多步转移概率</h2><p>对于齐次马氏链，多步转移概率就是$u+v$时间段的状态转移，可以分解为先转移$u$步，再转移$v$步。则有<code>CK方程</code>的矩阵形式<br>$$<br>P(u+v) = P(u)P(v)<br>$$<br>由此得到$n$步转移概率矩阵是一次转移概率矩阵的$n$次方<br>$$<br>P(n) = P(1) P(n-1) = PP(n-1) \implies P(n) = P^n<br>$$<br>对于求矩阵的幂$A^n$，则最好使用<code>相似对角化</code>来进行矩阵连乘。</p>
-<p>存在一个可逆矩阵P，使得$P^{-1}AP = \Lambda，A = P \Lambda P^{-1}$，其中$\Lambda$是矩阵$A$的特征值矩阵<br>$$<br>\Lambda =<br>\begin{bmatrix}<br>\lambda_1 &amp;  &amp; &amp;  \<br> &amp;\lambda_2 &amp;  &amp;  \<br> &amp;&amp; \ddots &amp;  \<br> &amp;  &amp;  &amp; \lambda_n \<br>\end{bmatrix}<br>，其中\lambda是矩阵A的特征值<br>$$<br>则有$A^n = P\Lambda ^ {n}P^{-1}$</p>
-<h2 id="遍历性"><a href="#遍历性" class="headerlink" title="遍历性"></a>遍历性</h2><p>齐次马氏链，状态$i$向状态$j$转移，经过无穷步，<strong>任何状态$s_i$经过无穷步转移到状态$s_j$的概率收敛于一个定值$\pi_j$</strong>，即$\lim_{n \to \infty} P_{ij}(n) = \pi_j \; (与i无关)$ 则称此链具有<code>遍历性</code>。若$\sum_{j=1}^N \pi_j = 1$，则称$\vec{\pi} = (\pi_1, \pi_2, \cdots)$为链的<code>极限分布</code>。</p>
-<p>遍历性的充分条件：如果存在正整数$m$(步数)，使得对于任意的，都有如下（<strong>转移概率大于0</strong>），则该马氏链<strong>具有遍历性</strong><br>$$<br>P_{ij}(m) &gt; 0, \quad i, j =1, 2, \cdots, N, \quad s_i,s_j \in S  \;<br>$$<br>那么它的极限分布$\vec{\pi}  = (\pi_1, \pi_2, \cdots, \pi_N)​$，它是下面方程组的唯一解<br>$$<br>\pi = \pi P, \quad 即\pi_j = \sum_{i=1}^{N} \pi_i p_{ij}, \quad 其中\pi_j &gt; 0, \sum_{j=1}^N \pi_j = 1<br>$$</p>
-<h2 id="PageRank应用"><a href="#PageRank应用" class="headerlink" title="PageRank应用"></a>PageRank应用</h2><p>有很多应用，压缩算法、排队论等统计建模、语音识别、基因预测、搜索引擎鉴别网页质量-PR值。</p>
+<h2 id="多步转移概率">多步转移概率</h2>
+<p>对于齐次马氏链，多步转移概率就是<span class="math inline">\(u+v\)</span>时间段的状态转移，可以分解为先转移<span class="math inline">\(u\)</span>步，再转移<span class="math inline">\(v\)</span>步。则有<code>CK方程</code>的矩阵形式 <span class="math display">\[
+P(u+v) = P(u)P(v)
+\]</span> 由此得到<span class="math inline">\(n\)</span>步转移概率矩阵是一次转移概率矩阵的<span class="math inline">\(n\)</span>次方 <span class="math display">\[
+P(n) = P(1) P(n-1) = PP(n-1) \implies P(n) = P^n
+\]</span> 对于求矩阵的幂<span class="math inline">\(A^n\)</span>，则最好使用<code>相似对角化</code>来进行矩阵连乘。</p>
+<p>存在一个可逆矩阵P，使得<span class="math inline">\(P^{-1}AP = \Lambda，A = P \Lambda P^{-1}\)</span>，其中<span class="math inline">\(\Lambda\)</span>是矩阵<span class="math inline">\(A\)</span>的特征值矩阵 <span class="math display">\[
+\Lambda = 
+\begin{bmatrix} 
+\lambda_1 &amp;  &amp; &amp;  \\
+ &amp;\lambda_2 &amp;  &amp;  \\
+ &amp;&amp; \ddots &amp;  \\
+ &amp;  &amp;  &amp; \lambda_n \\
+\end{bmatrix}
+，其中\lambda是矩阵A的特征值
+\]</span> 则有<span class="math inline">\(A^n = P\Lambda ^ {n}P^{-1}\)</span></p>
+<h2 id="遍历性">遍历性</h2>
+<p>齐次马氏链，状态<span class="math inline">\(i\)</span>向状态<span class="math inline">\(j\)</span>转移，经过无穷步，<strong>任何状态<span class="math inline">\(s_i\)</span>经过无穷步转移到状态<span class="math inline">\(s_j\)</span>的概率收敛于一个定值<span class="math inline">\(\pi_j\)</span></strong>，即<span class="math inline">\(\lim_{n \to \infty} P_{ij}(n) = \pi_j \; (与i无关)\)</span> 则称此链具有<code>遍历性</code>。若<span class="math inline">\(\sum_{j=1}^N \pi_j = 1\)</span>，则称<span class="math inline">\(\vec{\pi} = (\pi_1, \pi_2, \cdots)\)</span>为链的<code>极限分布</code>。</p>
+<p>遍历性的充分条件：如果存在正整数<span class="math inline">\(m\)</span>(步数)，使得对于任意的，都有如下（<strong>转移概率大于0</strong>），则该马氏链<strong>具有遍历性</strong> <span class="math display">\[
+P_{ij}(m) &gt; 0, \quad i, j =1, 2, \cdots, N, \quad s_i,s_j \in S  \;
+\]</span> 那么它的极限分布<span class="math inline">\(\vec{\pi} = (\pi_1, \pi_2, \cdots, \pi_N)​\)</span>，它是下面方程组的唯一解 <span class="math display">\[
+\pi = \pi P, \quad 即\pi_j = \sum_{i=1}^{N} \pi_i p_{ij}, \quad 其中\pi_j &gt; 0, \sum_{j=1}^N \pi_j = 1
+\]</span></p>
+<h2 id="pagerank应用">PageRank应用</h2>
+<p>有很多应用，压缩算法、排队论等统计建模、语音识别、基因预测、搜索引擎鉴别网页质量-PR值。</p>
 <p><strong>Page Rank算法</strong></p>
 <p>这是Google最核心的算法，用于给每个网页价值评分，是Google“在垃圾中找黄金”的关键算法。</p>
 <p>大致思想是要为搜索引擎返回最相关的页面。<code>页面相关度</code>是由和当前网页相关的一些页面决定的。</p>
 <ul>
-<li>当前页面会<strong>把自己的<code>importance</code>平均传递给它所指向的页面</strong>，若有$k$个，则为每个传递$\frac 1 k$</li>
-</ul>
-<ul>
+<li><p>当前页面会<strong>把自己的<code>importance</code>平均传递给它所指向的页面</strong>，若有<span class="math inline">\(k\)</span>个，则为每个传递<span class="math inline">\(\frac 1 k\)</span></p></li>
 <li>如果有很多页面都指向当前页面，则当前页面很重要，相关度高</li>
-<li>当前页面有一些来自官方页面的<code>backlink</code>，当前页面很重要</li>
+<li><p>当前页面有一些来自官方页面的<code>backlink</code>，当前页面很重要</p></li>
 </ul>
 <p>例如有4个页面，分别如下</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/pgm/pagerank-graf2.PNG" style="display:block; margin:auto" width="30%"></p>
-<p>矩阵$\color {blue }A$是页面跳转的一次转移矩阵，$\color {blue }q$是当前时间每个页面的相关度向量，即<code>PageRank vector</code>。<br>$$<br>A =<br>\begin{bmatrix}<br>0 &amp; 0 &amp;1 &amp; \frac {1}{2} \<br>  \frac {1}{3}&amp; 0 &amp; 0 &amp; 0 \<br>\frac {1}{3}&amp;  \frac {1}{2} &amp; 0 &amp;  \frac {1}{2} \<br> \frac {1}{3} &amp;  \frac {1}{2} &amp; 0 &amp; 0 \<br>\end{bmatrix}<br>\quad<br>初始时刻，q =<br>\begin {bmatrix}<br>\frac1 4 \<br>\frac1 4 \<br>\frac1 4 \<br>\frac1 4 \<br>\end {bmatrix}<br>$$<br>$A$的<strong>一列是当前页面出去的所有页面</strong>，<strong>一行是进入当前页面的所有页面</strong>。设$u$表示第$A$的第$i$行，那么$u*q$就表示当页面$i$接受当前$q$的更新后的rank值。</p>
-<p>定义矩阵$\color {blue} {G} =  \color{red} {\alpha A + (1-\alpha) \frac {1} {n} U}$，对$A$进行修正，$G$所有元素大于0，具有遍历性</p>
+<p>矩阵<span class="math inline">\(\color {blue }A\)</span>是页面跳转的一次转移矩阵，<span class="math inline">\(\color {blue }q\)</span>是当前时间每个页面的相关度向量，即<code>PageRank vector</code>。 <span class="math display">\[
+A = 
+\begin{bmatrix} 
+0 &amp; 0 &amp;1 &amp; \frac {1}{2} \\
+  \frac {1}{3}&amp; 0 &amp; 0 &amp; 0 \\
+\frac {1}{3}&amp;  \frac {1}{2} &amp; 0 &amp;  \frac {1}{2} \\
+ \frac {1}{3} &amp;  \frac {1}{2} &amp; 0 &amp; 0 \\
+\end{bmatrix}
+\quad
+初始时刻，q = 
+\begin {bmatrix}
+\frac1 4 \\
+\frac1 4 \\
+\frac1 4 \\
+\frac1 4 \\
+\end {bmatrix}
+\]</span> <span class="math inline">\(A\)</span>的<strong>一列是当前页面出去的所有页面</strong>，<strong>一行是进入当前页面的所有页面</strong>。设<span class="math inline">\(u\)</span>表示第<span class="math inline">\(A\)</span>的第<span class="math inline">\(i\)</span>行，那么<span class="math inline">\(u*q\)</span>就表示当页面<span class="math inline">\(i\)</span>接受当前<span class="math inline">\(q\)</span>的更新后的rank值。</p>
+<p>定义矩阵<span class="math inline">\(\color {blue} {G} = \color{red} {\alpha A + (1-\alpha) \frac {1} {n} U}\)</span>，对<span class="math inline">\(A\)</span>进行修正，<span class="math inline">\(G\)</span>所有元素大于0，具有遍历性</p>
 <ul>
-<li>$\alpha \in[0, 1] \; (\alpha = 0.85)$ 阻尼因子</li>
-<li>$A$  一步转移矩阵</li>
-<li>$n$  页面数量</li>
-<li>$U$ 元素全为$1$的矩阵</li>
+<li><span class="math inline">\(\alpha \in[0, 1] \; (\alpha = 0.85)\)</span> 阻尼因子</li>
+<li><span class="math inline">\(A\)</span> 一步转移矩阵</li>
+<li><span class="math inline">\(n\)</span> 页面数量</li>
+<li><span class="math inline">\(U\)</span> 元素全为<span class="math inline">\(1\)</span>的矩阵</li>
 </ul>
-<p>使用$G$进行迭代的好处</p>
+<p>使用<span class="math inline">\(G\)</span>进行迭代的好处</p>
 <ul>
-<li>解决了很多$A$元素为0导致的问题，如没有超链接的节点，不连接的图等 </li>
-<li>$A$所有元素大于0，具有遍历性，具有极限分布，即它的极限分布$q$会收敛</li>
+<li>解决了很多<span class="math inline">\(A\)</span>元素为0导致的问题，如没有超链接的节点，不连接的图等</li>
+<li><span class="math inline">\(A\)</span>所有元素大于0，具有遍历性，具有极限分布，即它的极限分布<span class="math inline">\(q\)</span>会收敛</li>
 </ul>
-<p>那么通过<strong>迭代</strong>就可以求出PR向量$\color {red} {q^{next} = G q^{cur}}$，实际上$q$是$G$的特征值为1的<strong>特征向量</strong>。</p>
+<p>那么通过<strong>迭代</strong>就可以求出PR向量<span class="math inline">\(\color {red} {q^{next} = G q^{cur}}\)</span>，实际上<span class="math inline">\(q\)</span>是<span class="math inline">\(G\)</span>的特征值为1的<strong>特征向量</strong>。</p>
 <p>迭代具体计算如下图(下图没有使用G，是使用A去算的，这是网上找的图[捂脸])</p>
 <figure class="image-bubble">
                 <div class="img-lightbox">
@@ -292,118 +370,176 @@
                 </div>
                 <div class="image-caption"></div>
             </figure>
-<p>随着迭代，$q$会收敛，那么称为$q$就是<code>PageRank vector</code>。</p>
+<p>随着迭代，<span class="math inline">\(q\)</span>会收敛，那么称为<span class="math inline">\(q\)</span>就是<code>PageRank vector</code>。</p>
 <p>我们知道节点1有2个backlink，3有3个backlink。但是节点1却比3更加相关，这是为什么呢？因为节点3虽然有3个backlink，但是却只有1个outgoing，只指向了页面1。这样的话它就把它所有的importance都传递给了1，所以页面1也就比页面3的相关度高。</p>
-<h1 id="隐马尔可夫模型"><a href="#隐马尔可夫模型" class="headerlink" title="隐马尔可夫模型"></a>隐马尔可夫模型</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p><strong>隐马尔可夫模型</strong>（Hidden Markov Model， HMM）是统计模型，它用来描述含有隐含未知参数的马尔可夫过程。其难点是从可观察的参数中确定该过程的隐含参数，然后利用这些参数来做进一步的分析。大概形状如下</p>
+<h1 id="隐马尔可夫模型">隐马尔可夫模型</h1>
+<h2 id="定义">定义</h2>
+<p><strong>隐马尔可夫模型</strong>（Hidden Markov Model， HMM）是统计模型，它用来描述含有隐含未知参数的马尔可夫过程。其难点是从可观察的参数中确定该过程的隐含参数，然后利用这些参数来做进一步的分析。大概形状如下</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/nlp/pgm/HMM.PNG" style="display:block; margin:auto" width="50%"></p>
 <p>一个HMM由以下5个部分构成。</p>
-<p><strong>隐藏状态</strong> </p>
+<p><strong>隐藏状态</strong></p>
 <ul>
 <li><code>模型的状态</code>，隐蔽不可观察</li>
-<li>有$N$种，隐状态种类集合$\color {blue} {S = {s_1, s_2, \cdots, s_N}}$会相</li>
-<li>隐藏状态互相互转换，<strong>一步转移</strong>。<strong>$s_i$转移到$s_j$的概率</strong> $\color {red} {a_{ij} = P(q_t= s_j \mid q_{t-1}=s_i)}$</li>
-<li>$q_t = s_i$ 代表在$t$时刻，系统隐藏状态$q_t$是$s_i$</li>
-<li><code>隐状态时间序列</code> $\color{blue}{Q = {q_1, q_2, \cdots, q_t, q_{t+1}\cdots }}$</li>
+<li>有<span class="math inline">\(N\)</span>种，隐状态种类集合<span class="math inline">\(\color {blue} {S = \{s_1, s_2, \cdots, s_N\}}\)</span>会相</li>
+<li>隐藏状态互相互转换，<strong>一步转移</strong>。<strong><span class="math inline">\(s_i\)</span>转移到<span class="math inline">\(s_j\)</span>的概率</strong> <span class="math inline">\(\color {red} {a_{ij} = P(q_t= s_j \mid q_{t-1}=s_i)}\)</span></li>
+<li><span class="math inline">\(q_t = s_i\)</span> 代表在<span class="math inline">\(t\)</span>时刻，系统隐藏状态<span class="math inline">\(q_t\)</span>是<span class="math inline">\(s_i\)</span></li>
+<li><code>隐状态时间序列</code> <span class="math inline">\(\color{blue}{Q = \{q_1, q_2, \cdots, q_t, q_{t+1}\cdots \}}\)</span></li>
 </ul>
-<p><strong>观察状态</strong> </p>
+<p><strong>观察状态</strong></p>
 <ul>
 <li>模型可以显示观察到的状态</li>
-<li>有$M$种，显状态种类集合$\color{blue} {K = {v_1, v_2, \cdots, v_M}}$。不能相互转换，只能由隐状态产生(发射)</li>
-<li>$o_t = v_k​$ 代表在$t​$时刻，系统的观察状态$o_t​$是$v_k​$</li>
-<li>每一个隐藏状态会发射一个观察状态。<strong>$s_j$发射符号$v_k$的概率</strong>$\color {red} {b_j (k)  = P(o_t = v_k \mid s_j)}$</li>
-<li><code>显状态时间序列</code> $\color{blue} {O = {o_1, o_2, \cdots, o_ t}}$</li>
+<li>有<span class="math inline">\(M\)</span>种，显状态种类集合<span class="math inline">\(\color{blue} {K = \{v_1, v_2, \cdots, v_M\}}\)</span>。不能相互转换，只能由隐状态产生(发射)</li>
+<li><span class="math inline">\(o_t = v_k​\)</span> 代表在<span class="math inline">\(t​\)</span>时刻，系统的观察状态<span class="math inline">\(o_t​\)</span>是<span class="math inline">\(v_k​\)</span></li>
+<li>每一个隐藏状态会发射一个观察状态。<strong><span class="math inline">\(s_j\)</span>发射符号<span class="math inline">\(v_k\)</span>的概率</strong><span class="math inline">\(\color {red} {b_j (k) = P(o_t = v_k \mid s_j)}\)</span></li>
+<li><code>显状态时间序列</code> <span class="math inline">\(\color{blue} {O = \{o_1, o_2, \cdots, o_ t\}}\)</span></li>
 </ul>
-<p><strong>状态转移矩阵A (隐–隐)</strong> </p>
+<p><strong>状态转移矩阵A (隐--隐)</strong></p>
 <ul>
-<li>从一个隐状$s_i$转移到另一个隐状$s_j$的概率。$A  = {a_{ij}}$  </li>
-<li>$\color {red} {a_{ij} = P(q_t= s_j \mid q_{t-1}=s_i)}$，其中 $1 \leq i, j \leq N, \; a_{ij} \geq 0, \; \sum_{j=1}^N a_{ij}=1$</li>
+<li>从一个隐状<span class="math inline">\(s_i\)</span>转移到另一个隐状<span class="math inline">\(s_j\)</span>的概率。<span class="math inline">\(A = \{a_{ij}\}\)</span><br>
+</li>
+<li><span class="math inline">\(\color {red} {a_{ij} = P(q_t= s_j \mid q_{t-1}=s_i)}\)</span>，其中 <span class="math inline">\(1 \leq i, j \leq N, \; a_{ij} \geq 0, \; \sum_{j=1}^N a_{ij}=1\)</span></li>
 </ul>
-<p><strong>发射概率矩阵B (隐–显)</strong>  </p>
+<p><strong>发射概率矩阵B (隐--显)</strong></p>
 <ul>
-<li>一个隐状$s_j$发射出一个显状$v_k$的概率。$B = {b_j(k)}$</li>
-<li>$\color {red} {b_j(k) = P(o_t = v_k \mid s_j)}$，其中$1 \leq j \leq N; \; 1 \leq k \leq M; \; b_{jk} \ge 0; \; \sum_{k=1}^Mb_{jk}=1$</li>
+<li>一个隐状<span class="math inline">\(s_j\)</span>发射出一个显状<span class="math inline">\(v_k\)</span>的概率。<span class="math inline">\(B = \{b_j(k)\}\)</span></li>
+<li><span class="math inline">\(\color {red} {b_j(k) = P(o_t = v_k \mid s_j)}\)</span>，其中<span class="math inline">\(1 \leq j \leq N; \; 1 \leq k \leq M; \; b_{jk} \ge 0; \; \sum_{k=1}^Mb_{jk}=1\)</span></li>
 </ul>
-<p><strong>初始状态概率分布 $\pi$</strong></p>
+<p><strong>初始状态概率分布 <span class="math inline">\(\pi\)</span></strong></p>
 <ul>
-<li>最初的隐状态$q_1=s_i$的概率是$\pi_i = P(q_1 = s_i)$</li>
-<li>其中$1 \leq i \leq N, \; \pi_i \ge 0, \; \sum_{i=1}^N \pi_i = 1$</li>
+<li>最初的隐状态<span class="math inline">\(q_1=s_i\)</span>的概率是<span class="math inline">\(\pi_i = P(q_1 = s_i)\)</span></li>
+<li>其中<span class="math inline">\(1 \leq i \leq N, \; \pi_i \ge 0, \; \sum_{i=1}^N \pi_i = 1\)</span></li>
 </ul>
-<p>一般地，一个HMM记作一个五元组$\mu = (S, K, A, B, \pi)$，有时也简单记作$\mu = (A, B, \pi)$。一般，当考虑潜在事件随机生成表面事件的时候，HMM是非常有用的。</p>
+<p>一般地，一个HMM记作一个五元组<span class="math inline">\(\mu = (S, K, A, B, \pi)\)</span>，有时也简单记作<span class="math inline">\(\mu = (A, B, \pi)\)</span>。一般，当考虑潜在事件随机生成表面事件的时候，HMM是非常有用的。</p>
 <p><strong>HMM中的三个问题</strong></p>
 <ul>
-<li><code>观察序列概率</code>  给定观察序列$O={o_1, o_2, \cdots, o_T}$和模型$\mu = (A, B, \pi)$，求当前观察序列$O$的出现概率$P(O \mid \mu)$</li>
-<li><code>状态序列概率</code>  给定观察序列$O={o_1, o_2, \cdots, o_T}$和模型$\mu = (A, B, \pi)$，求一个最优的状态序列$Q={q_1, q_2, \cdots, q_T}$的出现概率，使得最好解释当前观察序列$O$</li>
-<li><code>训练问题或参数估计问题</code>   给定观察序列$O={o_1, o_2, \cdots, o_T}$，调节模型$\mu = (A, B, \pi)$参数，使得$P(O \mid u)$最大</li>
+<li><code>观察序列概率</code> 给定观察序列<span class="math inline">\(O=\{o_1, o_2, \cdots, o_T\}\)</span>和模型<span class="math inline">\(\mu = (A, B, \pi)\)</span>，求当前观察序列<span class="math inline">\(O\)</span>的出现概率<span class="math inline">\(P(O \mid \mu)\)</span></li>
+<li><code>状态序列概率</code> 给定观察序列<span class="math inline">\(O=\{o_1, o_2, \cdots, o_T\}\)</span>和模型<span class="math inline">\(\mu = (A, B, \pi)\)</span>，求一个最优的状态序列<span class="math inline">\(Q=\{q_1, q_2, \cdots, q_T\}\)</span>的出现概率，使得最好解释当前观察序列<span class="math inline">\(O\)</span></li>
+<li><code>训练问题或参数估计问题</code> 给定观察序列<span class="math inline">\(O=\{o_1, o_2, \cdots, o_T\}\)</span>，调节模型<span class="math inline">\(\mu = (A, B, \pi)\)</span>参数，使得<span class="math inline">\(P(O \mid u)\)</span>最大</li>
 </ul>
-<h2 id="前后向算法"><a href="#前后向算法" class="headerlink" title="前后向算法"></a>前后向算法</h2><p>给定观察序列$O={o_1, o_2, \cdots, o_T}$和模型$\mu = (A, B, \pi)$，求给定模型$\mu$的情况下观察序列$O$的出现概率。这是<code>解码问题</code>。如果直接去求，计算量会出现指数爆炸，那么会很不好求。我们这里使用<code>前向算法</code>和<code>后向算法</code>进行求解。</p>
+<h2 id="前后向算法">前后向算法</h2>
+<p>给定观察序列<span class="math inline">\(O=\{o_1, o_2, \cdots, o_T\}\)</span>和模型<span class="math inline">\(\mu = (A, B, \pi)\)</span>，求给定模型<span class="math inline">\(\mu\)</span>的情况下观察序列<span class="math inline">\(O\)</span>的出现概率。这是<code>解码问题</code>。如果直接去求，计算量会出现指数爆炸，那么会很不好求。我们这里使用<code>前向算法</code>和<code>后向算法</code>进行求解。</p>
 <p><strong>前向算法</strong></p>
-<p><code>前向变量</code>$\color {blue} {\alpha_t(i)}$是系统在$t$时刻，观察序列为$O=o_1o_2\cdots o_t$并且隐状态为$q_t = s_i$的概率，即<br>$$<br>\color {red} {\alpha_t(i) = P(o_1o_2\cdots o_t, q_t = s_i \mid \mu)}<br>$$<br>$\color {blue} {P(O \mid \mu)}$ 是在$t$时刻，状态$q_t=$  <strong>所有隐状态的情况下，输出序列$O$的概率之和</strong><br>$$<br>\color {blue} {P(O \mid \mu)} = \sum_{i=1}^N P(O, q_t = s_i \mid \mu) = \color {red} {\sum_{i=1}^{N}\alpha_t(i)}<br>$$</p>
-<p>接下来就是计算$\color {blue} {\alpha_t(i)}$，其实是有动态规划的思想，有如下递推公式<br>$$<br>\color {blue} {\alpha_{t+1}(j)} =<br>\color{red}{\underbrace{\left( \sum_{i=1}^N \alpha_t(i)a_{ij} \right)}_{所有状态i转为j的概率} \underbrace {b_j(o_{ t+1})}<em>{状态j发射o</em>{t+1}}}<br>$$<br>上述计算，其实是分为了下面3步</p>
+<p><code>前向变量</code><span class="math inline">\(\color {blue} {\alpha_t(i)}\)</span>是系统在<span class="math inline">\(t\)</span>时刻，观察序列为<span class="math inline">\(O=o_1o_2\cdots o_t\)</span>并且隐状态为<span class="math inline">\(q_t = s_i\)</span>的概率，即 <span class="math display">\[
+\color {red} {\alpha_t(i) = P(o_1o_2\cdots o_t, q_t = s_i \mid \mu)}
+\]</span> <span class="math inline">\(\color {blue} {P(O \mid \mu)}\)</span> 是在<span class="math inline">\(t\)</span>时刻，状态<span class="math inline">\(q_t=\)</span> <strong>所有隐状态的情况下，输出序列<span class="math inline">\(O\)</span>的概率之和</strong> <span class="math display">\[
+\color {blue} {P(O \mid \mu)} = \sum_{i=1}^N P(O, q_t = s_i \mid \mu) = \color {red} {\sum_{i=1}^{N}\alpha_t(i)}
+\]</span></p>
+<p>接下来就是计算<span class="math inline">\(\color {blue} {\alpha_t(i)}\)</span>，其实是有动态规划的思想，有如下递推公式 <span class="math display">\[
+\color {blue} {\alpha_{t+1}(j)} = 
+\color{red}{\underbrace{\left( \sum_{i=1}^N \alpha_t(i)a_{ij} \right)}_{所有状态i转为j的概率} \underbrace {b_j(o_{ t+1})}_{状态j发射o_{t+1}}}
+\]</span> 上述计算，其实是分为了下面3步</p>
 <ul>
-<li>从1到达时间$t$，状态为$s_i$，输出$o_1o_2 \cdots o_t$。$\color{blue}{\alpha_t(i)}$</li>
-<li>从$t$到达$t+1$，状态变化$s_i  \to s_j \text{。} \quad\color{blue}{a_{ij}}$</li>
-<li>在$t+1$时刻，输出$o_{t+1}$。$\color{blue}{b_j(o_{ t+1})}$</li>
+<li>从1到达时间<span class="math inline">\(t\)</span>，状态为<span class="math inline">\(s_i\)</span>，输出<span class="math inline">\(o_1o_2 \cdots o_t\)</span>。<span class="math inline">\(\color{blue}{\alpha_t(i)}\)</span></li>
+<li>从<span class="math inline">\(t\)</span>到达<span class="math inline">\(t+1\)</span>，状态变化<span class="math inline">\(s_i \to s_j \text{。} \quad\color{blue}{a_{ij}}\)</span></li>
+<li>在<span class="math inline">\(t+1\)</span>时刻，输出<span class="math inline">\(o_{t+1}\)</span>。<span class="math inline">\(\color{blue}{b_j(o_{ t+1})}\)</span></li>
 </ul>
 <p>算法的步骤如下</p>
 <ul>
-<li>初始化 $\color {blue} {\alpha_1(i)} = \color {red} {\pi_ib_i(o_1)}, \; 1 \leq i \leq N$ </li>
-<li>归纳计算 $\color {blue} {\alpha_{t+1}(j)} = \color{red} {\left( \sum_{i=1}^N \alpha_t(i)a_{ij} \right)  b_j(o_{ t+1})}, \; 1 \leq t \leq T-1$</li>
-<li>求和终结 $\color {blue} {P(O \mid \mu)} = \color {red} {\sum_{i=1}^{N}\alpha_T(i)}$</li>
+<li>初始化 <span class="math inline">\(\color {blue} {\alpha_1(i)} = \color {red} {\pi_ib_i(o_1)}, \; 1 \leq i \leq N\)</span></li>
+<li>归纳计算 <span class="math inline">\(\color {blue} {\alpha_{t+1}(j)} = \color{red} {\left( \sum_{i=1}^N \alpha_t(i)a_{ij} \right) b_j(o_{ t+1})}, \; 1 \leq t \leq T-1\)</span></li>
+<li>求和终结 <span class="math inline">\(\color {blue} {P(O \mid \mu)} = \color {red} {\sum_{i=1}^{N}\alpha_T(i)}\)</span></li>
 </ul>
-<p>在每个时刻$t$，需要考虑$N$个状态转移到$s_{j}$的可能性，同时也需要计算$\alpha_t(1), \cdots , \alpha_t(N)$，所以时间复杂度为$O(N^2)$。同时在系统中有$T$个时间，所以总的复杂度为$O(N^2T)$。</p>
+<p>在每个时刻<span class="math inline">\(t\)</span>，需要考虑<span class="math inline">\(N\)</span>个状态转移到<span class="math inline">\(s_{j}\)</span>的可能性，同时也需要计算<span class="math inline">\(\alpha_t(1), \cdots , \alpha_t(N)\)</span>，所以时间复杂度为<span class="math inline">\(O(N^2)\)</span>。同时在系统中有<span class="math inline">\(T\)</span>个时间，所以总的复杂度为<span class="math inline">\(O(N^2T)\)</span>。</p>
 <p><strong>后向算法</strong></p>
-<p><code>后向变量</code> $\color {blue} {\beta_{t}(i)}$ 是系统在$t$时刻，状态为$s_i$的条件下，输出为$o_{t+1}o_{t+2}\cdots o_T$的概率，即<br>$$<br>\color {red} {\beta_t(i) = P(o_{t+1}o_{t+2}\cdots o_T \mid q_t = s_i , \mu)}<br>$$<br>递推 $\color {blue} {\beta_{t}(i)}$的思路及公式如下</p>
+<p><code>后向变量</code> <span class="math inline">\(\color {blue} {\beta_{t}(i)}\)</span> 是系统在<span class="math inline">\(t\)</span>时刻，状态为<span class="math inline">\(s_i\)</span>的条件下，输出为<span class="math inline">\(o_{t+1}o_{t+2}\cdots o_T\)</span>的概率，即 <span class="math display">\[
+\color {red} {\beta_t(i) = P(o_{t+1}o_{t+2}\cdots o_T \mid q_t = s_i , \mu)}
+\]</span> 递推 <span class="math inline">\(\color {blue} {\beta_{t}(i)}\)</span>的思路及公式如下</p>
 <ul>
-<li>从$t \to t+1$，状态变化$s_i \to s_j$，并从$s_j \implies o_{t+1}$，发射$o_{t+1}$</li>
-<li>在$q_{t+1}=s_j$的条件下，输出序列$o_{t+2}\cdots o_T$</li>
+<li>从<span class="math inline">\(t \to t+1\)</span>，状态变化<span class="math inline">\(s_i \to s_j\)</span>，并从<span class="math inline">\(s_j \implies o_{t+1}\)</span>，发射<span class="math inline">\(o_{t+1}\)</span></li>
+<li>在<span class="math inline">\(q_{t+1}=s_j\)</span>的条件下，输出序列<span class="math inline">\(o_{t+2}\cdots o_T\)</span></li>
 </ul>
-<p>$$<br>\color {blue} {\beta_{t}(i)} = \sum_{j=1}^N\color{red}{\underbrace {a_{ij}b_j(o_{t+1})\beta_{t+1}(j)}_{s_i转s_j \; s_j发o_{t+1} \; t+1时s_j后面{o_{t+2}, \cdots}} }<br>$$</p>
+<p><span class="math display">\[
+\color {blue} {\beta_{t}(i)} = \sum_{j=1}^N\color{red}{\underbrace {a_{ij}b_j(o_{t+1})\beta_{t+1}(j)}_{s_i转s_j \; s_j发o_{t+1} \; t+1时s_j后面\{o_{t+2}, \cdots\}} }
+\]</span></p>
 <p>上面的公式个人的思路解释如下(不明白公式再看)</p>
 <ul>
-<li>其实要从$\beta_{t+1}(j) \to \beta_{t}(i)$</li>
-<li>$\beta_{t+1}(j)$是$t+1$时刻状态为$s_j$，后面的观察序列为$o_{t+2}, \cdots, o_{T}$</li>
-<li>$\beta_{t}(i)$是$t$时刻状态为$s_i$，后面的观察序列为$\color{red}{o_{t+1}}, o_{t+2}, \cdots, o_{T}$</li>
-<li>$t \to t+1$ <strong>$s_i$会变成各种$s_j$</strong>，$\beta_t(i)$只关心t+1时刻的显示状态为$o_{t+1}$，而不关心隐状态，<strong>所以是所有隐状态发射$o_{t+1}$的概率和</strong></li>
-<li>$\color{red} {a_{ij}b_j(o_{t+1})\beta_{t+1}(j)}$，$s_i$转为$s_j$的概率，在t+1时刻$s_j$发射$o_{t+1}$的概率，t+1时刻状态为$s_j$ 观察序列为$o_{t+2}, \cdots, o_{T}$的概率</li>
-<li>把上述概率加起来，就得到了t时刻为$s_i$,后面的观察为$o_{t+1}, o_{t+2}, \cdots, o_{T}$的概率$\beta_{t}(i)$</li>
+<li>其实要从<span class="math inline">\(\beta_{t+1}(j) \to \beta_{t}(i)\)</span></li>
+<li><span class="math inline">\(\beta_{t+1}(j)\)</span>是<span class="math inline">\(t+1\)</span>时刻状态为<span class="math inline">\(s_j\)</span>，后面的观察序列为<span class="math inline">\(o_{t+2}, \cdots, o_{T}\)</span></li>
+<li><span class="math inline">\(\beta_{t}(i)\)</span>是<span class="math inline">\(t\)</span>时刻状态为<span class="math inline">\(s_i\)</span>，后面的观察序列为<span class="math inline">\(\color{red}{o_{t+1}}, o_{t+2}, \cdots, o_{T}\)</span></li>
+<li><span class="math inline">\(t \to t+1\)</span> <strong><span class="math inline">\(s_i\)</span>会变成各种<span class="math inline">\(s_j\)</span></strong>，<span class="math inline">\(\beta_t(i)\)</span>只关心t+1时刻的显示状态为<span class="math inline">\(o_{t+1}\)</span>，而不关心隐状态，<strong>所以是所有隐状态发射<span class="math inline">\(o_{t+1}\)</span>的概率和</strong></li>
+<li><span class="math inline">\(\color{red} {a_{ij}b_j(o_{t+1})\beta_{t+1}(j)}\)</span>，<span class="math inline">\(s_i\)</span>转为<span class="math inline">\(s_j\)</span>的概率，在t+1时刻<span class="math inline">\(s_j\)</span>发射<span class="math inline">\(o_{t+1}\)</span>的概率，t+1时刻状态为<span class="math inline">\(s_j\)</span> 观察序列为<span class="math inline">\(o_{t+2}, \cdots, o_{T}\)</span>的概率</li>
+<li>把上述概率加起来，就得到了t时刻为<span class="math inline">\(s_i\)</span>,后面的观察为<span class="math inline">\(o_{t+1}, o_{t+2}, \cdots, o_{T}\)</span>的概率<span class="math inline">\(\beta_{t}(i)\)</span></li>
 </ul>
-<p>上式是把所有从$t+1 \to t$的概率加起来，得到$t$的概率。算法步骤如下</p>
+<p>上式是把所有从<span class="math inline">\(t+1 \to t\)</span>的概率加起来，得到<span class="math inline">\(t\)</span>的概率。算法步骤如下</p>
 <ul>
-<li>初始化 $\color {blue} {\beta_T(i) = 1}, \; 1 \leq i \leq N$</li>
-<li>归纳计算 $\color {blue} {\beta_{t}(i)} = \sum_{j=1}^N\color{red}{a_{ij}b_j(o_{t+1})\beta_{t+1}(j) }, \quad 1 \leq t \leq T-1; \; 1 \leq i \leq N$</li>
-<li>求和终结 $\color {blue} {P(O \mid \mu)} = \sum_{i=1}^{N} \color{red} {\pi_i b_i(o_1)\beta_1(i)}$</li>
+<li>初始化 <span class="math inline">\(\color {blue} {\beta_T(i) = 1}, \; 1 \leq i \leq N\)</span></li>
+<li>归纳计算 <span class="math inline">\(\color {blue} {\beta_{t}(i)} = \sum_{j=1}^N\color{red}{a_{ij}b_j(o_{t+1})\beta_{t+1}(j) }, \quad 1 \leq t \leq T-1; \; 1 \leq i \leq N\)</span></li>
+<li>求和终结 <span class="math inline">\(\color {blue} {P(O \mid \mu)} = \sum_{i=1}^{N} \color{red} {\pi_i b_i(o_1)\beta_1(i)}\)</span></li>
 </ul>
 <p><strong>前后向算法结合</strong></p>
-<p> 模型$\mu$，观察序列$O={o_1, o_2, \cdots, o_t, o_{t+1}\cdots, o_T}$，$t$时刻状态为$q_t=s_i$的概率如下<br>$$<br>\color {blue} {P(O, q_t = s_i \mid \mu)} = \color{red} {\alpha_t(i) \times \beta_t(i)}<br>$$<br>推导过程如下<br>$$<br>\begin{align<em>}<br>P(O, q_t = s_i \mid \mu) &amp;= P(o_1\cdots o_T, q_t=s_i \mid \mu) =P(o_1 \cdots o_t, q_t=s_i, o_{t+1} \cdots o_T \mid \mu) \<br>&amp;= P(o_1 \cdots o_t, q_t=s_i \mid \mu) \times P(o_{t+1} \cdots o_T \mid o_1 \cdots o_t, q_t=s_i, \mu) \<br>&amp;= \alpha_t(i) \times P((o_{t+1} \cdots o_T \mid q_t=s_i, \mu) \quad (显然o_1 \cdots o_t是显然成立的，概率为1，条件忽略)\<br>&amp;= \alpha_t(i) \times \beta_t(i)<br>\end{align</em>}<br>$$<br>所以，把$q_t$等于所有$s_i$的概率加起来就可以得到观察概率$\color{blue} {P(O \mid \mu)}$<br>$$<br>\color{blue} {P(O \mid \mu)} = \sum_{i=1}^N\ \color{red} {\alpha_t(i) \times \beta_t(i)}, \quad 1 \leq t \leq T<br>$$</p>
-<h2 id="维特比算法"><a href="#维特比算法" class="headerlink" title="维特比算法"></a>维特比算法</h2><p><code>维特比(Viterbi)算法</code>用于求解HMM的第二个问题<code>状态序列问题</code>。即给定观察序列$O=o_1o_2\cdots o_T$和模型$\mu = (A, B, \pi)$，<strong>求一个最优的状态序列</strong>$Q=q_1q_2 \cdots q_T$。</p>
+<p>模型<span class="math inline">\(\mu\)</span>，观察序列<span class="math inline">\(O=\{o_1, o_2, \cdots, o_t, o_{t+1}\cdots, o_T\}\)</span>，<span class="math inline">\(t\)</span>时刻状态为<span class="math inline">\(q_t=s_i\)</span>的概率如下 <span class="math display">\[
+\color {blue} {P(O, q_t = s_i \mid \mu)} = \color{red} {\alpha_t(i) \times \beta_t(i)}
+\]</span> 推导过程如下 <span class="math display">\[
+\begin{align*}
+P(O, q_t = s_i \mid \mu) &amp;= P(o_1\cdots o_T, q_t=s_i \mid \mu) =P(o_1 \cdots o_t, q_t=s_i, o_{t+1} \cdots o_T \mid \mu) \\
+&amp;= P(o_1 \cdots o_t, q_t=s_i \mid \mu) \times P(o_{t+1} \cdots o_T \mid o_1 \cdots o_t, q_t=s_i, \mu) \\
+&amp;= \alpha_t(i) \times P((o_{t+1} \cdots o_T \mid q_t=s_i, \mu) \quad (显然o_1 \cdots o_t是显然成立的，概率为1，条件忽略)\\
+&amp;= \alpha_t(i) \times \beta_t(i)
+\end{align*}
+\]</span> 所以，把<span class="math inline">\(q_t\)</span>等于所有<span class="math inline">\(s_i\)</span>的概率加起来就可以得到观察概率<span class="math inline">\(\color{blue} {P(O \mid \mu)}\)</span> <span class="math display">\[
+\color{blue} {P(O \mid \mu)} = \sum_{i=1}^N\ \color{red} {\alpha_t(i) \times \beta_t(i)}, \quad 1 \leq t \leq T
+\]</span></p>
+<h2 id="维特比算法">维特比算法</h2>
+<p><code>维特比(Viterbi)算法</code>用于求解HMM的第二个问题<code>状态序列问题</code>。即给定观察序列<span class="math inline">\(O=o_1o_2\cdots o_T\)</span>和模型<span class="math inline">\(\mu = (A, B, \pi)\)</span>，<strong>求一个最优的状态序列</strong><span class="math inline">\(Q=q_1q_2 \cdots q_T\)</span>。</p>
 <p>有两种理解最优的思路。</p>
 <ul>
-<li>使该状态序列中每一个状态都单独地具有最大概率，即$\gamma_t(i) = P(q_t = s_i \mid O,\mu)$最大。但可能出现$a_{q_tq_{t+1}}=0$的情况</li>
-<li>另一种是，使<strong>整个状态序列概率最大</strong>，即$P(Q \mid O, \mu)$最大。$\hat{Q} = arg  \max \limits_Q P(Q \mid O, \mu)$</li>
+<li>使该状态序列中每一个状态都单独地具有最大概率，即<span class="math inline">\(\gamma_t(i) = P(q_t = s_i \mid O,\mu)\)</span>最大。但可能出现<span class="math inline">\(a_{q_tq_{t+1}}=0\)</span>的情况</li>
+<li>另一种是，使<strong>整个状态序列概率最大</strong>，即<span class="math inline">\(P(Q \mid O, \mu)\)</span>最大。<span class="math inline">\(\hat{Q} = arg \max \limits_Q P(Q \mid O, \mu)\)</span></li>
 </ul>
-<p><code>维特比变量</code> $\color{blue}{\delta_t(i)}$是，在$t$时刻，$q_t = s_i$ ，HMM<strong>沿着某一条路径到达状态$s_i$，并输出观察序列$o_1o_2 \cdots o_t$的概率</strong>。<br>$$<br>\color{blue}{\delta_t(i)} = \arg \max \limits_{q_1\cdots q_{t-1}} P(q_1 \cdots q_{t-1}, q_t = s_i, o_1 \cdots o_t \mid \mu)<br>$$<br><strong>递推关系</strong><br>$$<br>\color{blue}{\delta_{t+1}(i)} = \max \limits_j [\delta_t(j) \cdot a_{ji}] \cdot b_i(o_{t+1})<br>$$<br><code>路径记忆变量</code> $\color{blue}{\psi_t(i) = k}$ 表示$q_t = s_i, q_{t-1} = s_k$，即表示在该路径上<strong>状态$q_t=s_i$的前一个状态$q_{t-1} = s_k$</strong>。</p>
+<p><code>维特比变量</code> <span class="math inline">\(\color{blue}{\delta_t(i)}\)</span>是，在<span class="math inline">\(t\)</span>时刻，<span class="math inline">\(q_t = s_i\)</span> ，HMM<strong>沿着某一条路径到达状态<span class="math inline">\(s_i\)</span>，并输出观察序列<span class="math inline">\(o_1o_2 \cdots o_t\)</span>的概率</strong>。 <span class="math display">\[
+\color{blue}{\delta_t(i)} = \arg \max \limits_{q_1\cdots q_{t-1}} P(q_1 \cdots q_{t-1}, q_t = s_i, o_1 \cdots o_t \mid \mu)
+\]</span> <strong>递推关系</strong> <span class="math display">\[
+\color{blue}{\delta_{t+1}(i)} = \max \limits_j [\delta_t(j) \cdot a_{ji}] \cdot b_i(o_{t+1})
+\]</span> <code>路径记忆变量</code> <span class="math inline">\(\color{blue}{\psi_t(i) = k}\)</span> 表示<span class="math inline">\(q_t = s_i, q_{t-1} = s_k\)</span>，即表示在该路径上<strong>状态<span class="math inline">\(q_t=s_i\)</span>的前一个状态<span class="math inline">\(q_{t-1} = s_k\)</span></strong>。</p>
 <p><strong>维特比算法步骤</strong></p>
 <p>初始化</p>
-<p>$\delta_1(i) = \pi_ib_i(o_1), \; 1 \le i \le N$，路径变量$\psi_1(i) = 0$</p>
+<p><span class="math inline">\(\delta_1(i) = \pi_ib_i(o_1), \; 1 \le i \le N\)</span>，路径变量<span class="math inline">\(\psi_1(i) = 0\)</span></p>
 <p>归纳计算</p>
-<p>维特比变量 $\delta_t(j) = \max \limits_{1 \le i  \le N}  [\delta_{t-1}(i) \cdot a_{ij}] \cdot b_j(o_t), \quad 2 \le t \le T; 1 \le j \le N$ </p>
-<p>记忆路径(记住参数$i$就行) $\psi_t(j) = \arg \max \limits_{1 \le i  \le N}  [\delta_{t-1}(i) \cdot a_{ij}] \cdot b_j(o_t), \quad 2 \le t \le T; 1 \le j \le N$ </p>
+<p>维特比变量 <span class="math inline">\(\delta_t(j) = \max \limits_{1 \le i \le N} [\delta_{t-1}(i) \cdot a_{ij}] \cdot b_j(o_t), \quad 2 \le t \le T; 1 \le j \le N\)</span></p>
+<p>记忆路径(记住参数<span class="math inline">\(i\)</span>就行) <span class="math inline">\(\psi_t(j) = \arg \max \limits_{1 \le i \le N} [\delta_{t-1}(i) \cdot a_{ij}] \cdot b_j(o_t), \quad 2 \le t \le T; 1 \le j \le N\)</span></p>
 <p>终结</p>
-<p>$$<br>\hat{Q_T} = \arg \max \limits_{1 \le i \le N} [\delta_T(i)], \quad \hat P(\hat{Q_T}) =  \max \limits_{1 \le i \le N} [\delta_T(i)]<br>$$<br>路径（状态序列）回溯</p>
-<p>$\hat{q_t} = \psi_{t+1}(\hat{q}_{t+1}), \quad t = T-1, T-2, \cdots, 1$</p>
-<h2 id="Baum-Welch算法"><a href="#Baum-Welch算法" class="headerlink" title="Baum-Welch算法"></a>Baum-Welch算法</h2><p>Baum-Welch算法用于解决HMM的第3个问题，参数估计问题，给定一个观察序列$O= o_1 o_2 \cdots o_T$，去调节模型$\mu = (A, B, \pi)$的参数使得$P(O\mid \mu)$最大化，即$\mathop{argmax} \limits_{\mu} P(O_{training} \mid \mu)$。模型参数主要是$a_{ij}, b_j(k) \text{和}\pi_i$，详细信息见上文。</p>
+<p><span class="math display">\[
+\hat{Q_T} = \arg \max \limits_{1 \le i \le N} [\delta_T(i)], \quad \hat P(\hat{Q_T}) =  \max \limits_{1 \le i \le N} [\delta_T(i)]
+\]</span> 路径（状态序列）回溯</p>
+<p><span class="math inline">\(\hat{q_t} = \psi_{t+1}(\hat{q}_{t+1}), \quad t = T-1, T-2, \cdots, 1\)</span></p>
+<h2 id="baum-welch算法">Baum-Welch算法</h2>
+<p>Baum-Welch算法用于解决HMM的第3个问题，参数估计问题，给定一个观察序列<span class="math inline">\(O= o_1 o_2 \cdots o_T\)</span>，去调节模型<span class="math inline">\(\mu = (A, B, \pi)\)</span>的参数使得<span class="math inline">\(P(O\mid \mu)\)</span>最大化，即<span class="math inline">\(\mathop{argmax} \limits_{\mu} P(O_{training} \mid \mu)\)</span>。模型参数主要是<span class="math inline">\(a_{ij}, b_j(k) \text{和}\pi_i\)</span>，详细信息见上文。</p>
 <p><strong>有完整语料库</strong></p>
-<p>如果我们知道观察序列$\color{blue}{O= o_1 o_2 \cdots o_T}$和状态序列$\color{blue}{Q = q_1 q_2 \cdots q_T}$，那么我们可以根据<code>最大似然估计</code>去计算HMM的参数。</p>
-<p>设$\delta(x, y)$是克罗耐克函数，当$x==y$时为1，否则为0。计算步骤如下<br>$$<br>\begin{align<em>}<br>&amp; 初始概率\quad \color{blue}{\bar\pi_i} = \delta(q_1, s_1) \<br>&amp; 转移概率\quad \color{blue}{\bar {a}_{ij}} = \frac{s_i \to s_j的次数}{s_i \to all的次数} = \frac {\sum_{t=1}^{T-1} \delta(q_t, s_i) \times \delta(q_{t+1}, s_j)} { \sum_{t=1}^{T-1}\delta(q_t, s_i)} \<br>&amp; 发射概率 \quad \color{blue}{\bar{b}_j(k)} = \frac{s_j \to v_k 的次数}{Q到达q_j的次数} = \frac {\sum_{t=1}^T\delta(q_t, s_i) \times \delta(o_t, v_k)}{ \sum_{t=1}^{T}\delta(q_t, s_j)}<br>\end{align</em>}<br>$$<br>但是一般情况下是不知道隐藏状态序列$Q​$的，还好我们可以使用<a href="https://plmsmile.github.io/2017/08/13/em/">期望最大算法</a>去进行含有隐变量的参数估计。主要思路如下。</p>
-<p>我们可以给定初始值模型$\mu_0$，然后通过EM算法去估计隐变量$Q$的期望来代替实际出现的次数，再通过上式去进行计算新的参数得到新的模型$\mu_1$，再如此迭代直到参数收敛。</p>
-<p>这种迭代爬山算法可以局部地使$P(O \mid \mu)$最大化，BW算法就是具体实现这种EM算法。</p>
+<p>如果我们知道观察序列<span class="math inline">\(\color{blue}{O= o_1 o_2 \cdots o_T}\)</span>和状态序列<span class="math inline">\(\color{blue}{Q = q_1 q_2 \cdots q_T}\)</span>，那么我们可以根据<code>最大似然估计</code>去计算HMM的参数。</p>
+<p>设<span class="math inline">\(\delta(x, y)\)</span>是克罗耐克函数，当<span class="math inline">\(x==y\)</span>时为1，否则为0。计算步骤如下 <span class="math display">\[
+\begin{align*} 
+&amp; 初始概率\quad \color{blue}{\bar\pi_i} = \delta(q_1, s_1) \\
+&amp; 转移概率\quad \color{blue}{\bar {a}_{ij}} = \frac{s_i \to s_j的次数}{s_i \to all的次数} = \frac {\sum_{t=1}^{T-1} \delta(q_t, s_i) \times \delta(q_{t+1}, s_j)} { \sum_{t=1}^{T-1}\delta(q_t, s_i)} \\
+&amp; 发射概率 \quad \color{blue}{\bar{b}_j(k)} = \frac{s_j \to v_k 的次数}{Q到达q_j的次数} = \frac {\sum_{t=1}^T\delta(q_t, s_i) \times \delta(o_t, v_k)}{ \sum_{t=1}^{T}\delta(q_t, s_j)}
+\end{align*}
+\]</span> 但是一般情况下是不知道隐藏状态序列<span class="math inline">\(Q​\)</span>的，还好我们可以使用<a href="https://plmsmile.github.io/2017/08/13/em/">期望最大算法</a>去进行含有隐变量的参数估计。主要思路如下。</p>
+<p>我们可以给定初始值模型<span class="math inline">\(\mu_0\)</span>，然后通过EM算法去估计隐变量<span class="math inline">\(Q\)</span>的期望来代替实际出现的次数，再通过上式去进行计算新的参数得到新的模型<span class="math inline">\(\mu_1\)</span>，再如此迭代直到参数收敛。</p>
+<p>这种迭代爬山算法可以局部地使<span class="math inline">\(P(O \mid \mu)\)</span>最大化，BW算法就是具体实现这种EM算法。</p>
 <p><strong>Baum-Welch算法</strong></p>
-<p>给定HMM的参数$\mu$和观察序列$O= o_1 o_2 \cdots o_T$。</p>
-<p>定义<strong>t时刻状态为$s_i$和t+1时刻状态为$s_j$的概率</strong>是$\color{blue}{\xi_t(i, j)} = P(q_t =s_i, q_{t+1}=s_j \mid O, \mu)$<br>$$<br>\begin{align}<br>\color{blue}{\xi_t(i, j)}  &amp;= \frac{P(q_t =s_i, q_{t+1}=s_j, O \mid \mu)}{P(O \mid \mu)}<br>= \color{red}{\frac{\alpha_t(i)a_{ij}b_j(o_{t+1})\beta_{t+1}(j)}{P(O \mid \mu)}}<br>=  \frac{\overbrace{\alpha_t(i)a_{ij}b_j(o_{t+1})\beta_{t+1}(j)}^{o_1\cdots o_t, \; o_{t+1}, \; o_{t+2}\cdots o_T}}<br>            {\underbrace{\sum_{i=1}^N \sum_{j=1}^N \alpha_t(i)a_{ij}b_j(o_{t+1})\beta_{t+1}(j)}_{\xi_t(i, j)对ij求和，只留下P(O\mid \mu)}} \<br>\end{align}<br>$$<br>定义<strong>$t$时刻状态为$s_i$的概率</strong>是$\color{blue}{\gamma_t(i)} = P(q_t = s_i \mid O, \mu)$<br>$$<br>\color{blue}{\gamma_t(i)} = \color{red}{\sum_{j=1}^N \xi_t(i, j)}<br>$$<br>那么有算法步骤如下（也称作前向后向算法）</p>
+<p>给定HMM的参数<span class="math inline">\(\mu\)</span>和观察序列<span class="math inline">\(O= o_1 o_2 \cdots o_T\)</span>。</p>
+<p>定义<strong>t时刻状态为<span class="math inline">\(s_i\)</span>和t+1时刻状态为<span class="math inline">\(s_j\)</span>的概率</strong>是<span class="math inline">\(\color{blue}{\xi_t(i, j)} = P(q_t =s_i, q_{t+1}=s_j \mid O, \mu)\)</span> <span class="math display">\[
+\begin{align}
+\color{blue}{\xi_t(i, j)}  &amp;= \frac{P(q_t =s_i, q_{t+1}=s_j, O \mid \mu)}{P(O \mid \mu)} 
+= \color{red}{\frac{\alpha_t(i)a_{ij}b_j(o_{t+1})\beta_{t+1}(j)}{P(O \mid \mu)}} 
+=  \frac{\overbrace{\alpha_t(i)a_{ij}b_j(o_{t+1})\beta_{t+1}(j)}^{o_1\cdots o_t, \; o_{t+1}, \; o_{t+2}\cdots o_T}}
+            {\underbrace{\sum_{i=1}^N \sum_{j=1}^N \alpha_t(i)a_{ij}b_j(o_{t+1})\beta_{t+1}(j)}_{\xi_t(i, j)对ij求和，只留下P(O\mid \mu)}} \\
+\end{align}
+\]</span> 定义<strong><span class="math inline">\(t\)</span>时刻状态为<span class="math inline">\(s_i\)</span>的概率</strong>是<span class="math inline">\(\color{blue}{\gamma_t(i)} = P(q_t = s_i \mid O, \mu)\)</span> <span class="math display">\[
+\color{blue}{\gamma_t(i)} = \color{red}{\sum_{j=1}^N \xi_t(i, j)}
+\]</span> 那么有算法步骤如下（也称作前向后向算法）</p>
 <p>1初始化</p>
-<p>随机地给参数$\color{blue}{a_{ij}, b_j(k), \pi_i}$赋值，当然要满足一些基本条件，各个概率和为1。得到模型$\mu_0$，令$i=0$，执行下面步骤</p>
+<p>随机地给参数<span class="math inline">\(\color{blue}{a_{ij}, b_j(k), \pi_i}\)</span>赋值，当然要满足一些基本条件，各个概率和为1。得到模型<span class="math inline">\(\mu_0\)</span>，令<span class="math inline">\(i=0\)</span>，执行下面步骤</p>
 <p>2EM步骤</p>
-<p>2.1E步骤 使用模型$\mu_i$计算$\color{blue}{\xi_t(i, j)}和\color{blue}{\gamma_t(i)}$<br>$$<br>\color{blue}{\xi_t(i, j)} = \color{red}{\frac{\alpha_t(i)a_{ij}b_j(o_{t+1})\beta_{t+1}(j)}{\sum_{i=1}^N \sum_{j=1}^N \alpha_t(i)a_{ij}b_j(o_{t+1})\beta_{t+1}(j)}} ,<br>\; \color{blue}{\gamma_t(i)} = \color{red}{\sum_{j=1}^N \xi_t(i, j)}<br>$$<br>2.2M步骤 用上面算得的期望去估计参数<br>$$<br>\begin{align<em>}<br>&amp; 初始概率\quad \color{blue}{\bar\pi_i} = P(q_1=s_i \mid O, \mu) = \gamma_1(i) \<br>&amp; 转移概率\quad \color{blue}{\bar {a}<em>{ij}} = \frac{\sum</em>{t=1}^{T-1}\xi_t(i, j)}{\sum_{t=1}^{T-1} \gamma_t(i)} \<br>&amp; 发射概率 \quad \color{blue}{\bar{b}<em>j(k)}  = \frac{\sum</em>{t=1}^T \gamma_t(j) \times \delta(o_t, v_k)}{\sum_{t=1}^T \gamma_t(j)}<br>\end{align</em>}<br>$$<br>3循环计算 令$i=i+1$，直到参数收敛</p>
+<p>2.1E步骤 使用模型<span class="math inline">\(\mu_i\)</span>计算<span class="math inline">\(\color{blue}{\xi_t(i, j)}和\color{blue}{\gamma_t(i)}\)</span> <span class="math display">\[
+\color{blue}{\xi_t(i, j)} = \color{red}{\frac{\alpha_t(i)a_{ij}b_j(o_{t+1})\beta_{t+1}(j)}{\sum_{i=1}^N \sum_{j=1}^N \alpha_t(i)a_{ij}b_j(o_{t+1})\beta_{t+1}(j)}} , 
+\; \color{blue}{\gamma_t(i)} = \color{red}{\sum_{j=1}^N \xi_t(i, j)}
+\]</span> 2.2M步骤 用上面算得的期望去估计参数 <span class="math display">\[
+\begin{align*} 
+&amp; 初始概率\quad \color{blue}{\bar\pi_i} = P(q_1=s_i \mid O, \mu) = \gamma_1(i) \\
+&amp; 转移概率\quad \color{blue}{\bar {a}_{ij}} = \frac{\sum_{t=1}^{T-1}\xi_t(i, j)}{\sum_{t=1}^{T-1} \gamma_t(i)} \\
+&amp; 发射概率 \quad \color{blue}{\bar{b}_j(k)}  = \frac{\sum_{t=1}^T \gamma_t(j) \times \delta(o_t, v_k)}{\sum_{t=1}^T \gamma_t(j)}
+\end{align*}
+\]</span> 3循环计算 令<span class="math inline">\(i=i+1\)</span>，直到参数收敛</p>
 
         </div>
 
@@ -412,7 +548,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-11-25T08:30:10.685Z" itemprop="dateUpdated">2018-11-25 16:30:10</time>
+    最后更新时间：<time datetime="2018-12-13T09:16:16.890Z" itemprop="dateUpdated">2018-12-13 17:16:16</time>
 </span><br>
 
 
@@ -458,7 +594,9 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/08/04/pgm-01/&title=《马尔可夫模型》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/08/04/pgm-01/&title=《马尔可夫模型》 — PLM's Notes&source=
+本文包括概率图模型、马尔科夫模型和隐马尔可夫模型。重点是HMM的前后向算法、维特比算法和BW算法
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -496,7 +634,7 @@
 <nav class="post-nav flex-row flex-justify-between">
   
     <div class="waves-block waves-effect prev">
-      <a href="/2017/08/13/em/" id="post-prev" class="post-nav-link">
+      <a href="/2017/08/13/14-em/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
         <h4 class="title">最大期望算法</h4>
       </a>
@@ -629,7 +767,9 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/08/04/pgm-01/&title=《马尔可夫模型》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/08/04/pgm-01/&title=《马尔可夫模型》 — PLM's Notes&source=
+本文包括概率图模型、马尔科夫模型和隐马尔可夫模型。重点是HMM的前后向算法、维特比算法和BW算法
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>

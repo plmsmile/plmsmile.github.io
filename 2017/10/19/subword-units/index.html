@@ -21,18 +21,18 @@
     
     
     <meta name="keywords" content="NMT,subword">
-    <meta name="description" content="Neural Machine Translation of Rare Words with Subword Units   背景摘要NMT处理的词汇表是定长的，但是实际翻译却是OOV(out of vocabulary)的。以前是把 新词汇加到词典里去。本文是提出一种subword单元的策略，会把稀有和未知词汇以subword units序列来进行编码，更简单更有效。 会介绍不同分词技术的适用性">
+    <meta name="description" content="Subword策略，很有用的论文。BERT也使用到了，有对应的tokenization.py">
 <meta name="keywords" content="NMT,subword">
 <meta property="og:type" content="article">
 <meta property="og:title" content="subword-units">
 <meta property="og:url" content="http://plmsmile.github.io/2017/10/19/subword-units/index.html">
 <meta property="og:site_name" content="PLM&#39;s Notes">
-<meta property="og:description" content="Neural Machine Translation of Rare Words with Subword Units   背景摘要NMT处理的词汇表是定长的，但是实际翻译却是OOV(out of vocabulary)的。以前是把 新词汇加到词典里去。本文是提出一种subword单元的策略，会把稀有和未知词汇以subword units序列来进行编码，更简单更有效。 会介绍不同分词技术的适用性">
+<meta property="og:description" content="Subword策略，很有用的论文。BERT也使用到了，有对应的tokenization.py">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-11-25T08:30:11.078Z">
+<meta property="og:updated_time" content="2018-12-13T08:20:32.545Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="subword-units">
-<meta name="twitter:description" content="Neural Machine Translation of Rare Words with Subword Units   背景摘要NMT处理的词汇表是定长的，但是实际翻译却是OOV(out of vocabulary)的。以前是把 新词汇加到词典里去。本文是提出一种subword单元的策略，会把稀有和未知词汇以subword units序列来进行编码，更简单更有效。 会介绍不同分词技术的适用性">
+<meta name="twitter:description" content="Subword策略，很有用的论文。BERT也使用到了，有对应的tokenization.py">
     
         <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
     
@@ -167,7 +167,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#背景"><span class="post-toc-number">1.</span> <span class="post-toc-text">背景</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#摘要"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">摘要</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#简介"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">简介</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#神经机器翻译"><span class="post-toc-number">2.</span> <span class="post-toc-text">神经机器翻译</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Subword-翻译"><span class="post-toc-number">3.</span> <span class="post-toc-text">Subword 翻译</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#相关工作"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">相关工作</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Byte-Pair-Encoding"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">Byte Pair Encoding</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#评估"><span class="post-toc-number">4.</span> <span class="post-toc-text">评估</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Subword统计"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">Subword统计</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#翻译评估"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">翻译评估</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#背景"><span class="post-toc-number">1.</span> <span class="post-toc-text">背景</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#摘要"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">摘要</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#简介"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">简介</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#神经机器翻译"><span class="post-toc-number">2.</span> <span class="post-toc-text">神经机器翻译</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#subword-翻译"><span class="post-toc-number">3.</span> <span class="post-toc-text">Subword 翻译</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#相关工作"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">相关工作</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#byte-pair-encoding"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">Byte Pair Encoding</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#评估"><span class="post-toc-number">4.</span> <span class="post-toc-text">评估</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#subword统计"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">Subword统计</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#翻译评估"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">翻译评估</span></a></li></ol></li></ol>
         </nav>
     </aside>
 
@@ -193,11 +193,16 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <blockquote>
-<p><a href="https://arxiv.org/pdf/1508.07909.pdf" target="_blank" rel="noopener">Neural Machine Translation of Rare Words with Subword Units</a> </p>
+<p>Subword策略，很有用的论文。BERT也使用到了，有对应的<code>tokenization.py</code></p>
 </blockquote>
-<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>NMT处理的词汇表是定长的，但是实际翻译却是OOV(out of vocabulary)的。以前是把 新词汇加到词典里去。本文是提出一种subword单元的策略，会把稀有和未知词汇以subword units序列来进行编码，更简单更有效。</p>
+<a id="more"></a>
+<p><a href="https://arxiv.org/pdf/1508.07909.pdf" target="_blank" rel="noopener">Neural Machine Translation of Rare Words with Subword Units</a></p>
+<h1 id="背景">背景</h1>
+<h2 id="摘要">摘要</h2>
+<p>NMT处理的词汇表是定长的，但是实际翻译却是OOV(out of vocabulary)的。以前是把 新词汇加到词典里去。本文是提出一种subword单元的策略，会把稀有和未知词汇以subword units序列来进行编码，更简单更有效。</p>
 <p>会介绍不同分词技术的适用性，包括简单的字符n元模型和基于字节对编码压缩算法的分词技术。也会以经验说明subword模型比传统back-off词典的方法好。</p>
-<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>NMT模型的词汇一般是30000-5000，但是翻译却是open-vocabulary的问题。很多语言富有信息创造力，比如凝聚组合等等，翻译系统就需要一种低于word-level的机制。</p>
+<h2 id="简介">简介</h2>
+<p>NMT模型的词汇一般是30000-5000，但是翻译却是open-vocabulary的问题。很多语言富有信息创造力，比如凝聚组合等等，翻译系统就需要一种低于word-level的机制。</p>
 <p><strong>Word-level NMT的缺点</strong></p>
 <p>对于word-level的NMT模型，翻译out-of-vocabulary的单词会回退到dictionary里面去查找。有下面几个缺点</p>
 <ul>
@@ -211,32 +216,37 @@
 <li>open-vocabulary的问题可以通过对稀有词汇使用subword units单元来编码解决</li>
 <li>采用<strong>Byte pair encoding (BPE)</strong> 算法来进行分割。BPE通过一个固定大小的词汇表来表示开放词汇，这个词汇表里面的是变长的字符串序列。这是一种对于神经网络模型非常合适的词分割策略。</li>
 </ul>
-<h1 id="神经机器翻译"><a href="#神经机器翻译" class="headerlink" title="神经机器翻译"></a>神经机器翻译</h1><p>NMT是使用的Bahdanau的Attention模型。Encoder是双向RNN，输入$X=(x_1, x_2, \cdots, x_m)$，会把两个方向的隐状态串联起来得到annotation向量$\mathbf x$。实际上是一个矩阵，对于单个$x_j$来说，对应的注释向量是$\mathbf{x}_j$。</p>
-<p>Decoder是一个单向的RNN，预测$Y=(y_1, y_2, \cdots, y_n)$。   预测$y_i$ 时，需要：</p>
+<h1 id="神经机器翻译">神经机器翻译</h1>
+<p>NMT是使用的Bahdanau的Attention模型。Encoder是双向RNN，输入<span class="math inline">\(X=(x_1, x_2, \cdots, x_m)\)</span>，会把两个方向的隐状态串联起来得到annotation向量<span class="math inline">\(\mathbf x\)</span>。实际上是一个矩阵，对于单个<span class="math inline">\(x_j\)</span>来说，对应的注释向量是<span class="math inline">\(\mathbf{x}_j\)</span>。</p>
+<p>Decoder是一个单向的RNN，预测<span class="math inline">\(Y=(y_1, y_2, \cdots, y_n)\)</span>。 预测<span class="math inline">\(y_i\)</span> 时，需要：</p>
 <ul>
-<li>当前的隐状态$s_i$</li>
-<li>上一时刻的输出$y_{i-1}$作为当前的输入  </li>
-<li>语义向量$\mathbf c_i$ 。语义向量是由所有的注释向量$x_j$ 加权求和得到的。权就是对齐概率$\alpha_{ij}$。 即$\mathbf c_i = \sum_{j=1} ^ m \alpha_{ij} \mathbf x_j$</li>
+<li>当前的隐状态<span class="math inline">\(s_i\)</span></li>
+<li>上一时刻的输出<span class="math inline">\(y_{i-1}\)</span>作为当前的输入<br>
+</li>
+<li>语义向量<span class="math inline">\(\mathbf c_i\)</span> 。语义向量是由所有的注释向量<span class="math inline">\(x_j\)</span> 加权求和得到的。权就是对齐概率<span class="math inline">\(\alpha_{ij}\)</span>。 即<span class="math inline">\(\mathbf c_i = \sum_{j=1} ^ m \alpha_{ij} \mathbf x_j\)</span></li>
 </ul>
 <p>详情请看<a href="https://plmsmile.github.io/2017/10/17/%E8%B0%B7%E6%AD%8C%E7%BF%BB%E8%AF%91%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/#系统总览">谷歌论文里面的介绍</a>或者Bahdanau的论文。</p>
-<h1 id="Subword-翻译"><a href="#Subword-翻译" class="headerlink" title="Subword 翻译"></a>Subword 翻译</h1><p>下面词汇的翻译是透明的(transparent，明显的)</p>
+<h1 id="subword-翻译">Subword 翻译</h1>
+<p>下面词汇的翻译是透明的(transparent，明显的)</p>
 <ul>
 <li>命名实体。如果两个语言的字母表相同，可以直接copy到目标句子中去，也可以抄写音译直译等。</li>
 <li>同源词和外来词。有着共同的起源，但是不同的语言表达形式不同，所以character-level翻译规则就可以了。</li>
 <li>形态复杂的词语。包含多个语素的单词，可以通过单独翻译语素来翻译。</li>
 </ul>
 <p>总之，通过subword单元表示稀有词汇对于NMT来说可以学到transparent翻译，并且可以翻译和产生未见词汇。</p>
-<h2 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h2><p>对于SMT(Statistical Machine Translation)来说，翻译未见单词一直是研究的主题。</p>
+<h2 id="相关工作">相关工作</h2>
+<p>对于SMT(Statistical Machine Translation)来说，翻译未见单词一直是研究的主题。</p>
 <p>很多未见单词都是人名，如果两种语言的字母表一样，那么可以直接复制过去。如果不一样，那么就得音译过去。基于字符（character-based）的翻译是比较成功的。</p>
 <p>形态上很复杂的单词往往需要分割，这里有很多的分割算法。基于短语的SMT的分割算法是比较保守的。而我们需要<strong>积极的细分</strong>，让网络可以处理open-vocabulary，而不是去求助于背字典。 怎么选择subword units要看具体的任务。</p>
 <p>提出了很多这样的技术：生成基于字符或者基于语素的定长的连续的词向量。于此同时，word-based的方法并没有重大发现。现在的注意力机制还是基于word-level的。我们希望，<strong>注意力机制</strong>能从我们<strong>变长表达</strong>中收益：<strong>网络可以把注意力放在不同的subword units中。</strong> 这可以突破定长表达的信息传达瓶颈。</p>
 <p>NMT减少词汇表可以大大节省时间和增加空间效率。我们也想要对一个句子<strong>更紧凑的表达</strong>。因为文本长度增加了，会减少效率，也会增加模型传递信息的距离。(hidden size？)</p>
-<p> 权衡词汇表大小和文本长度，可以用未分割单词列表，subword 单元表达的稀有词汇。作为一个代替，Byte pair encoding就是这样的一种分割算法，可以学到一个词汇表，同时对文本有很好的压缩率。</p>
-<h2 id="Byte-Pair-Encoding"><a href="#Byte-Pair-Encoding" class="headerlink" title="Byte Pair Encoding"></a>Byte Pair Encoding</h2><p>Byte pair encoding是一种简单的数据压缩技术，它把句子中经常出现的字节pairs用一个没有出现的字节去替代。我们使用这种算法去分割单词，但我们合并字符或者字符序列。</p>
+<p>权衡词汇表大小和文本长度，可以用未分割单词列表，subword 单元表达的稀有词汇。作为一个代替，Byte pair encoding就是这样的一种分割算法，可以学到一个词汇表，同时对文本有很好的压缩率。</p>
+<h2 id="byte-pair-encoding">Byte Pair Encoding</h2>
+<p>Byte pair encoding是一种简单的数据压缩技术，它把句子中经常出现的字节pairs用一个没有出现的字节去替代。我们使用这种算法去分割单词，但我们合并字符或者字符序列。</p>
 <p><strong>算法步骤</strong></p>
 <p>算法步骤如下：</p>
 <ul>
-<li>初始化符号词表。用所有的字符加入到符号词表中。对所有单词的末尾加入特殊标记，如<code>-</code>。翻译后恢复原始的标记。 </li>
+<li>初始化符号词表。用所有的字符加入到符号词表中。对所有单词的末尾加入特殊标记，如<code>-</code>。翻译后恢复原始的标记。</li>
 <li>迭代对所有符号进行计数，找出次数最多的(A, B)，用AB代替。</li>
 <li>每次合并，会产生一个新的符号，代表着n-gram字符</li>
 <li>常见的n-grams字符(或者whole words)，最终会被合并到一个符号</li>
@@ -250,7 +260,8 @@
 <p>为目标语言和原语言分别使用BPE去计算词典。从文本和词汇表大小来说更加紧凑，能保证每个subword单元在各自的训练数据上都有。同样的名字在不同的语言中可能切割的不一样，神经网络很难去学习subword units之间的映射。</p>
 <p><strong>Joint BPE</strong></p>
 <p>为目标语言和原语言一起使用BPE，即联合两种语言的词典去做BPE。提高了源语言和目标语言的分割一致性。训练中一般concat两种语言。</p>
-<h1 id="评估"><a href="#评估" class="headerlink" title="评估"></a>评估</h1><p>有两个重要问题</p>
+<h1 id="评估">评估</h1>
+<p>有两个重要问题</p>
 <ul>
 <li>subword units表达稀有词汇，是否真的对翻译有效果？</li>
 <li>根据词汇表大小，文本长度，翻译质量，怎样分割才是最好的？</li>
@@ -267,12 +278,13 @@
 </ul>
 <p>minibatch-size是80，每个epoch都会reshuffle训练数据。训练了7天，每12个小时存一次模型，取最后4个模型再单独训练。分别选择clip 梯度是5.0和1.0，1.0效果好一些。最终是融合了8个模型。</p>
 <p>Beam search的大小是12，使用双语词典进行快速对齐，类似于对稀有词汇查找词典，也会用词典去加速训练。</p>
-<h2 id="Subword统计"><a href="#Subword统计" class="headerlink" title="Subword统计"></a>Subword统计</h2><p>我们的目标是通过一个紧凑的固定大小的subword词典去代表一个open-vocabulary，并且能够有效的训练和解码。</p>
+<h2 id="subword统计">Subword统计</h2>
+<p>我们的目标是通过一个紧凑的固定大小的subword词典去代表一个open-vocabulary，并且能够有效的训练和解码。</p>
 <p>一个简单的基准就是把单词分割成字符n-grams 。n的选择很重要，可以在序列长度(tokens)和词汇表大小(size)之间做一个权衡。序列的长度会增加许多，一个比较好得减少长度的方法就是使用k个最常见的未被分割的词列表。只有unigram(n=1，一元模型)表达才能真正实现open-vocabulary，但是实际上效果却并不好。Bigram效果好，但是不能产生测试集中的tokens。</p>
 <p>BPE符合open-vocabulary的目标，并且合并操作可以应用于测试集，去发现未知符号的分割。与字符集模型的主要区别在于，BPE更紧凑的表示较短序列，注意力模型可以应对变长的单元。</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>分割方法</th>
 <th>tokens</th>
 <th>types</th>
@@ -281,14 +293,14 @@
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>BPE</td>
 <td>112 m</td>
 <td>63000</td>
 <td>0</td>
 <td>59500</td>
 </tr>
-<tr>
+<tr class="even">
 <td>BPE(joint)</td>
 <td>111 m</td>
 <td>82000</td>
@@ -300,7 +312,7 @@
 <p>实际上，NMT词汇表中，并不会包含不常见的subword单元，因为里面有很多噪声。</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>name</th>
 <th>seg</th>
 <th>shotlist</th>
@@ -316,7 +328,7 @@
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>BPE-60k</td>
 <td>BPE</td>
 <td>无</td>
@@ -330,7 +342,7 @@
 <td>40.9</td>
 <td>29.3</td>
 </tr>
-<tr>
+<tr class="even">
 <td>BPE-J60k</td>
 <td>BPE(joint)</td>
 <td>无</td>
@@ -346,7 +358,8 @@
 </tr>
 </tbody>
 </table>
-<h2 id="翻译评估"><a href="#翻译评估" class="headerlink" title="翻译评估"></a>翻译评估</h2><p>所有的subword系统都不会去查字典。使用UNK表示模型词典以外的单词，OOV表示训练集里面没有的单词。</p>
+<h2 id="翻译评估">翻译评估</h2>
+<p>所有的subword系统都不会去查字典。使用UNK表示模型词典以外的单词，OOV表示训练集里面没有的单词。</p>
 
         </div>
 
@@ -355,7 +368,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-11-25T08:30:11.078Z" itemprop="dateUpdated">2018-11-25 16:30:11</time>
+    最后更新时间：<time datetime="2018-12-13T08:20:32.545Z" itemprop="dateUpdated">2018-12-13 16:20:32</time>
 </span><br>
 
 
@@ -401,7 +414,9 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/10/19/subword-units/&title=《subword-units》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/10/19/subword-units/&title=《subword-units》 — PLM's Notes&source=
+Subword策略，很有用的论文。BERT也使用到了，有对应的tokenization.py
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -441,14 +456,14 @@
     <div class="waves-block waves-effect prev">
       <a href="/2017/11/02/cs224n-lecture2-word2vec/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">Word2vec推导图文笔记</h4>
+        <h4 class="title">Word2vec之公式推导笔记</h4>
       </a>
     </div>
   
 
   
     <div class="waves-block waves-effect next">
-      <a href="/2017/10/19/26_wordpieacemodel/" id="post-next" class="post-nav-link">
+      <a href="/2017/10/19/26-wordpieacemodel/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
         <h4 class="title">Wordpiece模型</h4>
       </a>
@@ -572,7 +587,9 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/10/19/subword-units/&title=《subword-units》 — PLM's Notes&source=NLP, DL, MRC." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/10/19/subword-units/&title=《subword-units》 — PLM's Notes&source=
+Subword策略，很有用的论文。BERT也使用到了，有对应的tokenization.py
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>

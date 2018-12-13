@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>博客搭建及相关问题 | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="心得,hexo,pandoc,数学公式,indigo,中文,pyplot">
+    <meta name="description" content="搭建hexo博客，数学公式问题，Indigo主题">
+<meta name="keywords" content="心得,hexo,pandoc,数学公式,indigo,中文,pyplot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="博客搭建及相关问题">
+<meta property="og:url" content="http://plmsmile.github.io/2017/10/16/24-hexo-problems/index.html">
+<meta property="og:site_name" content="PLM&#39;s Notes">
+<meta property="og:description" content="搭建hexo博客，数学公式问题，Indigo主题">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-12-13T08:54:10.305Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="博客搭建及相关问题">
+<meta name="twitter:description" content="搭建hexo博客，数学公式问题，Indigo主题">
+    
+        <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">PLM</h5>
+          <a href="mailto:plmsmile@126.com" title="plmsmile@126.com" class="mail">plmsmile@126.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                类别
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/plmsmile" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">博客搭建及相关问题</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">博客搭建及相关问题</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-10-16T14:47:46.000Z" itemprop="datePublished" class="page-time">
+  2017-10-16
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/心得体会/">心得体会</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#搭建博客"><span class="post-toc-number">1.</span> <span class="post-toc-text">搭建博客</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#搭建博客-1"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">搭建博客</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#indigo主题"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">indigo主题</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#搭建indigo博客"><span class="post-toc-number">2.</span> <span class="post-toc-text">搭建indigo博客</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#安装博客"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">安装博客</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#配置数学公式"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">配置数学公式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#博客配置"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">博客配置</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#indigo-config配置"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">indigo-config配置</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#indigo其他3个文件配置"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">indigo其他3个文件配置</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#indigo-config一览"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">indigo-config一览</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#hexo-config一览"><span class="post-toc-number">2.7.</span> <span class="post-toc-text">hexo-config一览</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">2.8.</span> <span class="post-toc-text">总结</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#pyplot使用中文"><span class="post-toc-number">3.</span> <span class="post-toc-text">PyPlot使用中文</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-24-hexo-problems" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">博客搭建及相关问题</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-10-16 22:47:46" datetime="2017-10-16T14:47:46.000Z" itemprop="datePublished">2017-10-16</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/心得体会/">心得体会</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>搭建hexo博客，数学公式问题，Indigo主题</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="搭建博客">搭建博客</h1>
+<h2 id="搭建博客-1">搭建博客</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">mkdir PLMBlogs</span><br><span class="line">cd PLMBlogs</span><br><span class="line"><span class="meta">#</span><span class="bash"> install hexo</span></span><br><span class="line">npm install hexo-cli -g</span><br><span class="line"><span class="meta">#</span><span class="bash"> init</span></span><br><span class="line">hexo init </span><br><span class="line">npm install</span><br><span class="line">hexo server</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> install plugins</span></span><br><span class="line">npm install hexo-deployer-git --save</span><br><span class="line">npm install hexo-renderer-scss --save</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 在默认_config.yml中添加需要的插件</span></span><br><span class="line">plugins:</span><br><span class="line">  hexo-generator-feed #RSS订阅插件</span><br><span class="line">  hexo-generator-sitemap  #sitemap插件</span><br><span class="line"></span><br><span class="line">git clone https://github.com/ahonn/hexo-theme-even themes/even</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 替换配置文件 or 一步一步地去配置</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 生成，再替换文件</span></span><br><span class="line">hexo new page tags</span><br><span class="line">hexo new page categories</span><br></pre></td></tr></table></figure>
+<h2 id="indigo主题">indigo主题</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">hexo init</span><br><span class="line"><span class="meta">#</span><span class="bash"> 配置.yml文件，复制旧的过来即可</span></span><br><span class="line">npm install hexo-deployer-git --save</span><br><span class="line">git clone git@github.com:yscoder/hexo-theme-indigo.git themes/indigo</span><br><span class="line">git checkout -b card origin/card</span><br><span class="line"></span><br><span class="line">npm install hexo-renderer-less --save</span><br><span class="line">npm install hexo-generator-feed --save</span><br><span class="line">npm install hexo-generator-json-content --save</span><br><span class="line">npm install hexo-helper-qrcode --save</span><br><span class="line"></span><br><span class="line">hexo new page tags</span><br><span class="line">hexo new page categories</span><br><span class="line">hexo new page about</span><br><span class="line"><span class="meta">#</span><span class="bash"> 再去配置各个目录下的index文件，也可以直接copy</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 配置主题中的yml，直接copy</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改图片等</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 后续 修改宽度</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">source</span>/css/_partial/variable.css 中第28行，修改为80%的宽度</span></span><br><span class="line">contentWidth: 80%</span><br><span class="line"><span class="meta">#</span><span class="bash"> 主题配置文件中 cdn改为<span class="literal">false</span></span></span><br><span class="line">cdn: false</span><br></pre></td></tr></table></figure>
+<h1 id="搭建indigo博客">搭建indigo博客</h1>
+<h2 id="安装博客">安装博客</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">hexo init</span><br><span class="line">npm install hexo-deployer-git --save</span><br><span class="line">''' 安装 '''</span><br><span class="line">git clone git@github.com:yscoder/hexo-theme-indigo.git themes/indigo</span><br><span class="line">npm install hexo-renderer-less --save</span><br><span class="line">npm install hexo-generator-feed --save</span><br><span class="line">npm install hexo-generator-json-content --save</span><br><span class="line">npm install hexo-helper-qrcode --save</span><br><span class="line">''' 配置标签和类别页面，去配置index.md中的数据 '''</span><br><span class="line">hexo new page tags</span><br><span class="line">hexo new page categories</span><br><span class="line"><span class="meta">#</span><span class="bash"> 主要是配置 layout: tags layout: categories comment: <span class="literal">false</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 新建关于我的页面，并填上相应的信息 layout: about</span></span><br><span class="line">hexo new page about</span><br></pre></td></tr></table></figure>
+<p>配置<code>hexo/_config.yml</code>中的主题是<code>indigo</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 配置indigo主题</span></span><br><span class="line">theme: indigo</span><br></pre></td></tr></table></figure>
+<h2 id="配置数学公式">配置数学公式</h2>
+<p>请务必使用<code>pandoc</code>进行渲染，这是最好的没有之一！别的会有各种问题，比如默认的多行数学公式渲染不了，这个问题困扰了好久。</p>
+<p>但是pandoc也有坑啊，测试了2.5不行。我这里<strong>成功</strong>的是<code>pandoc-2.2.3.2-windows-x86_64</code> + <code>hexo-renderer-pandoc@0.2.0</code>。最新的都不行。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 在主题_config.yml 中配置 </span></span><br><span class="line">mathjax: true</span><br><span class="line"><span class="meta">#</span><span class="bash"> 要先卸载已有的渲染器</span></span><br><span class="line">npm uninstall hexo-renderer-marked --save</span><br><span class="line"><span class="meta">#</span><span class="bash"> 潜在的</span></span><br><span class="line">npm uninstall hexo-renderer-kramed --save</span><br><span class="line">npm uninstall hexo-math --save</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 只需要安装pandoc就可以了</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 先在本地下载pandoc，安装好，再执行如下命令。最新的pandoc测试有问题。推荐2.2和0.2.</span></span><br><span class="line">npm install hexo-renderer-pandoc --save</span><br><span class="line"><span class="meta">#</span><span class="bash"> 其他命令</span></span><br><span class="line">npm view hexo-renderer-pandoc versions</span><br><span class="line">npm ls hexo-renderer-pandoc</span><br><span class="line">npm uninstall hexo-renderer-pandoc@0.2.0 --save</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 1. 安装旧版pandoc-2.2.3.2-windows-x86_64.msi在win10上</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 2. 安装hexo-renderer-pandoc@0.2.0在博客中</span></span><br><span class="line">npm install hexo-renderer-pandoc@0.2.0 --save</span><br></pre></td></tr></table></figure>
+<p>做到这里，要先启动，放两篇带数学公式的文档，去测试一下。</p>
+<h2 id="博客配置">博客配置</h2>
+<p>编辑<code>hexo/_config.yml</code> ，添加如下项目</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Site</span></span><br><span class="line">title: PLM<span class="string">'s Blog</span></span><br><span class="line"><span class="string">subtitle: 好好学习，天天向上</span></span><br><span class="line"><span class="string">description: 菜鸟程序员</span></span><br><span class="line"><span class="string">author: 蒲黎明</span></span><br><span class="line"><span class="string">language: zh-CN</span></span><br><span class="line"><span class="string"># url    </span></span><br><span class="line"><span class="string">url: https://plmsmile.github.io/</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># Deployment</span></span><br><span class="line"><span class="string">deploy:</span></span><br><span class="line"><span class="string">  type: git</span></span><br><span class="line"><span class="string">  repo: git@github.com:plmsmile/plmsmile.github.io.git</span></span><br><span class="line"><span class="string">  branch: master</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># indigo的配置项</span></span><br><span class="line"><span class="string">feed:</span></span><br><span class="line"><span class="string">  type: atom</span></span><br><span class="line"><span class="string">  path: atom.xml</span></span><br><span class="line"><span class="string">  limit: 0</span></span><br><span class="line"><span class="string">jsonContent:</span></span><br><span class="line"><span class="string">  meta: false</span></span><br><span class="line"><span class="string">  pages: false</span></span><br><span class="line"><span class="string">  posts:</span></span><br><span class="line"><span class="string">    title: true</span></span><br><span class="line"><span class="string">    date: true</span></span><br><span class="line"><span class="string">    path: true</span></span><br><span class="line"><span class="string">    text: true</span></span><br><span class="line"><span class="string">    raw: false</span></span><br><span class="line"><span class="string">    content: false</span></span><br><span class="line"><span class="string">    slug: false</span></span><br><span class="line"><span class="string">    updated: false</span></span><br><span class="line"><span class="string">    comments: false</span></span><br><span class="line"><span class="string">    link: false</span></span><br><span class="line"><span class="string">    permalink: false</span></span><br><span class="line"><span class="string">    excerpt: false</span></span><br><span class="line"><span class="string">    categories: false</span></span><br><span class="line"><span class="string">    tags: true</span></span><br></pre></td></tr></table></figure>
+<h2 id="indigo-config配置">indigo-config配置</h2>
+<p>参考<a href="https://github.com/yscoder/hexo-theme-indigo/wiki/%E9%85%8D%E7%BD%AE" target="_blank" rel="noopener">官方配置说明</a></p>
+<p>编辑<code>themes/indigo/_config.yml</code></p>
+<p>配置左侧菜单</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line">  home:</span><br><span class="line">    text: 主页</span><br><span class="line">    url: /</span><br><span class="line">  archives:</span><br><span class="line">    text: 归档</span><br><span class="line">    url: /archives</span><br><span class="line">  tags:</span><br><span class="line">    text: 标签</span><br><span class="line">    url: /tags</span><br><span class="line">  th-list:</span><br><span class="line">    text: 类别</span><br><span class="line">    url: /categories</span><br><span class="line">  user:</span><br><span class="line">    url: /about</span><br><span class="line">    text: 关于我</span><br><span class="line">  github:</span><br><span class="line">    url: https://github.com/plmsmile</span><br><span class="line">    target: _blank</span><br></pre></td></tr></table></figure>
+<p>配置自我介绍</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">about: 自然语言处理，机器学习，深度学习，Spark，Leetcode，Java，C++，数据结构。都不会呢，赶紧快学吧！</span><br></pre></td></tr></table></figure>
+<p>设置图片，需要配置站点图片、头像图片，也可以换头像背景图片。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 你的头像url</span><br><span class="line">avatar: /img/avatar.jpg</span><br><span class="line"># avatar link</span><br><span class="line">avatar_link: https://plmsmile.github.io/about</span><br><span class="line"># 头像背景图</span><br><span class="line">brand: /img/brand.jpg</span><br><span class="line"># favicon</span><br><span class="line">favicon: /img/favicon.png</span><br><span class="line"></span><br><span class="line"># email</span><br><span class="line">email: plmsmile@126.com</span><br></pre></td></tr></table></figure>
+<p>配置页面宽度</p>
+<p>修改<code>source/css/_partial/variable.css</code> 中的28行，设置为80%。设置主题配置文件中，<code>cdn: false</code>。 、</p>
+<p>配置支付宝和微信图片，默认就有打赏功能。可以关掉。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">''' 是否开启打赏，关闭 reward: false'''</span><br><span class="line">reward:</span><br><span class="line">  title: 谢谢大爷~</span><br><span class="line">  wechat: /img/wechat.png     '微信，关闭设为 false</span><br><span class="line">  alipay: /img/alipay.png     '支付宝，关闭设为 false</span><br></pre></td></tr></table></figure>
+<p>每张文章最后的备注</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">postMessage: &lt;br&gt;原始链接：&lt;a href="&lt;%- url_for(page.path).replace(/index\.html$/, '') %&gt;" target="_blank" rel="external"&gt;&lt;%- page.permalink.replace(/index\.html$/, '') %&gt;&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+<p>关闭动态title</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 动态定义title</span></span><br><span class="line"><span class="comment"># title_change:</span></span><br><span class="line"><span class="comment">#   normal: (つェ⊂)咦!又好了!</span></span><br><span class="line"><span class="comment">#   leave: 死鬼去哪里了！</span></span><br></pre></td></tr></table></figure>
+<p>配置valine评论</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">valine:</span><br><span class="line">  enable: true # 如果你想使用valine，请将值设置为 true</span><br><span class="line">  appId: xxxx # your leancloud appId</span><br><span class="line">  appKey: xxxx # your leancloud appKey</span><br><span class="line">  notify: true # Mail notify</span><br><span class="line">  verify: false # Verify code</span><br><span class="line">  avatar: mm # Gravatar style : mm/identicon/monsterid/wavatar/retro/hide</span><br><span class="line">  placeholder: Just go go # Comment Box placeholder</span><br><span class="line">  guest_info: nick,mail,link # Comment header info</span><br><span class="line">  pageSize: 10 # comment list page size</span><br></pre></td></tr></table></figure>
+<p>配置几个页面的标题</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 页面标题</span></span><br><span class="line">tags_title: 标签</span><br><span class="line">archives_title: 归档</span><br><span class="line">categories_title: 类别</span><br></pre></td></tr></table></figure>
+<p>语言栏</p>
+<h2 id="indigo其他3个文件配置">indigo其他3个文件配置</h2>
+<p><code>languages/zh-CN.yml</code>配置</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">global:</span></span><br><span class="line"><span class="attr">  search_input_hint:</span> <span class="string">"输入感兴趣的关键字"</span></span><br><span class="line"><span class="attr">post:</span></span><br><span class="line"><span class="attr">  continue_reading:</span> <span class="string">"点击阅读全文"</span></span><br><span class="line"><span class="attr">  last_updated:</span> <span class="string">"最后更新时间："</span></span><br><span class="line"><span class="attr">footer:</span></span><br><span class="line"><span class="attr">  license:</span> <span class="string">'博客内容遵循 &lt;a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh"&gt;知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议&lt;/a&gt;'</span></span><br><span class="line"><span class="attr">tag:</span></span><br><span class="line"><span class="attr">  all:</span> <span class="string">"全部"</span></span><br><span class="line"><span class="attr">  tags:</span> <span class="string">"标签"</span></span><br></pre></td></tr></table></figure>
+<p><code>layout/_partial/footer.ejs</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;footer class=&quot;footer&quot;&gt;</span><br><span class="line">    &lt;div class=&quot;bottom&quot;&gt;</span><br><span class="line">        &lt;%- partial(&apos;plugins/site-visit&apos;) %&gt;</span><br><span class="line">        &lt;p&gt;</span><br><span class="line">            &lt;span&gt;</span><br><span class="line">            PLM&apos;s Notes &amp;nbsp; &amp;copy; &amp;nbsp</span><br><span class="line">            &lt;/span&gt;</span><br><span class="line">            &lt;%if (theme.since_year &amp;&amp; theme.since_year &lt; date(new Date(), &apos;YYYY&apos;)) &#123;%&gt;&lt;%- theme.since_year %&gt; - &lt;%&#125;%&gt;&lt;%- date(new Date(), &apos;YYYY&apos;) %&gt;</span><br><span class="line">        &lt;/p&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/footer&gt;</span><br></pre></td></tr></table></figure>
+<p><code>layout/_partial/script.ejs</code> 更改卜算子的域名，解决统计访问量的问题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=&quot;//cdn.bootcss.com/node-waves/0.7.4/waves.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">var BLOG = &#123; ROOT: &apos;&lt;%= config.root %&gt;&apos;, SHARE: &lt;%- theme.share %&gt;, REWARD: &lt;%- Boolean(page.reward) %&gt; &#125;;</span><br><span class="line"></span><br><span class="line">&lt;% if (theme.cnzz)&#123; %&gt;</span><br><span class="line">lazyScripts.push(&apos;//s95.cnzz.com/z_stat.php?id=&lt;%-theme.cnzz %&gt;&amp;web_id=&lt;%-theme.cnzz %&gt;&apos;)</span><br><span class="line">&lt;% &#125; %&gt;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;script src=&quot;&lt;%- url_for(theme_js(&apos;/js/main&apos;, cache)) %&gt;&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;% if (theme.search)&#123; %&gt;</span><br><span class="line">&lt;%- partial(&apos;search&apos;) %&gt;</span><br><span class="line">&lt;script src=&quot;&lt;%- url_for(theme_js(&apos;/js/search&apos;, cache)) %&gt;&quot; async&gt;&lt;/script&gt;</span><br><span class="line">&lt;% &#125; %&gt;</span><br><span class="line"></span><br><span class="line">&lt;%- partial(&apos;plugins/mathjax&apos;) %&gt;</span><br><span class="line"></span><br><span class="line">&lt;% if (theme.visit_counter) &#123; %&gt;</span><br><span class="line">&lt;script async src=&quot;//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;% &#125; %&gt;</span><br><span class="line"></span><br><span class="line">&lt;%- partial(&apos;plugins/dynamic-title&apos;) %&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="indigo-config一览">indigo-config一览</h2>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">menu:</span></span><br><span class="line"><span class="attr">  home:</span></span><br><span class="line"><span class="attr">    text:</span> <span class="string">主页</span></span><br><span class="line"><span class="attr">    url:</span> <span class="string">/</span></span><br><span class="line"><span class="attr">  archives:</span></span><br><span class="line"><span class="attr">    text:</span> <span class="string">归档</span></span><br><span class="line"><span class="attr">    url:</span> <span class="string">/archives</span></span><br><span class="line"><span class="attr">  tags:</span></span><br><span class="line"><span class="attr">    text:</span> <span class="string">标签</span></span><br><span class="line"><span class="attr">    url:</span> <span class="string">/tags</span></span><br><span class="line"><span class="attr">  th-list:</span></span><br><span class="line"><span class="attr">    text:</span> <span class="string">类别</span></span><br><span class="line"><span class="attr">    url:</span> <span class="string">/categories</span></span><br><span class="line"><span class="attr">  user:</span></span><br><span class="line"><span class="attr">    url:</span> <span class="string">/about</span></span><br><span class="line"><span class="attr">    text:</span> <span class="string">关于我</span></span><br><span class="line"><span class="attr">  github:</span></span><br><span class="line"><span class="attr">    url:</span> <span class="attr">https://github.com/plmsmile</span></span><br><span class="line"><span class="attr">    target:</span> <span class="string">_blank</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 你的头像url</span></span><br><span class="line"><span class="attr">avatar:</span> <span class="string">/img/avatar.jpg</span></span><br><span class="line"><span class="comment"># avatar link</span></span><br><span class="line"><span class="attr">avatar_link:</span> <span class="string">/</span></span><br><span class="line"><span class="comment"># 头像背景图</span></span><br><span class="line"><span class="attr">brand:</span> <span class="string">/img/brand.jpg</span></span><br><span class="line"><span class="comment"># favicon</span></span><br><span class="line"><span class="attr">favicon:</span> <span class="string">/img/favicon.png</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># email</span></span><br><span class="line"><span class="attr">email:</span> <span class="string">plmsmile@126.com</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置 Android L Chrome 浏览器状态栏颜色</span></span><br><span class="line"><span class="attr">color:</span> <span class="string">'#3F51B5'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 页面标题</span></span><br><span class="line"><span class="attr">tags_title:</span> <span class="string">标签</span></span><br><span class="line"><span class="attr">archives_title:</span> <span class="string">归档</span></span><br><span class="line"><span class="attr">categories_title:</span> <span class="string">类别</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 文章截断</span></span><br><span class="line"><span class="attr">excerpt_render:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">excerpt_length:</span> <span class="number">200</span></span><br><span class="line"><span class="attr">excerpt_link:</span> <span class="string">点击阅读全文</span></span><br><span class="line"><span class="attr">mathjax:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">archive_yearly:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 是否显示文章最后更新时间</span></span><br><span class="line"><span class="attr">show_last_updated:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 是否开启分享</span></span><br><span class="line"><span class="attr">share:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 是否开启打赏，关闭 reward: false</span></span><br><span class="line"><span class="attr">reward:</span></span><br><span class="line"><span class="attr">  title:</span> <span class="string">谢谢大爷~</span></span><br><span class="line"><span class="attr">  wechat:</span> <span class="string">/img/wechat.png</span>     <span class="comment">#微信，关闭设为 false</span></span><br><span class="line"><span class="attr">  alipay:</span> <span class="string">/img/alipay.png</span>     <span class="comment">#支付宝，关闭设为 false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 是否开启搜索</span></span><br><span class="line"><span class="attr">search:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 是否大屏幕下文章页隐藏导航</span></span><br><span class="line"><span class="attr">hideMenu:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 是否开启toc</span></span><br><span class="line"><span class="comment"># toc: false</span></span><br><span class="line"><span class="attr">toc:</span></span><br><span class="line"><span class="attr">  list_number:</span> <span class="literal">true</span>  <span class="comment"># 是否显示数字排序</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 文章页留言内容，hexo中所有变量及辅助函数等均可调用，具体请查阅 hexo.io</span></span><br><span class="line"><span class="attr">postMessage:</span> <span class="string">&lt;br&gt;原始链接：&lt;a</span> <span class="string">href="&lt;%-</span> <span class="string">url_for(page.path).replace(/index\.html$/,</span> <span class="string">''</span><span class="string">)</span> <span class="string">%&gt;"</span> <span class="string">target="_blank"</span> <span class="string">rel="external"&gt;&lt;%-</span> <span class="string">page.permalink.replace(/index\.html$/,</span> <span class="string">''</span><span class="string">)</span> <span class="string">%&gt;&lt;/a&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 站长统计，如要开启，输入CNZZ站点id，如 cnzz: 1255152447</span></span><br><span class="line"><span class="attr">cnzz:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 百度统计，如要开启，改为你的 key</span></span><br><span class="line"><span class="attr">baidu_tongji:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 腾讯分析，如要开启，输入站点id</span></span><br><span class="line"><span class="attr">tajs:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># google</span></span><br><span class="line"><span class="attr">google_analytics:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">google_site_verification:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># sogou站长验证 http://zhanzhang.sogou.com/</span></span><br><span class="line"><span class="attr">sogou_site_verification:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># less</span></span><br><span class="line"><span class="attr">less:</span></span><br><span class="line"><span class="attr">  compress:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">  paths:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">source/css/style.less</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 以下评论插件开启一个即可</span></span><br><span class="line"><span class="comment"># 是否开启 disqus</span></span><br><span class="line"><span class="attr">disqus_shortname:</span> <span class="literal">false</span></span><br><span class="line"><span class="comment"># 是否开启友言评论, 填写友言用户id</span></span><br><span class="line"><span class="attr">uyan_uid:</span> <span class="literal">false</span></span><br><span class="line"><span class="comment"># 是否使用 gitment，https://github.com/imsun/gitment</span></span><br><span class="line"><span class="attr">gitment:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Valine Comment system. https://valine.js.org</span></span><br><span class="line"><span class="attr">valine:</span></span><br><span class="line"><span class="attr">  enable:</span> <span class="literal">true</span> <span class="comment"># 如果你想使用valine，请将值设置为 true</span></span><br><span class="line"><span class="attr">  appId:</span> <span class="string">xxxx</span> <span class="comment"># your leancloud appId</span></span><br><span class="line"><span class="attr">  appKey:</span> <span class="string">xxxx</span> <span class="comment"># your leancloud appKey</span></span><br><span class="line"><span class="attr">  notify:</span> <span class="literal">true</span> <span class="comment"># Mail notify</span></span><br><span class="line"><span class="attr">  verify:</span> <span class="literal">false</span> <span class="comment"># Verify code</span></span><br><span class="line"><span class="attr">  avatar:</span> <span class="string">mm</span> <span class="comment"># Gravatar style : mm/identicon/monsterid/wavatar/retro/hide</span></span><br><span class="line"><span class="attr">  placeholder:</span> <span class="string">Just</span> <span class="string">go</span> <span class="string">go</span> <span class="comment"># Comment Box placeholder</span></span><br><span class="line"><span class="attr">  guest_info:</span> <span class="string">nick,mail,link</span> <span class="comment"># Comment header info</span></span><br><span class="line"><span class="attr">  pageSize:</span> <span class="number">10</span> <span class="comment"># comment list page size</span></span><br><span class="line"></span><br><span class="line"><span class="attr">hyper_id:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="attr">canonical:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 版权起始年份</span></span><br><span class="line"><span class="attr">since_year:</span> <span class="number">2016</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 用户页面中作者相关的描述性文字，如不需要设为 false</span></span><br><span class="line"><span class="attr">about:</span> <span class="string">NLP</span> <span class="string">&amp;&amp;</span> <span class="string">DL</span> <span class="string">student</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># “不蒜子”访问量统计，详见 http://ibruce.info/2015/04/04/busuanzi/</span></span><br><span class="line"><span class="attr">visit_counter:</span></span><br><span class="line"><span class="attr">  site_uv:</span> <span class="string">总访客数：</span></span><br><span class="line"><span class="attr">  site_pv:</span> <span class="string">总访问量：</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 动态定义title</span></span><br><span class="line"><span class="comment"># title_change:</span></span><br><span class="line"><span class="comment">#  normal: (つェ⊂)咦!又好了!</span></span><br><span class="line"><span class="comment">#  leave: 死鬼去哪里了！</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置为 true 发布后将使用 unpkg cdn 最新的主题样式</span></span><br><span class="line"><span class="comment"># 如果想让你的自定义样式生效，把此项设为 false</span></span><br><span class="line"><span class="attr">cdn:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置为 true 将使用 lightbox render 图片</span></span><br><span class="line"><span class="attr">lightbox:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># icp备案号  ICP_license: 京ICP备1234556号-1</span></span><br><span class="line"><span class="attr">ICP_license:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<h2 id="hexo-config一览">hexo-config一览</h2>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Hexo Configuration</span></span><br><span class="line"><span class="comment">## Docs: https://hexo.io/docs/configuration.html</span></span><br><span class="line"><span class="comment">## Source: https://github.com/hexojs/hexo/</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Site</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">PLM's</span> <span class="string">Notes</span></span><br><span class="line"><span class="attr">subtitle:</span> <span class="string">好好学习，天天笔记</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">NLP,</span> <span class="string">DL,</span> <span class="string">MRC.</span></span><br><span class="line"><span class="attr">keywords:</span></span><br><span class="line"><span class="attr">author:</span> <span class="string">PLM</span></span><br><span class="line"><span class="attr">language:</span> <span class="string">zh-CN</span></span><br><span class="line"><span class="attr">timezone:</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># URL</span></span><br><span class="line"><span class="comment">## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'</span></span><br><span class="line"><span class="attr">url:</span> <span class="attr">http://plmsmile.github.io</span></span><br><span class="line"><span class="attr">root:</span> <span class="string">/</span></span><br><span class="line"><span class="attr">permalink:</span> <span class="string">:year/:month/:day/:title/</span></span><br><span class="line"><span class="attr">permalink_defaults:</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Directory</span></span><br><span class="line"><span class="attr">source_dir:</span> <span class="string">source</span></span><br><span class="line"><span class="attr">public_dir:</span> <span class="string">public</span></span><br><span class="line"><span class="attr">tag_dir:</span> <span class="string">tags</span></span><br><span class="line"><span class="attr">archive_dir:</span> <span class="string">archives</span></span><br><span class="line"><span class="attr">category_dir:</span> <span class="string">categories</span></span><br><span class="line"><span class="attr">code_dir:</span> <span class="string">downloads/code</span></span><br><span class="line"><span class="attr">i18n_dir:</span> <span class="string">:lang</span></span><br><span class="line"><span class="attr">skip_render:</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Writing</span></span><br><span class="line"><span class="attr">new_post_name:</span> <span class="string">:title.md</span> <span class="comment"># File name of new posts</span></span><br><span class="line"><span class="attr">default_layout:</span> <span class="string">post</span></span><br><span class="line"><span class="attr">titlecase:</span> <span class="literal">false</span> <span class="comment"># Transform title into titlecase</span></span><br><span class="line"><span class="attr">external_link:</span> <span class="literal">true</span> <span class="comment"># Open external links in new tab</span></span><br><span class="line"><span class="attr">filename_case:</span> <span class="number">0</span></span><br><span class="line"><span class="attr">render_drafts:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">post_asset_folder:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">relative_link:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">future:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">highlight:</span></span><br><span class="line"><span class="attr">  enable:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">  line_number:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">  auto_detect:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">  tab_replace:</span></span><br><span class="line">  </span><br><span class="line"><span class="attr">index_generator:</span></span><br><span class="line"><span class="attr">  path:</span> <span class="string">''</span></span><br><span class="line"><span class="attr">  per_page:</span> <span class="number">15</span></span><br><span class="line"><span class="attr">  order_by:</span> <span class="bullet">-date</span></span><br><span class="line">  </span><br><span class="line"><span class="comment"># Category &amp; Tag</span></span><br><span class="line"><span class="attr">default_category:</span> <span class="string">uncategorized</span></span><br><span class="line"><span class="attr">category_map:</span></span><br><span class="line"><span class="attr">tag_map:</span></span><br><span class="line"></span><br><span class="line"><span class="attr">date_format:</span> <span class="string">YYYY-MM-DD</span></span><br><span class="line"><span class="attr">time_format:</span> <span class="attr">HH:mm:ss</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Pagination</span></span><br><span class="line"><span class="comment">## Set per_page to 0 to disable pagination</span></span><br><span class="line"><span class="attr">per_page:</span> <span class="number">10</span></span><br><span class="line"><span class="attr">pagination_dir:</span> <span class="string">page</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Extensions</span></span><br><span class="line"><span class="attr">theme:</span> <span class="string">indigo</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line"><span class="attr">  type:</span> <span class="string">git</span></span><br><span class="line"><span class="attr">  repo:</span> <span class="string">git@github.com:plmsmile/plmsmile.github.io.git</span></span><br><span class="line"><span class="attr">  branch:</span> <span class="string">master</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## added</span></span><br><span class="line"><span class="attr">jsonContent:</span></span><br><span class="line"><span class="attr">  meta:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">  pages:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">  posts:</span></span><br><span class="line"><span class="attr">    title:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">    date:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">    path:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">    text:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">    raw:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">    content:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">    slug:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">    updated:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">    comments:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">    link:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">    permalink:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">    excerpt:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">    categories:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">    tags:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<h2 id="总结">总结</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">hexo init</span><br><span class="line"><span class="comment"># 1. 运行下面的脚本</span></span><br><span class="line">npm install hexo-deployer-git --save</span><br><span class="line">git clone git@github.com:yscoder/hexo-theme-indigo.git themes/indigo</span><br><span class="line">npm install hexo-renderer-less --save</span><br><span class="line">npm install hexo-generator-feed --save</span><br><span class="line">npm install hexo-generator-json-content --save</span><br><span class="line">npm install hexo-helper-qrcode --save</span><br><span class="line">hexo new page tags</span><br><span class="line">hexo new page categories</span><br><span class="line">hexo new page about</span><br><span class="line"><span class="comment"># 2. 替换source/中3个文件夹，about, categories, tags</span></span><br><span class="line"><span class="comment"># 3. 替换hexo和主题中的配置文件 _config.yml</span></span><br><span class="line"><span class="comment"># 4. 替换indigo/source/img 文件夹</span></span><br><span class="line"><span class="comment"># 5. 修改source/css/_partial/variable.css的28行 宽度为80%</span></span><br><span class="line"><span class="comment"># 6. 替换indigo其他3个文件配置，footer.ejs, scipt.ejs, zh-CN.yml</span></span><br><span class="line"><span class="comment"># 7. 数学公式，请使用pandoc渲染！！！</span></span><br><span class="line"><span class="comment"># 8. 把博客文件复制过来，运行查看。</span></span><br></pre></td></tr></table></figure>
+<h1 id="pyplot使用中文">PyPlot使用中文</h1>
+<p><a href="http://www.jianshu.com/p/b76481530472" target="_blank" rel="noopener">参考文档</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 下载字体放到下面的目录</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 下载simhei.tff</span></span><br><span class="line">/home/plm/app/anaconda2/lib/python2.7/site-packages/matplotlib/mpl-data/fonts/ttf</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 编辑文件</span></span><br><span class="line">/home/plm/app/anaconda2/lib/python2.7/site-packages/matplotlib/mpl-data/matplotlibrc</span><br><span class="line"><span class="meta">#</span><span class="bash"> 打开下面的注释</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> font.family         : sans-serif</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 打开注释，加上SimHei</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> font.sans-serif     : SimHei,Bitstream Vera Sans, Lucida Grande, Verdana, Geneva, Lucid, Arial, Helvetica, Avant Garde, sans-serif</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除缓存</span></span><br><span class="line">rm -rf ~/.cache/matplotlib</span><br></pre></td></tr></table></figure>
+<p>简单测试例子</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"></span><br><span class="line">matplotlib.matplotlib_fname()</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">plt.rcParams[<span class="string">'font.sans-serif'</span>]=[<span class="string">'simhei'</span>] <span class="comment">#用来正常显示中文标签</span></span><br><span class="line">plt.rcParams[<span class="string">'axes.unicode_minus'</span>]=<span class="keyword">False</span> <span class="comment">#用来正常显示负号</span></span><br><span class="line">matplotlib.rcParams[<span class="string">'axes.unicode_minus'</span>] = <span class="keyword">False</span>   <span class="comment">#-号为方块问题</span></span><br><span class="line">plt.plot((<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>),(<span class="number">4</span>,<span class="number">3</span>,<span class="number">-1</span>))</span><br><span class="line"></span><br><span class="line">s = <span class="string">"横坐标"</span></span><br><span class="line"></span><br><span class="line">plt.xlabel(unicode(s))</span><br><span class="line">plt.ylabel(<span class="string">u'纵坐标'</span>)</span><br><span class="line">plt.show()</span><br><span class="line"><span class="keyword">print</span> (s)</span><br></pre></td></tr></table></figure>
+<p>有时候依然不好使，那么就</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys  </span><br><span class="line">reload(sys)  </span><br><span class="line">sys.setdefaultencoding(<span class="string">'utf8'</span>)</span><br></pre></td></tr></table></figure>
+<p>应该就可以了。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-12-13T08:54:10.305Z" itemprop="dateUpdated">2018-12-13 16:54:10</time>
+</span><br>
+
+
+        
+        <br>原始链接：<a href="/2017/10/16/24-hexo-problems/" target="_blank" rel="external">http://plmsmile.github.io/2017/10/16/24-hexo-problems/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://plmsmile.github.io">
+            <img src="/img/avatar.jpg" alt="PLM">
+            PLM
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/indigo/">indigo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pandoc/">pandoc</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pyplot/">pyplot</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/中文/">中文</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/心得/">心得</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数学公式/">数学公式</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/10/16/24-hexo-problems/&title=《博客搭建及相关问题》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/10/16/24-hexo-problems/&title=《博客搭建及相关问题》 — PLM's Notes&source=
+搭建hexo博客，数学公式问题，Indigo主题
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2017/10/16/24-hexo-problems/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《博客搭建及相关问题》 — PLM's Notes&url=http://plmsmile.github.io/2017/10/16/24-hexo-problems/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2017/10/16/24-hexo-problems/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/10/17/25-google-nmt/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">谷歌RNN翻译模型</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/10/12/Attention-based-NMT/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">机器翻译注意力机制及其PyTorch实现</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'true' == 'true',
+            verify: 'false' == 'true',
+            appId: "kR8nND4dcsWgqDWIjpiH4YFj-gzGzoHsz",
+            appKey: "il7PLkcJCfDBXMR6XirLdO2K",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="bottom">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <span>
+            PLM's Notes &nbsp; &copy; &nbsp
+            </span>
+            2016 - 2018
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2017/10/16/24-hexo-problems/&title=《博客搭建及相关问题》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2017/10/16/24-hexo-problems/&title=《博客搭建及相关问题》 — PLM's Notes&source=
+搭建hexo博客，数学公式问题，Indigo主题
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2017/10/16/24-hexo-problems/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《博客搭建及相关问题》 — PLM's Notes&url=http://plmsmile.github.io/2017/10/16/24-hexo-problems/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2017/10/16/24-hexo-problems/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJklEQVR42u3aS5LiMBAFQO5/afoAhN3vleiJsZReEeCwlF4U9dHrFV/vj+vz1/z+z3uuvvnyhYGB8VjG+/a6X/KKcb9W/pqSvWFgYJzDuF8yD4vJJtq1oteBgYGBUX5OAm67LgYGBsa3GLPQjIGBgZEwkiK2LVn/01ocAwPjgYx2+X/5+U/mGxgYGI9ivMtrNtq832IeXi93hYGBsTWjbZPlxyzW08R6PxgYGJsyks0lR75WSs18rUsqBgbGAYykxX8PSBLBvKHWPg0DA2NvRtvFmhWoOX5WPGNgYJzDSB7RPnr9OcmrwcDA2JvRtuln7bPZLDIvdDEwMPZm5JtYT92S+2d3YmBgnMNYD7v3ZWo+tsxbbxgYGCcw8jA6K0TXQ3ZxWgQDA+MAxix01l29UVIY/T9gYGBszciTs3YW2o4q80bb8MwIBgbGYxltGtcem8hHEcPXhIGBcQAj38RsVNm+gjr1xMDA2JrRNtRmLf68hM6PkV0+GQMDY1NGXkC2jHwgOmu0FeMBDAyMLRjt8awkoczL2jx9/CXgYmBgHMNYCX8rgTgviaOAi4GBsQVjZQCQB+u29Z+s+2pjNgYGxmMZs+b+rK223rBr01YMDIydGG2QbRtn+XB0KeBiYGAcwFgPlLMW20oRi4GBgTFL0drDZN86fIaBgYHRbn19nNkmrxgYGCcw8mMT7QmHlZI4WQsDA+MExuyIQ06abfe7pS8GBsZjGT/355Nhlt/REAAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

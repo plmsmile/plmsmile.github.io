@@ -158,110 +158,7 @@
     <ul class="post-list">
     
         <li class="post-list-item fade">
-            <article id="post-NumPy" class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2017-04-15 15:32:52" datetime="2017-04-15T07:32:52.000Z" itemprop="datePublished">2017-04-15</time>
-
-        
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Python/">Python</a></li></ul>
-
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/04/15/NumPy/">NumPy</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        NumPy教程
-基础简单demoNumPy中最重要的对象是ndarray，是一个N维数组。它存储着相同类型的元素集合。通过dtype来获取类型，索引来获取值。
-通过numpy.array来创建ndarray。
-123456789101112# 1. numpy定义numpy.array(object, dtype = None, copy = True, order = None, subo...
-    
-
-        <a href="/2017/04/15/NumPy/" class="post-more waves-effect waves-button">
-            点击阅读全文
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NumPy/">NumPy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
-            <article id="post-ml-watermelon-chap1" class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2017-04-04 12:07:22" datetime="2017-04-04T04:07:22.000Z" itemprop="datePublished">2017-04-04</time>
-
-        
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/机器学习/">机器学习</a></li></ul>
-
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/04/04/ml-watermelon-chap1/">机器学习-西瓜书-第一章习题</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        $ $
-1.1版本空间题目
-表1.1中若只包含编号为1和4的两个用例，试给出相应的版本空间。
-背景知识
-
-假设空间：假设数据有$n$中属性，第$i$个属性可能的取值有$t_i$种，加上该属性的泛化取值(*)，所以可能的假设有$\prod_{i=1}^n {(t_i+1)}$种。再用空集表示没有正例，所以假设空间一共有$\prod_{i=1}^n {(t_i+1)} + 1$种假设。
-
-
-学习...
-    
-
-        <a href="/2017/04/04/ml-watermelon-chap1/" class="post-more waves-effect waves-button">
-            点击阅读全文
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/周志华/">周志华</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/机器学习/">机器学习</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/西瓜书/">西瓜书</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
-            <article id="post-Spark-Programming" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-19-spark-programming" class="article-card article-type-post" itemprop="blogPost">
 
     <div class="post-meta">
         <time class="post-time" title="2017-03-25 18:07:35" datetime="2017-03-25T10:07:35.000Z" itemprop="datePublished">2017-03-25</time>
@@ -278,7 +175,7 @@
 
   
     <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/03/25/Spark-Programming/">Spark-Programming</a>
+      <a class="post-title-link" href="/2017/03/25/19-spark-programming/">Spark基础编程核心思想介绍</a>
     </h3>
   
 
@@ -288,15 +185,12 @@
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        总览Spark程序
-有一个驱动程序，会运行用户的主要功能，并且在集群上执行各种并行操作。
-RDD
-RDD是跨集群节点分区的、并且可以并行计算的分布式数据集合。可以通过外部文件系统或者内部集合来创建。可以在内存中持久化一个RDD，并且在并行计算中有效地重用。RDD可以从节点故障中自动恢复。
-共享变量
-当一组任务在不同的节点上并行运行一个函数时，Spark会为函数中的每个变量发送一个副本到各个任...
+        
+Spark基础编程核心思想介绍。参考自官方文档
+
     
 
-        <a href="/2017/03/25/Spark-Programming/" class="post-more waves-effect waves-button">
+        <a href="/2017/03/25/19-spark-programming/" class="post-more waves-effect waves-button">
             点击阅读全文
         </a>
     </div>
@@ -312,7 +206,7 @@ RDD是跨集群节点分区的、并且可以并行计算的分布式数据集�
         </li>
     
         <li class="post-list-item fade">
-            <article id="post-Spark-SQL" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-18-spark-sql" class="article-card article-type-post" itemprop="blogPost">
 
     <div class="post-meta">
         <time class="post-time" title="2017-03-19 22:34:44" datetime="2017-03-19T14:34:44.000Z" itemprop="datePublished">2017-03-19</time>
@@ -329,7 +223,7 @@ RDD是跨集群节点分区的、并且可以并行计算的分布式数据集�
 
   
     <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/03/19/Spark-SQL/">Spark-SQL</a>
+      <a class="post-title-link" href="/2017/03/19/18-spark-sql/">Spark-SQL的简略笔记</a>
     </h3>
   
 
@@ -339,13 +233,12 @@ RDD是跨集群节点分区的、并且可以并行计算的分布式数据集�
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        基础概念Spark SQL是用来处理结构化数据的模块。与基本RDD相比，Spark SQL提供了更多关于数据结构和计算方面的信息(在内部有优化效果)。通常通过SQL和Dataset API来和Spark SQL进行交互。
+        
+几个基本的Spark-SQL概念。没多少东西
 
-SQL:  进行SQL查询，从各种结构化数据源(Json, Hive, Parquet)读取数据。返回Dataset/DataFrame。
-Dataset: 分布式的数据...
     
 
-        <a href="/2017/03/19/Spark-SQL/" class="post-more waves-effect waves-button">
+        <a href="/2017/03/19/18-spark-sql/" class="post-more waves-effect waves-button">
             点击阅读全文
         </a>
     </div>
@@ -361,7 +254,7 @@ Dataset: 分布式的数据...
         </li>
     
         <li class="post-list-item fade">
-            <article id="post-博客搭建过程及问题" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-13-old-blog-problems" class="article-card article-type-post" itemprop="blogPost">
 
     <div class="post-meta">
         <time class="post-time" title="2017-03-13 22:52:41" datetime="2017-03-13T14:52:41.000Z" itemprop="datePublished">2017-03-13</time>
@@ -378,7 +271,7 @@ Dataset: 分布式的数据...
 
   
     <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/03/13/博客搭建过程及问题/">博客搭建过程及问题</a>
+      <a class="post-title-link" href="/2017/03/13/13-old-blog-problems/">旧版博客搭建过程及其问题</a>
     </h3>
   
 
@@ -388,25 +281,19 @@ Dataset: 分布式的数据...
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        一直都想搭建一个博客，今天终于把博客给初步搭建好了。搭建的过程其实不那么顺利，所以简答记录一下。
-搭建过程
-根据手把手搭建博客教程这篇文章来进行搭建，其中目前只看了它的第一页
-后期在hexo主题里面选择了even主题
-依照even-wiki来添加标签、分类和about页面
-修改主题目录下的_config.yml的menu，把home、tags等手动改成中文了
+        
+一直都想搭建一个博客，今天终于把博客给初步搭建好了。搭建的过程其实不那么顺利，所以简答记录一下。
 
-遇到的坑
-没有看wiki，自己...
     
 
-        <a href="/2017/03/13/博客搭建过程及问题/" class="post-more waves-effect waves-button">
+        <a href="/2017/03/13/13-old-blog-problems/" class="post-more waves-effect waves-button">
             点击阅读全文
         </a>
     </div>
     
     <div class="post-footer">
         
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/心得/">心得</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo搭建/">hexo搭建</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/配置Git/">配置Git</a></li></ul>
 
     </div>
     
@@ -415,7 +302,7 @@ Dataset: 分布式的数据...
         </li>
     
         <li class="post-list-item fade">
-            <article id="post-Spark-PairRDD" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-17-spark-pairrdd" class="article-card article-type-post" itemprop="blogPost">
 
     <div class="post-meta">
         <time class="post-time" title="2017-03-13 19:37:06" datetime="2017-03-13T11:37:06.000Z" itemprop="datePublished">2017-03-13</time>
@@ -432,7 +319,7 @@ Dataset: 分布式的数据...
 
   
     <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/03/13/Spark-PairRDD/">Spark的键值对RDD</a>
+      <a class="post-title-link" href="/2017/03/13/17-spark-pairrdd/">Spark键值对RDD的常用API</a>
     </h3>
   
 
@@ -442,12 +329,12 @@ Dataset: 分布式的数据...
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        PairRDD及其创建键值对RDD称为PairRDD，通常用来做聚合计算。Spark为Pair RDD提供了许多专有的操作。
-1234# 创建pair rdd: map 或者 读取键值对格式自动转成pairrdd# 每行的第一个单词作为key，line作为valuepairs = lines.map(lambda line: (line.split(' ')[0], line))
-转化操作P...
+        
+Spark-KV-RDD的API使用
+
     
 
-        <a href="/2017/03/13/Spark-PairRDD/" class="post-more waves-effect waves-button">
+        <a href="/2017/03/13/17-spark-pairrdd/" class="post-more waves-effect waves-button">
             点击阅读全文
         </a>
     </div>
@@ -463,7 +350,7 @@ Dataset: 分布式的数据...
         </li>
     
         <li class="post-list-item fade">
-            <article id="post-Spark-BaseRDD" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-16-Spark-BaseRDD" class="article-card article-type-post" itemprop="blogPost">
 
     <div class="post-meta">
         <time class="post-time" title="2017-03-13 19:26:18" datetime="2017-03-13T11:26:18.000Z" itemprop="datePublished">2017-03-13</time>
@@ -480,7 +367,7 @@ Dataset: 分布式的数据...
 
   
     <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/03/13/Spark-BaseRDD/">Spark的基础RDD</a>
+      <a class="post-title-link" href="/2017/03/13/16-Spark-BaseRDD/">Spark基础RDD的常用API</a>
     </h3>
   
 
@@ -490,11 +377,12 @@ Dataset: 分布式的数据...
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        RDD基础RDD是Spark中的核心抽象——弹性分布式数据集(Resilient Distributed Dataset)。其实RDD是分布式的元素集合，是一个不可变的分布式对象集合。每个RDD都会被分为多个分区，这些分区运行在不同的节点上。RDD可以包含任意对象。Spark会自动将这些RDD的数据分发到集群上，并将操作并行化执行。
-RDD当做我们通过转化操作构建出来的、记录如何计算数据的指...
+        
+Spark基础RDD的常用API总结
+
     
 
-        <a href="/2017/03/13/Spark-BaseRDD/" class="post-more waves-effect waves-button">
+        <a href="/2017/03/13/16-Spark-BaseRDD/" class="post-more waves-effect waves-button">
             点击阅读全文
         </a>
     </div>
@@ -502,64 +390,6 @@ RDD当做我们通过转化操作构建出来的、记录如何计算数据的�
     <div class="post-footer">
         
 	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RDD/">RDD</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spark/">Spark</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
-            <article id="post-HDFS初步学习" class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2016-12-05 19:59:45" datetime="2016-12-05T11:59:45.000Z" itemprop="datePublished">2016-12-05</time>
-
-        
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/大数据/">大数据</a></li></ul>
-
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2016/12/05/HDFS初步学习/">HDFS初步学习</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        HDFS是Hadoop的一个分布式文件系统
-HDFS设计原理
-                
-                    
-                    
-                
-                HDFS设计原理
-            
-
-
-提供了一个抽象访问界面，通过路径访问文件
-抽象界面上所展示的文件，存储在很多个服务器上面
-抽象路径与...
-    
-
-        <a href="/2016/12/05/HDFS初步学习/" class="post-more waves-effect waves-button">
-            点击阅读全文
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HDFS/">HDFS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hadoop/">Hadoop</a></li></ul>
 
     </div>
     
