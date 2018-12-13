@@ -264,6 +264,8 @@
       <category term="强化学习" scheme="http://plmsmile.github.io/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/"/>
     
     
+      <category term="策略梯度" scheme="http://plmsmile.github.io/tags/%E7%AD%96%E7%95%A5%E6%A2%AF%E5%BA%A6/"/>
+    
       <category term="策略迭代" scheme="http://plmsmile.github.io/tags/%E7%AD%96%E7%95%A5%E8%BF%AD%E4%BB%A3/"/>
     
       <category term="值迭代" scheme="http://plmsmile.github.io/tags/%E5%80%BC%E8%BF%AD%E4%BB%A3/"/>
@@ -279,8 +281,6 @@
       <category term="Q网络" scheme="http://plmsmile.github.io/tags/Q%E7%BD%91%E7%BB%9C/"/>
     
       <category term="DQN" scheme="http://plmsmile.github.io/tags/DQN/"/>
-    
-      <category term="策略梯度" scheme="http://plmsmile.github.io/tags/%E7%AD%96%E7%95%A5%E6%A2%AF%E5%BA%A6/"/>
     
   </entry>
   
@@ -302,9 +302,9 @@
       <category term="强化学习" scheme="http://plmsmile.github.io/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/"/>
     
     
-      <category term="策略梯度" scheme="http://plmsmile.github.io/tags/%E7%AD%96%E7%95%A5%E6%A2%AF%E5%BA%A6/"/>
-    
       <category term="策略函数" scheme="http://plmsmile.github.io/tags/%E7%AD%96%E7%95%A5%E5%87%BD%E6%95%B0/"/>
+    
+      <category term="策略梯度" scheme="http://plmsmile.github.io/tags/%E7%AD%96%E7%95%A5%E6%A2%AF%E5%BA%A6/"/>
     
       <category term="REINFORCE" scheme="http://plmsmile.github.io/tags/REINFORCE/"/>
     
