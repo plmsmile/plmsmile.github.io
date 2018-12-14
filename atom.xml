@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://plmsmile.github.io/"/>
-  <updated>2018-12-13T14:52:21.281Z</updated>
+  <updated>2018-12-14T15:10:10.498Z</updated>
   <id>http://plmsmile.github.io/</id>
   
   <author>
@@ -17,24 +17,26 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>OpenAI GPT</title>
+    <title>OpenAI GPT：Improving Language Understanding by Generative Pre-Training</title>
     <link href="http://plmsmile.github.io/2018/12/13/51-opengpt/"/>
     <id>http://plmsmile.github.io/2018/12/13/51-opengpt/</id>
     <published>2018-12-13T14:44:24.000Z</published>
-    <updated>2018-12-13T14:52:21.281Z</updated>
+    <updated>2018-12-14T15:10:10.498Z</updated>
     
-    <content type="html"><![CDATA[<blockquote><p>还没开始写</p></blockquote><a id="more"></a>]]></content>
+    <content type="html"><![CDATA[<blockquote><p>使用Transformer(Decoder)预训练单向语言模型，再进行有监督数据进行特定任务finetune</p></blockquote><a id="more"></a><p><img src="" style="display:block; margin:auto" width="60%"></p><h1 id="背景">背景</h1><h2 id="问题提出">问题提出</h2><p>NLP中，无标注语料很多，有标注的数据很少。</p><ul><li>很多任务不能从头开始训练（标注数据太少），需要<strong>减轻对标注数据的依赖</strong></li><li>在大规模无标注语料中预训练的语言模型可以提升很多效果</li><li>从无标注数据中学习一个<code>good representations</code>，很流行且有效果</li></ul><p>从无标注数据中学习到词级以上的意义的难点：</p><ul><li>没有一个有效的优化目标函数</li><li>对学习到的<code>representations</code>没有通用的有效的迁移方法</li></ul><h2 id="半监督学习">半监督学习</h2><p>半监督是指从无监督数据中学习一些通用表示，再做轻微的有监督<code>finetune</code>到各种各样的特定任务中。</p><p><strong>1. 无监督特征表示</strong></p><p>利用大量的语料和语言模型任务，去学习到一个神经网络。作为后面模型的网络初始参数。</p><p>语言模型网络可以使用<a href="https://plmsmile.github.io/2017/10/18/rnn/">LSTM</a>和<a href="https://plmsmile.github.io/2018/08/29/48-attention-is-all-you-need/">Transformer</a>。<code>Transformer</code>可以解决LSTM的<code>长依赖问题</code>，具有<strong>更好的迁移能力</strong>。</p><p><strong>2. 有监督任务训练</strong></p><p>特定任务的监督数据去finetune初始的网络。一般需要根据任务类型加上输出层。</p><h2 id="相关研究">相关研究</h2><p><strong>1. 语义研究</strong></p><p>词向量主要是迁移具有<code>词级别的信息</code>，但更需要其一些<code>词级别以上的语义信息</code>。主要有<code>phrase-level</code>和<code>sentence-level</code> embedding。</p><p><strong>2. 无监督预训练</strong></p><p>无监督预训练的目的在于为后续任务去<strong>初始化一个好的网络参数</strong>，而不需要去改变任务的目标。预训练主要是使用<code>语言模型任务</code>，Transformer比LSTM更好，更强的迁移能力和处理长依赖能力。</p><p><code>Ruder</code>大神说NLP的ImageNet时代已经来了，足以说明预训练的重要性。</p><p><strong>3. 辅助任务</strong></p><ul><li>加辅助特征(<a href="https://plmsmile.github.io/2018/12/11/50-elmo/">ELMo</a>)：网络的参数需要重新学习</li><li>辅助训练目标--语言模型和特定任务一起训练：其实无监督预训练已经学习到了语言特征，无需辅助训练目标了</li></ul><h1 id="gpt模型">GPT模型</h1><h2 id="预训练单向语言模型">预训练单向语言模型</h2><p>采用的是<a href="https://plmsmile.github.io/2018/12/11/50-elmo/#%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B">单向语言模型</a>，预测下一个词语，采用的是<a href="https://plmsmile.github.io/2018/08/29/48-attention-is-all-you-need/#decoder">Tansformer的Decoder</a>。</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/openai-transformer-1.png" style="display:block; margin:auto" width="60%"></p><p>在Decoder之外加上线性层去预测下一个单词，训练语言模型任务。</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/openai-transformer-language-modeling.png" style="display:block; margin:auto" width="60%"></p><h2 id="迁移到下游监督任务">迁移到下游监督任务</h2><p>预训练的Tansformer已经具有处理语言的能力，再加上输出层，并且监督finetune，则可以达到一个不错的效果。如下</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/openai-transformer-sentence-classification.png" style="display:block; margin:auto" width="60%"></p><h2 id="各种任务组织方式">各种任务组织方式</h2><p>利用<a href="https://arxiv.org/abs/1509.06664" target="_blank" rel="noopener">traversal-style</a>方法，把结构化数据处理成一个序列。每个序列都有一个开始和结束符号，也有分解符号，都是随机初始化的。</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/openai-input%20transformations2.png" style="display:block; margin:auto" width="80%"></p><p><strong>分类任务</strong></p><p>开始符号 -- 文本 -- 结束符号</p><p><strong>文本蕴含</strong></p><p>开始 -- 前提 -- 分界 -- 假设 -- 结束</p><p><strong>相似性</strong></p><p>相似度计算与顺序无关，所以加了两个</p><p><strong>问答和常识推理</strong></p><p>文章和问题组成上下文，与每一个可能的答案作为拼接。一共有多组</p><h1 id="分析">分析</h1><h2 id="效果">效果</h2><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/result-1.png" style="display:block; margin:auto" width="60%"></p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/result-2.png" style="display:block; margin:auto" width="60%"></p><h2 id="参数分析">参数分析</h2><ul><li>右图：<code>zero-shot</code>上Transformer的效果是比LSTM好的</li><li>左图：可以知道Transformer层数越多效果也越好</li></ul><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/parameter-analyze.png" style="display:block; margin:auto" width="70%"></p><h1 id="参考">参考</h1><ul><li>原始论文 <a href="https://s3-us-west-2.amazonaws.com/openai-assets/research-covers/language-unsupervised/language_understanding_paper.pdf" target="_blank" rel="noopener">Improving Language Understanding by Generative Pre-Training</a></li><li><a href="https://jalammar.github.io/illustrated-bert/" target="_blank" rel="noopener">Illustrated-BERT</a></li></ul>]]></content>
     
     <summary type="html">
     
       &lt;blockquote&gt;
-&lt;p&gt;还没开始写&lt;/p&gt;
+&lt;p&gt;使用Transformer(Decoder)预训练单向语言模型，再进行有监督数据进行特定任务finetune&lt;/p&gt;
 &lt;/blockquote&gt;
     
     </summary>
     
       <category term="论文笔记" scheme="http://plmsmile.github.io/categories/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/"/>
     
+    
+      <category term="迁移学习" scheme="http://plmsmile.github.io/tags/%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0/"/>
     
       <category term="语言模型" scheme="http://plmsmile.github.io/tags/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/"/>
     
@@ -117,9 +119,9 @@
     
       <category term="论文笔记" scheme="http://plmsmile.github.io/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/"/>
     
-      <category term="机器翻译" scheme="http://plmsmile.github.io/tags/%E6%9C%BA%E5%99%A8%E7%BF%BB%E8%AF%91/"/>
-    
       <category term="Self-Attention" scheme="http://plmsmile.github.io/tags/Self-Attention/"/>
+    
+      <category term="机器翻译" scheme="http://plmsmile.github.io/tags/%E6%9C%BA%E5%99%A8%E7%BF%BB%E8%AF%91/"/>
     
       <category term="Transformer" scheme="http://plmsmile.github.io/tags/Transformer/"/>
     

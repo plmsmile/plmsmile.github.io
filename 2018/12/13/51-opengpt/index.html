@@ -14,25 +14,33 @@
     
     
     
-    <title>OpenAI GPT | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <title>OpenAI GPT：Improving Language Understanding by Generative Pre-Training | PLM&#39;s Notes | 好好学习，天天笔记</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="语言模型,transformer">
-    <meta name="description" content="还没开始写">
-<meta name="keywords" content="语言模型,transformer">
+    <meta name="keywords" content="迁移学习,语言模型,transformer">
+    <meta name="description" content="使用Transformer(Decoder)预训练单向语言模型，再进行有监督数据进行特定任务finetune">
+<meta name="keywords" content="迁移学习,语言模型,transformer">
 <meta property="og:type" content="article">
-<meta property="og:title" content="OpenAI GPT">
+<meta property="og:title" content="OpenAI GPT：Improving Language Understanding by Generative Pre-Training">
 <meta property="og:url" content="http://plmsmile.github.io/2018/12/13/51-opengpt/index.html">
 <meta property="og:site_name" content="PLM&#39;s Notes">
-<meta property="og:description" content="还没开始写">
+<meta property="og:description" content="使用Transformer(Decoder)预训练单向语言模型，再进行有监督数据进行特定任务finetune">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-12-13T14:52:21.281Z">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/openai-transformer-1.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/openai-transformer-language-modeling.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/openai-transformer-sentence-classification.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/openai-input%20transformations2.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/result-1.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/result-2.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/parameter-analyze.png">
+<meta property="og:updated_time" content="2018-12-14T15:10:10.498Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="OpenAI GPT">
-<meta name="twitter:description" content="还没开始写">
+<meta name="twitter:title" content="OpenAI GPT：Improving Language Understanding by Generative Pre-Training">
+<meta name="twitter:description" content="使用Transformer(Decoder)预训练单向语言模型，再进行有监督数据进行特定任务finetune">
+<meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/openai-transformer-1.png">
     
         <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
     
@@ -120,7 +128,7 @@
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
         </a>
-        <div class="flex-col header-title ellipsis">OpenAI GPT</div>
+        <div class="flex-col header-title ellipsis">OpenAI GPT：Improving Language Understanding by Generative Pre-Training</div>
         
         <div class="search-wrap" id="search-wrap">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
@@ -142,7 +150,7 @@
 <header class="content-header post-header">
 
     <div class="container fade-scale">
-        <h1 class="title">OpenAI GPT</h1>
+        <h1 class="title">OpenAI GPT：Improving Language Understanding by Generative Pre-Training</h1>
         <h5 class="subtitle">
             
                 <time datetime="2018-12-13T14:44:24.000Z" itemprop="datePublished" class="page-time">
@@ -164,11 +172,18 @@
 
 <div class="container body-wrap">
     
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#背景"><span class="post-toc-number">1.</span> <span class="post-toc-text">背景</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#问题提出"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">问题提出</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#半监督学习"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">半监督学习</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#相关研究"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">相关研究</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#gpt模型"><span class="post-toc-number">2.</span> <span class="post-toc-text">GPT模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#预训练单向语言模型"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">预训练单向语言模型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#迁移到下游监督任务"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">迁移到下游监督任务</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#各种任务组织方式"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">各种任务组织方式</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#分析"><span class="post-toc-number">3.</span> <span class="post-toc-text">分析</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#效果"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">效果</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#参数分析"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">参数分析</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#参考"><span class="post-toc-number">4.</span> <span class="post-toc-text">参考</span></a></li></ol>
+        </nav>
+    </aside>
+
 
 <article id="post-51-opengpt" class="post-article article-type-post fade" itemprop="blogPost">
 
     <div class="post-card">
-        <h1 class="post-card-title">OpenAI GPT</h1>
+        <h1 class="post-card-title">OpenAI GPT：Improving Language Understanding by Generative Pre-Training</h1>
         <div class="post-meta">
             <time class="post-time" title="2018-12-13 22:44:24" datetime="2018-12-13T14:44:24.000Z" itemprop="datePublished">2018-12-13</time>
 
@@ -186,9 +201,76 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <blockquote>
-<p>还没开始写</p>
+<p>使用Transformer(Decoder)预训练单向语言模型，再进行有监督数据进行特定任务finetune</p>
 </blockquote>
 <a id="more"></a>
+<p><img src="" style="display:block; margin:auto" width="60%"></p>
+<h1 id="背景">背景</h1>
+<h2 id="问题提出">问题提出</h2>
+<p>NLP中，无标注语料很多，有标注的数据很少。</p>
+<ul>
+<li>很多任务不能从头开始训练（标注数据太少），需要<strong>减轻对标注数据的依赖</strong></li>
+<li>在大规模无标注语料中预训练的语言模型可以提升很多效果</li>
+<li>从无标注数据中学习一个<code>good representations</code>，很流行且有效果</li>
+</ul>
+<p>从无标注数据中学习到词级以上的意义的难点：</p>
+<ul>
+<li>没有一个有效的优化目标函数</li>
+<li>对学习到的<code>representations</code>没有通用的有效的迁移方法</li>
+</ul>
+<h2 id="半监督学习">半监督学习</h2>
+<p>半监督是指从无监督数据中学习一些通用表示，再做轻微的有监督<code>finetune</code>到各种各样的特定任务中。</p>
+<p><strong>1. 无监督特征表示</strong></p>
+<p>利用大量的语料和语言模型任务，去学习到一个神经网络。作为后面模型的网络初始参数。</p>
+<p>语言模型网络可以使用<a href="https://plmsmile.github.io/2017/10/18/rnn/">LSTM</a>和<a href="https://plmsmile.github.io/2018/08/29/48-attention-is-all-you-need/">Transformer</a>。<code>Transformer</code>可以解决LSTM的<code>长依赖问题</code>，具有<strong>更好的迁移能力</strong>。</p>
+<p><strong>2. 有监督任务训练</strong></p>
+<p>特定任务的监督数据去finetune初始的网络。一般需要根据任务类型加上输出层。</p>
+<h2 id="相关研究">相关研究</h2>
+<p><strong>1. 语义研究</strong></p>
+<p>词向量主要是迁移具有<code>词级别的信息</code>，但更需要其一些<code>词级别以上的语义信息</code>。主要有<code>phrase-level</code>和<code>sentence-level</code> embedding。</p>
+<p><strong>2. 无监督预训练</strong></p>
+<p>无监督预训练的目的在于为后续任务去<strong>初始化一个好的网络参数</strong>，而不需要去改变任务的目标。预训练主要是使用<code>语言模型任务</code>，Transformer比LSTM更好，更强的迁移能力和处理长依赖能力。</p>
+<p><code>Ruder</code>大神说NLP的ImageNet时代已经来了，足以说明预训练的重要性。</p>
+<p><strong>3. 辅助任务</strong></p>
+<ul>
+<li>加辅助特征(<a href="https://plmsmile.github.io/2018/12/11/50-elmo/">ELMo</a>)：网络的参数需要重新学习</li>
+<li>辅助训练目标--语言模型和特定任务一起训练：其实无监督预训练已经学习到了语言特征，无需辅助训练目标了</li>
+</ul>
+<h1 id="gpt模型">GPT模型</h1>
+<h2 id="预训练单向语言模型">预训练单向语言模型</h2>
+<p>采用的是<a href="https://plmsmile.github.io/2018/12/11/50-elmo/#%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B">单向语言模型</a>，预测下一个词语，采用的是<a href="https://plmsmile.github.io/2018/08/29/48-attention-is-all-you-need/#decoder">Tansformer的Decoder</a>。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/openai-transformer-1.png" style="display:block; margin:auto" width="60%"></p>
+<p>在Decoder之外加上线性层去预测下一个单词，训练语言模型任务。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/openai-transformer-language-modeling.png" style="display:block; margin:auto" width="60%"></p>
+<h2 id="迁移到下游监督任务">迁移到下游监督任务</h2>
+<p>预训练的Tansformer已经具有处理语言的能力，再加上输出层，并且监督finetune，则可以达到一个不错的效果。如下</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/openai-transformer-sentence-classification.png" style="display:block; margin:auto" width="60%"></p>
+<h2 id="各种任务组织方式">各种任务组织方式</h2>
+<p>利用<a href="https://arxiv.org/abs/1509.06664" target="_blank" rel="noopener">traversal-style</a>方法，把结构化数据处理成一个序列。每个序列都有一个开始和结束符号，也有分解符号，都是随机初始化的。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/openai-input%20transformations2.png" style="display:block; margin:auto" width="80%"></p>
+<p><strong>分类任务</strong></p>
+<p>开始符号 -- 文本 -- 结束符号</p>
+<p><strong>文本蕴含</strong></p>
+<p>开始 -- 前提 -- 分界 -- 假设 -- 结束</p>
+<p><strong>相似性</strong></p>
+<p>相似度计算与顺序无关，所以加了两个</p>
+<p><strong>问答和常识推理</strong></p>
+<p>文章和问题组成上下文，与每一个可能的答案作为拼接。一共有多组</p>
+<h1 id="分析">分析</h1>
+<h2 id="效果">效果</h2>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/result-1.png" style="display:block; margin:auto" width="60%"></p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/result-2.png" style="display:block; margin:auto" width="60%"></p>
+<h2 id="参数分析">参数分析</h2>
+<ul>
+<li>右图：<code>zero-shot</code>上Transformer的效果是比LSTM好的</li>
+<li>左图：可以知道Transformer层数越多效果也越好</li>
+</ul>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/parameter-analyze.png" style="display:block; margin:auto" width="70%"></p>
+<h1 id="参考">参考</h1>
+<ul>
+<li>原始论文 <a href="https://s3-us-west-2.amazonaws.com/openai-assets/research-covers/language-unsupervised/language_understanding_paper.pdf" target="_blank" rel="noopener">Improving Language Understanding by Generative Pre-Training</a></li>
+<li><a href="https://jalammar.github.io/illustrated-bert/" target="_blank" rel="noopener">Illustrated-BERT</a></li>
+</ul>
 
         </div>
 
@@ -197,7 +279,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-12-13T14:52:21.281Z" itemprop="dateUpdated">2018-12-13 22:52:21</time>
+    最后更新时间：<time datetime="2018-12-14T15:10:10.498Z" itemprop="dateUpdated">2018-12-14 23:10:10</time>
 </span><br>
 
 
@@ -223,7 +305,7 @@
 
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/transformer/">transformer</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/语言模型/">语言模型</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/transformer/">transformer</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/语言模型/">语言模型</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/迁移学习/">迁移学习</a></li></ul>
 
 
             
@@ -233,7 +315,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2018/12/13/51-opengpt/&title=《OpenAI GPT》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2018/12/13/51-opengpt/&title=《OpenAI GPT：Improving Language Understanding by Generative Pre-Training》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -243,8 +325,8 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/12/13/51-opengpt/&title=《OpenAI GPT》 — PLM's Notes&source=
-还没开始写
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/12/13/51-opengpt/&title=《OpenAI GPT：Improving Language Understanding by Generative Pre-Training》 — PLM's Notes&source=
+使用Transformer(Decoder)预训练单向语言模型，再进行有监督数据进行特定任务finetune
 " data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
@@ -255,7 +337,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《OpenAI GPT》 — PLM's Notes&url=http://plmsmile.github.io/2018/12/13/51-opengpt/&via=http://plmsmile.github.io" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《OpenAI GPT：Improving Language Understanding by Generative Pre-Training》 — PLM's Notes&url=http://plmsmile.github.io/2018/12/13/51-opengpt/&via=http://plmsmile.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
@@ -399,7 +481,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2018/12/13/51-opengpt/&title=《OpenAI GPT》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2018/12/13/51-opengpt/&title=《OpenAI GPT：Improving Language Understanding by Generative Pre-Training》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -409,8 +491,8 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/12/13/51-opengpt/&title=《OpenAI GPT》 — PLM's Notes&source=
-还没开始写
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/12/13/51-opengpt/&title=《OpenAI GPT：Improving Language Understanding by Generative Pre-Training》 — PLM's Notes&source=
+使用Transformer(Decoder)预训练单向语言模型，再进行有监督数据进行特定任务finetune
 " data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
@@ -421,7 +503,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《OpenAI GPT》 — PLM's Notes&url=http://plmsmile.github.io/2018/12/13/51-opengpt/&via=http://plmsmile.github.io" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《OpenAI GPT：Improving Language Understanding by Generative Pre-Training》 — PLM's Notes&url=http://plmsmile.github.io/2018/12/13/51-opengpt/&via=http://plmsmile.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
