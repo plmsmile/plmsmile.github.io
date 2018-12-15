@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>BERT | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="语言模型,Transformer,预训练">
+    <meta name="description" content="未完成。目前最强NLP模型，横扫NLP11项任务。利用Transformer去训练双向语言模型。">
+<meta name="keywords" content="语言模型,Transformer,预训练">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BERT">
+<meta property="og:url" content="http://plmsmile.github.io/2018/12/15/52-bert/index.html">
+<meta property="og:site_name" content="PLM&#39;s Notes">
+<meta property="og:description" content="未完成。目前最强NLP模型，横扫NLP11项任务。利用Transformer去训练双向语言模型。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-transfer-learning.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/BERT-classification-spam.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-input-output.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-encoders-input.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-output-vector.png">
+<meta property="og:image" content="https://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-base-bert-large.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-base-bert-large-encoders.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-input.png">
+<meta property="og:updated_time" content="2018-12-15T15:09:36.407Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="BERT">
+<meta name="twitter:description" content="未完成。目前最强NLP模型，横扫NLP11项任务。利用Transformer去训练双向语言模型。">
+<meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-transfer-learning.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">PLM</h5>
+          <a href="mailto:plmsmile@126.com" title="plmsmile@126.com" class="mail">plmsmile@126.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives/">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags/">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories/">
+                <i class="icon icon-lg icon-th-list"></i>
+                类别
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about/">
+                <i class="icon icon-lg icon-user"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/plmsmile" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">BERT</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">BERT</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-12-15T04:07:30.000Z" itemprop="datePublished" class="page-time">
+  2018-12-15
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/论文笔记/">论文笔记</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#背景"><span class="post-toc-number">1.</span> <span class="post-toc-text">背景</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#简介"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">简介</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#存在的问题"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">存在的问题</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#相关研究"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">相关研究</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#bert模型"><span class="post-toc-number">2.</span> <span class="post-toc-text">BERT模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#模型架构"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">模型架构</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#输入"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">输入</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-52-bert" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">BERT</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-12-15 12:07:30" datetime="2018-12-15T04:07:30.000Z" itemprop="datePublished">2018-12-15</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/论文笔记/">论文笔记</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>未完成。目前最强NLP模型，横扫NLP11项任务。利用Transformer去训练双向语言模型。</p>
+</blockquote>
+<a id="more"></a>
+<p><img src="" style="display:block; margin:auto" width="60%"></p>
+<h1 id="背景">背景</h1>
+<h2 id="简介">简介</h2>
+<p>在NLP中，利用语言模型去做预训练，能显著提升许多任务的效果。</p>
+<ul>
+<li><code>句子级别</code>任务：自然语言推理等。学习多个句子之间的关系</li>
+<li><code>词级别</code>任务 ：NER、QA、SQuAD等</li>
+</ul>
+<p>两种迁移方式</p>
+<ul>
+<li>基于特征：<a href="https://plmsmile.github.io/2018/12/11/50-elmo/">ELMo</a></li>
+<li>基于finetune：<a href="https://plmsmile.github.io/2018/12/13/51-opengpt/">OpenAI GPT</a></li>
+</ul>
+<h2 id="存在的问题">存在的问题</h2>
+<p>单向语言模型和两个方向语言模型简单拼接，这两个方法的能力都小于双向语言模型。</p>
+<p>单向语言模型对于：</p>
+<ul>
+<li><code>sentence-level</code>任务：次优方案。</li>
+<li><code>token-level</code>任务：效果很差。比如SQuAD，非常需要融合两个方向的信息</li>
+</ul>
+<h2 id="相关研究">相关研究</h2>
+<p><strong>1. 基于特征的方法</strong></p>
+<ul>
+<li>词向量</li>
+<li><code>sentence</code> 、<code>paragraph</code> 向量</li>
+<li>从语言模型中获得具有上下文语义的向量--<a href="https://plmsmile.github.io/2018/12/11/50-elmo/">ELMo</a></li>
+</ul>
+<p><strong>2. 基于Finetune的方法</strong></p>
+<p>预训练一个语言模型，在下游任务只需要简单finetune，只需要从新训练很少的参数。</p>
+<ul>
+<li><a href="https://plmsmile.github.io/2018/12/13/51-opengpt/">OpenAI GPT</a></li>
+</ul>
+<p><strong>3. 基于监督数据的迁移学习</strong></p>
+<p>从一些大规模是数据集中进行迁移学习。比如</p>
+<ul>
+<li>从自然语言推理中迁移</li>
+<li>从机器翻译中迁移学习词向量：<a href="https://arxiv.org/abs/1708.00107" target="_blank" rel="noopener">Learned in Translation: Contextualized Word Vectors</a></li>
+</ul>
+<h1 id="bert模型">BERT模型</h1>
+<p><img src="" style="display:block; margin:auto" width="60%"></p>
+<p><img src="" style="display:block; margin:auto" width="60%"></p>
+<p><img src="" style="display:block; margin:auto" width="60%"></p>
+<p><img src="" style="display:block; margin:auto" width="60%"></p>
+<p><img src="" style="display:block; margin:auto" width="60%"></p>
+<p><img src="" style="display:block; margin:auto" width="60%"></p>
+<p><img src="" style="display:block; margin:auto" width="60%"></p>
+<p><img src="" style="display:block; margin:auto" width="60%"></p>
+<p><img src="" style="display:block; margin:auto" width="60%"></p>
+<p><img src="" style="display:block; margin:auto" width="60%"></p>
+<p><img src="" style="display:block; margin:auto" width="60%"></p>
+<p><img src="" style="display:block; margin:auto" width="60%"></p>
+<p><img src="" style="display:block; margin:auto" width="60%"></p>
+<h2 id="模型架构">模型架构</h2>
+<p><strong>1. 总体架构</strong></p>
+<p>利用<a href="https://plmsmile.github.io/2018/08/29/48-attention-is-all-you-need/#encoder">Transformer的Encoder</a>去训练双向语言模型<code>BERT</code>，再在BERT后面接上特定任务的分类器。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-transfer-learning.png" style="display:block; margin:auto" width="60%"></p>
+<p>使用方法示例：</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/BERT-classification-spam.png" style="display:block; margin:auto" width="60%"></p>
+<p><strong>2. 输入与输出</strong></p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-input-output.png" style="display:block; margin:auto" width="60%"></p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-encoders-input.png" style="display:block; margin:auto" width="60%"></p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-output-vector.png" style="display:block; margin:auto" width="60%"></p>
+<p><strong>3. 两种规模</strong></p>
+<ul>
+<li><span class="math inline">\(\rm{BERT}_{BASE}\)</span> ：<span class="math inline">\(\rm{L=12, H=768, A=12}\)</span>。总参数为110M。和GPT一样</li>
+<li><span class="math inline">\(\rm{BERT}_{LARGE}\)</span> ：<span class="math inline">\(\rm{L=24, H=1024, A=16}\)</span>。总参数为340M。最优模型</li>
+</ul>
+<p><img src="https://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-base-bert-large.png" style="display:block; margin:auto" width="60%"></p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-base-bert-large-encoders.png" style="display:block; margin:auto" width="60%"></p>
+<h2 id="输入">输入</h2>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-input.png" style="display:block; margin:auto" width="60%"></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-12-15T15:09:36.407Z" itemprop="dateUpdated">2018-12-15 23:09:36</time>
+</span><br>
+
+
+        
+        <br>原始链接：<a href="/2018/12/15/52-bert/" target="_blank" rel="external">http://plmsmile.github.io/2018/12/15/52-bert/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://plmsmile.github.io">
+            <img src="/img/avatar.jpg" alt="PLM">
+            PLM
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Transformer/">Transformer</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/语言模型/">语言模型</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/预训练/">预训练</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2018/12/15/52-bert/&title=《BERT》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/12/15/52-bert/&title=《BERT》 — PLM's Notes&source=
+未完成。目前最强NLP模型，横扫NLP11项任务。利用Transformer去训练双向语言模型。
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2018/12/15/52-bert/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《BERT》 — PLM's Notes&url=http://plmsmile.github.io/2018/12/15/52-bert/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2018/12/15/52-bert/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/12/13/51-opengpt/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">OpenAI GPT：Improving Language Understanding by Generative Pre-Training</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "kR8nND4dcsWgqDWIjpiH4YFj-gzGzoHsz",
+            appKey: "il7PLkcJCfDBXMR6XirLdO2K",
+            avatar: "wavatar",
+            placeholder: "快来评论吧~",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="bottom">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <span>
+            PLM's Notes &nbsp; &copy; &nbsp
+            </span>
+            2016 - 2018
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2018/12/15/52-bert/&title=《BERT》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/12/15/52-bert/&title=《BERT》 — PLM's Notes&source=
+未完成。目前最强NLP模型，横扫NLP11项任务。利用Transformer去训练双向语言模型。
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2018/12/15/52-bert/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《BERT》 — PLM's Notes&url=http://plmsmile.github.io/2018/12/15/52-bert/&via=http://plmsmile.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2018/12/15/52-bert/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACKElEQVR42u3aSW4jMRAEQP3/0/IDtGUWJQNNBk8Do4dk+FBmLbdbvO4P69U37fev/tftFwsDA+OyjPvblXzz/tKP++Ts/BQMDIwTGEkAbbeOjo+pH+6MgYGBUQbN9ifJuRgYGBizgLuSALdPSQwMDIwkiW1rXPkl1p+hGBgYezPyoPn///5JfwMDA+NSjFm5Py/fJ9e6Ly8MDIy9GXmAa599+Z6zgIuBgXEOIy/T58X9PNWcnf7kSwwMjAMY+QFt2at9PuZPzCcBFwMDY1NGHtrWB7zalLVuYWJgYGzKyK+48hBs09rkJkXVEAMD4+KMZACiDa+zlHh9UAwDA2NXxkrSmIfR5PtZQ/TD3w0MDIztGEmonSW0Lb4e+MDAwDiM0QbQ706ZJvu/nBbBwMDYmrFy3eSwWZuz+JVhYGBszZhtl3dHk6fhekMCAwNjb0Zbym+Pz9PdWeMTAwPjBEbbB8zZ6wF3adgCAwNjO8asENYW6WajGMWJGBgYxzDyMPqth+NKoa3ucmBgYFyc0T71ooGtuEiXD1hgYGCczMjHvPLuYdI2+NqQBwYGxqaMe7nahDNht62I2yxmY2BgXJaRr/YhOCu35Tu3DVEMDIyrM2YJ5GxIog3lxR0wMDAOYLRJaX7kcMBrlotjYGBglG3IlUGNmo2BgYERNzJnaXA7cvEyicXAwNiakSSxeSkt37lNbjEwMM5kzFLH2XDGykjHF5qaGBgY12P8AYbkYL7BhUjpAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

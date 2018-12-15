@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://plmsmile.github.io/"/>
-  <updated>2018-12-14T15:10:10.498Z</updated>
+  <updated>2018-12-15T15:09:36.407Z</updated>
   <id>http://plmsmile.github.io/</id>
   
   <author>
@@ -17,13 +17,41 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>BERT</title>
+    <link href="http://plmsmile.github.io/2018/12/15/52-bert/"/>
+    <id>http://plmsmile.github.io/2018/12/15/52-bert/</id>
+    <published>2018-12-15T04:07:30.000Z</published>
+    <updated>2018-12-15T15:09:36.407Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>未完成。目前最强NLP模型，横扫NLP11项任务。利用Transformer去训练双向语言模型。</p></blockquote><a id="more"></a><p><img src="" style="display:block; margin:auto" width="60%"></p><h1 id="背景">背景</h1><h2 id="简介">简介</h2><p>在NLP中，利用语言模型去做预训练，能显著提升许多任务的效果。</p><ul><li><code>句子级别</code>任务：自然语言推理等。学习多个句子之间的关系</li><li><code>词级别</code>任务 ：NER、QA、SQuAD等</li></ul><p>两种迁移方式</p><ul><li>基于特征：<a href="https://plmsmile.github.io/2018/12/11/50-elmo/">ELMo</a></li><li>基于finetune：<a href="https://plmsmile.github.io/2018/12/13/51-opengpt/">OpenAI GPT</a></li></ul><h2 id="存在的问题">存在的问题</h2><p>单向语言模型和两个方向语言模型简单拼接，这两个方法的能力都小于双向语言模型。</p><p>单向语言模型对于：</p><ul><li><code>sentence-level</code>任务：次优方案。</li><li><code>token-level</code>任务：效果很差。比如SQuAD，非常需要融合两个方向的信息</li></ul><h2 id="相关研究">相关研究</h2><p><strong>1. 基于特征的方法</strong></p><ul><li>词向量</li><li><code>sentence</code> 、<code>paragraph</code> 向量</li><li>从语言模型中获得具有上下文语义的向量--<a href="https://plmsmile.github.io/2018/12/11/50-elmo/">ELMo</a></li></ul><p><strong>2. 基于Finetune的方法</strong></p><p>预训练一个语言模型，在下游任务只需要简单finetune，只需要从新训练很少的参数。</p><ul><li><a href="https://plmsmile.github.io/2018/12/13/51-opengpt/">OpenAI GPT</a></li></ul><p><strong>3. 基于监督数据的迁移学习</strong></p><p>从一些大规模是数据集中进行迁移学习。比如</p><ul><li>从自然语言推理中迁移</li><li>从机器翻译中迁移学习词向量：<a href="https://arxiv.org/abs/1708.00107" target="_blank" rel="noopener">Learned in Translation: Contextualized Word Vectors</a></li></ul><h1 id="bert模型">BERT模型</h1><p><img src="" style="display:block; margin:auto" width="60%"></p><p><img src="" style="display:block; margin:auto" width="60%"></p><p><img src="" style="display:block; margin:auto" width="60%"></p><p><img src="" style="display:block; margin:auto" width="60%"></p><p><img src="" style="display:block; margin:auto" width="60%"></p><p><img src="" style="display:block; margin:auto" width="60%"></p><p><img src="" style="display:block; margin:auto" width="60%"></p><p><img src="" style="display:block; margin:auto" width="60%"></p><p><img src="" style="display:block; margin:auto" width="60%"></p><p><img src="" style="display:block; margin:auto" width="60%"></p><p><img src="" style="display:block; margin:auto" width="60%"></p><p><img src="" style="display:block; margin:auto" width="60%"></p><p><img src="" style="display:block; margin:auto" width="60%"></p><h2 id="模型架构">模型架构</h2><p><strong>1. 总体架构</strong></p><p>利用<a href="https://plmsmile.github.io/2018/08/29/48-attention-is-all-you-need/#encoder">Transformer的Encoder</a>去训练双向语言模型<code>BERT</code>，再在BERT后面接上特定任务的分类器。</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-transfer-learning.png" style="display:block; margin:auto" width="60%"></p><p>使用方法示例：</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/BERT-classification-spam.png" style="display:block; margin:auto" width="60%"></p><p><strong>2. 输入与输出</strong></p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-input-output.png" style="display:block; margin:auto" width="60%"></p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-encoders-input.png" style="display:block; margin:auto" width="60%"></p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-output-vector.png" style="display:block; margin:auto" width="60%"></p><p><strong>3. 两种规模</strong></p><ul><li><span class="math inline">\(\rm{BERT}_{BASE}\)</span> ：<span class="math inline">\(\rm{L=12, H=768, A=12}\)</span>。总参数为110M。和GPT一样</li><li><span class="math inline">\(\rm{BERT}_{LARGE}\)</span> ：<span class="math inline">\(\rm{L=24, H=1024, A=16}\)</span>。总参数为340M。最优模型</li></ul><p><img src="https://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-base-bert-large.png" style="display:block; margin:auto" width="60%"></p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-base-bert-large-encoders.png" style="display:block; margin:auto" width="60%"></p><h2 id="输入">输入</h2><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-input.png" style="display:block; margin:auto" width="60%"></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;未完成。目前最强NLP模型，横扫NLP11项任务。利用Transformer去训练双向语言模型。&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+      <category term="论文笔记" scheme="http://plmsmile.github.io/categories/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="语言模型" scheme="http://plmsmile.github.io/tags/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/"/>
+    
+      <category term="Transformer" scheme="http://plmsmile.github.io/tags/Transformer/"/>
+    
+      <category term="预训练" scheme="http://plmsmile.github.io/tags/%E9%A2%84%E8%AE%AD%E7%BB%83/"/>
+    
+  </entry>
+  
+  <entry>
     <title>OpenAI GPT：Improving Language Understanding by Generative Pre-Training</title>
     <link href="http://plmsmile.github.io/2018/12/13/51-opengpt/"/>
     <id>http://plmsmile.github.io/2018/12/13/51-opengpt/</id>
     <published>2018-12-13T14:44:24.000Z</published>
-    <updated>2018-12-14T15:10:10.498Z</updated>
+    <updated>2018-12-15T04:09:41.861Z</updated>
     
-    <content type="html"><![CDATA[<blockquote><p>使用Transformer(Decoder)预训练单向语言模型，再进行有监督数据进行特定任务finetune</p></blockquote><a id="more"></a><p><img src="" style="display:block; margin:auto" width="60%"></p><h1 id="背景">背景</h1><h2 id="问题提出">问题提出</h2><p>NLP中，无标注语料很多，有标注的数据很少。</p><ul><li>很多任务不能从头开始训练（标注数据太少），需要<strong>减轻对标注数据的依赖</strong></li><li>在大规模无标注语料中预训练的语言模型可以提升很多效果</li><li>从无标注数据中学习一个<code>good representations</code>，很流行且有效果</li></ul><p>从无标注数据中学习到词级以上的意义的难点：</p><ul><li>没有一个有效的优化目标函数</li><li>对学习到的<code>representations</code>没有通用的有效的迁移方法</li></ul><h2 id="半监督学习">半监督学习</h2><p>半监督是指从无监督数据中学习一些通用表示，再做轻微的有监督<code>finetune</code>到各种各样的特定任务中。</p><p><strong>1. 无监督特征表示</strong></p><p>利用大量的语料和语言模型任务，去学习到一个神经网络。作为后面模型的网络初始参数。</p><p>语言模型网络可以使用<a href="https://plmsmile.github.io/2017/10/18/rnn/">LSTM</a>和<a href="https://plmsmile.github.io/2018/08/29/48-attention-is-all-you-need/">Transformer</a>。<code>Transformer</code>可以解决LSTM的<code>长依赖问题</code>，具有<strong>更好的迁移能力</strong>。</p><p><strong>2. 有监督任务训练</strong></p><p>特定任务的监督数据去finetune初始的网络。一般需要根据任务类型加上输出层。</p><h2 id="相关研究">相关研究</h2><p><strong>1. 语义研究</strong></p><p>词向量主要是迁移具有<code>词级别的信息</code>，但更需要其一些<code>词级别以上的语义信息</code>。主要有<code>phrase-level</code>和<code>sentence-level</code> embedding。</p><p><strong>2. 无监督预训练</strong></p><p>无监督预训练的目的在于为后续任务去<strong>初始化一个好的网络参数</strong>，而不需要去改变任务的目标。预训练主要是使用<code>语言模型任务</code>，Transformer比LSTM更好，更强的迁移能力和处理长依赖能力。</p><p><code>Ruder</code>大神说NLP的ImageNet时代已经来了，足以说明预训练的重要性。</p><p><strong>3. 辅助任务</strong></p><ul><li>加辅助特征(<a href="https://plmsmile.github.io/2018/12/11/50-elmo/">ELMo</a>)：网络的参数需要重新学习</li><li>辅助训练目标--语言模型和特定任务一起训练：其实无监督预训练已经学习到了语言特征，无需辅助训练目标了</li></ul><h1 id="gpt模型">GPT模型</h1><h2 id="预训练单向语言模型">预训练单向语言模型</h2><p>采用的是<a href="https://plmsmile.github.io/2018/12/11/50-elmo/#%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B">单向语言模型</a>，预测下一个词语，采用的是<a href="https://plmsmile.github.io/2018/08/29/48-attention-is-all-you-need/#decoder">Tansformer的Decoder</a>。</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/openai-transformer-1.png" style="display:block; margin:auto" width="60%"></p><p>在Decoder之外加上线性层去预测下一个单词，训练语言模型任务。</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/openai-transformer-language-modeling.png" style="display:block; margin:auto" width="60%"></p><h2 id="迁移到下游监督任务">迁移到下游监督任务</h2><p>预训练的Tansformer已经具有处理语言的能力，再加上输出层，并且监督finetune，则可以达到一个不错的效果。如下</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/openai-transformer-sentence-classification.png" style="display:block; margin:auto" width="60%"></p><h2 id="各种任务组织方式">各种任务组织方式</h2><p>利用<a href="https://arxiv.org/abs/1509.06664" target="_blank" rel="noopener">traversal-style</a>方法，把结构化数据处理成一个序列。每个序列都有一个开始和结束符号，也有分解符号，都是随机初始化的。</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/openai-input%20transformations2.png" style="display:block; margin:auto" width="80%"></p><p><strong>分类任务</strong></p><p>开始符号 -- 文本 -- 结束符号</p><p><strong>文本蕴含</strong></p><p>开始 -- 前提 -- 分界 -- 假设 -- 结束</p><p><strong>相似性</strong></p><p>相似度计算与顺序无关，所以加了两个</p><p><strong>问答和常识推理</strong></p><p>文章和问题组成上下文，与每一个可能的答案作为拼接。一共有多组</p><h1 id="分析">分析</h1><h2 id="效果">效果</h2><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/result-1.png" style="display:block; margin:auto" width="60%"></p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/result-2.png" style="display:block; margin:auto" width="60%"></p><h2 id="参数分析">参数分析</h2><ul><li>右图：<code>zero-shot</code>上Transformer的效果是比LSTM好的</li><li>左图：可以知道Transformer层数越多效果也越好</li></ul><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/parameter-analyze.png" style="display:block; margin:auto" width="70%"></p><h1 id="参考">参考</h1><ul><li>原始论文 <a href="https://s3-us-west-2.amazonaws.com/openai-assets/research-covers/language-unsupervised/language_understanding_paper.pdf" target="_blank" rel="noopener">Improving Language Understanding by Generative Pre-Training</a></li><li><a href="https://jalammar.github.io/illustrated-bert/" target="_blank" rel="noopener">Illustrated-BERT</a></li></ul>]]></content>
+    <content type="html"><![CDATA[<blockquote><p>使用Transformer(Decoder)预训练单向语言模型，再进行有监督数据进行特定任务finetune</p></blockquote><a id="more"></a><p><img src="" style="display:block; margin:auto" width="60%"></p><h1 id="背景">背景</h1><h2 id="问题提出">问题提出</h2><p>NLP中，无标注语料很多，有标注的数据很少。</p><ul><li>很多任务不能从头开始训练（标注数据太少），需要<strong>减轻对标注数据的依赖</strong></li><li>在大规模无标注语料中预训练的语言模型可以提升很多效果</li><li>从无标注数据中学习一个<code>good representations</code>，很流行且有效果</li></ul><p>从无标注数据中学习到词级以上的意义的难点：</p><ul><li>没有一个有效的优化目标函数</li><li>对学习到的<code>representations</code>没有通用的有效的迁移方法</li></ul><h2 id="半监督学习">半监督学习</h2><p>半监督是指从无监督数据中学习一些通用表示，再做轻微的有监督<code>finetune</code>到各种各样的特定任务中。</p><p><strong>1. 无监督特征表示</strong></p><p>利用大量的语料和语言模型任务，去学习到一个神经网络。作为后面模型的网络初始参数。</p><p>语言模型网络可以使用<a href="https://plmsmile.github.io/2017/10/18/rnn/">LSTM</a>和<a href="https://plmsmile.github.io/2018/08/29/48-attention-is-all-you-need/">Transformer</a>。<code>Transformer</code>可以解决LSTM的<code>长依赖问题</code>，具有<strong>更好的迁移能力</strong>。</p><p><strong>2. 有监督任务训练</strong></p><p>特定任务的监督数据去finetune初始的网络。一般需要根据任务类型加上输出层。</p><h2 id="相关研究">相关研究</h2><p><strong>1. 语义研究</strong></p><p>词向量主要是迁移具有<code>词级别的信息</code>，但更需要其一些<code>词级别以上的语义信息</code>。主要有<code>phrase-level</code>和<code>sentence-level</code> embedding。</p><p><strong>2. 无监督预训练</strong></p><p>无监督预训练的目的在于为后续任务去<strong>初始化一个好的网络参数</strong>，而不需要去改变任务的目标。预训练主要是使用<code>语言模型任务</code>，Transformer比LSTM更好，更强的迁移能力和处理长依赖能力。</p><p><code>Ruder</code>大神说NLP的ImageNet时代已经来了，足以说明预训练的重要性。</p><p><strong>3. 辅助任务</strong></p><ul><li>加辅助特征(<a href="https://plmsmile.github.io/2018/12/11/50-elmo/">ELMo</a>)：网络的参数需要重新学习</li><li>辅助训练目标--语言模型和特定任务一起训练：其实无监督预训练已经学习到了语言特征，无需辅助训练目标了</li></ul><h1 id="gpt模型">GPT模型</h1><h2 id="预训练单向语言模型">预训练单向语言模型</h2><p>采用的是<a href="https://plmsmile.github.io/2018/12/11/50-elmo/#%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B">单向语言模型</a>，预测下一个词语，采用的是<a href="https://plmsmile.github.io/2018/08/29/48-attention-is-all-you-need/#decoder">Tansformer的Decoder</a>。</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/openai-transformer-1.png" style="display:block; margin:auto" width="60%"></p><p>在Decoder之外加上线性层去预测下一个单词，训练语言模型任务。</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/openai-transformer-language-modeling.png" style="display:block; margin:auto" width="60%"></p><h2 id="迁移到下游监督任务">迁移到下游监督任务</h2><p>预训练的Tansformer已经具有处理语言的能力，再加上输出层，并且监督finetune，则可以达到一个不错的效果。如下</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/openai-transformer-sentence-classification.png" style="display:block; margin:auto" width="60%"></p><h2 id="各种任务组织方式">各种任务组织方式</h2><p>利用<a href="https://arxiv.org/abs/1509.06664" target="_blank" rel="noopener">traversal-style</a>方法，把结构化数据处理成一个序列。每个序列都有一个开始和结束符号，也有分解符号，都是随机初始化的。</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/openai-input%20transformations2.png" style="display:block; margin:auto" width="80%"></p><p><strong>分类任务</strong></p><p>开始符号 -- 文本 -- 结束符号</p><p><strong>文本蕴含</strong></p><p>开始 -- 前提 -- 分界 -- 假设 -- 结束</p><p><strong>相似性</strong></p><p>相似度计算与顺序无关，所以加了两个</p><p><strong>问答和常识推理</strong></p><p>文章和问题组成上下文，与每一个可能的答案作为拼接。一共有多组</p><h1 id="分析">分析</h1><h2 id="效果">效果</h2><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/result-1.png" style="display:block; margin:auto" width="60%"></p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/result-2.png" style="display:block; margin:auto" width="60%"></p><h2 id="参数分析">参数分析</h2><ul><li>右图：<code>zero-shot</code>上Transformer的效果是比LSTM好的</li><li>左图：可以知道Transformer层数越多效果也越好</li></ul><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/paper/gpt/parameter-analyze.png" style="display:block; margin:auto" width="70%"></p><h1 id="参考">参考</h1><ul><li>原始论文 <a href="https://s3-us-west-2.amazonaws.com/openai-assets/research-covers/language-unsupervised/language_understanding_paper.pdf" target="_blank" rel="noopener">Improving Language Understanding by Generative Pre-Training</a></li><li><a href="https://jalammar.github.io/illustrated-bert/" target="_blank" rel="noopener">Illustrated-BERT</a></li><li><a href="https://github.com/huggingface/pytorch-openai-transformer-lm" target="_blank" rel="noopener">pytorch-openai-transformer-lm</a></li><li><a href="https://blog.openai.com/language-unsupervised/" target="_blank" rel="noopener">openai language-unsupervised</a></li></ul>]]></content>
     
     <summary type="html">
     
@@ -36,11 +64,11 @@
       <category term="论文笔记" scheme="http://plmsmile.github.io/categories/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/"/>
     
     
-      <category term="迁移学习" scheme="http://plmsmile.github.io/tags/%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0/"/>
+      <category term="transformer" scheme="http://plmsmile.github.io/tags/transformer/"/>
     
       <category term="语言模型" scheme="http://plmsmile.github.io/tags/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/"/>
     
-      <category term="transformer" scheme="http://plmsmile.github.io/tags/transformer/"/>
+      <category term="迁移学习" scheme="http://plmsmile.github.io/tags/%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0/"/>
     
   </entry>
   
@@ -63,13 +91,13 @@
       <category term="论文笔记" scheme="http://plmsmile.github.io/categories/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/"/>
     
     
-      <category term="ELMo" scheme="http://plmsmile.github.io/tags/ELMo/"/>
-    
-      <category term="词向量" scheme="http://plmsmile.github.io/tags/%E8%AF%8D%E5%90%91%E9%87%8F/"/>
+      <category term="语言模型" scheme="http://plmsmile.github.io/tags/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/"/>
     
       <category term="迁移学习" scheme="http://plmsmile.github.io/tags/%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0/"/>
     
-      <category term="语言模型" scheme="http://plmsmile.github.io/tags/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/"/>
+      <category term="ELMo" scheme="http://plmsmile.github.io/tags/ELMo/"/>
+    
+      <category term="词向量" scheme="http://plmsmile.github.io/tags/%E8%AF%8D%E5%90%91%E9%87%8F/"/>
     
       <category term="LSTM" scheme="http://plmsmile.github.io/tags/LSTM/"/>
     
@@ -119,11 +147,11 @@
     
       <category term="论文笔记" scheme="http://plmsmile.github.io/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/"/>
     
-      <category term="Self-Attention" scheme="http://plmsmile.github.io/tags/Self-Attention/"/>
+      <category term="Transformer" scheme="http://plmsmile.github.io/tags/Transformer/"/>
     
       <category term="机器翻译" scheme="http://plmsmile.github.io/tags/%E6%9C%BA%E5%99%A8%E7%BF%BB%E8%AF%91/"/>
     
-      <category term="Transformer" scheme="http://plmsmile.github.io/tags/Transformer/"/>
+      <category term="Self-Attention" scheme="http://plmsmile.github.io/tags/Self-Attention/"/>
     
       <category term="多头注意力" scheme="http://plmsmile.github.io/tags/%E5%A4%9A%E5%A4%B4%E6%B3%A8%E6%84%8F%E5%8A%9B/"/>
     
@@ -607,34 +635,6 @@
       <category term="coattention" scheme="http://plmsmile.github.io/tags/coattention/"/>
     
       <category term="QA" scheme="http://plmsmile.github.io/tags/QA/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>协同注意力简介</title>
-    <link href="http://plmsmile.github.io/2018/03/14/31-co-attention-vqa/"/>
-    <id>http://plmsmile.github.io/2018/03/14/31-co-attention-vqa/</id>
-    <published>2018-03-14T08:56:27.000Z</published>
-    <updated>2018-12-13T07:53:38.618Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote><p>只是记录一下Co-Attention，后续再补上本篇论文的全部笔记吧。</p></blockquote><a id="more"></a><p>论文：<a href="https://arxiv.org/abs/1606.00061" target="_blank" rel="noopener">Hierarchical Question-Image Co-Attention for Visual Question Answering</a></p><p>我的相关笔记：<a href="https://plmsmile.github.io/2017/10/12/Attention-based-NMT/">Attention-based NMT阅读笔记</a>和<a href="https://plmsmile.github.io/2017/10/10/attention-model/#encoder-decoder">NLP中的Attention笔记</a></p><h1 id="co-attention">Co-Attention</h1><p>这里以VQA里面的两个例子记录一下Co-Attention。即图片和问题。</p><h2 id="注意力和协同注意力">注意力和协同注意力</h2><p><strong>注意力</strong></p><p><code>注意力机制</code>就像人<strong>带着问题去阅读</strong>， 先看问题，再去文本中有目标地阅读寻找答案。</p><p>机器阅读则是结合问题和文本的信息，生成一个关于文本段落各部分的<code>注意力权重</code>，再<strong>对文本信息进行加权</strong>。</p><p>注意力机制可以帮助我们更好地去捕捉段落中和问题相关的信息。</p><p><strong>协同注意力</strong></p><p><code>协同注意力</code>是一种<strong>双向的注意力</strong>， 再利用注意力去生成文本和问句的注意力。</p><ul><li>给文本生成注意力权值</li><li>给问句生成注意力权值</li></ul><p>协同注意力分为两种方式：</p><ul><li><strong>Parallel Co-Attention</strong> : 两种数据源A和B，先结合得到C，再基于结合信息C对A和B分别生成对应的Attention。<code>同时生成注意力</code></li><li><strong>Alternating Co-Attention</strong>： 先基于A产生B的attention，得到新的B；再基于新B去产生A的attention。两次<code>交替生成注意力</code></li></ul><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/coattention.png" style="display:block; margin:auto" width="100%"></p><h2 id="parallel-co-attention">Parallel Co-Attention</h2><p>图片特征：<span class="math inline">\(V \in \mathbb {R}^{d\times N}\)</span> ，问句特征：<span class="math inline">\(Q \in \mathbb R^{d \times T}\)</span> 。</p><p><code>同时</code>生成图片和问题的注意力。</p><p>先计算<code>关联矩阵</code>： <span class="math display">\[C = \rm{tanh}(Q^T W_b V) \in \mathbb R^{T \times N}\]</span> 计算<code>注意力权值</code> <span class="math inline">\(a^v\)</span>和<span class="math inline">\(a^q\)</span></p><p>方法1：直接选择最大值。<span class="math inline">\(a^v_n = \max \limits_i(C_{i, n})\)</span> ，<span class="math inline">\(a_t^q = \max \limits_i (C_{t, j})\)</span></p><p>方法2：把关联矩阵当做特征给到网络中，进行计算注意力权值，再进行<code>softmax</code>。<strong>更好</strong> <span class="math display">\[H^v = \rm{tanh} (W_vV + (W_qQ)C), \quad \quad H^q = \rm{tanh} (W_qQ + (W_vV)C^T)\]</span></p><p><span class="math display">\[a^v = \rm{softmax}(w_{hv}^TH^v), \quad \quad a^q = \rm{softmax}(w^T_{hq}H^q)\]</span></p><p>利用注意力和原特征向量去计算<code>新的特征向量</code> <span class="math display">\[\mathbf {\hat v} = \sum_{n=1}^N a^v_n \mathbf v_n, \quad \quad \mathbf { \hat q} = \sum_{t=1}^Tq_t^q \mathbf q_t\]</span></p><h2 id="alternating-co-attention">Alternating Co-Attention</h2><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/nlp/papers/coattention.png" style="display:block; margin:auto" width="100%"></p><p><code>交替</code>生成图片和问题的注意力。</p><ul><li>把问题归纳成一个单独向量<span class="math inline">\(\mathbf {q}\)</span></li><li>基于<span class="math inline">\(\mathbf q\)</span> 去和图片特征<span class="math inline">\(V\)</span>去生成图像特征<span class="math inline">\(\mathbf {\hat v}\)</span></li><li>基于<span class="math inline">\(\mathbf v\)</span>和问题特征<span class="math inline">\(Q\)</span>去生成问题特征<span class="math inline">\(\mathbf {\hat q}\)</span></li></ul><p>具体地，给一个<span class="math inline">\(X\)</span>和<code>attention guidance</code><span class="math inline">\(\mathbf g\)</span> ，通过<span class="math inline">\(\mathbf {\hat x} = f(X, \mathbf g)\)</span>去得到特征向量<span class="math inline">\(\mathbf {\hat x}\)</span> <span class="math display">\[H = \rm {tanh} (W_x X+ (W_g \mathbf g) \mathbb 1^T)\]</span> <span class="math inline">\(\mathbf a ^x\)</span> 是特征<span class="math inline">\(X\)</span>的<code>注意力权值</code> ： <span class="math display">\[\mathbf a^x = \rm(softmax)(w^T_{hx} H)\]</span> 新的<strong>注意力向量</strong> (<code>attended image (or question) vector)</code> : <span class="math display">\[\mathbf {\hat x} = \sum a_i^x \mathbf x_i\]</span> 对应本例子如下：</p><ul><li><span class="math inline">\(X = Q, \; g = 0 \to \mathbf q\)</span></li><li><span class="math inline">\(X = V, \; g = \mathbf q \to \mathbf {\hat v}\)</span></li><li><span class="math inline">\(X = Q, \; g = \mathbf {\hat v} \to \mathbf {\hat q}\)</span></li></ul>]]></content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;只是记录一下Co-Attention，后续再补上本篇论文的全部笔记吧。&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="自然语言处理" scheme="http://plmsmile.github.io/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/"/>
-    
-    
-      <category term="论文笔记" scheme="http://plmsmile.github.io/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/"/>
-    
-      <category term="注意力" scheme="http://plmsmile.github.io/tags/%E6%B3%A8%E6%84%8F%E5%8A%9B/"/>
-    
-      <category term="VQA" scheme="http://plmsmile.github.io/tags/VQA/"/>
     
   </entry>
   
