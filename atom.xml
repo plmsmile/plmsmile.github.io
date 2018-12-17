@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://plmsmile.github.io/"/>
-  <updated>2018-12-16T14:57:38.309Z</updated>
+  <updated>2018-12-17T08:49:26.001Z</updated>
   <id>http://plmsmile.github.io/</id>
   
   <author>
@@ -17,18 +17,18 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>BERT</title>
+    <title>BERT详解</title>
     <link href="http://plmsmile.github.io/2018/12/15/52-bert/"/>
     <id>http://plmsmile.github.io/2018/12/15/52-bert/</id>
     <published>2018-12-15T04:07:30.000Z</published>
-    <updated>2018-12-16T14:57:38.309Z</updated>
+    <updated>2018-12-17T08:49:26.001Z</updated>
     
-    <content type="html"><![CDATA[<blockquote><p>未完成。目前最强NLP模型，横扫NLP11项任务。利用Transformer去训练双向语言模型。</p></blockquote><a id="more"></a><p><img src="" style="display:block; margin:auto" width="60%"></p><h1 id="背景">背景</h1><h2 id="简介">简介</h2><p>在NLP中，利用语言模型去做预训练，能显著提升许多任务的效果。</p><ul><li><code>句子级别</code>任务：自然语言推理等。学习多个句子之间的关系</li><li><code>词级别</code>任务 ：NER、QA、SQuAD等</li></ul><p>两种迁移方式</p><ul><li>基于特征：<a href="https://plmsmile.github.io/2018/12/11/50-elmo/">ELMo</a></li><li>基于finetune：<a href="https://plmsmile.github.io/2018/12/13/51-opengpt/">OpenAI GPT</a></li></ul><h2 id="存在的问题">存在的问题</h2><p>单向语言模型和两个方向语言模型简单拼接，这两个方法的能力都小于双向语言模型。</p><p>单向语言模型对于：</p><ul><li><code>sentence-level</code>任务：次优方案。</li><li><code>token-level</code>任务：效果很差。比如SQuAD，非常需要融合两个方向的信息</li></ul><h2 id="相关研究">相关研究</h2><p><strong>1. 基于特征的方法</strong></p><ul><li>词向量</li><li><code>sentence</code> 、<code>paragraph</code> 向量</li><li>从语言模型中获得具有上下文语义的向量--<a href="https://plmsmile.github.io/2018/12/11/50-elmo/">ELMo</a></li></ul><p><strong>2. 基于Finetune的方法</strong></p><p>预训练一个语言模型，在下游任务只需要简单finetune，只需要从新训练很少的参数。</p><ul><li><a href="https://plmsmile.github.io/2018/12/13/51-opengpt/">OpenAI GPT</a></li></ul><p><strong>3. 基于监督数据的迁移学习</strong></p><p>从一些大规模是数据集中进行迁移学习。比如</p><ul><li>从自然语言推理中迁移</li><li>从机器翻译中迁移学习词向量：<a href="https://arxiv.org/abs/1708.00107" target="_blank" rel="noopener">Learned in Translation: Contextualized Word Vectors</a></li></ul><h1 id="bert模型">BERT模型</h1><p><img src="" style="display:block; margin:auto" width="60%"></p><p><img src="" style="display:block; margin:auto" width="60%"></p><p><img src="" style="display:block; margin:auto" width="60%"></p><p><img src="" style="display:block; margin:auto" width="60%"></p><p><img src="" style="display:block; margin:auto" width="60%"></p><p><img src="" style="display:block; margin:auto" width="60%"></p><p><img src="" style="display:block; margin:auto" width="60%"></p><p><img src="" style="display:block; margin:auto" width="60%"></p><p><img src="" style="display:block; margin:auto" width="60%"></p><p><img src="" style="display:block; margin:auto" width="60%"></p><p><img src="" style="display:block; margin:auto" width="60%"></p><p><img src="" style="display:block; margin:auto" width="60%"></p><h2 id="模型架构">模型架构</h2><p><strong>1. 总体架构</strong></p><p>利用<a href="https://plmsmile.github.io/2018/08/29/48-attention-is-all-you-need/#encoder">Transformer的Encoder</a>去训练双向语言模型<code>BERT</code>，再在BERT后面接上特定任务的分类器。</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-transfer-learning.png" style="display:block; margin:auto" width="60%"></p><p>使用方法示例：</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/BERT-classification-spam.png" style="display:block; margin:auto" width="60%"></p><p><strong>2. 输入与输出</strong></p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-input-output.png" style="display:block; margin:auto" width="60%"></p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-encoders-input.png" style="display:block; margin:auto" width="60%"></p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-output-vector.png" style="display:block; margin:auto" width="60%"></p><p><strong>3. 两种规模</strong></p><ul><li><span class="math inline">\(\rm{BERT}_{BASE}\)</span> ：<span class="math inline">\(\rm{L=12, H=768, A=12}\)</span>。总参数为110M。和GPT一样</li><li><span class="math inline">\(\rm{BERT}_{LARGE}\)</span> ：<span class="math inline">\(\rm{L=24, H=1024, A=16}\)</span>。总参数为340M。最优模型</li></ul><p><img src="https://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-base-bert-large.png" style="display:block; margin:auto" width="60%"></p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-base-bert-large-encoders.png" style="display:block; margin:auto" width="60%"></p><h2 id="任务输入">任务输入</h2><p>每个位置输入三个部分相加而成：</p><ul><li><code>wordpiece-token</code>向量</li><li><code>位置向量</code>：512个。训练</li><li><code>段向量</code>：sentence A B两个向量。训练</li></ul><p>一些符号：</p><ul><li><code>CLS</code>：special classification embedding，用于分类的向量，会聚集所有的分类信息</li><li><code>SEP</code>：输入是QA或2个句子时，需添加<code>SEP</code>标记以示区别</li><li><span class="math inline">\(E_A\)</span>和<span class="math inline">\(E_B\)</span>：输入是QA或2个句子时，标记的sentence向量。如只有一个句子，则是sentence A向量</li></ul><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-input.png" style="display:block; margin:auto" width="60%"></p><p>不同任务的输入输出</p><ul><li>单句子分类：CLS+句子。利用CLS进行分类</li><li>多句子分类：CLS+句子A+SEP+句子B。利用CLS分类</li><li>SQuAD：CLS+问题+SEP+文章。利用所有文章单词的输出做计算start和end</li><li>NER：CLS+句子。利用句子单词做标记</li></ul><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-tasks2.png" style="display:block; margin:auto" width="60%"></p><h2 id="预训练语言模型">预训练语言模型</h2><p>我们都知道单向语言模型的能力很差，单独训练两个方向的语言模型再把结果拼接起来也不好。那么怎么才能训练一个真正的双向语言模型呢？如何让一个单词<code>is conditioned on both left and right context</code>呢？</p><p><strong>Masked LM</strong></p><p>在进行WordPiece之后，随机掩盖一些（15%）词汇，再去预测这些词汇。</p>]]></content>
+    <content type="html"><![CDATA[<blockquote><p>目前最强NLP模型，横扫NLP11项任务。利用Transformer去预训练双向语言模型和NSP任务，再finetune达到了各种任务的最优效果。</p></blockquote><a id="more"></a><p><img src="" style="display:block; margin:auto" width="60%"></p><h1 id="背景">背景</h1><h2 id="简介">简介</h2><p>在NLP中，利用语言模型去做预训练，能显著提升许多任务的效果。</p><ul><li><code>句子级别</code>任务：自然语言推理等。学习多个句子之间的关系</li><li><code>词级别</code>任务 ：NER、QA、SQuAD等</li></ul><p>两种迁移方式</p><ul><li>基于特征：<a href="https://plmsmile.github.io/2018/12/11/50-elmo/">ELMo</a></li><li>基于finetune：<a href="https://plmsmile.github.io/2018/12/13/51-opengpt/">OpenAI GPT</a></li></ul><h2 id="存在的问题">存在的问题</h2><p>单向语言模型和两个方向语言模型简单拼接，这两个方法的能力都小于双向语言模型。</p><p>单向语言模型对于：</p><ul><li><code>sentence-level</code>任务：次优方案。</li><li><code>token-level</code>任务：效果很差。比如SQuAD，非常需要融合两个方向的信息</li></ul><h2 id="相关研究">相关研究</h2><p><strong>1. 基于特征的方法</strong></p><ul><li>词向量</li><li><code>sentence</code> 、<code>paragraph</code> 向量</li><li>从语言模型中获得具有上下文语义的向量--<a href="https://plmsmile.github.io/2018/12/11/50-elmo/">ELMo</a></li></ul><p><strong>2. 基于Finetune的方法</strong></p><p>预训练一个语言模型，在下游任务只需要简单finetune，只需要从新训练很少的参数。</p><ul><li><a href="https://plmsmile.github.io/2018/12/13/51-opengpt/">OpenAI GPT</a></li></ul><p><strong>3. 基于监督数据的迁移学习</strong></p><p>从一些大规模是数据集中进行迁移学习。比如</p><ul><li>从自然语言推理中迁移</li><li>从机器翻译中迁移学习词向量：<a href="https://arxiv.org/abs/1708.00107" target="_blank" rel="noopener">Learned in Translation: Contextualized Word Vectors</a></li></ul><h1 id="bert模型">BERT模型</h1><h2 id="模型架构">模型架构</h2><p><strong>1. 总体架构</strong></p><p>利用<a href="https://plmsmile.github.io/2018/08/29/48-attention-is-all-you-need/#encoder">Transformer的Encoder</a>去训练双向语言模型<code>BERT</code>，再在BERT后面接上特定任务的分类器。</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-transfer-learning.png" style="display:block; margin:auto" width="60%"></p><p>使用方法示例：</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/BERT-classification-spam.png" style="display:block; margin:auto" width="60%"></p><p><strong>2. 输入与输出</strong></p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-input-output.png" style="display:block; margin:auto" width="60%"></p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-encoders-input.png" style="display:block; margin:auto" width="60%"></p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-output-vector.png" style="display:block; margin:auto" width="60%"></p><p><strong>3. 两种规模</strong></p><ul><li><span class="math inline">\(\rm{BERT}_{BASE}\)</span> ：<span class="math inline">\(\rm{L=12, H=768, A=12}\)</span>。总参数为110M。和GPT一样</li><li><span class="math inline">\(\rm{BERT}_{LARGE}\)</span> ：<span class="math inline">\(\rm{L=24, H=1024, A=16}\)</span>。总参数为340M。最优模型</li></ul><p><img src="https://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-base-bert-large.png" style="display:block; margin:auto" width="60%"></p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-base-bert-large-encoders.png" style="display:block; margin:auto" width="60%"></p><h2 id="单个位置的输入">单个位置的输入</h2><p>每个位置输入三个部分相加而成：</p><ul><li><code>wordpiece-token</code>向量</li><li><code>位置向量</code>：512个。训练</li><li><code>段向量</code>：sentence A B两个向量。训练</li></ul><p>一些符号：</p><ul><li><code>CLS</code>：special classification embedding，用于分类的向量，会聚集所有的分类信息</li><li><code>SEP</code>：输入是QA或2个句子时，需添加<code>SEP</code>标记以示区别</li><li><span class="math inline">\(E_A\)</span>和<span class="math inline">\(E_B\)</span>：输入是QA或2个句子时，标记的sentence向量。如只有一个句子，则是sentence A向量</li></ul><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-input.png" style="display:block; margin:auto" width="60%"></p><h2 id="特定任务的bert">特定任务的BERT</h2><ul><li>单句子分类：CLS+句子。利用CLS进行分类</li><li>多句子分类：CLS+句子A+SEP+句子B。利用CLS分类</li><li>SQuAD：CLS+问题+SEP+文章。利用所有文章单词的输出做计算start和end</li><li>NER：CLS+句子。利用句子单词做标记</li></ul><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-tasks2.png" style="display:block; margin:auto" width="60%"></p><h2 id="预训练语言模型">预训练语言模型</h2><p>我们都知道单向语言模型的能力很差，单独训练两个方向的语言模型再把结果拼接起来也不好。那么怎么才能训练一个真正的双向语言模型呢？如何让一个单词<code>is conditioned on both left and right context</code>呢？答案就是<code>Masked Language Model</code></p><p><strong>Masked LM</strong></p><p>在进行WordPiece之后，随机掩盖一些（15%）词汇，再去预测这些词汇。</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/BERT-language-modeling-masked-lm.png" style="display:block; margin:auto" width="60%"></p><p>但是有2个缺点</p><p><strong>缺点1 大量mask标记，造成预训练和finetune时候的差距，因为finetune没有mask</strong></p><ul><li>80%：替换为mask</li><li>10%：随机替换为其它词汇</li><li>10%：保留原来的词汇。这部分正确的保留，保证了语言能力。</li></ul><p>由于Transformer不知道要预测哪个词语，所以它会强制学习到所有单词的上下文表达。</p><p><strong>缺点2 收敛很慢，但是效果好</strong></p><p>比单向语言模型收敛较慢。</p><h2 id="预训练nsp任务">预训练NSP任务</h2><p>对于像QA、NLI等需要理解多个句子之间关系的下游任务，只靠语言模型是不够的。还<strong>需要提前学习到句子之间的关系</strong>。</p><p><strong>Next Sentence Prediction</strong></p><p>NSP-<code>Next Sentence Prediction</code>，是一个二分类任务。输入是A和B两个句子，标记是<code>IsNext</code>或<code>NotNext</code>，用来判断B是否是A后面的句子。这样，就能从大规模预料中学习到一些句间关系。</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-next-sentence-prediction.png" style="display:block; margin:auto" width="60%"></p><p>模型最终能达到97%-98%的准确率，对QA和NLI都很有效果。</p><h2 id="预训练细节">预训练细节</h2><p><strong>数据组成</strong></p><p>语料是下面两个库，合计33亿词汇。采用文档级别的语料，有利于学习长依赖序列。</p><ul><li><code>BooksCorpus</code>：8亿个词。(800M)</li><li><code>英文维基百科</code>：25亿个词。(2,500M)</li></ul><p>从语料库中随机选择2个片段(较长)作为两个AB句子，构成一条输入数据：</p><ul><li>0.5概率A-B两个句子连续，0.5概率随机选择B</li><li>A使用A embedding，B使用B embedding</li><li>A和B总长度最大为512 tokens</li></ul><p><a href="https://github.com/google-research/bert/blob/master/tokenization.py" target="_blank" rel="noopener">WordPiece Tokenization</a>后再mask掉15%的词汇。</p><p><strong>训练参数</strong></p><ul><li><code>batch_size</code>：256。每条数据长度：512</li><li>100万步，40个epoch。语料合计33亿词汇</li><li><a href="https://plmsmile.github.io/2018/03/30/35-nerual-network-optim/#adam">Adam</a> ：<span class="math inline">\(\beta_1=0.9, \beta_2=0.999\)</span></li><li>L2权值衰减为0.01。所有层的dropout为0.1</li><li><a href="https://github.com/plmsmile/QANet/blob/master/optim.py" target="_blank" rel="noopener">学习率的warmup</a>的step为10000</li><li><a href="https://arxiv.org/abs/1606.08415" target="_blank" rel="noopener">GELU</a>激活函数</li><li>训练loss：LM和NSP的loss加起来</li><li>BERT base 16个TPU，Large 64个TPU，训练4天</li></ul><h2 id="finetune细节">Finetune细节</h2><p>两种不同类型的任务所需要的向量，详情见特定任务的BERT</p><ul><li><code>sentence-level</code>：一般只拿<code>CLS</code>位置的向量，过线性层再softmax即可得到分类结果</li><li><code>token-level</code>：SQuAD或NER，取对应位置的向量，过线性层再softmax得到相应的结果</li></ul><p>Finetune时超参数基本一致，但有一些是与特定任务相关的。下面是比较好的选择</p><ul><li><code>Batch size</code>：16, 32</li><li><code>学习率</code>：<span class="math inline">\(5*10^{-5}\)</span>，<span class="math inline">\(3*10^{-5}\)</span>，<span class="math inline">\(2*10^{-5}\)</span></li><li><code>epoch</code> ：3,4</li></ul><h1 id="bert与gpt比较">BERT与GPT比较</h1><p>BERT和<a href="https://plmsmile.github.io/2018/12/13/51-opengpt/#gpt%E6%A8%A1%E5%9E%8B">OpenAI GPT</a>都是使用Transformer进行预训练语言模型， 再进行finetune达到不错的效果。区别如下：</p><table><thead><tr class="header"><th align="center">项目</th><th align="center">BERT</th><th align="center">GPT</th></tr></thead><tbody><tr class="odd"><td align="center">训练数据</td><td align="center">BooksCorpus(8亿)+维基百科(25亿)</td><td align="center">BooksCorpus(8亿)</td></tr><tr class="even"><td align="center">任务</td><td align="center">双向语言模型(MLM)+NSP+Finetune</td><td align="center">单向语言模型+Finetune</td></tr><tr class="odd"><td align="center">Transformer</td><td align="center">Encoder</td><td align="center">Decoder</td></tr><tr class="even"><td align="center">符号</td><td align="center">CLS, SEP, sentence A-B</td><td align="center">Start, SEP, 结束(CLS)</td></tr><tr class="odd"><td align="center">符号使用</td><td align="center">预训练、finetune过程</td><td align="center">finetune过程</td></tr><tr class="even"><td align="center">Batch数据</td><td align="center">1M步，128000个词汇</td><td align="center">1M步，32000个词汇</td></tr><tr class="odd"><td align="center">finetune学习率</td><td align="center">与特定任务相关</td><td align="center">与预训练一样，<span class="math inline">\(5*10^{-5}\)</span></td></tr></tbody></table><h1 id="实验结果">实验结果</h1><h2 id="项glue任务">9项GLUE任务</h2><p><code>General Language Understanding Evaluation</code> 包含了很多自然语言理解的任务。</p><p><strong>1. MNLI</strong></p><p><a href="https://www.nyu.edu/projects/bowman/multinli/" target="_blank" rel="noopener">Multi-Genre Natural Language Inference</a>是一个众包大规模的文本蕴含任务。</p><blockquote><p>给2个句子，判断第二个句子与第一个句子之间的关系。蕴含、矛盾、中立的</p></blockquote><p><strong>2. QQP</strong></p><p><a href="https://www.kaggle.com/c/quora-question-pairs" target="_blank" rel="noopener">Quora Question Pairs</a></p><blockquote><p>给2个问题，判断是否语义相同</p></blockquote><p><strong>3. QNLI</strong></p><p><a href="https://www.nyu.edu/projects/bowman/glue.pdf" target="_blank" rel="noopener">Question Natural Language Inference</a> 是一个二分类任务，由SQuAD数据变成。</p><blockquote><p>给1个(问题，句子)对，判断句子是否包含正确答案</p></blockquote><p><strong>4. SST-2</strong></p><p><a href="https://nlp.stanford.edu/sentiment/treebank.html" target="_blank" rel="noopener">Stanford Sentiment Treebank</a>，二分类任务，从电影评论中提取。</p><blockquote><p>给1个评论句子，判断情感</p></blockquote><p><strong>5. CoLA</strong></p><p><a href="https://nyu-mll.github.io/CoLA/" target="_blank" rel="noopener">The Corpus of Linguistic Acceptablity</a>，二分类任务，判断一个英语句子是否符合语法的</p><blockquote><p>给1个英语句子，判断是否符合语法</p></blockquote><p><strong>6. STS-B</strong></p><p><a href="http://alt.qcri.org/semeval2017/task1/" target="_blank" rel="noopener">The Semantic Textual Similarity Benchmark</a>，多分类任务，判断两个句子的相似性，0-5。由新闻标题和其他组成</p><blockquote><p>给2个句子，看相似性</p></blockquote><p><strong>7. MRPC</strong></p><p><a href="https://www.microsoft.com/en-us/download/details.aspx?id=52398" target="_blank" rel="noopener">Microsoft Research Paraphrase Corpus</a>，2分类任务，判断两个句子是否语义相等，由网上新闻组成。05年的，3600条训练数据。</p><blockquote><p>给1个句子对，判断2个句子语义是否相同</p></blockquote><p><strong>8. RTE</strong></p><p><a href="https://www.k4all.org/project/third-recognising-textual-entailment-challenge/" target="_blank" rel="noopener">Recognizing Textual Entailment</a>，二分类任务，类似于MNLI，但是只是蕴含或者不蕴含。训练数据更少</p><p><strong>9. WNLI</strong></p><p><a href="">Winograd NLI</a>一个小数据集的NLI。据说官网评测有问题。所以评测后面的评测没有加入这个</p><p><strong>GLUE评测结果</strong></p><p>对于<code>sentence-level</code>的分类任务，只用<code>CLS</code>位置的输出向量来进行分类。</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/glue.png" style="display:block; margin:auto" width="60%"></p><h2 id="squad-v1.1">SQuAD-v1.1</h2><p>SQuAD属于<code>token-level</code>的任务，不是用CLS位置，而是用所有的文章位置的向量去计算开始和结束位置。</p><p>Finetune了3轮，学习率为<span class="math inline">\(5*10^{-5}\)</span>，batchsize为32。取得了最好的效果</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/squad.png" style="display:block; margin:auto" width="50%"></p><h2 id="ner">NER</h2><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/ner.png" style="display:block; margin:auto" width="50%"></p><h2 id="swag">SWAG</h2><p><a href="https://rowanzellers.com/swag/" target="_blank" rel="noopener">The Situations With Adversarial Generations</a> 是一个常识性推理数据集，是一个四分类问题。给一个背景，选择一个最有可能会发生的情景。</p><p>Finetune了3轮，学习率为<span class="math inline">\(2*10^{-5}\)</span>，batchsize=16</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/swag.png" style="display:block; margin:auto" width="50%"></p><h1 id="效果分析">效果分析</h1><h2 id="任务影响">任务影响</h2><p>No NSP：不加NSP任务；LTR 单向语言模型。</p><ul><li>NSP：对SQuAD、QNLI、MNLI有影响，下降1个点左右</li><li>双向LM：如果是LTR，SQuAD、MRPC都严重下降10个点。因为<strong>token-level的任务，更需要右边上下文的信息</strong></li></ul><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/task-impact.png" style="display:block; margin:auto" width="60%"></p><h2 id="模型大小">模型大小</h2><p>BERT的base和large的参数分别为：110M和340M。</p><p>一般来说，对于大型任务，扩大模型会提升效果。但是，<strong>BERT得到充分预训练以后，扩大模型，也会对小数据集有提升</strong>！这是第一个证明这个结论的任务。</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/modelsize-impact.png" style="display:block; margin:auto" width="60%"></p><h2 id="训练步数">训练步数</h2><ul><li>确实需要训练100万步。12800词/batch</li><li>MLM收敛到最优慢，但是效果好。在早期就早早超过单向语言模型了</li></ul><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/step-impact.png" style="display:block; margin:auto" width="60%"></p><h1 id="bert使用方法">BERT使用方法</h1><h2 id="基于finetune">基于finetune</h2><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/BERT-classification-spam.png" style="display:block; margin:auto" width="60%"></p><h2 id="基于特征">基于特征</h2><p>Finetune稍微麻烦一些。可以使用BERT预训练好的<code>contextualized embeddings</code>，每一层都有。</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-contexualized-embeddings.png" style="display:block; margin:auto" width="60%"></p><p>其中效果最好的方法，就是<strong>拼接最后四层的向量</strong>。</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-feature-extraction-contextualized-embeddings.png" style="display:block; margin:auto" width="60%"></p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/feature-based-impact.png" style="display:block; margin:auto" width="50%"></p><h1 id="参考和思考">参考和思考</h1><h2 id="参考">参考</h2><ul><li><a href="https://arxiv.org/abs/1810.04805" target="_blank" rel="noopener">BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</a></li><li><a href="https://jalammar.github.io/illustrated-bert/" target="_blank" rel="noopener">Illustrated-bert</a></li></ul><h2 id="思考">思考</h2><ul><li>今年很流行 无监督预训练和有监督finetune，那么有什么演变历程吗？</li><li>BERT的成功会是因为更多的数据吗？</li><li>BERT很通用太重量级，8个GPU据说要训练一年。普通人难以训练。</li><li>BERT是一个通用预训练模型，那么我们还要继续研究特定任务的架构吗？</li></ul>]]></content>
     
     <summary type="html">
     
       &lt;blockquote&gt;
-&lt;p&gt;未完成。目前最强NLP模型，横扫NLP11项任务。利用Transformer去训练双向语言模型。&lt;/p&gt;
+&lt;p&gt;目前最强NLP模型，横扫NLP11项任务。利用Transformer去预训练双向语言模型和NSP任务，再finetune达到了各种任务的最优效果。&lt;/p&gt;
 &lt;/blockquote&gt;
     
     </summary>
@@ -36,11 +36,21 @@
       <category term="论文笔记" scheme="http://plmsmile.github.io/categories/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/"/>
     
     
-      <category term="Transformer" scheme="http://plmsmile.github.io/tags/Transformer/"/>
+      <category term="ELMo" scheme="http://plmsmile.github.io/tags/ELMo/"/>
+    
+      <category term="迁移学习" scheme="http://plmsmile.github.io/tags/%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0/"/>
     
       <category term="语言模型" scheme="http://plmsmile.github.io/tags/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/"/>
     
-      <category term="预训练" scheme="http://plmsmile.github.io/tags/%E9%A2%84%E8%AE%AD%E7%BB%83/"/>
+      <category term="Transformer" scheme="http://plmsmile.github.io/tags/Transformer/"/>
+    
+      <category term="MLM" scheme="http://plmsmile.github.io/tags/MLM/"/>
+    
+      <category term="NSP" scheme="http://plmsmile.github.io/tags/NSP/"/>
+    
+      <category term="BERT" scheme="http://plmsmile.github.io/tags/BERT/"/>
+    
+      <category term="GPT" scheme="http://plmsmile.github.io/tags/GPT/"/>
     
   </entry>
   
@@ -64,9 +74,9 @@
       <category term="论文笔记" scheme="http://plmsmile.github.io/categories/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/"/>
     
     
-      <category term="语言模型" scheme="http://plmsmile.github.io/tags/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/"/>
-    
       <category term="迁移学习" scheme="http://plmsmile.github.io/tags/%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="语言模型" scheme="http://plmsmile.github.io/tags/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/"/>
     
       <category term="transformer" scheme="http://plmsmile.github.io/tags/transformer/"/>
     
@@ -91,13 +101,13 @@
       <category term="论文笔记" scheme="http://plmsmile.github.io/categories/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/"/>
     
     
-      <category term="语言模型" scheme="http://plmsmile.github.io/tags/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/"/>
-    
       <category term="ELMo" scheme="http://plmsmile.github.io/tags/ELMo/"/>
     
       <category term="词向量" scheme="http://plmsmile.github.io/tags/%E8%AF%8D%E5%90%91%E9%87%8F/"/>
     
       <category term="迁移学习" scheme="http://plmsmile.github.io/tags/%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="语言模型" scheme="http://plmsmile.github.io/tags/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/"/>
     
       <category term="LSTM" scheme="http://plmsmile.github.io/tags/LSTM/"/>
     
@@ -149,9 +159,9 @@
     
       <category term="Self-Attention" scheme="http://plmsmile.github.io/tags/Self-Attention/"/>
     
-      <category term="Transformer" scheme="http://plmsmile.github.io/tags/Transformer/"/>
-    
       <category term="机器翻译" scheme="http://plmsmile.github.io/tags/%E6%9C%BA%E5%99%A8%E7%BF%BB%E8%AF%91/"/>
+    
+      <category term="Transformer" scheme="http://plmsmile.github.io/tags/Transformer/"/>
     
       <category term="多头注意力" scheme="http://plmsmile.github.io/tags/%E5%A4%9A%E5%A4%B4%E6%B3%A8%E6%84%8F%E5%8A%9B/"/>
     
@@ -321,8 +331,6 @@
       <category term="强化学习" scheme="http://plmsmile.github.io/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/"/>
     
     
-      <category term="策略梯度" scheme="http://plmsmile.github.io/tags/%E7%AD%96%E7%95%A5%E6%A2%AF%E5%BA%A6/"/>
-    
       <category term="策略迭代" scheme="http://plmsmile.github.io/tags/%E7%AD%96%E7%95%A5%E8%BF%AD%E4%BB%A3/"/>
     
       <category term="值迭代" scheme="http://plmsmile.github.io/tags/%E5%80%BC%E8%BF%AD%E4%BB%A3/"/>
@@ -338,6 +346,8 @@
       <category term="Q网络" scheme="http://plmsmile.github.io/tags/Q%E7%BD%91%E7%BB%9C/"/>
     
       <category term="DQN" scheme="http://plmsmile.github.io/tags/DQN/"/>
+    
+      <category term="策略梯度" scheme="http://plmsmile.github.io/tags/%E7%AD%96%E7%95%A5%E6%A2%AF%E5%BA%A6/"/>
     
   </entry>
   
@@ -359,9 +369,9 @@
       <category term="强化学习" scheme="http://plmsmile.github.io/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/"/>
     
     
-      <category term="策略函数" scheme="http://plmsmile.github.io/tags/%E7%AD%96%E7%95%A5%E5%87%BD%E6%95%B0/"/>
-    
       <category term="策略梯度" scheme="http://plmsmile.github.io/tags/%E7%AD%96%E7%95%A5%E6%A2%AF%E5%BA%A6/"/>
+    
+      <category term="策略函数" scheme="http://plmsmile.github.io/tags/%E7%AD%96%E7%95%A5%E5%87%BD%E6%95%B0/"/>
     
       <category term="REINFORCE" scheme="http://plmsmile.github.io/tags/REINFORCE/"/>
     

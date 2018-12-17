@@ -14,20 +14,20 @@
     
     
     
-    <title>BERT | PLM&#39;s Notes | 好好学习，天天笔记</title>
+    <title>BERT详解 | PLM&#39;s Notes | 好好学习，天天笔记</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="Transformer,语言模型,预训练">
-    <meta name="description" content="未完成。目前最强NLP模型，横扫NLP11项任务。利用Transformer去训练双向语言模型。">
-<meta name="keywords" content="Transformer,语言模型,预训练">
+    <meta name="keywords" content="ELMo,迁移学习,语言模型,Transformer,MLM,NSP,BERT,GPT">
+    <meta name="description" content="目前最强NLP模型，横扫NLP11项任务。利用Transformer去预训练双向语言模型和NSP任务，再finetune达到了各种任务的最优效果。">
+<meta name="keywords" content="ELMo,迁移学习,语言模型,Transformer,MLM,NSP,BERT,GPT">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BERT">
+<meta property="og:title" content="BERT详解">
 <meta property="og:url" content="http://plmsmile.github.io/2018/12/15/52-bert/index.html">
 <meta property="og:site_name" content="PLM&#39;s Notes">
-<meta property="og:description" content="未完成。目前最强NLP模型，横扫NLP11项任务。利用Transformer去训练双向语言模型。">
+<meta property="og:description" content="目前最强NLP模型，横扫NLP11项任务。利用Transformer去预训练双向语言模型和NSP任务，再finetune达到了各种任务的最优效果。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-transfer-learning.png">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/BERT-classification-spam.png">
@@ -38,10 +38,23 @@
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-base-bert-large-encoders.png">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-input.png">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-tasks2.png">
-<meta property="og:updated_time" content="2018-12-16T14:57:38.309Z">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/BERT-language-modeling-masked-lm.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-next-sentence-prediction.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/glue.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/squad.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/ner.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/swag.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/task-impact.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/modelsize-impact.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/step-impact.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/BERT-classification-spam.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-contexualized-embeddings.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-feature-extraction-contextualized-embeddings.png">
+<meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/feature-based-impact.png">
+<meta property="og:updated_time" content="2018-12-17T08:49:26.001Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="BERT">
-<meta name="twitter:description" content="未完成。目前最强NLP模型，横扫NLP11项任务。利用Transformer去训练双向语言模型。">
+<meta name="twitter:title" content="BERT详解">
+<meta name="twitter:description" content="目前最强NLP模型，横扫NLP11项任务。利用Transformer去预训练双向语言模型和NSP任务，再finetune达到了各种任务的最优效果。">
 <meta name="twitter:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-transfer-learning.png">
     
         <link rel="alternate" type="application/atom+xml" title="PLM&#39;s Notes" href="/atom.xml">
@@ -130,7 +143,7 @@
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
         </a>
-        <div class="flex-col header-title ellipsis">BERT</div>
+        <div class="flex-col header-title ellipsis">BERT详解</div>
         
         <div class="search-wrap" id="search-wrap">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
@@ -152,7 +165,7 @@
 <header class="content-header post-header">
 
     <div class="container fade-scale">
-        <h1 class="title">BERT</h1>
+        <h1 class="title">BERT详解</h1>
         <h5 class="subtitle">
             
                 <time datetime="2018-12-15T04:07:30.000Z" itemprop="datePublished" class="page-time">
@@ -177,7 +190,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#背景"><span class="post-toc-number">1.</span> <span class="post-toc-text">背景</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#简介"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">简介</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#存在的问题"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">存在的问题</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#相关研究"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">相关研究</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#bert模型"><span class="post-toc-number">2.</span> <span class="post-toc-text">BERT模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#模型架构"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">模型架构</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#任务输入"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">任务输入</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#预训练语言模型"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">预训练语言模型</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#背景"><span class="post-toc-number">1.</span> <span class="post-toc-text">背景</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#简介"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">简介</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#存在的问题"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">存在的问题</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#相关研究"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">相关研究</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#bert模型"><span class="post-toc-number">2.</span> <span class="post-toc-text">BERT模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#模型架构"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">模型架构</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#单个位置的输入"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">单个位置的输入</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#特定任务的bert"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">特定任务的BERT</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#预训练语言模型"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">预训练语言模型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#预训练nsp任务"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">预训练NSP任务</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#预训练细节"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">预训练细节</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#finetune细节"><span class="post-toc-number">2.7.</span> <span class="post-toc-text">Finetune细节</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#bert与gpt比较"><span class="post-toc-number">3.</span> <span class="post-toc-text">BERT与GPT比较</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#实验结果"><span class="post-toc-number">4.</span> <span class="post-toc-text">实验结果</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#项glue任务"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">9项GLUE任务</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#squad-v1.1"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">SQuAD-v1.1</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ner"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">NER</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#swag"><span class="post-toc-number">4.4.</span> <span class="post-toc-text">SWAG</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#效果分析"><span class="post-toc-number">5.</span> <span class="post-toc-text">效果分析</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#任务影响"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">任务影响</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#模型大小"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">模型大小</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#训练步数"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">训练步数</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#bert使用方法"><span class="post-toc-number">6.</span> <span class="post-toc-text">BERT使用方法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#基于finetune"><span class="post-toc-number">6.1.</span> <span class="post-toc-text">基于finetune</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#基于特征"><span class="post-toc-number">6.2.</span> <span class="post-toc-text">基于特征</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#参考和思考"><span class="post-toc-number">7.</span> <span class="post-toc-text">参考和思考</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#参考"><span class="post-toc-number">7.1.</span> <span class="post-toc-text">参考</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#思考"><span class="post-toc-number">7.2.</span> <span class="post-toc-text">思考</span></a></li></ol></li></ol>
         </nav>
     </aside>
 
@@ -185,7 +198,7 @@
 <article id="post-52-bert" class="post-article article-type-post fade" itemprop="blogPost">
 
     <div class="post-card">
-        <h1 class="post-card-title">BERT</h1>
+        <h1 class="post-card-title">BERT详解</h1>
         <div class="post-meta">
             <time class="post-time" title="2018-12-15 12:07:30" datetime="2018-12-15T04:07:30.000Z" itemprop="datePublished">2018-12-15</time>
 
@@ -203,7 +216,7 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <blockquote>
-<p>未完成。目前最强NLP模型，横扫NLP11项任务。利用Transformer去训练双向语言模型。</p>
+<p>目前最强NLP模型，横扫NLP11项任务。利用Transformer去预训练双向语言模型和NSP任务，再finetune达到了各种任务的最优效果。</p>
 </blockquote>
 <a id="more"></a>
 <p><img src="" style="display:block; margin:auto" width="60%"></p>
@@ -245,18 +258,6 @@
 <li>从机器翻译中迁移学习词向量：<a href="https://arxiv.org/abs/1708.00107" target="_blank" rel="noopener">Learned in Translation: Contextualized Word Vectors</a></li>
 </ul>
 <h1 id="bert模型">BERT模型</h1>
-<p><img src="" style="display:block; margin:auto" width="60%"></p>
-<p><img src="" style="display:block; margin:auto" width="60%"></p>
-<p><img src="" style="display:block; margin:auto" width="60%"></p>
-<p><img src="" style="display:block; margin:auto" width="60%"></p>
-<p><img src="" style="display:block; margin:auto" width="60%"></p>
-<p><img src="" style="display:block; margin:auto" width="60%"></p>
-<p><img src="" style="display:block; margin:auto" width="60%"></p>
-<p><img src="" style="display:block; margin:auto" width="60%"></p>
-<p><img src="" style="display:block; margin:auto" width="60%"></p>
-<p><img src="" style="display:block; margin:auto" width="60%"></p>
-<p><img src="" style="display:block; margin:auto" width="60%"></p>
-<p><img src="" style="display:block; margin:auto" width="60%"></p>
 <h2 id="模型架构">模型架构</h2>
 <p><strong>1. 总体架构</strong></p>
 <p>利用<a href="https://plmsmile.github.io/2018/08/29/48-attention-is-all-you-need/#encoder">Transformer的Encoder</a>去训练双向语言模型<code>BERT</code>，再在BERT后面接上特定任务的分类器。</p>
@@ -274,7 +275,7 @@
 </ul>
 <p><img src="https://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-base-bert-large.png" style="display:block; margin:auto" width="60%"></p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-base-bert-large-encoders.png" style="display:block; margin:auto" width="60%"></p>
-<h2 id="任务输入">任务输入</h2>
+<h2 id="单个位置的输入">单个位置的输入</h2>
 <p>每个位置输入三个部分相加而成：</p>
 <ul>
 <li><code>wordpiece-token</code>向量</li>
@@ -288,7 +289,7 @@
 <li><span class="math inline">\(E_A\)</span>和<span class="math inline">\(E_B\)</span>：输入是QA或2个句子时，标记的sentence向量。如只有一个句子，则是sentence A向量</li>
 </ul>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-input.png" style="display:block; margin:auto" width="60%"></p>
-<p>不同任务的输入输出</p>
+<h2 id="特定任务的bert">特定任务的BERT</h2>
 <ul>
 <li>单句子分类：CLS+句子。利用CLS进行分类</li>
 <li>多句子分类：CLS+句子A+SEP+句子B。利用CLS分类</li>
@@ -297,9 +298,206 @@
 </ul>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-tasks2.png" style="display:block; margin:auto" width="60%"></p>
 <h2 id="预训练语言模型">预训练语言模型</h2>
-<p>我们都知道单向语言模型的能力很差，单独训练两个方向的语言模型再把结果拼接起来也不好。那么怎么才能训练一个真正的双向语言模型呢？如何让一个单词<code>is conditioned on both left and right context</code>呢？</p>
+<p>我们都知道单向语言模型的能力很差，单独训练两个方向的语言模型再把结果拼接起来也不好。那么怎么才能训练一个真正的双向语言模型呢？如何让一个单词<code>is conditioned on both left and right context</code>呢？答案就是<code>Masked Language Model</code></p>
 <p><strong>Masked LM</strong></p>
 <p>在进行WordPiece之后，随机掩盖一些（15%）词汇，再去预测这些词汇。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/BERT-language-modeling-masked-lm.png" style="display:block; margin:auto" width="60%"></p>
+<p>但是有2个缺点</p>
+<p><strong>缺点1 大量mask标记，造成预训练和finetune时候的差距，因为finetune没有mask</strong></p>
+<ul>
+<li>80%：替换为mask</li>
+<li>10%：随机替换为其它词汇</li>
+<li>10%：保留原来的词汇。这部分正确的保留，保证了语言能力。</li>
+</ul>
+<p>由于Transformer不知道要预测哪个词语，所以它会强制学习到所有单词的上下文表达。</p>
+<p><strong>缺点2 收敛很慢，但是效果好</strong></p>
+<p>比单向语言模型收敛较慢。</p>
+<h2 id="预训练nsp任务">预训练NSP任务</h2>
+<p>对于像QA、NLI等需要理解多个句子之间关系的下游任务，只靠语言模型是不够的。还<strong>需要提前学习到句子之间的关系</strong>。</p>
+<p><strong>Next Sentence Prediction</strong></p>
+<p>NSP-<code>Next Sentence Prediction</code>，是一个二分类任务。输入是A和B两个句子，标记是<code>IsNext</code>或<code>NotNext</code>，用来判断B是否是A后面的句子。这样，就能从大规模预料中学习到一些句间关系。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-next-sentence-prediction.png" style="display:block; margin:auto" width="60%"></p>
+<p>模型最终能达到97%-98%的准确率，对QA和NLI都很有效果。</p>
+<h2 id="预训练细节">预训练细节</h2>
+<p><strong>数据组成</strong></p>
+<p>语料是下面两个库，合计33亿词汇。采用文档级别的语料，有利于学习长依赖序列。</p>
+<ul>
+<li><code>BooksCorpus</code>：8亿个词。(800M)</li>
+<li><code>英文维基百科</code>：25亿个词。(2,500M)</li>
+</ul>
+<p>从语料库中随机选择2个片段(较长)作为两个AB句子，构成一条输入数据：</p>
+<ul>
+<li>0.5概率A-B两个句子连续，0.5概率随机选择B</li>
+<li>A使用A embedding，B使用B embedding</li>
+<li>A和B总长度最大为512 tokens</li>
+</ul>
+<p><a href="https://github.com/google-research/bert/blob/master/tokenization.py" target="_blank" rel="noopener">WordPiece Tokenization</a>后再mask掉15%的词汇。</p>
+<p><strong>训练参数</strong></p>
+<ul>
+<li><code>batch_size</code>：256。每条数据长度：512</li>
+<li>100万步，40个epoch。语料合计33亿词汇</li>
+<li><a href="https://plmsmile.github.io/2018/03/30/35-nerual-network-optim/#adam">Adam</a> ：<span class="math inline">\(\beta_1=0.9, \beta_2=0.999\)</span></li>
+<li>L2权值衰减为0.01。所有层的dropout为0.1</li>
+<li><a href="https://github.com/plmsmile/QANet/blob/master/optim.py" target="_blank" rel="noopener">学习率的warmup</a>的step为10000</li>
+<li><a href="https://arxiv.org/abs/1606.08415" target="_blank" rel="noopener">GELU</a>激活函数</li>
+<li>训练loss：LM和NSP的loss加起来</li>
+<li>BERT base 16个TPU，Large 64个TPU，训练4天</li>
+</ul>
+<h2 id="finetune细节">Finetune细节</h2>
+<p>两种不同类型的任务所需要的向量，详情见特定任务的BERT</p>
+<ul>
+<li><code>sentence-level</code>：一般只拿<code>CLS</code>位置的向量，过线性层再softmax即可得到分类结果</li>
+<li><code>token-level</code>：SQuAD或NER，取对应位置的向量，过线性层再softmax得到相应的结果</li>
+</ul>
+<p>Finetune时超参数基本一致，但有一些是与特定任务相关的。下面是比较好的选择</p>
+<ul>
+<li><code>Batch size</code>：16, 32</li>
+<li><code>学习率</code>：<span class="math inline">\(5*10^{-5}\)</span>，<span class="math inline">\(3*10^{-5}\)</span>，<span class="math inline">\(2*10^{-5}\)</span></li>
+<li><code>epoch</code> ：3,4</li>
+</ul>
+<h1 id="bert与gpt比较">BERT与GPT比较</h1>
+<p>BERT和<a href="https://plmsmile.github.io/2018/12/13/51-opengpt/#gpt%E6%A8%A1%E5%9E%8B">OpenAI GPT</a>都是使用Transformer进行预训练语言模型， 再进行finetune达到不错的效果。区别如下：</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">项目</th>
+<th align="center">BERT</th>
+<th align="center">GPT</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">训练数据</td>
+<td align="center">BooksCorpus(8亿)+维基百科(25亿)</td>
+<td align="center">BooksCorpus(8亿)</td>
+</tr>
+<tr class="even">
+<td align="center">任务</td>
+<td align="center">双向语言模型(MLM)+NSP+Finetune</td>
+<td align="center">单向语言模型+Finetune</td>
+</tr>
+<tr class="odd">
+<td align="center">Transformer</td>
+<td align="center">Encoder</td>
+<td align="center">Decoder</td>
+</tr>
+<tr class="even">
+<td align="center">符号</td>
+<td align="center">CLS, SEP, sentence A-B</td>
+<td align="center">Start, SEP, 结束(CLS)</td>
+</tr>
+<tr class="odd">
+<td align="center">符号使用</td>
+<td align="center">预训练、finetune过程</td>
+<td align="center">finetune过程</td>
+</tr>
+<tr class="even">
+<td align="center">Batch数据</td>
+<td align="center">1M步，128000个词汇</td>
+<td align="center">1M步，32000个词汇</td>
+</tr>
+<tr class="odd">
+<td align="center">finetune学习率</td>
+<td align="center">与特定任务相关</td>
+<td align="center">与预训练一样，<span class="math inline">\(5*10^{-5}\)</span></td>
+</tr>
+</tbody>
+</table>
+<h1 id="实验结果">实验结果</h1>
+<h2 id="项glue任务">9项GLUE任务</h2>
+<p><code>General Language Understanding Evaluation</code> 包含了很多自然语言理解的任务。</p>
+<p><strong>1. MNLI</strong></p>
+<p><a href="https://www.nyu.edu/projects/bowman/multinli/" target="_blank" rel="noopener">Multi-Genre Natural Language Inference</a>是一个众包大规模的文本蕴含任务。</p>
+<blockquote>
+<p>给2个句子，判断第二个句子与第一个句子之间的关系。蕴含、矛盾、中立的</p>
+</blockquote>
+<p><strong>2. QQP</strong></p>
+<p><a href="https://www.kaggle.com/c/quora-question-pairs" target="_blank" rel="noopener">Quora Question Pairs</a></p>
+<blockquote>
+<p>给2个问题，判断是否语义相同</p>
+</blockquote>
+<p><strong>3. QNLI</strong></p>
+<p><a href="https://www.nyu.edu/projects/bowman/glue.pdf" target="_blank" rel="noopener">Question Natural Language Inference</a> 是一个二分类任务，由SQuAD数据变成。</p>
+<blockquote>
+<p>给1个(问题，句子)对，判断句子是否包含正确答案</p>
+</blockquote>
+<p><strong>4. SST-2</strong></p>
+<p><a href="https://nlp.stanford.edu/sentiment/treebank.html" target="_blank" rel="noopener">Stanford Sentiment Treebank</a>，二分类任务，从电影评论中提取。</p>
+<blockquote>
+<p>给1个评论句子，判断情感</p>
+</blockquote>
+<p><strong>5. CoLA</strong></p>
+<p><a href="https://nyu-mll.github.io/CoLA/" target="_blank" rel="noopener">The Corpus of Linguistic Acceptablity</a>，二分类任务，判断一个英语句子是否符合语法的</p>
+<blockquote>
+<p>给1个英语句子，判断是否符合语法</p>
+</blockquote>
+<p><strong>6. STS-B</strong></p>
+<p><a href="http://alt.qcri.org/semeval2017/task1/" target="_blank" rel="noopener">The Semantic Textual Similarity Benchmark</a>，多分类任务，判断两个句子的相似性，0-5。由新闻标题和其他组成</p>
+<blockquote>
+<p>给2个句子，看相似性</p>
+</blockquote>
+<p><strong>7. MRPC</strong></p>
+<p><a href="https://www.microsoft.com/en-us/download/details.aspx?id=52398" target="_blank" rel="noopener">Microsoft Research Paraphrase Corpus</a>，2分类任务，判断两个句子是否语义相等，由网上新闻组成。05年的，3600条训练数据。</p>
+<blockquote>
+<p>给1个句子对，判断2个句子语义是否相同</p>
+</blockquote>
+<p><strong>8. RTE</strong></p>
+<p><a href="https://www.k4all.org/project/third-recognising-textual-entailment-challenge/" target="_blank" rel="noopener">Recognizing Textual Entailment</a>，二分类任务，类似于MNLI，但是只是蕴含或者不蕴含。训练数据更少</p>
+<p><strong>9. WNLI</strong></p>
+<p><a href="">Winograd NLI</a>一个小数据集的NLI。据说官网评测有问题。所以评测后面的评测没有加入这个</p>
+<p><strong>GLUE评测结果</strong></p>
+<p>对于<code>sentence-level</code>的分类任务，只用<code>CLS</code>位置的输出向量来进行分类。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/glue.png" style="display:block; margin:auto" width="60%"></p>
+<h2 id="squad-v1.1">SQuAD-v1.1</h2>
+<p>SQuAD属于<code>token-level</code>的任务，不是用CLS位置，而是用所有的文章位置的向量去计算开始和结束位置。</p>
+<p>Finetune了3轮，学习率为<span class="math inline">\(5*10^{-5}\)</span>，batchsize为32。取得了最好的效果</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/squad.png" style="display:block; margin:auto" width="50%"></p>
+<h2 id="ner">NER</h2>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/ner.png" style="display:block; margin:auto" width="50%"></p>
+<h2 id="swag">SWAG</h2>
+<p><a href="https://rowanzellers.com/swag/" target="_blank" rel="noopener">The Situations With Adversarial Generations</a> 是一个常识性推理数据集，是一个四分类问题。给一个背景，选择一个最有可能会发生的情景。</p>
+<p>Finetune了3轮，学习率为<span class="math inline">\(2*10^{-5}\)</span>，batchsize=16</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/swag.png" style="display:block; margin:auto" width="50%"></p>
+<h1 id="效果分析">效果分析</h1>
+<h2 id="任务影响">任务影响</h2>
+<p>No NSP：不加NSP任务；LTR 单向语言模型。</p>
+<ul>
+<li>NSP：对SQuAD、QNLI、MNLI有影响，下降1个点左右</li>
+<li>双向LM：如果是LTR，SQuAD、MRPC都严重下降10个点。因为<strong>token-level的任务，更需要右边上下文的信息</strong></li>
+</ul>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/task-impact.png" style="display:block; margin:auto" width="60%"></p>
+<h2 id="模型大小">模型大小</h2>
+<p>BERT的base和large的参数分别为：110M和340M。</p>
+<p>一般来说，对于大型任务，扩大模型会提升效果。但是，<strong>BERT得到充分预训练以后，扩大模型，也会对小数据集有提升</strong>！这是第一个证明这个结论的任务。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/modelsize-impact.png" style="display:block; margin:auto" width="60%"></p>
+<h2 id="训练步数">训练步数</h2>
+<ul>
+<li>确实需要训练100万步。12800词/batch</li>
+<li>MLM收敛到最优慢，但是效果好。在早期就早早超过单向语言模型了</li>
+</ul>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/step-impact.png" style="display:block; margin:auto" width="60%"></p>
+<h1 id="bert使用方法">BERT使用方法</h1>
+<h2 id="基于finetune">基于finetune</h2>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/BERT-classification-spam.png" style="display:block; margin:auto" width="60%"></p>
+<h2 id="基于特征">基于特征</h2>
+<p>Finetune稍微麻烦一些。可以使用BERT预训练好的<code>contextualized embeddings</code>，每一层都有。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-contexualized-embeddings.png" style="display:block; margin:auto" width="60%"></p>
+<p>其中效果最好的方法，就是<strong>拼接最后四层的向量</strong>。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/bert-feature-extraction-contextualized-embeddings.png" style="display:block; margin:auto" width="60%"></p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/paper/bert/feature-based-impact.png" style="display:block; margin:auto" width="50%"></p>
+<h1 id="参考和思考">参考和思考</h1>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://arxiv.org/abs/1810.04805" target="_blank" rel="noopener">BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</a></li>
+<li><a href="https://jalammar.github.io/illustrated-bert/" target="_blank" rel="noopener">Illustrated-bert</a></li>
+</ul>
+<h2 id="思考">思考</h2>
+<ul>
+<li>今年很流行 无监督预训练和有监督finetune，那么有什么演变历程吗？</li>
+<li>BERT的成功会是因为更多的数据吗？</li>
+<li>BERT很通用太重量级，8个GPU据说要训练一年。普通人难以训练。</li>
+<li>BERT是一个通用预训练模型，那么我们还要继续研究特定任务的架构吗？</li>
+</ul>
 
         </div>
 
@@ -308,7 +506,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-12-16T14:57:38.309Z" itemprop="dateUpdated">2018-12-16 22:57:38</time>
+    最后更新时间：<time datetime="2018-12-17T08:49:26.001Z" itemprop="dateUpdated">2018-12-17 16:49:26</time>
 </span><br>
 
 
@@ -334,7 +532,7 @@
 
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Transformer/">Transformer</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/语言模型/">语言模型</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/预训练/">预训练</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/BERT/">BERT</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ELMo/">ELMo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GPT/">GPT</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MLM/">MLM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NSP/">NSP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Transformer/">Transformer</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/语言模型/">语言模型</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/迁移学习/">迁移学习</a></li></ul>
 
 
             
@@ -344,7 +542,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2018/12/15/52-bert/&title=《BERT》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2018/12/15/52-bert/&title=《BERT详解》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -354,8 +552,8 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/12/15/52-bert/&title=《BERT》 — PLM's Notes&source=
-未完成。目前最强NLP模型，横扫NLP11项任务。利用Transformer去训练双向语言模型。
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/12/15/52-bert/&title=《BERT详解》 — PLM's Notes&source=
+目前最强NLP模型，横扫NLP11项任务。利用Transformer去预训练双向语言模型和NSP任务，再finetune达到了各种任务的最优效果。
 " data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
@@ -366,7 +564,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《BERT》 — PLM's Notes&url=http://plmsmile.github.io/2018/12/15/52-bert/&via=http://plmsmile.github.io" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《BERT详解》 — PLM's Notes&url=http://plmsmile.github.io/2018/12/15/52-bert/&via=http://plmsmile.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
@@ -510,7 +708,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2018/12/15/52-bert/&title=《BERT》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2018/12/15/52-bert/&title=《BERT详解》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -520,8 +718,8 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/12/15/52-bert/&title=《BERT》 — PLM's Notes&source=
-未完成。目前最强NLP模型，横扫NLP11项任务。利用Transformer去训练双向语言模型。
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2018/12/15/52-bert/&title=《BERT详解》 — PLM's Notes&source=
+目前最强NLP模型，横扫NLP11项任务。利用Transformer去预训练双向语言模型和NSP任务，再finetune达到了各种任务的最优效果。
 " data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
@@ -532,7 +730,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《BERT》 — PLM's Notes&url=http://plmsmile.github.io/2018/12/15/52-bert/&via=http://plmsmile.github.io" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《BERT详解》 — PLM's Notes&url=http://plmsmile.github.io/2018/12/15/52-bert/&via=http://plmsmile.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
