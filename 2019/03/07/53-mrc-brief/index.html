@@ -25,11 +25,11 @@
 <meta name="keywords" content="机器阅读">
 <meta property="og:type" content="article">
 <meta property="og:title" content="机器阅读理解概述">
-<meta property="og:url" content="http://plmsmile.github.io/2019/03/07/53-rc-brief/index.html">
+<meta property="og:url" content="http://plmsmile.github.io/2019/03/07/53-mrc-brief/index.html">
 <meta property="og:site_name" content="PLM&#39;s Notes">
 <meta property="og:description" content="阅读理解的历史发展；数学定义；阅读理解和问答系统的区别；数据集和模型的发展">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-03-07T15:27:09.939Z">
+<meta property="og:updated_time" content="2019-03-12T14:59:59.586Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器阅读理解概述">
 <meta name="twitter:description" content="阅读理解的历史发展；数学定义；阅读理解和问答系统的区别；数据集和模型的发展">
@@ -167,12 +167,12 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#发展动机"><span class="post-toc-number">1.</span> <span class="post-toc-text">发展动机</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#传统nlp任务"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">传统NLP任务</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#阅读理解动机"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">阅读理解动机</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#历史发展"><span class="post-toc-number">2.</span> <span class="post-toc-text">历史发展</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#早期系统"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">早期系统</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#机器学习"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">机器学习</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#三元组"><span class="post-toc-number">2.2.1.</span> <span class="post-toc-text">三元组</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#两个数据集"><span class="post-toc-number">2.2.2.</span> <span class="post-toc-text">两个数据集</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#规则方法"><span class="post-toc-number">2.2.3.</span> <span class="post-toc-text">规则方法</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#机器学习-1"><span class="post-toc-number">2.2.4.</span> <span class="post-toc-text">机器学习</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#深度学习"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">深度学习</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#任务定义"><span class="post-toc-number">3.</span> <span class="post-toc-text">任务定义</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#rc和qa的关系"><span class="post-toc-number">4.</span> <span class="post-toc-text">RC和QA的关系</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#数据集和模型"><span class="post-toc-number">5.</span> <span class="post-toc-text">数据集和模型</span></a></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#发展动机"><span class="post-toc-number">1.</span> <span class="post-toc-text">发展动机</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#传统nlp任务"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">传统NLP任务</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#阅读理解动机"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">阅读理解动机</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#历史发展"><span class="post-toc-number">2.</span> <span class="post-toc-text">历史发展</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#早期系统"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">早期系统</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#机器学习时代"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">机器学习时代</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#三元组"><span class="post-toc-number">2.2.1.</span> <span class="post-toc-text">三元组</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#两个数据集"><span class="post-toc-number">2.2.2.</span> <span class="post-toc-text">两个数据集</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#传统规则方法"><span class="post-toc-number">2.2.3.</span> <span class="post-toc-text">传统规则方法</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#机器学习方法"><span class="post-toc-number">2.2.4.</span> <span class="post-toc-text">机器学习方法</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#深度学习时代"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">深度学习时代</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#任务形式"><span class="post-toc-number">3.</span> <span class="post-toc-text">任务形式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#完形填空"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">完形填空</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#四选一"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">四选一</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#span预测"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">Span预测</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#自然形式"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">自然形式</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#mrc和qa的比较"><span class="post-toc-number">4.</span> <span class="post-toc-text">MRC和QA的比较</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#数据集和模型"><span class="post-toc-number">5.</span> <span class="post-toc-text">数据集和模型</span></a></li></ol>
         </nav>
     </aside>
 
 
-<article id="post-53-rc-brief" class="post-article article-type-post fade" itemprop="blogPost">
+<article id="post-53-mrc-brief" class="post-article article-type-post fade" itemprop="blogPost">
 
     <div class="post-card">
         <h1 class="post-card-title">机器阅读理解概述</h1>
@@ -235,7 +235,7 @@
 <li>基于词汇和语义对应</li>
 </ul>
 <p>还有3和4的结合（<code>Charniak</code>，2000年），准确率在30%-40%左右。</p>
-<h2 id="机器学习">机器学习</h2>
+<h2 id="机器学习时代">机器学习时代</h2>
 <h3 id="三元组">三元组</h3>
 <p>（文章，问题，答案）</p>
 <h3 id="两个数据集">两个数据集</h3>
@@ -251,16 +251,13 @@
 <li>生物类型文章</li>
 <li>需要理解实体关系和事件</li>
 </ul>
-<h3 id="规则方法">规则方法</h3>
-<blockquote>
+<h3 id="传统规则方法">传统规则方法</h3>
 <p>不使用训练数据集</p>
-</blockquote>
 <p><strong>1. 启发式的滑动窗口方法</strong></p>
 <p>计算<code>word overlap</code>、<code>distance information</code></p>
 <p><strong>2. 文本蕴含方法</strong></p>
 <p>用现有的文本蕴含系统，把<code>(问题，答案)</code>对转化为一个<code>statement</code>。</p>
-<p><strong>3. max-margin 学习框架</strong></p>
-<p>使用很多语言特征：</p>
+<p><strong>3. max-margin 学习框架</strong> 使用了很多语言特征:</p>
 <ul>
 <li>句法依存</li>
 <li>semantic frames</li>
@@ -268,10 +265,86 @@
 <li>discourse relation</li>
 <li>词向量</li>
 </ul>
-<h3 id="机器学习-1">机器学习</h3>
-<h2 id="深度学习">深度学习</h2>
-<h1 id="任务定义">任务定义</h1>
-<h1 id="rc和qa的关系">RC和QA的关系</h1>
+<h3 id="机器学习方法">机器学习方法</h3>
+<p>机器学习方法比规则方法好，但是人肉有很多不足。</p>
+<ol style="list-style-type: decimal">
+<li>依赖于现有语言特征工具</li>
+</ol>
+<ul>
+<li>许多NLP任务没有得到有效解决</li>
+<li>任务泛化性差，一般在单一领域训练</li>
+<li>语言特征任务添加了噪声</li>
+</ul>
+<ol start="2" style="list-style-type: decimal">
+<li>很难模拟人类阅读，难以构建有效特征</li>
+<li>标记数据太少，难以训练出效果好的统计模型</li>
+</ol>
+<h2 id="深度学习时代">深度学习时代</h2>
+<p>深度学习火热于2015年，DeepMind的Hermann大佬提出了一种新型低成本构建大规模监督数据的方法，同时提出了<code>attention-based LSTM</code>。</p>
+<p>神经网络效果较好，能更好地在词/句子上做match。</p>
+<p><strong>1. CNN/Daily-Mail数据集</strong></p>
+<ul>
+<li>把文章标题/摘要中的名词mask掉，再提问这个名词</li>
+<li>使用NER和指代消解等技术</li>
+<li>半合成的数据集，存在误差，影响发展</li>
+</ul>
+<p><strong>2. SQuAD数据集</strong></p>
+<ul>
+<li>107785问答数据，546文章</li>
+<li>第一个大规模机器阅读理解数据集</li>
+<li>推动了很多机器阅读模型的发展</li>
+</ul>
+<p><strong>3. 深度学习的优点</strong></p>
+<ul>
+<li>不依赖于语言特征工具，避免了噪声误差等</li>
+<li>传统NLP方法特征稀少、难以泛化</li>
+<li>不用去手动构建特征， 工作重心在模型设计上</li>
+</ul>
+<h1 id="任务形式">任务形式</h1>
+<p>阅读理解任务看作是一种监督学习任务，目的是学习一种映射关系： <span class="math display">\[
+f: (p, q) \to a
+\]</span> 根据答案类型，分为如下四种形式的机器阅读任务。</p>
+<h2 id="完形填空">完形填空</h2>
+<p>预测一个词汇，一般平均3.5个词汇长度。准确率评估。</p>
+<h2 id="四选一">四选一</h2>
+<p>从k个答案中选择一个，一般是一个词、一个短语和一个答案。准确率评估。</p>
+<h2 id="span预测">Span预测</h2>
+<p>抽取式问答，预测答案在文章中start和end位置。</p>
+<p><code>Exact Match</code> 评估：准确率。测试集会有多个正确答案，EM匹配一个就好。</p>
+<p><code>F1 score</code>评估：句子单词之间的overlap，忽略字符和a an the。计算最优的F1。 <span class="math display">\[
+\rm{
+    F1 = \frac{2*Precision*Recall}{Precision + Recall}
+}
+\]</span></p>
+<h2 id="自然形式">自然形式</h2>
+<p>自然语言回答，没有固定的形式<code>free-form answer</code>。没有明确统一的评估指标。有如下几个：</p>
+<ul>
+<li>BLEU(注意看新文章，好像说这个评测不是很好)</li>
+<li>Meteor</li>
+<li>ROUGE</li>
+</ul>
+<h1 id="mrc和qa的比较">MRC和QA的比较</h1>
+<p>机器阅读理解是Question Answering的一个特例。</p>
+<p><strong>1. 相同点</strong></p>
+<ul>
+<li>问题形式</li>
+<li>解决方法</li>
+<li>评估方法</li>
+</ul>
+<p><strong>2. 不同点</strong></p>
+<p>问答系统在于：</p>
+<ul>
+<li>旨在构建问答系统，依赖于各种资源</li>
+<li>资源包括：结构化数据、非结构化文本、半结构化表格和其他形式的资源</li>
+<li>QA致力于：寻找和识别有用资源；集成各种资源的信息；研究人们常问的问题</li>
+</ul>
+<p>机器阅读在于：</p>
+<ul>
+<li>文本问答</li>
+<li>需要去理解文本信息</li>
+<li>答案只依赖于文章</li>
+<li>会设计不同类型问题去测试机器对文章不同方面的理解</li>
+</ul>
 <h1 id="数据集和模型">数据集和模型</h1>
 
         </div>
@@ -281,12 +354,12 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-03-07T15:27:09.939Z" itemprop="dateUpdated">2019-03-07 23:27:09</time>
+    最后更新时间：<time datetime="2019-03-12T14:59:59.586Z" itemprop="dateUpdated">2019-03-12 22:59:59</time>
 </span><br>
 
 
         
-        <br>原始链接：<a href="/2019/03/07/53-rc-brief/" target="_blank" rel="external">http://plmsmile.github.io/2019/03/07/53-rc-brief/</a>
+        <br>原始链接：<a href="/2019/03/07/53-mrc-brief/" target="_blank" rel="external">http://plmsmile.github.io/2019/03/07/53-mrc-brief/</a>
         
     </div>
     
@@ -317,7 +390,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2019/03/07/53-rc-brief/&title=《机器阅读理解概述》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2019/03/07/53-mrc-brief/&title=《机器阅读理解概述》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -327,24 +400,24 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2019/03/07/53-rc-brief/&title=《机器阅读理解概述》 — PLM's Notes&source=
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2019/03/07/53-mrc-brief/&title=《机器阅读理解概述》 — PLM's Notes&source=
 阅读理解的历史发展；数学定义；阅读理解和问答系统的区别；数据集和模型的发展
 " data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2019/03/07/53-rc-brief/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2019/03/07/53-mrc-brief/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《机器阅读理解概述》 — PLM's Notes&url=http://plmsmile.github.io/2019/03/07/53-rc-brief/&via=http://plmsmile.github.io" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《机器阅读理解概述》 — PLM's Notes&url=http://plmsmile.github.io/2019/03/07/53-mrc-brief/&via=http://plmsmile.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2019/03/07/53-rc-brief/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2019/03/07/53-mrc-brief/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -483,7 +556,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2019/03/07/53-rc-brief/&title=《机器阅读理解概述》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://plmsmile.github.io/2019/03/07/53-mrc-brief/&title=《机器阅读理解概述》 — PLM's Notes&pic=http://plmsmile.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -493,24 +566,24 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2019/03/07/53-rc-brief/&title=《机器阅读理解概述》 — PLM's Notes&source=
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://plmsmile.github.io/2019/03/07/53-mrc-brief/&title=《机器阅读理解概述》 — PLM's Notes&source=
 阅读理解的历史发展；数学定义；阅读理解和问答系统的区别；数据集和模型的发展
 " data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2019/03/07/53-rc-brief/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://plmsmile.github.io/2019/03/07/53-mrc-brief/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《机器阅读理解概述》 — PLM's Notes&url=http://plmsmile.github.io/2019/03/07/53-rc-brief/&via=http://plmsmile.github.io" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《机器阅读理解概述》 — PLM's Notes&url=http://plmsmile.github.io/2019/03/07/53-mrc-brief/&via=http://plmsmile.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2019/03/07/53-rc-brief/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://plmsmile.github.io/2019/03/07/53-mrc-brief/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -521,7 +594,7 @@
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACG0lEQVR42u3aUa7DIAwEwN7/0n0HqJq3C6RSYPiK1DRh8mEZ269XvN4f69uvyf2f//32nMULAwPjsYz35co3eo283nTy3n8+DQYGxgGMJBTOBOI2WOd7w8DAwGiv2zCdkzAwMDBaRn7UHEs3MTAwMMYOscn9SaFt7UEXAwPjBEYeNH9/fUt/AwMD41GMsdA5c+jNg2+xKwwMjK0ZeYBrG5b5M8cCLgYGxjmMtumYj1MkmCSUJ2/EwMDYmzFW6G/DYt4eGCv5YWBg7M3Ix7nyyDYTQKPAGqW7GBgYuzHGBh3yV87cH31iDAyMrRnXgCSw5mMTyccaeyYGBsYJjOtXjk075Oz5oywGBsbejHqgoQzQbWuhxWBgYJzMmE/yZsY16iMxBgbG1oy7m4v5yMXiLgcGBsYxjPyIm5fPZlqYxcwIBgbGRoyxwn3CaxPBmfIcBgbGCYw2+UvSwbHC3ODIGgYGxtaMOxqT7Z3JVtrSHgYGxn6MsdJ8vum2CdoOmWFgYJzDmG8PtOX+/BiMgYGBMVPiz1O3NpjWCSsGBsamjHe57iiHzQTcoheBgYHxWEa+8qLbqsJcPTOCgYGxNWOshdm2Htsksg64GBgYBzDGAt/MEXdmXAwDAwOjbR+uAkfbXRVwMTAwtmbkm55JCpOGaD0zgoGB8XBGPnKRx708+ctbEQvKbRgYGA9ktHnXqtJ/mxQuaGpiYGA8j/EHyK6Jh/hGRaMAAAAASUVORK5CYII=" alt="微信分享二维码">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACN0lEQVR42u3aSW7DMBAEwPz/087VQWC6m5SDiCyeDEMLS4cBZ/n6itfjaT3/k18/vrK9a3JhYGDclvEYrjGj3e74CXPXYGBgnMNIQmEbiH/f9eqf/Akv/8fAwMAoXz8O6Fd9PgwMDIxxEExCZHugnKNiYGCcw0iSyTwpTYpreVC+OBfHwMC4ISOvuv/974/0NzAwMG7FeJSrDYJzDYZ6VxgYGFsz8gA33mhy+FsqpSX7wcDA2JqRpKnroXMOln8+DAyMExjtUMUnqHnJ780HwsDAOIaxkqy2LYfJwJpHcQwMjNsyVjoJ7RajFLQcyPhRNcTAwNiUsZIutkMPKwW7osGJgYGxKSO35qMSSQrazku8eQ4GBsamjLZwnwfTItKvHzoxMDC2Zsy9MmlPJse7uUJbNGaBgYFxAGNlVKK9Ny/PXdDTwMDAuC2jPQ7mQw95cpsAimELDAyMjRjj5PNz4xcrjQQMDIzTGEmxbP0k1pb780ENDAyMcxhJmaw+XZatynzrxeQIBgbGRox2Q3MDYfnvvGnxsoWJgYGxNSMJgnm4XGl21gMcGBgYBzDa0tvKqWxuyKPIxTEwMDZiPMrVHuPmBmTb92JgYOzNaIv+c0G53Uqe9NYwDAyM2zJWgmxbnmsHW+ueBgYGxtaMNvDlzcgLOqtJwoyBgYExN55VHvjaEh4GBgbG3JBEHoLbodWov4GBgbE1ox0tHeOvGnhNMBgYGCcw5s5dK6FzvbV52fERAwPjvzO+AbAyVYOq/TDzAAAAAElFTkSuQmCC" alt="微信分享二维码">
 </div>
 
 
