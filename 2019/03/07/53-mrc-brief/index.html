@@ -30,7 +30,7 @@
 <meta property="og:description" content="主要包含：机器阅读的起因和发展历史；MRC数学形式；MRC与QA的区别；MRC的常见数据集和关键模型">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/53-mrc-brief/01-model-data.png">
-<meta property="og:updated_time" content="2019-03-30T09:45:04.969Z">
+<meta property="og:updated_time" content="2019-03-30T11:19:26.930Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器阅读理解概述">
 <meta name="twitter:description" content="主要包含：机器阅读的起因和发展历史；MRC数学形式；MRC与QA的区别；MRC的常见数据集和关键模型">
@@ -201,20 +201,16 @@
 <p><img src="" style="display:block; margin:auto" width="60%"></p>
 <h1 id="发展动机">发展动机</h1>
 <h2 id="传统nlp任务">传统NLP任务</h2>
-<p><strong>1. 词性分析</strong></p>
-<p><code>part-of-speech tagging</code> ：判断词性</p>
-<p><strong>2. 命名实体识别</strong></p>
-<p><code>named entity recognition</code> 识别实体</p>
-<p><strong>3. 句法依存</strong></p>
-<p><code>sytactic parsing</code> 找到词间关系、语法结构信息</p>
-<p><strong>4. 指代消解</strong></p>
-<p><code>coreference resolution</code></p>
+<p><strong>1) 词性分析</strong> <code>part-of-speech tagging</code> ：判断词性</p>
+<p><strong>2) 命名实体识别</strong> <code>named entity recognition</code> 识别实体</p>
+<p><strong>3) 句法依存</strong> <code>sytactic parsing</code> 找到词间关系、语法结构信息</p>
+<p><strong>4) 指代消解</strong> <code>coreference resolution</code></p>
 <h2 id="阅读理解动机">阅读理解动机</h2>
 <ol style="list-style-type: decimal">
-<li>让机器理解人类语言是AI领域长期存在的问题</li>
-<li>阅读理解能综合评估各项NLP任务，是一个<strong>综合性任务</strong></li>
-<li>阅读理解探索更加<strong>深层次的理解</strong></li>
-<li>回答问题是<strong>检测机器是否读懂文章</strong>最好的办法</li>
+<li><p>让机器理解人类语言是AI领域长期存在的问题</p></li>
+<li><p>阅读理解能综合评估各项NLP任务，是一个<strong>综合性任务</strong></p></li>
+<li><p>阅读理解探索更加<strong>深层次的理解</strong></p></li>
+<li><p>回答问题是<strong>检测机器是否读懂文章</strong>最好的办法</p></li>
 </ol>
 <h1 id="历史发展">历史发展</h1>
 <h2 id="早期系统">早期系统</h2>
@@ -245,38 +241,22 @@
 <p><code>ProcessBank</code>：二分类；585问题，200个段落；生物类型文章；需要理解实体关系和事件</p>
 <p><strong>3. 传统规则方法</strong></p>
 <p>不使用训练数据集</p>
-<ol style="list-style-type: decimal">
-<li>启发式的滑动窗口方法</li>
-</ol>
+<p>1）启发式的滑动窗口方法</p>
 <p>计算<code>word overlap</code>、<code>distance information</code></p>
-<ol start="2" style="list-style-type: decimal">
-<li>文本蕴含方法</li>
-</ol>
+<p>2）文本蕴含方法</p>
 <p>用现有的文本蕴含系统，把<code>(问题，答案)</code>对转化为一个<code>statement</code>。</p>
-<ol start="3" style="list-style-type: decimal">
-<li>max-margin 学习框架，使用了很多语言特征:</li>
-</ol>
-<ul>
-<li>句法依存</li>
-<li>semantic frames</li>
-<li>指代消解</li>
-<li>discourse relation</li>
-<li>词向量</li>
-</ul>
+<p>3）max-margin 学习框架，使用了很多语言特征:</p>
+<p>句法依存、semantic frames、 指代消解、 discourse relation和 词向量等特征。</p>
 <p><strong>4. 机器学习方法</strong></p>
 <p>机器学习方法比规则方法好，但是任然有很多不足：</p>
-<ol style="list-style-type: decimal">
-<li>依赖于现有语言特征工具</li>
-</ol>
+<p>1）依赖于现有语言特征工具</p>
 <ul>
 <li>许多NLP任务没有得到有效解决</li>
 <li>任务泛化性差，一般在单一领域训练</li>
 <li>语言特征任务添加了噪声</li>
 </ul>
-<ol start="2" style="list-style-type: decimal">
-<li><p>很难模拟人类阅读，难以构建有效特征</p></li>
-<li><p>标记数据太少，难以训练出效果好的统计模型d</p></li>
-</ol>
+<p>2）很难模拟人类阅读，难以构建有效特征</p>
+<p>3）标记数据太少，难以训练出效果好的统计模型</p>
 <h2 id="深度学习时代">深度学习时代</h2>
 <p>深度学习火热于2015年，DeepMind的Hermann大佬提出了一种新型低成本构建大规模监督数据的方法，同时提出了<code>attention-based LSTM</code>。</p>
 <p>神经网络效果较好，能更好地在词/句子上做match。</p>
@@ -323,7 +303,7 @@ f: (p, q) \to a
 </ul>
 <h1 id="mrc和qa的比较">MRC和QA的比较</h1>
 <p>机器阅读理解是Question Answering的一个特例。</p>
-<p><strong>1) 相同点</strong>：问题形式；解决方法；评估方法</p>
+<p><strong>1) 相同点</strong>：问题形式、解决方法和评估方法</p>
 <p><strong>2) 不同点</strong></p>
 <p><code>问答系统</code>在于：</p>
 <ul>
@@ -341,7 +321,7 @@ f: (p, q) \to a
 <h1 id="数据集和模型">数据集和模型</h1>
 <p>机器阅读的发展原因：大规模数据和端到端神经网络模型的出现。</p>
 <p>数据集促进了模型，模型又进一步促进了数据集的发展。</p>
-<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/53-mrc-brief/01-model-data.png" style="display:block; margin:auto" width="60%"></p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/53-mrc-brief/01-model-data.png" style="display:block; margin:auto" width="40%"></p>
 <h2 id="主要模型">主要模型</h2>
 <ul>
 <li><a href="https://arxiv.org/pdf/1506.03340" target="_blank" rel="noopener">Attentive Reader</a></li>
@@ -407,7 +387,7 @@ f: (p, q) \to a
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-03-30T09:45:04.969Z" itemprop="dateUpdated">2019-03-30 17:45:04</time>
+    最后更新时间：<time datetime="2019-03-30T11:19:26.930Z" itemprop="dateUpdated">2019-03-30 19:19:26</time>
 </span><br>
 
 
