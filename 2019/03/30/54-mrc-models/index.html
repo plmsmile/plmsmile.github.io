@@ -30,7 +30,7 @@
 <meta property="og:description" content="主要包含：传统特征模型、Stanford Attentive Reader、实验结果等">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/54-mrc-models/01-features.png">
-<meta property="og:updated_time" content="2019-03-30T15:23:15.809Z">
+<meta property="og:updated_time" content="2019-03-31T15:00:29.411Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器阅读(二)--模型(未完成)">
 <meta name="twitter:description" content="主要包含：传统特征模型、Stanford Attentive Reader、实验结果等">
@@ -169,7 +169,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#传统特征模型"><span class="post-toc-number">1.</span> <span class="post-toc-text">传统特征模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#基本思路"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">基本思路</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#八种特征"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">八种特征</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#传统特征模型"><span class="post-toc-number">1.</span> <span class="post-toc-text">传统特征模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#基本思路"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">基本思路</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#八种特征"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">八种特征</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#现代nlp组件"><span class="post-toc-number">2.</span> <span class="post-toc-text">现代NLP组件</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#词向量"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">词向量</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#循环神经网络"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">循环神经网络</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#注意力机制"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">注意力机制</span></a></li></ol></li></ol>
         </nav>
     </aside>
 
@@ -218,8 +218,22 @@ W^Tf_{p,q}(a) &gt; W^Tf_{p,q}(e), \forall e \in E-\{a\}
 <li>让模型更加的笨重</li>
 <li>模型依赖于已有工具的准确率</li>
 </ul>
-<p>常见的八种特征如下图所示：</p>
+<p>对于完型填空任务而言，有八种特征，如下：</p>
 <p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/54-mrc-models/01-features.png" style="display:block; margin:auto" width="70%"></p>
+<h1 id="现代nlp组件">现代NLP组件</h1>
+<h2 id="词向量">词向量</h2>
+<p>传统one-hot编码没有词汇之间的语义相似度。</p>
+<p>词向量的假设：相似上下文中的单词具有相似的语义。对语义相同的词汇，词向量的编码也会相同。 <span class="math display">\[
+\cos(\mathbf{v}_{\text{car}}, \mathbf{v}_{\text{vechicle}}) &lt; \cos(\mathbf{v}_{\text{car}}, \mathbf{v}_{\text{man}})
+\]</span> 常见的词向量有<a href="https://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/">Word2vec</a>、<code>Glove</code>和<code>Fasttext</code>。</p>
+<h2 id="循环神经网络">循环神经网络</h2>
+<p><a href="https://plmsmile.github.io/2017/10/18/rnn/#%E7%BB%8F%E5%85%B8rnn%E6%A8%A1%E5%9E%8B">RNN</a>天生能有效处理时序信息、变长的时序信息。</p>
+<p><a href="https://plmsmile.github.io/2017/10/18/rnn/#lstm%E6%80%BB%E8%A7%88%E4%B8%8E%E6%A0%B8%E5%BF%83%E7%BB%93%E6%9E%84">LSTM</a>解决了<a href="https://plmsmile.github.io/2017/10/18/rnn/#rnn%E6%A2%AF%E5%BA%A6%E9%97%AE%E9%A2%98">RNN的梯度消失问题</a>，利于网络优化。</p>
+<p><code>BiLSTM</code>从两个方向去编码时序信息，<strong>把两个方向的特征拼接起来</strong>，能够充分编码，是NLP任务中一种通用的特征抽取器。</p>
+<h2 id="注意力机制">注意力机制</h2>
+<p>经过RNN编码后的序列得到<span class="math inline">\(\mathbf{h}_1, \mathbf{h}_2, \cdots, \mathbf{h}_n\)</span>。一般使用<span class="math inline">\(\mathbf{h}_n\)</span>去做下游任务，这就需要模型把所有信息压缩到一个向量中。这就造成了<code>信息瓶颈问题</code>。</p>
+<p>这里使用<a href="https://plmsmile.github.io/2018/03/25/33-attention-summary/">注意力机制</a>对这n个向量进行加权求和，得到序列的表达。权值决定了序列中哪些部分是最有用、最相关的。</p>
+<p>注意力机制不一定只能和RNN使用，比如<a href="https://plmsmile.github.io/2018/08/29/48-attention-is-all-you-need/">Transformer</a>：词向量、注意力机制、FFN、位置信息。它的优点有：参数更少、并行性更好、上限更高。</p>
 
         </div>
 
@@ -228,7 +242,7 @@ W^Tf_{p,q}(a) &gt; W^Tf_{p,q}(e), \forall e \in E-\{a\}
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-03-30T15:23:15.809Z" itemprop="dateUpdated">2019-03-30 23:23:15</time>
+    最后更新时间：<time datetime="2019-03-31T15:00:29.411Z" itemprop="dateUpdated">2019-03-31 23:00:29</time>
 </span><br>
 
 

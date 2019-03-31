@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://plmsmile.github.io/"/>
-  <updated>2019-03-30T15:23:15.809Z</updated>
+  <updated>2019-03-31T15:00:29.411Z</updated>
   <id>http://plmsmile.github.io/</id>
   
   <author>
@@ -21,9 +21,9 @@
     <link href="http://plmsmile.github.io/2019/03/30/54-mrc-models/"/>
     <id>http://plmsmile.github.io/2019/03/30/54-mrc-models/</id>
     <published>2019-03-30T14:56:07.000Z</published>
-    <updated>2019-03-30T15:23:15.809Z</updated>
+    <updated>2019-03-31T15:00:29.411Z</updated>
     
-    <content type="html"><![CDATA[<blockquote><p>主要包含：传统特征模型、Stanford Attentive Reader、实验结果等</p></blockquote><a id="more"></a><p><img src="" style="display:block; margin:auto" width="60%"></p><h1 id="传统特征模型">传统特征模型</h1><h2 id="基本思路">基本思路</h2><p>文章p，问题q，答案a，候选答案集合E。包含两个步骤：</p><p>1）为每个候选答案a构建特征向量<span class="math inline">\(f_{p,q}(a)\)</span></p><p>2）利用机器学习方法对答案的特征向量进行排序分类，正确答案要比其他候选答案排序要高 <span class="math display">\[W^Tf_{p,q}(a) &gt; W^Tf_{p,q}(e), \forall e \in E-\{a\}\]</span></p><h2 id="八种特征">八种特征</h2><p>特征向量对传统特征模型很重要，它需要有：</p><ul><li>丰富的信息</li><li>能应对各种具体的任务</li><li>不太稀疏</li></ul><p>特征向量包含数值特征和语言特征，其中语言特征需要利用已有的语言特征工具。语言特征使得模型有两个缺点:</p><ul><li>让模型更加的笨重</li><li>模型依赖于已有工具的准确率</li></ul><p>常见的八种特征如下图所示：</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/54-mrc-models/01-features.png" style="display:block; margin:auto" width="70%"></p>]]></content>
+    <content type="html"><![CDATA[<blockquote><p>主要包含：传统特征模型、Stanford Attentive Reader、实验结果等</p></blockquote><a id="more"></a><p><img src="" style="display:block; margin:auto" width="60%"></p><h1 id="传统特征模型">传统特征模型</h1><h2 id="基本思路">基本思路</h2><p>文章p，问题q，答案a，候选答案集合E。包含两个步骤：</p><p>1）为每个候选答案a构建特征向量<span class="math inline">\(f_{p,q}(a)\)</span></p><p>2）利用机器学习方法对答案的特征向量进行排序分类，正确答案要比其他候选答案排序要高 <span class="math display">\[W^Tf_{p,q}(a) &gt; W^Tf_{p,q}(e), \forall e \in E-\{a\}\]</span></p><h2 id="八种特征">八种特征</h2><p>特征向量对传统特征模型很重要，它需要有：</p><ul><li>丰富的信息</li><li>能应对各种具体的任务</li><li>不太稀疏</li></ul><p>特征向量包含数值特征和语言特征，其中语言特征需要利用已有的语言特征工具。语言特征使得模型有两个缺点:</p><ul><li>让模型更加的笨重</li><li>模型依赖于已有工具的准确率</li></ul><p>对于完型填空任务而言，有八种特征，如下：</p><p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/img/54-mrc-models/01-features.png" style="display:block; margin:auto" width="70%"></p><h1 id="现代nlp组件">现代NLP组件</h1><h2 id="词向量">词向量</h2><p>传统one-hot编码没有词汇之间的语义相似度。</p><p>词向量的假设：相似上下文中的单词具有相似的语义。对语义相同的词汇，词向量的编码也会相同。 <span class="math display">\[\cos(\mathbf{v}_{\text{car}}, \mathbf{v}_{\text{vechicle}}) &lt; \cos(\mathbf{v}_{\text{car}}, \mathbf{v}_{\text{man}})\]</span> 常见的词向量有<a href="https://plmsmile.github.io/2017/11/12/cs224n-notes1-word2vec/">Word2vec</a>、<code>Glove</code>和<code>Fasttext</code>。</p><h2 id="循环神经网络">循环神经网络</h2><p><a href="https://plmsmile.github.io/2017/10/18/rnn/#%E7%BB%8F%E5%85%B8rnn%E6%A8%A1%E5%9E%8B">RNN</a>天生能有效处理时序信息、变长的时序信息。</p><p><a href="https://plmsmile.github.io/2017/10/18/rnn/#lstm%E6%80%BB%E8%A7%88%E4%B8%8E%E6%A0%B8%E5%BF%83%E7%BB%93%E6%9E%84">LSTM</a>解决了<a href="https://plmsmile.github.io/2017/10/18/rnn/#rnn%E6%A2%AF%E5%BA%A6%E9%97%AE%E9%A2%98">RNN的梯度消失问题</a>，利于网络优化。</p><p><code>BiLSTM</code>从两个方向去编码时序信息，<strong>把两个方向的特征拼接起来</strong>，能够充分编码，是NLP任务中一种通用的特征抽取器。</p><h2 id="注意力机制">注意力机制</h2><p>经过RNN编码后的序列得到<span class="math inline">\(\mathbf{h}_1, \mathbf{h}_2, \cdots, \mathbf{h}_n\)</span>。一般使用<span class="math inline">\(\mathbf{h}_n\)</span>去做下游任务，这就需要模型把所有信息压缩到一个向量中。这就造成了<code>信息瓶颈问题</code>。</p><p>这里使用<a href="https://plmsmile.github.io/2018/03/25/33-attention-summary/">注意力机制</a>对这n个向量进行加权求和，得到序列的表达。权值决定了序列中哪些部分是最有用、最相关的。</p><p>注意力机制不一定只能和RNN使用，比如<a href="https://plmsmile.github.io/2018/08/29/48-attention-is-all-you-need/">Transformer</a>：词向量、注意力机制、FFN、位置信息。它的优点有：参数更少、并行性更好、上限更高。</p>]]></content>
     
     <summary type="html">
     
@@ -100,11 +100,11 @@
       <category term="论文笔记" scheme="http://plmsmile.github.io/categories/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/"/>
     
     
-      <category term="ELMo" scheme="http://plmsmile.github.io/tags/ELMo/"/>
+      <category term="语言模型" scheme="http://plmsmile.github.io/tags/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/"/>
     
       <category term="迁移学习" scheme="http://plmsmile.github.io/tags/%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0/"/>
     
-      <category term="语言模型" scheme="http://plmsmile.github.io/tags/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/"/>
+      <category term="ELMo" scheme="http://plmsmile.github.io/tags/ELMo/"/>
     
       <category term="Transformer" scheme="http://plmsmile.github.io/tags/Transformer/"/>
     
@@ -138,11 +138,11 @@
       <category term="论文笔记" scheme="http://plmsmile.github.io/categories/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/"/>
     
     
-      <category term="迁移学习" scheme="http://plmsmile.github.io/tags/%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0/"/>
+      <category term="transformer" scheme="http://plmsmile.github.io/tags/transformer/"/>
     
       <category term="语言模型" scheme="http://plmsmile.github.io/tags/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/"/>
     
-      <category term="transformer" scheme="http://plmsmile.github.io/tags/transformer/"/>
+      <category term="迁移学习" scheme="http://plmsmile.github.io/tags/%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0/"/>
     
   </entry>
   
@@ -165,13 +165,13 @@
       <category term="论文笔记" scheme="http://plmsmile.github.io/categories/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/"/>
     
     
-      <category term="ELMo" scheme="http://plmsmile.github.io/tags/ELMo/"/>
-    
-      <category term="词向量" scheme="http://plmsmile.github.io/tags/%E8%AF%8D%E5%90%91%E9%87%8F/"/>
+      <category term="语言模型" scheme="http://plmsmile.github.io/tags/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/"/>
     
       <category term="迁移学习" scheme="http://plmsmile.github.io/tags/%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0/"/>
     
-      <category term="语言模型" scheme="http://plmsmile.github.io/tags/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/"/>
+      <category term="ELMo" scheme="http://plmsmile.github.io/tags/ELMo/"/>
+    
+      <category term="词向量" scheme="http://plmsmile.github.io/tags/%E8%AF%8D%E5%90%91%E9%87%8F/"/>
     
       <category term="LSTM" scheme="http://plmsmile.github.io/tags/LSTM/"/>
     
@@ -395,8 +395,6 @@
       <category term="强化学习" scheme="http://plmsmile.github.io/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/"/>
     
     
-      <category term="策略梯度" scheme="http://plmsmile.github.io/tags/%E7%AD%96%E7%95%A5%E6%A2%AF%E5%BA%A6/"/>
-    
       <category term="策略迭代" scheme="http://plmsmile.github.io/tags/%E7%AD%96%E7%95%A5%E8%BF%AD%E4%BB%A3/"/>
     
       <category term="值迭代" scheme="http://plmsmile.github.io/tags/%E5%80%BC%E8%BF%AD%E4%BB%A3/"/>
@@ -412,6 +410,8 @@
       <category term="Q网络" scheme="http://plmsmile.github.io/tags/Q%E7%BD%91%E7%BB%9C/"/>
     
       <category term="DQN" scheme="http://plmsmile.github.io/tags/DQN/"/>
+    
+      <category term="策略梯度" scheme="http://plmsmile.github.io/tags/%E7%AD%96%E7%95%A5%E6%A2%AF%E5%BA%A6/"/>
     
   </entry>
   
@@ -433,9 +433,9 @@
       <category term="强化学习" scheme="http://plmsmile.github.io/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/"/>
     
     
-      <category term="策略函数" scheme="http://plmsmile.github.io/tags/%E7%AD%96%E7%95%A5%E5%87%BD%E6%95%B0/"/>
-    
       <category term="策略梯度" scheme="http://plmsmile.github.io/tags/%E7%AD%96%E7%95%A5%E6%A2%AF%E5%BA%A6/"/>
+    
+      <category term="策略函数" scheme="http://plmsmile.github.io/tags/%E7%AD%96%E7%95%A5%E5%87%BD%E6%95%B0/"/>
     
       <category term="REINFORCE" scheme="http://plmsmile.github.io/tags/REINFORCE/"/>
     
